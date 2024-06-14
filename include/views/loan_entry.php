@@ -128,6 +128,7 @@
                                             <label for="pic"> Photo</label><span class="text-danger">*</span><br>
                                             <img id='imgshow' class="img_show" src='img\avatar.png' />
                                             <input type="file" class="form-control" id="pic" name="pic" tabindex="8">
+                                            <input type="hidden" id="per_pic">
                                         </div>
                                     </div>
                                 </div>
@@ -140,7 +141,7 @@
                 <div class="card">
                     <div class="card-header">
                         <div class="card-title">Family Info <span class="text-danger">*</span>
-                            <button type="button" class="btn btn-primary" id="add_group" name="add_group" data-toggle="modal" data-target="#add_fam_info_modal" style="padding: 5px 35px; float: right;" tabindex='9'><span class="icon-add"></span></button>
+                            <button type="button" class="btn btn-primary" id="add_group" name="add_group" data-toggle="modal" data-target="#add_fam_info_modal" onclick="getFamilyTable()" style="padding: 5px 35px; float: right;" tabindex='9'><span class="icon-add"></span></button>
                         </div>
                     </div>
                     <div class="card-body">
@@ -201,6 +202,7 @@
                                             <label for="pic"> Photo</label><span class="text-danger">*</span><br>
                                             <img id='imgshows' class="img_show" src='img\avatar.png' />
                                             <input type="file" class="form-control" id="gu_pic" name="gu_pic" tabindex="12">
+                                            <input type="hidden" id="gur_pic">
                                         </div>
                                     </div>
                                 </div>
@@ -325,8 +327,8 @@
                         <div class="row">
                             <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
                                 <div class="form-group">
-                                    <label for="residential-type">Residential Type</label>
-                                    <select type="text" class="form-control" id="residential-type" name="residential-type" tabindex="18">
+                                    <label for="res_type">Residential Type</label>
+                                    <select type="text" class="form-control" id="res_type" name="res_type" tabindex="18">
                                         <option value="Select Residential Type">Select Residential Type</option>
                                         <option value="1">Own</option>
                                         <option value="2">Rental</option>
@@ -337,14 +339,14 @@
                             </div>
                             <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
                                 <div class="form-group">
-                                    <label for="residential_detail"> Residential Details </label>
-                                    <input type="text" class="form-control" id="residential_detail" name="residential_detail" pattern="[a-zA-Z\s]+" placeholder="Enter Residential Details" tabindex="19">
+                                    <label for="res_detail"> Residential Details </label>
+                                    <input type="text" class="form-control" id="res_detail" name="res_detail" pattern="[a-zA-Z\s]+" placeholder="Enter Residential Details" tabindex="19">
                                 </div>
                             </div>
                             <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
                                 <div class="form-group">
-                                    <label for="resident_address"> Address </label>
-                                    <input type="text" class="form-control" id="resident_address" name="resident_address" placeholder="Enter Address" tabindex="20">
+                                    <label for="res_address"> Address </label>
+                                    <input type="text" class="form-control" id="res_address" name="res_address" placeholder="Enter Address" tabindex="20">
                                 </div>
                             </div>
                             <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
@@ -371,14 +373,14 @@
                             </div>
                             <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
                                 <div class="form-group">
-                                    <label for="occupation_detail"> Occupation Detail</label>
-                                    <input type="text" class="form-control" id="occupation_detail" name="occupation_detail" placeholder="Enter Occupation Detail " tabindex="23">
+                                    <label for="occ_detail"> Occupation Detail</label>
+                                    <input type="text" class="form-control" id="occ_detail" name="occ_detail" placeholder="Enter Occupation Detail " tabindex="23">
                                 </div>
                             </div>
                             <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
                                 <div class="form-group">
-                                    <label for="income"> Income</label>
-                                    <input type="text" class="form-control" id="income" name="income" placeholder="Enter Income" tabindex="24">
+                                    <label for="occ_income"> Income</label>
+                                    <input type="text" class="form-control" id="income" name="occ_income" placeholder="Enter Income" tabindex="24">
                                 </div>
                             </div>
                             <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
@@ -428,7 +430,7 @@
                 <div class="card">
                     <div class="card-header">
                         <div class="card-title">Property Info 
-                            <button type="button" class="btn btn-primary" id="add_property" name="add_property" data-toggle="modal" data-target="#add_prop_info_modal" style="padding: 5px 35px; float: right;" tabindex='29'><span class="icon-add"></span></button>
+                            <button type="button" class="btn btn-primary" id="add_property" name="add_property" data-toggle="modal" data-target="#add_prop_info_modal" onclick="getPropertyTable()"    style="padding: 5px 35px; float: right;" tabindex='29'><span class="icon-add"></span></button>
                         </div>
                     </div>
                     <div class="card-body">
@@ -458,7 +460,7 @@
                 <div class="card">
                     <div class="card-header">
                         <div class="card-title">Bank Info
-                            <button type="button" class="btn btn-primary" id="add_bank" name="add_bank" data-toggle="modal" data-target="#add_bank_info_modal" style="padding: 5px 35px; float: right;" tabindex='30'><span class="icon-add"></span></button>
+                            <button type="button" class="btn btn-primary" id="add_bank" name="add_bank" data-toggle="modal" data-target="#add_bank_info_modal" onclick="getBankTable()" style="padding: 5px 35px; float: right;" tabindex='30'><span class="icon-add"></span></button>
                         </div>
                     </div>
                     <div class="card-body">
@@ -489,7 +491,7 @@
                 <div class="card">
                     <div class="card-header">
                         <div class="card-title">KYC Info <span class="text-danger">*</span>
-                            <button type="button" class="btn btn-primary" id="add_kyc" name="add_kyc" data-toggle="modal" data-target="#add_kyc_info_modal" style="padding: 5px 35px; float: right;" tabindex='31'><span class="icon-add"></span></button>
+                            <button type="button" class="btn btn-primary" id="add_kyc" name="add_kyc" data-toggle="modal" data-target="#add_kyc_info_modal" onclick="getKycTable()" style="padding: 5px 35px; float: right;" tabindex='31'><span class="icon-add"></span></button>
                         </div>
                     </div>
                     <div class="card-body">
@@ -895,7 +897,7 @@
                             </div>
                             <div class="col-xl-1 col-lg-1 col-md-1 col-sm-1 col-12" style="margin-top: 18px;">
                                 <div class="form-group">
-                                    <button type="button" class="btn btn-primary modalBtnCss" id="proof_modal_btn" data-toggle="modal" data-target="#add_proof_info_modal"  tabindex="1">+</button>
+                                    <button type="button" class="btn btn-primary modalBtnCss" id="proof_modal_btn" data-toggle="modal" data-target="#add_proof_info_modal" onclick="getProofTable()" tabindex="1">+</button>
                                 </div>
                             </div>
                             <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
