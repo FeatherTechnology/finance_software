@@ -295,7 +295,10 @@ function appendDataToTable(tableSelector, response, columnMapping) {
 				if (value === 'action') {
 					// If the key is 'action', insert the HTML content directly
 					$('<td>').html(item[value]).appendTo(row);
-				} else {
+				}else if (value === 'upload') {
+					// If the key is 'action', insert the HTML content directly
+					$('<td>').html(item[value]).appendTo(row);
+				}else {
 					// Otherwise, insert the text content
 					$('<td>').text(item[value]).appendTo(row);
 				}
