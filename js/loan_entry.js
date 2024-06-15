@@ -23,9 +23,9 @@ $(document).ready(function () {
         famNameList()
         aadharList()
         mobileList()
-        clear();
-
+        //clear();
     });
+
     $('input[name=loan_entry_type]').click(function () {
         let loanEntryType = $(this).val();
         if (loanEntryType == 'cus_profile') {
@@ -33,6 +33,7 @@ $(document).ready(function () {
 
         } else if (loanEntryType == 'loan_calc') {
             $('#loan_entry_customer_profile').hide(); $('#loan_entry_loan_calculation').show();
+            callLoanCaculationFunctions();
         }
     })
 
@@ -41,57 +42,34 @@ $(document).ready(function () {
         value = value.replace(/\D/g, "").split(/(?:([\d]{4}))/g).filter(s => s.length > 0).join(" ");
         $(this).val(value);
     });
+
     $('#cus_name').on('blur', function () {
         var customerName = $(this).val().trim();
         if (customerName) {
             updateCustomerName(customerName);
-        }else {
+        } else {
             removeCustomerName();
         }
     });
-    function updateCustomerName(name) {
-        $('#name_check .custom-option').remove();
-        $('#name_check').append('<option class="custom-option" value="' + name + '">' + name + '</option>');
-    }
-    function removeCustomerName() {
-        $('#name_check .custom-option').remove();
-    }
-    
+
     $('#mobile1').on('blur', function () {
         var customerMobile = $(this).val().trim();
         if (customerMobile) {
             addCustomerMobile(customerMobile);
-        }else {
+        } else {
             removeCustomerMobile();
         }
-    }); 
-   
-    function addCustomerMobile(mobile) {
-        $('#mobile_check .custom-option').remove();
-        $('#mobile_check').append('<option class="custom-option" value="' + mobile + '">' + mobile + '</option>');
-    } 
-    
-    function removeCustomerMobile() {
-        $('#mobile_check .custom-option').remove();
-    }
-    ``
-    $('#cus_id').on('blur', function () {    
+    });
+
+    $('#cus_id').on('blur', function () {
         var customerID = $('#cus_id').val().trim().replace(/\s/g, '');
         if (customerID) {
             updateCustomerID(customerID);
-        }else {
+        } else {
             removeCustomerID();
         }
     });
-   
-    function updateCustomerID(id) {
-        $('#aadhar_check .custom-option').remove();
-        $('#aadhar_check').append('<option class="custom-option" value="' + id + '">' + id + '</option>');
-    }
-    function removeCustomerID() {
-        $('#aadhar_check .custom-option').remove();
-    }
-     
+
     $('#cus_id, #cus_name').on('blur', function () {
         var customerID = $('#cus_id').val().trim().replace(/\s/g, '');
         var customerName = $('#cus_name').val().trim();
@@ -102,19 +80,12 @@ $(document).ready(function () {
         }
     });
 
-    function addPropertyHolder(id, name) {
-        $('#property_holder .custom-option').remove();
-        $('#property_holder').append('<option class="custom-option" value="' + id + '">' + name + '</option>');
-    }
-    function removeCustomerEntries() {
-        $('#property_holder .custom-option').remove();
-    }
-
     $('#fam_aadhar').on('keyup', function () {
         var value = $(this).val();
         value = value.replace(/\D/g, "").split(/(?:([\d]{4}))/g).filter(s => s.length > 0).join(" ");
         $(this).val(value);
     });
+
     $('#pic').change(function () {
         var pic = $('#pic')[0];
         var img = $('#imgshow');
@@ -126,6 +97,7 @@ $(document).ready(function () {
         var img = $('#imgshows');
         img.attr('src', URL.createObjectURL(pic.files[0]));
     })
+
     /////family Modal////
     $('#submit_family').click(function () {
         event.preventDefault();
@@ -158,11 +130,10 @@ $(document).ready(function () {
                 mobileList()
                 famNameList()
                 aadharList()
-
-
             });
         }
     });
+
     $(document).on('click', '.familyActionBtn', function () {
         var id = $(this).attr('value'); // Get value attribute
         $.post('api/loan_entry/family_creation_data.php', { id: id }, function (response) {
@@ -174,9 +145,9 @@ $(document).ready(function () {
             $('#fam_occupation').val(response[0].fam_occupation);
             $('#fam_aadhar').val(response[0].fam_aadhar);
             $('#fam_mobile').val(response[0].fam_mobile);
-
         }, 'json');
     });
+
     $(document).on('click', '.familyDeleteBtn', function () {
         var id = $(this).attr('value');
         swalConfirm('Delete', 'Do you want to Delete the Family Details?', getFamilyDelete, id);
@@ -208,6 +179,7 @@ $(document).ready(function () {
             });
         }
     });
+
     $(document).on('click', '.propertyActionBtn', function () {
         var id = $(this).attr('value'); // Get value attribute
         $.post('api/loan_entry/property_creation_data.php', { id: id }, function (response) {
@@ -220,11 +192,13 @@ $(document).ready(function () {
 
         }, 'json');
     });
+
     $(document).on('click', '.propertyDeleteBtn', function () {
         var id = $(this).attr('value');
         swalConfirm('Delete', 'Do you want to Delete the Property Details?', getPropertyDelete, id);
         return;
     });
+
     $('#property_holder').change(function () {
         var propertyHolderId = $(this).val();
         if (propertyHolderId) {
@@ -233,6 +207,7 @@ $(document).ready(function () {
             $('#prop_relationship').val('');
         }
     });
+
     $('#proof_of').change(function () {
         var proofOf = $(this).val();
         if (proofOf == "2") { // Family Member selected
@@ -243,6 +218,7 @@ $(document).ready(function () {
             $('#kyc_relationship').val('Customer');
         }
     });
+
     $('#fam_mem').change(function () {
         var familyMemberId = $(this).val();
         if (familyMemberId) {
@@ -276,6 +252,7 @@ $(document).ready(function () {
             });
         }
     })
+
     $(document).on('click', '.bankActionBtn', function () {
         var id = $(this).attr('value'); // Get value attribute
         $.post('api/loan_entry/bank_creation_data.php', { id: id }, function (response) {
@@ -287,6 +264,7 @@ $(document).ready(function () {
             $('#ifsc_code').val(response[0].ifsc_code);
         }, 'json');
     });
+
     $(document).on('click', '.bankDeleteBtn', function () {
         var id = $(this).attr('value');
         swalConfirm('Delete', 'Do you want to Delete the Bank Details?', getBankDelete, id);
@@ -341,8 +319,8 @@ $(document).ready(function () {
                 }
             });
         }
-
     });
+
     $(document).on('click', '.kycActionBtn', function () {
         var id = $(this).attr('value'); // Get value attribute
         $.post('api/loan_entry/kyc_creation_data.php', { id: id }, function (response) {
@@ -381,6 +359,10 @@ $(document).ready(function () {
         $('#fam_mem').val('');
     });
 
+    $('.close').on('click', function () {
+        $('.fam_mem_div').hide();
+        $('#fam_mem').val('');
+    });
 
     $(document).on('click', '.kycDeleteBtn', function () {
         var id = $(this).attr('value');
@@ -395,6 +377,7 @@ $(document).ready(function () {
             $('.fam_mem_div').hide();
         }
     });
+
     //////KyC Proof Modal///////
     $('#submit_proof').click(function () {
         event.preventDefault();
@@ -416,11 +399,10 @@ $(document).ready(function () {
                 $('#add_proof_info_modal').modal('hide');
                 getProofTable();
                 fetchProofList();
-
-
             });
         }
     });
+
     $(document).on('click', '.proofActionBtn', function () {
         var id = $(this).attr('value'); // Get value attribute
         $.post('api/loan_entry/proof_creation_data.php', { id: id }, function (response) {
@@ -428,16 +410,82 @@ $(document).ready(function () {
             $('#addProof_name').val(response[0].addProof_name);
         }, 'json');
     });
+
     $(document).on('click', '.proofDeleteBtn', function () {
         var id = $(this).attr('value');
         swalConfirm('Delete', 'Do you want to Delete the Proof Details?', getProofDelete, id);
         return;
     });
+
     $('#mobile1,#mobile2,#fam_mobile').change(function () {
         checkMobileNo($(this).val(), $(this).attr('id'));
     });
 
-});
+    // Function to format Aadhaar number input
+    $('input[data-type="adhaar-number"]').keyup(function () {
+        var value = $(this).val();
+        value = value.replace(/\D/g, "").split(/(?:([\d]{4}))/g).filter(s => s.length > 0).join(" ");
+        $(this).val(value);
+    });
+
+    $('#area').change(function () {
+        var areaId = $(this).val();
+        if (areaId) {
+            getAlineName(areaId);
+        } else {
+            $('#').val('');
+        }
+    })
+
+    document.getElementById('dob').addEventListener('change', function () {
+        var dob = new Date(this.value);
+        var today = new Date();
+        var age = today.getFullYear() - dob.getFullYear();
+        var m = today.getMonth() - dob.getMonth();
+        if (m < 0 || (m === 0 && today.getDate() < dob.getDate())) {
+            age--;
+        }
+        document.getElementById('age').value = age;
+    })
+
+}); /// Document END/////
+
+function addCustomerMobile(mobile) {
+    $('#mobile_check .custom-option').remove();
+    $('#mobile_check').append('<option class="custom-option" value="' + mobile + '">' + mobile + '</option>');
+}
+
+function removeCustomerMobile() {
+    $('#mobile_check .custom-option').remove();
+}
+
+function updateCustomerID(id) {
+    $('#aadhar_check .custom-option').remove();
+    $('#aadhar_check').append('<option class="custom-option" value="' + id + '">' + id + '</option>');
+}
+
+function removeCustomerID() {
+    $('#aadhar_check .custom-option').remove();
+}
+
+function updateCustomerName(name) {
+    $('#name_check .custom-option').remove();
+    $('#name_check').append('<option class="custom-option" value="' + name + '">' + name + '</option>');
+}
+
+function removeCustomerName() {
+    $('#name_check .custom-option').remove();
+}
+
+function addPropertyHolder(id, name) {
+    $('#property_holder .custom-option').remove();
+    $('#property_holder').append('<option class="custom-option" value="' + id + '">' + name + '</option>');
+}
+
+function removeCustomerEntries() {
+    $('#property_holder .custom-option').remove();
+}
+
 function swapTableAndCreation() {
     if ($('.loan_table_content').is(':visible')) {
         $('.loan_table_content').hide();
@@ -452,20 +500,11 @@ function swapTableAndCreation() {
         $('#back_btn').hide();
     }
 }
-document.getElementById('dob').addEventListener('change', function () {
-    var dob = new Date(this.value);
-    var today = new Date();
-    var age = today.getFullYear() - dob.getFullYear();
-    var m = today.getMonth() - dob.getMonth();
-    if (m < 0 || (m === 0 && today.getDate() < dob.getDate())) {
-        age--;
-    }
-    document.getElementById('age').value = age;
-})
 
 $(function () {
 
 });
+
 function getFamilyTable() {
     $.post('api/loan_entry/family_creation_list.php', function (response) {
         var columnMapping = [
@@ -485,6 +524,7 @@ function getFamilyTable() {
     }, 'json')
 
 }
+
 function getFamilyInfoTable() {
     $.post('api/loan_entry/family_creation_list.php', function (response) {
         var columnMapping = [
@@ -499,9 +539,15 @@ function getFamilyInfoTable() {
         ];
         appendDataToTable('#fam_info_table', response, columnMapping);
         setdtable('#fam_info_table');
+        $('#family_form input').val('');
+        $('#family_form textarea').val('');
+        $('#family_form select').each(function () {
+            $(this).val($(this).find('option:first').val());
+        });
 
     }, 'json')
 }
+
 function getPropertyTable() {
     $.post('api/loan_entry/property_creation_list.php', function (response) {
         var columnMapping = [
@@ -518,6 +564,7 @@ function getPropertyTable() {
     }, 'json')
 
 }
+
 function getPropertyInfoTable() {
     $.post('api/loan_entry/property_creation_list.php', function (response) {
         var columnMapping = [
@@ -529,6 +576,11 @@ function getPropertyInfoTable() {
         ];
         appendDataToTable('#prop_info', response, columnMapping);
         setdtable('#prop_info');
+        $('#property_form input').val('');
+        $('#property_form textarea').val('');
+        $('#property_form select').each(function () {
+            $(this).val($(this).find('option:first').val());
+        });
 
     }, 'json')
 
@@ -558,6 +610,7 @@ function getFamilyDelete(id) {
         }
     }, 'json');
 }
+
 $('#guarantor_name').change(function () {
     var guarantorId = $(this).val();
     if (guarantorId) {
@@ -566,6 +619,7 @@ $('#guarantor_name').change(function () {
         $('#relationship').val('');
     }
 })
+
 function getGuarantorName() {
     $.post('api/loan_entry/get_guarantor_name.php', function (response) {
         let appendGuarantorOption = '';
@@ -577,6 +631,7 @@ function getGuarantorName() {
         getFamilyInfoTable();
     }, 'json');
 }
+
 function getGrelationshipName(guarantorId) {
     $.ajax({
         url: 'api/loan_entry/getGrelationship.php',
@@ -593,6 +648,7 @@ function getGrelationshipName(guarantorId) {
         }
     });
 }
+
 function getPropertyHolder() {
     $.post('api/loan_entry/get_property_holder.php', function (response) {
         let appendHolderOption = '';
@@ -604,6 +660,7 @@ function getPropertyHolder() {
         getFamilyInfoTable();
     }, 'json');
 }
+
 function getPropertyDelete(id) {
     $.post('api/loan_entry/delete_property_creation.php', { id }, function (response) {
         if (response == '1') {
@@ -615,6 +672,7 @@ function getPropertyDelete(id) {
         }
     }, 'json');
 }
+
 function getRelationshipName(propertyHolderId) {
     $.ajax({
         url: 'api/loan_entry/getRelationshipName.php',
@@ -639,6 +697,7 @@ function getBankDelete(id) {
         }
     }, 'json');
 }
+
 function getBankTable() {
     $.post('api/loan_entry/bank_creation_list.php', function (response) {
         var columnMapping = [
@@ -652,10 +711,9 @@ function getBankTable() {
         ];
         appendDataToTable('#bank_creation_table', response, columnMapping);
         setdtable('#bank_creation_table');
-
     }, 'json')
-
 }
+
 function getBankInfoTable() {
     $.post('api/loan_entry/bank_creation_list.php', function (response) {
         var columnMapping = [
@@ -668,10 +726,15 @@ function getBankInfoTable() {
         ];
         appendDataToTable('#bank_info', response, columnMapping);
         setdtable('#bank_info');
+        $('#bank_form input').val('');
+        $('#bank_form textarea').val('');
+        $('#bank_form select').each(function () {
+            $(this).val($(this).find('option:first').val());
+        });
 
     }, 'json')
-
 }
+
 function getKycDelete(id) {
     $.post('api/loan_entry/delete_kyc_creation.php', { id }, function (response) {
         if (response == '1') {
@@ -683,6 +746,7 @@ function getKycDelete(id) {
         }
     }, 'json');
 }
+
 function getKycTable() {
     $.post('api/loan_entry/kyc_creation_list.php', function (response) {
         var columnMapping = [
@@ -696,9 +760,7 @@ function getKycTable() {
         ];
         appendDataToTable('#kyc_creation_table', response, columnMapping);
         setdtable('#kyc_creation_table');
-
     }, 'json')
-
 }
 
 function getKycInfoTable() {
@@ -713,10 +775,15 @@ function getKycInfoTable() {
         ];
         appendDataToTable('#kyc_info', response, columnMapping);
         setdtable('#kyc_info');
-
+        $('#kyc_form input').val('');
+        $('#Kyc_form.fam_mem_div').hide();
+        $('#kyc_form textarea').val('');
+        $('#kyc_form select').each(function () {
+            $(this).val($(this).find('option:first').val());
+        });
     }, 'json')
-
 }
+
 function getFamilyMember() {
     $.post('api/loan_entry/get_family_member.php', function (response) {
         let appendHolderOption = '';
@@ -728,6 +795,7 @@ function getFamilyMember() {
         getFamilyInfoTable();
     }, 'json');
 }
+
 function getKycRelationshipName(familyMemberId) {
     $.ajax({
         url: 'api/loan_entry/getKycRelationshipName.php',
@@ -740,6 +808,7 @@ function getKycRelationshipName(familyMemberId) {
         },
     });
 }
+
 function getProofDelete(id) {
     $.post('api/loan_entry/delete_proof_creation.php', { id }, function (response) {
         if (response == '1') {
@@ -752,6 +821,7 @@ function getProofDelete(id) {
         }
     }, 'json')
 }
+
 function getProofTable() {
     $.post('api/loan_entry/proof_creation_list.php', function (response) {
         var columnMapping = [
@@ -761,10 +831,9 @@ function getProofTable() {
         ];
         appendDataToTable('#proof_creation_table', response, columnMapping);
         setdtable('#proof_creation_table');
-
     }, 'json')
-
 }
+
 function fetchProofList() {
     $.ajax({
         url: 'api/loan_entry/get_proof_list.php',
@@ -775,9 +844,11 @@ function fetchProofList() {
             $.each(response, function (index, proof) {
                 $('#proof').append('<option value="' + proof.id + '">' + proof.addProof_name + '</option>');
             });
+            $('#proof_form input').val('');
         }
     });
 }
+
 /*function clear() {
     // Bind the click event to buttons with the specified class and data attribute
     $('button[data-dismiss="modal"]').click(function (event) {
@@ -795,16 +866,8 @@ function fetchProofList() {
         });
     });
 }*/
-// Function to format Aadhaar number input
-$('input[data-type="adhaar-number"]').keyup(function () {
-    var value = $(this).val();
-    value = value.replace(/\D/g, "").split(/(?:([\d]{4}))/g).filter(s => s.length > 0).join(" ");
-    $(this).val(value);
-});
 
-
-
-function clear() {
+/*function clear() {
     // Bind the click event to buttons with the specified class and data attribute
     $('button[data-dismiss="modal"]').click(function (event) {
         event.preventDefault();
@@ -821,7 +884,7 @@ function clear() {
             $(this).val($(this).find('option:first').val());
         });
     });
-}
+}*/
 
 function getAreaName() {
     $.post('api/loan_entry/get_area.php', function (response) {
@@ -833,14 +896,7 @@ function getAreaName() {
         $('#area').empty().append(appendAreaOption);
     }, 'json');
 }
-$('#area').change(function () {
-    var areaId = $(this).val();
-    if (areaId) {
-        getAlineName(areaId);
-    } else {
-        $('#').val('');
-    }
-})
+
 function getAlineName(areaId) {
     $.ajax({
         url: 'api/loan_entry/getAlineName.php',
@@ -853,30 +909,33 @@ function getAlineName(areaId) {
         },
     });
 }
+
 function famNameList() {
     $.post('api/loan_entry/datacheck_name.php', function (response) {
         let nameCheck = '';
         nameCheck += "<option value='0'>Select  Name</option>";
         $.each(response, function (index, val) {
-            nameCheck += "<option value='" + val.fam_name+ "'>" + val.fam_name + "</option>";
+            nameCheck += "<option value='" + val.fam_name + "'>" + val.fam_name + "</option>";
         });
         $('#name_check').empty().append(nameCheck);
 
         getFamilyInfoTable();
     }, 'json');
 }
+
 function aadharList() {
     $.post('api/loan_entry/datacheck_name.php', function (response) {
         let aadharCheck = '';
         aadharCheck += "<option value='0'>Select Aadhar Number</option>";
         $.each(response, function (index, val) {
-            aadharCheck += "<option value='" + val.fam_aadhar+ "'>" + val.fam_aadhar + "</option>";
+            aadharCheck += "<option value='" + val.fam_aadhar + "'>" + val.fam_aadhar + "</option>";
         });
         $('#aadhar_check').empty().append(aadharCheck);
 
         getFamilyInfoTable();
     }, 'json');
 }
+
 function mobileList() {
     $.post('api/loan_entry/datacheck_name.php', function (response) {
         let mobileCheck = '';
@@ -889,6 +948,568 @@ function mobileList() {
         getFamilyInfoTable();
     }, 'json');
 }
+
 // Initial population of name_check dropdown
 
 ///////////////////////////////////////////////Customer Profile js End//////////////////////////////
+
+//////////////////////////////////////////////////////////////// Loan Calculation START //////////////////////////////////////////////////////////////////////
+$(document).ready(function () {
+
+    $('#loan_category_calc').change(function () {
+        let profiType = $('#profit_type_calc').val();
+        if (profiType == '0') { //Loan Calculation
+            getLoanCatDetails($(this).val());
+        }
+    });
+
+    $('#profit_type_calc').change(function () {
+        let profitType = $(this).val();
+        //check whether the loan category selected or not. if not alert and return else call function to get loan category details to show in calculation.
+        let id = $('#loan_category_calc').val();
+        if (profitType == '0' && id == '') {
+            swalError('Alert', 'Kindly select Loan Category');
+            $(this).val('');
+            return;
+        }
+        clearCalcSchemeFields(profitType);
+        $('#profit_type_calc_scheme').show();
+        $('.calc_scheme_title').text((profitType =='0') ? 'Calculation' : 'Scheme');
+        if (profitType == '0') {//Loan Calculation
+            $('.calc').show();
+            $('.scheme').hide();
+            $('.scheme_day').hide();
+            getLoanCatDetails(id);
+        } else if (profitType == '1') { //Scheme
+            $('.calc').hide();
+            $('.scheme').show();
+        } else {
+            $('#profit_type_calc_scheme').hide();
+        }
+    });
+
+    $('#scheme_due_method_calc').change(function(){
+        let schemeDueMethod = $(this).val();
+        $.post('api/common_files/get_due_method_scheme.php', {schemeDueMethod}, function(response){
+            let appendSchemeNameOption = '';
+            appendSchemeNameOption += '<option value="">Select Scheme Name</option>';
+            $.each(response, function (index, val) {
+                let selected = '';
+                let scheme_edit_it = '';
+                if (val.id == scheme_edit_it) {
+                    selected = 'selected';
+                }
+                appendSchemeNameOption += '<option value="' + val.id + '" ' + selected + '>' + val.scheme_name + '</option>';
+            });
+            $('#scheme_name_calc').empty().append(appendSchemeNameOption);
+            clearCalcSchemeFields('1') //to clear fields.
+        },'json');
+
+        if(schemeDueMethod =='2'){
+            $('.scheme_day').show();
+        }else{
+            $('.scheme_day').hide();
+            $('.scheme_day_calc').val('');
+        }
+    });
+
+    $('#scheme_name_calc').change(function(){ //Scheme Name change event
+        var scheme_id = $(this).val();
+        schemeCalAjax(scheme_id);
+    });
+
+    
+    $('#refresh_cal').click(function(){
+        $('.int-diff').text('*');$('.due-diff').text('*')
+        
+        var profit_method = $('#profit_type_calc').val(); // if profit method changes, due type is EMI
+        if(profit_method == '0'){
+            getLoanAfterInterest();
+        }
+
+        var due_type = $('#due_type_calc').val(); //If Changes not found in profit method, calculate loan amt for monthly basis
+        if(due_type == 'Interest'){
+            getLoanInterest();
+        }
+        
+        var due_method_scheme = $('#scheme_due_method_calc').val();
+        if(due_method_scheme == '1'){//Monthly scheme as 1
+            getLoanMonthly();
+        }else if(due_method_scheme == '2'){//Weekly scheme as 2
+            getLoanWeekly();
+        }else if(due_method_scheme == '3'){//Daily scheme as 3
+            getLoanDaily();
+        }
+
+        changeInttoBen();
+        
+        function changeInttoBen(){
+            let due_type = document.getElementById('due_type_calc');
+            let int_label = document.querySelector('interest_amnt_calc');
+            if(due_type.value == 'Interest'){
+                // Set its value to 'Benefit Amount'
+                int_label.previousElementSibling.previousElementSibling.textContent = 'Benefit Amount';
+            }else{
+                int_label.previousElementSibling.previousElementSibling.textContent = 'Interest Amount';
+            }
+        }
+    });
+
+}); //Document END.
+function callLoanCaculationFunctions() {
+    getLoanCategoryName();
+}
+
+function getLoanCategoryName() {
+    $.post('api/common_files/get_loan_category_creation.php', function (response) {
+        let appendLoanCatOption = '';
+        appendLoanCatOption += '<option value="">Select Loan Category</option>';
+        $.each(response, function (index, val) {
+            let selected = '';
+            let loan_cat_edit_it = '';
+            if (val.id == loan_cat_edit_it) {
+                selected = 'selected';
+            }
+            appendLoanCatOption += '<option value="' + val.id + '" ' + selected + '>' + val.loan_category + '</option>';
+        });
+        $('#loan_category_calc').empty().append(appendLoanCatOption);
+    }, 'json');
+}
+
+function getLoanCatDetails(id) {
+    $.post('api/loan_entry/loan_calculation/getLoanCatDetails.php', { id }, function (response) {
+        $('#due_method_calc').val(response[0].due_method);
+
+        if(response[0].due_type == 'emi'){
+            $('#due_type_calc').val('EMI');
+        }else if(response[0].due_type == 'interest'){
+            $('#due_type_calc').val('Interest');
+        }
+        //To set min and maximum 
+        $('.min-max-int').text('* ('+response[0].interest_rate_min+'% - '+response[0].interest_rate_max+'%) ');
+        $('#interest_rate_calc').attr('onChange',`if( parseFloat($(this).val()) > '`+response[0].interest_rate_max+`' ){ alert("Enter Lesser Value"); $(this).val(""); }else
+                            if( parseFloat($(this).val()) < '`+response[0].interest_rate_min+`' && parseFloat($(this).val()) != '' ){ alert("Enter Higher Value"); $(this).val(""); } `); //To check value between rage
+        // $('#interest_rate_calc').val(int_rate_upd);
+        $('.min-max-due').text('* ('+response[0].due_period_min+' - '+response[0].due_period_max+') ');
+        $('#due_period_calc').attr('onChange',`if( parseInt($(this).val()) > '`+response[0].due_period_max+`' ){ alert("Enter Lesser Value"); $(this).val(""); }else
+                            if( parseInt($(this).val()) < '`+response[0].due_period_min+`' && parseInt($(this).val()) != '' ){ alert("Enter Higher Value"); $(this).val(""); } `); //To check value between rage
+        // $('#due_period_calc').val(due_period_upd);
+        
+        $('.min-max-doc').text('* ('+response[0].doc_charge_min+'% - '+response[0].doc_charge_max+'%) ');
+        $('#doc_charge_calc').attr('onChange',`if( parseFloat($(this).val()) > '`+response[0].doc_charge_max+`' ){ alert("Enter Lesser Value"); $(this).val(""); }else
+                            if( parseFloat($(this).val()) < '`+response[0].doc_charge_min+`' && parseFloat($(this).val()) != '' ){ alert("Enter Higher Value"); $(this).val(""); } `); //To check value between rage
+        // $('#doc_charge_calc').val(doc_charge_upd);
+
+        $('.min-max-proc').text('* ('+response[0].processing_fee_min+'% - '+response[0].processing_fee_max+'%) ');
+        $('#processing_fees_calc').attr('onChange',`if( parseFloat($(this).val()) > '`+response[0].processing_fee_max+`' ){ alert("Enter Lesser Value"); $(this).val(""); }else
+                            if( parseFloat($(this).val()) < '`+response[0].processing_fee_min+`' && parseInt($(this).val()) != '' ){ alert("Enter Higher Value"); $(this).val(""); } `); //To check value between rage
+        // $('#processing_fees_calc').val(proc_fee_upd);
+
+    }, 'json');
+}
+
+function clearCalcSchemeFields(type){
+    $('.to_clear').val('');
+    $('.min-max-int').text('*');
+    $('.min-max-due').text('*');
+    $('.min-max-doc').text('*');
+    $('.min-max-proc').text('*');
+    if(type == '1'){ //Scheme
+        $('#interest_rate_calc').prop('readonly',  true);
+        $('#due_period_calc').prop('readonly',  true);
+    }else{
+        $('#interest_rate_calc').prop('readonly',  false);
+        $('#due_period_calc').prop('readonly',  false);
+    }
+}
+
+function schemeCalAjax(id){
+    
+    if(id != ''){
+        $.post('api/loan_category_creation/get_scheme_data.php', { id }, function (response) {
+            //To set min and maximum 
+            $('#interest_rate_calc').val(response[0].interest_rate_percent);// setting readonly due to fixed interest
+            $('#due_period_calc').val(response[0].due_period_percent);// setting readonly due to fixed due period
+            
+            (response[0].doc_charge_type == 'percent') ? type='%' : type = '₹';//Setting symbols
+            $('.min-max-doc').text('* ('+response[0].doc_charge_min +' '+type+' - '+response[0].doc_charge_max+' '+type+') '); //setting min max values in span
+            $('#doc_charge_calc').attr('onChange',`if( parseInt($(this).val()) > '`+response[0].doc_charge_max+`' ){ alert("Enter Lesser Value"); $(this).val(""); }else
+                                    if( parseInt($(this).val()) < '`+response[0].doc_charge_min+`' && parseInt($(this).val()) != '' ){ alert("Enter Higher Value"); $(this).val(""); } `); //To check value between rage
+            // $('#doc_charge_calc').val(doc_charge_upd);
+            
+            (response[0].processing_fee_type == 'percent') ? type='%' : type = '₹';//Setting symbols
+            $('.min-max-proc').text('* ('+response[0].processing_fee_min+' '+type+' - '+response[0].processing_fee_max+' '+type+') ');//setting min max values in span
+            $('#processing_fees_calc').attr('onChange',`if( parseInt($(this).val()) > '`+response[0].processing_fee_max+`' ){ alert("Enter Lesser Value"); $(this).val(""); }else
+                                if( parseInt($(this).val()) < '`+response[0].processing_fee_min+`' && parseInt($(this).val()) != '' ){ alert("Enter Higher Value"); $(this).val(""); } `); //To check value between rage
+            // $('#processing_fees_calc').val(doc_charge_upd);
+    
+        }, 'json');
+
+    }else{
+        clearCalcSchemeFields('1')
+    }
+}
+
+//To Get Loan Calculation for After Interest
+function getLoanAfterInterest(){
+    var loan_amt = $('#loan_amount_calc').val();
+    var int_rate = $('#interest_rate_calc').val();
+    var due_period = $('#due_period_calc').val();
+    var doc_charge = $('#doc_charge_calc').val();
+    var proc_fee = $('#processing_fees_calc').val();
+    
+    $('#loan_amnt_calc').val(parseInt(loan_amt).toFixed(0)); //get loan amt from loan info card
+    $('#principal_amnt_calc').val(parseInt(loan_amt).toFixed(0)); // principal amt as same as loan amt for after interest
+
+    var interest_rate = (parseInt(loan_amt) * (parseFloat(int_rate)/100) * parseInt(due_period)).toFixed(0); //Calculate interest rate 
+    
+    // var roundedInterest = Math.ceil(interest_rate / 5) * 5; //to increase interest rate to nearest multiple of 5
+    // if (roundedInterest < interest_rate) {
+    //     roundedInterest += 5;
+    // }
+    
+    // $('.int-diff').text('* (Difference: +' + parseInt(roundedInterest - interest_rate) + ')'); //To show the difference amount
+    $('#interest_amnt_calc').val(parseInt(interest_rate));
+
+    var tot_amt = parseInt(loan_amt) + parseFloat(interest_rate); //Calculate total amount from principal/loan amt and interest rate
+    $('#total_amnt_calc').val(parseInt(tot_amt).toFixed(0));
+
+    var due_amt = parseInt(tot_amt) / parseInt(due_period);//To calculate due amt by dividing total amount and due period given on loan info
+    var roundDue = Math.ceil(due_amt / 5) * 5; //to increase Due Amt to nearest multiple of 5
+    if (roundDue < due_amt) {
+        roundDue += 5;
+    }
+    $('.due-diff').text('* (Difference: +' + parseInt(roundDue - due_amt) + ')'); //To show the difference amount
+    $('#due_amnt_calc').val(parseInt(roundDue).toFixed(0));
+
+    ////////////////////recalculation of total, principal, interest///////////////////
+    var new_tot = parseInt(roundDue) * due_period;
+    $('#total_amnt_calc').val(new_tot)
+
+    //to get new interest rate using round due amt 
+    let new_int = (roundDue * due_period) - loan_amt;
+    var roundedInterest = Math.ceil(new_int / 5) * 5;
+    if (roundedInterest < new_int) {
+        roundedInterest += 5;
+    }
+
+    $('.int-diff').text('* (Difference: +' + parseInt(roundedInterest - interest_rate) + ')'); //To show the difference amount from old to new
+    $('#interest_amnt_calc').val(parseInt(roundedInterest));
+    
+    var new_princ = parseInt(new_tot) - parseInt(roundedInterest);
+    // $('.princ-diff').text('* (Difference: +' + parseInt(loan_amt - new_princ) + ')'); //To show the difference amount from old to new
+    $('#principal_amnt_calc').val(new_princ);
+    
+    //////////////////////////////////////////////////////////////////////////////////
+
+    var doc_charge = parseInt(loan_amt) * (parseFloat(doc_charge)/100) ; //Get document charge from loan info and multiply with loan amt to get actual doc charge
+    var roundeddoccharge = Math.ceil(doc_charge / 5) * 5; //to increase document charge to nearest multiple of 5
+    if (roundeddoccharge < doc_charge) {
+        roundeddoccharge += 5;
+    }
+    $('.doc-diff').text('* (Difference: +' + parseInt(roundeddoccharge - doc_charge) + ')'); //To show the difference amount from old to new
+    $('#doc_charge_calculate').val(parseInt(roundeddoccharge));
+
+    var proc_fee = parseInt(loan_amt) * (parseFloat(proc_fee)/100);//Get processing fee from loan info and multiply with loan amt to get actual proc fee
+    var roundeprocfee = Math.ceil(proc_fee / 5) * 5; //to increase Processing fee to nearest multiple of 5
+    if (roundeprocfee < proc_fee) {
+        roundeprocfee += 5;
+    }
+    $('.proc-diff').text('* (Difference: +' + parseInt(roundeprocfee - proc_fee) + ')'); //To show the difference amount from old to new
+    $('#processing_fees_calculate').val(parseInt(roundeprocfee));
+
+    var net_cash = parseInt(loan_amt) - parseFloat(roundeddoccharge) - parseFloat(roundeprocfee) ; //Net cash will be calculated by subracting other charges
+    $('#net_cash_calc').val(parseInt(net_cash).toFixed(0));
+}
+
+//To Get Loan Calculation for Interest due type
+function getLoanInterest(){
+    var loan_amt = $('#loan_amount_calc').val();
+    var int_rate = $('#interest_rate_calc').val();
+    var due_period = $('#due_period_calc').val();
+    var doc_charge = $('#doc_charge_calc').val();
+    var proc_fee = $('#processing_fees_calc').val();
+
+    $('#loan_amnt_calc').val(parseInt(loan_amt).toFixed(0)); //get loan amt from loan info card
+    $('#principal_amnt_calc').val(parseInt(loan_amt).toFixed(0)); 
+    
+    $('#total_amnt_calc').val('');
+    $('#due_amnt_calc').val('');//Due period will be monthly by default so no need of due amt
+    
+    var int_amt = (parseInt(loan_amt) * (parseFloat(int_rate)/100)).toFixed(0) ; //Calculate interest rate 
+
+    var roundedInterest = Math.ceil(int_amt / 5) * 5;
+    if (roundedInterest < int_amt) {
+        roundedInterest += 5;
+    }
+    $('.int-diff').text('* (Difference: +' + parseInt(roundedInterest - int_amt) + ')'); //To show the difference amount
+    $('#interest_amnt_calc').val(parseInt(roundedInterest));
+
+    var doc_charge = parseInt(loan_amt) * (parseFloat(doc_charge)/100) ; //Get document charge from loan info and multiply with loan amt to get actual doc charge
+    var roundeddoccharge = Math.ceil(doc_charge / 5) * 5; //to increase document charge to nearest multiple of 5
+    if (roundeddoccharge < doc_charge) {
+        roundeddoccharge += 5;
+    }
+    $('.doc-diff').text('* (Difference: +' + parseInt(roundeddoccharge - doc_charge) + ')'); //To show the difference amount from old to new
+    $('#doc_charge_calculate').val(parseInt(roundeddoccharge));
+
+    var proc_fee = parseInt(loan_amt) * (parseFloat(proc_fee)/100);//Get processing fee from loan info and multiply with loan amt to get actual proc fee
+    // $('.princ-diff').text('* (Difference: +' + parseInt(loan_amt - new_princ) + ')'); //To show the difference amount from old to new
+    var roundeprocfee = Math.ceil(proc_fee / 5) * 5; //to increase Processing fee to nearest multiple of 5
+    if (roundeprocfee < proc_fee) {
+        roundeprocfee += 5;
+    }
+    $('.proc-diff').text('* (Difference: +' + parseInt(roundeprocfee - proc_fee) + ')'); //To show the difference amount from old to new
+    $('#processing_fees_calculate').val(parseInt(roundeprocfee));
+
+    var net_cash = parseInt(loan_amt) - parseInt(doc_charge) - parseInt(proc_fee) ; //Net cash will be calculated by subracting other charges
+    $('#net_cash_calc').val(parseInt(net_cash).toFixed(0));
+}
+
+//To Get Loan Calculation for Monthly Scheme method
+function getLoanMonthly(){ 
+    var loan_amt = $('#loan_amount_calc').val();
+    var int_rate = $('#interest_rate_calc').val();
+    var due_period = $('#due_period_calc').val();
+    var doc_charge = $('#doc_charge_calc').val();
+    var proc_fee = $('#processing_fees_calc').val();
+
+    $('#loan_amnt_calc').val(parseInt(loan_amt).toFixed(0)); //get loan amt from loan info card
+    
+    var int_amt = (parseInt(loan_amt) * (parseFloat(int_rate)/100)).toFixed(0) ; //Calculate interest rate 
+    // $('#interest_amnt_calc').val(parseInt(int_amt));
+    
+    var princ_amt = parseInt(loan_amt) - parseInt(int_amt); // Calculate principal amt by subracting interest amt from loan amt
+    // $('#principal_amnt_calc').val(princ_amt); 
+
+    var tot_amt = parseInt(princ_amt) + parseFloat(int_amt); //Calculate total amount from principal/loan amt and interest rate
+    // $('#total_amnt_calc').val(parseInt(tot_amt).toFixed(0));
+
+    var due_amt = parseInt(tot_amt) / parseInt(due_period);//To calculate due amt by dividing total amount and due period given on loan info
+    var roundDue = Math.ceil(due_amt / 5) * 5; //to increase Due Amt to nearest multiple of 5
+    if (roundDue < due_amt) {
+        roundDue += 5;
+    }
+    $('.due-diff').text('* (Difference: +' + parseInt(roundDue - due_amt) + ')'); //To show the difference amount
+    $('#due_amnt_calc').val(parseInt(roundDue).toFixed(0));
+
+    ////////////////////recalculation of total, principal, interest///////////////////
+
+    var new_tot = parseInt(roundDue) * due_period;
+    $('#total_amnt_calc').val(new_tot)
+
+    //to get new interest rate using round due amt 
+    let new_int = (roundDue * due_period) - princ_amt;
+    
+    var roundedInterest = Math.ceil(new_int / 5) * 5;
+    if (roundedInterest < new_int) {
+        roundedInterest += 5;
+    }
+
+    $('.int-diff').text('* (Difference: +' + parseInt(roundedInterest - int_amt) + ')'); //To show the difference amount
+    $('#interest_amnt_calc').val(parseInt(roundedInterest));
+
+    var new_princ = parseInt(new_tot) - parseInt(roundedInterest);
+    // $('.princ-diff').text('* (Difference: ' + parseInt(new_princ - princ_amt) + ')'); //To show the difference amount from old to new
+    $('#principal_amnt_calc').val(new_princ);
+
+    //////////////////////////////////////////////////////////////////////////////////
+
+    var doc_type = $('.min-max-doc').text(); //Scheme may have document charge in rupees or percentage . so getting symbol from span
+    if(doc_type.includes('₹')){
+        var doc_charge = parseInt(doc_charge) ; //Get document charge from loan info and directly show the document charge provided because of it is in rupees
+    }else if(doc_type.includes('%')){
+        var doc_charge = parseInt(loan_amt) * (parseFloat(doc_charge)/100) ; //Get document charge from loan info and multiply with loan amt to get actual doc charge
+    }
+    var roundeddoccharge = Math.ceil(doc_charge / 5) * 5; //to increase document charge to nearest multiple of 5
+    if (roundeddoccharge < doc_charge) {
+        roundeddoccharge += 5;
+    }
+    $('.doc-diff').text('* (Difference: +' + parseInt(roundeddoccharge - doc_charge) + ')'); //To show the difference amount from old to new
+    $('#doc_charge_calculate').val(parseInt(roundeddoccharge));
+
+    var proc_type = $('.min-max-proc').text(); //Scheme may have Processing fee in rupees or percentage . so getting symbol from span
+    if(proc_type.includes('₹')){
+        var proc_fee =parseInt(proc_fee);//Get processing fee from loan info and directly show the Processing Fee provided because of it is in rupees
+    }else if(proc_type.includes('%')){
+        var proc_fee = parseInt(loan_amt) * (parseInt(proc_fee)/100);//Get processing fee from loan info and multiply with loan amt to get actual proc fee
+    }
+    var roundeprocfee = Math.ceil(proc_fee / 5) * 5; //to increase Processing fee to nearest multiple of 5
+    if (roundeprocfee < proc_fee) {
+        roundeprocfee += 5;
+    }
+    $('.proc-diff').text('* (Difference: +' + parseInt(roundeprocfee - proc_fee) + ')'); //To show the difference amount from old to new
+    $('#processing_fees_calculate').val(parseInt(roundeprocfee));
+
+    var net_cash = parseInt(princ_amt) - parseInt(doc_charge) - parseInt(proc_fee) ; //Net cash will be calculated by subracting other charges
+    $('#net_cash_calc').val(parseInt(net_cash).toFixed(0));
+}
+
+//To Get Loan Calculation for Weekly Scheme method
+function getLoanWeekly(){ 
+    var loan_amt = $('#loan_amount_calc').val();
+    var int_rate = $('#interest_rate_calc').val();
+    var due_period = $('#due_period_calc').val();
+    var doc_charge = $('#doc_charge_calc').val();
+    var proc_fee = $('#processing_fees_calc').val();
+
+    $('#loan_amnt_calc').val(parseInt(loan_amt).toFixed(0)); //get loan amt from loan info card
+    
+    var int_amt = (parseInt(loan_amt) * (parseFloat(int_rate)/100)).toFixed(0) ; //Calculate interest rate 
+    // var roundedInterest = Math.ceil(int_amt / 5) * 5;
+    // if (roundedInterest < int_amt) {
+    //     roundedInterest += 5;
+    // }
+    // $('.int-diff').text('* (Difference: +' + parseInt(roundedInterest - int_amt) + ')'); //To show the difference amount
+    // $('#interest_amnt_calc').val(parseInt(int_amt));
+
+    var princ_amt = parseInt(loan_amt) - parseInt(int_amt); // Calculate principal amt by subracting interest amt from loan amt
+    $('#principal_amnt_calc').val(parseInt(princ_amt).toFixed(0)); 
+
+    var tot_amt = parseInt(princ_amt) + parseFloat(int_amt); //Calculate total amount from principal/loan amt and interest rate
+    $('#total_amnt_calc').val(parseInt(tot_amt).toFixed(0));
+
+    var due_amt = parseInt(tot_amt) / parseInt(due_period);//To calculate due amt by dividing total amount and due period given on loan info
+    var roundDue = Math.ceil(due_amt / 5) * 5; //to increase Due Amt to nearest multiple of 5
+    if (roundDue < due_amt) {
+        roundDue += 5;
+    }
+    $('.due-diff').text('* (Difference: +' + parseInt(roundDue - due_amt) + ')'); //To show the difference amount
+    $('#due_amnt_calc').val(parseInt(roundDue).toFixed(0));
+    
+    ////////////////////recalculation of total, principal, interest///////////////////
+
+        var new_tot = parseInt(roundDue) * due_period;
+        $('#total_amnt_calc').val(new_tot)
+    
+        //to get new interest rate using round due amt 
+        let new_int = (roundDue * due_period) - princ_amt;
+        
+        var roundedInterest = Math.ceil(new_int / 5) * 5;
+        if (roundedInterest < new_int) {
+            roundedInterest += 5;
+        }
+    
+        $('.int-diff').text('* (Difference: +' + parseInt(roundedInterest - int_amt) + ')'); //To show the difference amount
+        $('#interest_amnt_calc').val(parseInt(roundedInterest));
+    
+        var new_princ = parseInt(new_tot) - parseInt(roundedInterest);
+        // $('.princ-diff').text('* (Difference: +' + parseInt(princ_amt - new_princ) + ')'); //To show the difference amount from old to new
+        $('#principal_amnt_calc').val(new_princ);
+
+     //////////////////////////////////////////////////////////////////////////////////
+
+    var doc_type = $('.min-max-doc').text(); //Scheme may have document charge in rupees or percentage . so getting symbol from span
+    if(doc_type.includes('₹')){ 
+        var doc_charge = parseInt(doc_charge) ; //Get document charge from loan info and directly show the document charge provided because of it is in rupees
+    }else if(doc_type.includes('%')){
+        var doc_charge = parseInt(loan_amt) * (parseFloat(doc_charge)/100) ; //Get document charge from loan info and multiply with loan amt to get actual doc charge
+    }
+    var roundeddoccharge = Math.ceil(doc_charge / 5) * 5; //to increase document charge to nearest multiple of 5
+    if (roundeddoccharge < doc_charge) {
+        roundeddoccharge += 5;
+    }
+    $('.doc-diff').text('* (Difference: +' + parseInt(roundeddoccharge - doc_charge) + ')'); //To show the difference amount from old to new
+    $('#doc_charge_calculate').val(parseInt(roundeddoccharge));
+
+    var proc_type = $('.min-max-proc').text();//Scheme may have Processing fee in rupees or percentage . so getting symbol from span
+    if(proc_type.includes('₹')){
+        var proc_fee =parseInt(proc_fee);//Get processing fee from loan info and directly show the Processing Fee provided because of it is in rupees
+    }else if(proc_type.includes('%')){
+        var proc_fee = parseInt(loan_amt) * (parseInt(proc_fee)/100);//Get processing fee from loan info and multiply with loan amt to get actual proc fee
+    }
+    var roundeprocfee = Math.ceil(proc_fee / 5) * 5; //to increase Processing fee to nearest multiple of 5
+    if (roundeprocfee < proc_fee) {
+        roundeprocfee += 5;
+    }
+    $('.proc-diff').text('* (Difference: +' + parseInt(roundeprocfee - proc_fee) + ')'); //To show the difference amount from old to new
+    $('#processing_fees_calculate').val(parseInt(roundeprocfee));
+
+    var net_cash = parseInt(princ_amt) - parseInt(doc_charge) - parseInt(proc_fee) ; //Net cash will be calculated by subracting other charges
+    $('#net_cash_calc').val(parseInt(net_cash).toFixed(0));
+}
+
+//To Get Loan Calculation for Daily Scheme method
+function getLoanDaily(){ 
+    var loan_amt = $('#loan_amount_calc').val();
+    var int_rate = $('#interest_rate_calc').val();
+    var due_period = $('#due_period_calc').val();
+    var doc_charge = $('#doc_charge_calc').val();
+    var proc_fee = $('#processing_fees_calc').val();
+
+    $('#loan_amnt_calc').val(parseInt(loan_amt).toFixed(0)); //get loan amt from loan info card
+    
+    var int_amt = (parseInt(loan_amt) * (parseFloat(int_rate)/100)).toFixed(0) ; //Calculate interest rate 
+    // var roundedInterest = Math.ceil(int_amt / 5) * 5;
+    // if (roundedInterest < int_amt) {
+    //     roundedInterest += 5;
+    // }
+    // $('.int-diff').text('* (Difference: +' + parseInt(roundedInterest - int_amt) + ')'); //To show the difference amount
+    $('#interest_amnt_calc').val(parseInt(int_amt));
+
+    var princ_amt = parseInt(loan_amt) - parseInt(int_amt); // Calculate principal amt by subracting interest amt from loan amt
+    $('#principal_amnt_calc').val(parseInt(princ_amt).toFixed(0)); 
+
+    var tot_amt = parseInt(princ_amt) + parseFloat(int_amt); //Calculate total amount from principal/loan amt and interest rate
+    $('#total_amnt_calc').val(parseInt(tot_amt).toFixed(0));
+
+    var due_amt = parseInt(tot_amt) / parseInt(due_period);//To calculate due amt by dividing total amount and due period given on loan info
+    var roundDue = Math.ceil(due_amt / 5) * 5; //to increase Due Amt to nearest multiple of 5
+    if (roundDue < due_amt) {
+        roundDue += 5;
+    }
+    $('.due-diff').text('* (Difference: +' + parseInt(roundDue - due_amt) + ')'); //To show the difference amount
+    $('#due_amnt_calc').val(parseInt(roundDue).toFixed(0));
+
+    ////////////////////recalculation of total, principal, interest///////////////////
+
+    var new_tot = parseInt(roundDue) * due_period;
+    $('#total_amnt_calc').val(new_tot)
+
+    //to get new interest rate using round due amt 
+    let new_int = (roundDue * due_period) - princ_amt;
+    
+    var roundedInterest = Math.ceil(new_int / 5) * 5;
+    if (roundedInterest < new_int) {
+        roundedInterest += 5;
+    }
+
+    $('.int-diff').text('* (Difference: +' + parseInt(roundedInterest - int_amt) + ')'); //To show the difference amount
+    $('#interest_amnt_calc').val(parseInt(roundedInterest));
+
+    var new_princ = parseInt(new_tot) - parseInt(roundedInterest);
+    // $('.princ-diff').text('* (Difference: +' + parseInt(princ_amt - new_princ) + ')'); //To show the difference amount from old to new
+    $('#principal_amnt_calc').val(new_princ);
+
+ //////////////////////////////////////////////////////////////////////////////////
+    
+    var doc_type = $('.min-max-doc').text(); //Scheme may have document charge in rupees or percentage . so getting symbol from span
+    if(doc_type.includes('₹')){ 
+        var doc_charge = parseInt(doc_charge) ; //Get document charge from loan info and directly show the document charge provided because of it is in rupees
+    }else if(doc_type.includes('%')){
+        var doc_charge = parseInt(loan_amt) * (parseFloat(doc_charge)/100) ; //Get document charge from loan info and multiply with loan amt to get actual doc charge
+    }
+    var roundeddoccharge = Math.ceil(doc_charge / 5) * 5; //to increase document charge to nearest multiple of 5
+    if (roundeddoccharge < doc_charge) {
+        roundeddoccharge += 5;
+    }
+    $('.doc-diff').text('* (Difference: +' + parseInt(roundeddoccharge - doc_charge) + ')'); //To show the difference amount from old to new
+    $('#doc_charge_calculate').val(parseInt(roundeddoccharge));
+
+    var proc_type = $('.min-max-proc').text();//Scheme may have Processing fee in rupees or percentage . so getting symbol from span
+    if(proc_type.includes('₹')){
+        var proc_fee =parseInt(proc_fee);//Get processing fee from loan info and directly show the Processing Fee provided because of it is in rupees
+    }else if(proc_type.includes('%')){
+        var proc_fee = parseInt(loan_amt) * (parseInt(proc_fee)/100);//Get processing fee from loan info and multiply with loan amt to get actual proc fee
+    }
+    var roundeprocfee = Math.ceil(proc_fee / 5) * 5; //to increase Processing fee to nearest multiple of 5
+    if (roundeprocfee < proc_fee) {
+        roundeprocfee += 5;
+    }
+    $('.proc-diff').text('* (Difference: +' + parseInt(roundeprocfee - proc_fee) + ')'); //To show the difference amount from old to new
+    $('#processing_fees_calculate').val(parseInt(roundeprocfee));
+
+    var net_cash = parseInt(princ_amt) - parseInt(doc_charge) - parseInt(proc_fee) ; //Net cash will be calculated by subracting other charges
+    $('#net_cash_calc').val(parseInt(net_cash).toFixed(0));
+}
+//////////////////////////////////////////////////////////////// Loan Calculation END //////////////////////////////////////////////////////////////////////
