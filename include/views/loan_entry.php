@@ -554,7 +554,7 @@
 
 <!-- -------------------------------------- Loan Calculation START ------------------------------ -->
 <form id="loan_entry_loan_calculation" name="loan_entry_loan_calculation">
-        <input type="hidden" id="loan_entry_id">
+        <input type="hidden" id="loan_calculation_id">
         <div class="row gutters">
             <div class="col-12">
                 <!--- -------------------------------------- Loan Info ------------------------------- -->
@@ -567,7 +567,7 @@
                             <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
                                 <div class="form-group">
                                     <label for="loan_id_calc"> Loan ID</label><span class="text-danger">*</span>
-                                    <input type="text" class="form-control" id="loan_id_calc" name="loan_id_calc" tabindex="1" readonly>
+                                    <input type="text" class="form-control" id="loan_id_calc" name="loan_id_calc" tabindex="1" value="LD" readonly>
                                 </div>
                             </div>
                             <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
@@ -833,6 +833,7 @@
                                 <div class="form-group">
                                     <label for="doc_need_calc">Document Need</label><span class="text-danger">*</span>
                                     <input type="text" class="form-control" id="doc_need_calc" name="doc_need_calc" tabindex="28">
+                                    <input type="hidden" id="all_doc_need" name="all_doc_need">
                                 </div>
                             </div>
                             <div class="col-xl-1 col-lg-1 col-md-1 col-sm-1 col-12">
@@ -846,7 +847,7 @@
 
                         <div class="row">
                             <div class="col-12">
-                                <table id="doc_need_table" class="custom-table">
+                                <table id="doc_need_table" class="table custom-table">
                                     <thead>
                                         <tr>
                                             <th>S.No.</th>

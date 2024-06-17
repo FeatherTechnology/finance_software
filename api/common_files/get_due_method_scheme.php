@@ -1,8 +1,14 @@
 <?php
+//also Using In Loan Entry - Loan Calculation.
 require "../../ajaxconfig.php";
 $scheme_arr = array();
 $schemeDueMethod = $_POST['schemeDueMethod'];
-$qry = $pdo->query("SELECT `id`,`scheme_name`, `due_method`, `profit_method`, `interest_rate_percent`, `due_period_percent`, `doc_charge_type`, `doc_charge_min`, `doc_charge_max`, `processing_fee_type`, `processing_fee_min`, `processing_fee_max`,`overdue_penalty_percent` FROM `scheme` WHERE due_method ='$schemeDueMethod' ");
+$loanCatId = $_POST['loanCatId'];
+$qry = $pdo->query("SELECT s.id, s.scheme_name
+FROM `loan_category_creation` lcc 
+JOIN scheme s ON FIND_IN_SET(s.id, lcc.scheme_name)
+WHERE lcc.id = '$loanCatId' AND s.due_method = '$schemeDueMethod'
+GROUP BY s.id ");
 if ($qry->rowCount() > 0) {
     $scheme_arr = $qry->fetchAll(PDO::FETCH_ASSOC);
 }
