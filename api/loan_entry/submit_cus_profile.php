@@ -46,7 +46,7 @@ $res_type=$_POST['res_type'];
 $res_detail=$_POST['res_detail'];
 $res_address=$_POST['res_address'];
 $native_address=$_POST['native_address'];
-$ocupation=$_POST['occupation'];
+$occupation=$_POST['occupation'];
 $occ_detail=$_POST['occ_detail'];
 $occ_income=$_POST['occ_income'];
 $occ_address=$_POST['occ_address'];
@@ -63,7 +63,8 @@ if($loan_id !=''){
     $result = 0; //update
 
 }else{
-    $qry = $pdo->query("INSERT INTO `loan_entry`(`cus_id`, `cus_name`, `gender`, `dob`, `age`, `mobile1`, `mobile2`, `pic`, `guarantor_name`, `gu_pic`, `cus_data`, `cus_status`, `res_type`, `res_detail`, `res_address`, `native_address`, `occupation`, `occ_detail`, `occ_income`, `occ_address`, `area_confirm`, `area`, `line`, `cus_limit`, `about_cus`, `insert_login_id`, `created_on`, ) VALUES ('$cus_id','$cus_name','$gender','$dob','$age','$mobile1','$mobile2','$picture','$guarantor_name','$gpicture','$cus_data','$cus_status','$res_type','$res_detail','$res_address','$native_address','$occupation','$occ_detail','$occ_income','$occ_address','$area_confirm','$area','$line','$cus_limit','$about_cus','$user_id',now())");
+    echo("INSERT INTO `loan_entry`(`cus_id`, `cus_name`, `gender`, `dob`, `age`, `mobile1`, `mobile2`, `pic`, `guarantor_name`, `gu_pic`, `cus_data`, `cus_status`, `res_type`, `res_detail`, `res_address`, `native_address`, `occupation`, `occ_detail`, `occ_income`, `occ_address`, `area_confirm`, `area`, `line`, `cus_limit`, `about_cus`, `insert_login_id`, `created_on`, ) VALUES ('$cus_id','$cus_name','$gender','$dob','$age','$mobile1','$mobile2','$picture','$guarantor_name','$gpicture','$cus_data','$cus_status','$res_type','$res_detail','$res_address','$native_address','$occupation','$occ_detail','$occ_income','$occ_address','$area_confirm','$area','$line','$cus_limit','$about_cus','$user_id',now())");
+    $qry = $pdo->query("INSERT INTO `loan_entry`(`cus_id`, `cus_name`, `gender`, `dob`, `age`, `mobile1`, `mobile2`, `pic`, `guarantor_name`, `gu_pic`, `cus_data`, `cus_status`, `res_type`, `res_detail`, `res_address`, `native_address`, `occupation`, `occ_detail`, `occ_income`, `occ_address`, `area_confirm`, `area`, `line`, `cus_limit`, `about_cus`, `insert_login_id`, `created_on` ) VALUES ('$cus_id','$cus_name','$gender','$dob','$age','$mobile1','$mobile2','$picture','$guarantor_name','$gpicture','$cus_data','$cus_status','$res_type','$res_detail','$res_address','$native_address','$occupation','$occ_detail','$occ_income','$occ_address','$area_confirm','$area','$line','$cus_limit','$about_cus','$user_id',now())");
     $result = 1; //Insert
 }
 echo json_encode($result);

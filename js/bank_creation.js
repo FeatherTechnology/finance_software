@@ -177,7 +177,7 @@ function getStatusChange(id) {
     }, 'json');
 }
 
-$('button[type="reset"], #back_btn').click(function (event) {
+$('#family_info, #back_btn').click(function (event) {
     // event.preventDefault();
     $('input, textarea').val('');
     underBranchChoices.clearInput();

@@ -270,8 +270,8 @@
                     <div class="card-body">
                         <div class="row">
                             <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
-                                <div class="form-group" id="cus_info">
-                                    <table class="table custom-table">
+                                <div class="form-group">
+                                    <table id="cus_info"class="table custom-table">
                                         <thead>
                                             <tr>
                                                 <th>S.NO</th>
@@ -295,8 +295,8 @@
                     <div class="card-body">
                         <div class="row">
                             <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
-                                <div class="form-group" id="family_info">
-                                    <table class="table custom-table">
+                                <div class="form-group">
+                                    <table id="family_info" class="table custom-table">
                                         <thead>
                                             <tr>
                                                 <th>S.NO</th>
@@ -329,7 +329,7 @@
                                 <div class="form-group">
                                     <label for="res_type">Residential Type</label>
                                     <select type="text" class="form-control" id="res_type" name="res_type" tabindex="18">
-                                        <option value="Select Residential Type">Select Residential Type</option>
+                                        <option value="0">Select Residential Type</option>
                                         <option value="1">Own</option>
                                         <option value="2">Rental</option>
                                         <option value="3">Lease</option>
@@ -380,7 +380,7 @@
                             <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
                                 <div class="form-group">
                                     <label for="occ_income"> Income</label>
-                                    <input type="text" class="form-control" id="income" name="occ_income" placeholder="Enter Income" tabindex="24">
+                                    <input type="text" class="form-control" id="occ_income" name="occ_income" placeholder="Enter Income" tabindex="24">
                                 </div>
                             </div>
                             <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
@@ -548,7 +548,7 @@
                 <div class="text-right">
 
                     <button type="submit" name="submit_entry_creation" id="submit_entry_creation" class="btn btn-primary" value="Submit" tabindex="34"><span class="icon-check"></span>&nbsp;Submit</button>
-                    <button type="reset" class="btn btn-outline-secondary" tabindex="35">Clear</button>
+                    <button type="reset" id ="clear_loan"class="btn btn-outline-secondary" tabindex="35">Clear</button>
                 </div>
             </div>
         </div>
