@@ -342,9 +342,9 @@
                                     <label for="scheme_due_method">Due Method</label><span class="text-danger">*</span>
                                     <select class="form-control" id="scheme_due_method" name="scheme_due_method" tabindex="3">
                                         <option value="">Select Due Method</option>
-                                        <option value="monthly">Monthly</option>
-                                        <option value="weekly">Weekly</option>
-                                        <option value="daily">Daily</option>
+                                        <option value="1">Monthly</option>
+                                        <option value="2">Weekly</option>
+                                        <option value="3">Daily</option>
                                     </select>
                                 </div>
                             </div>
