@@ -373,3 +373,18 @@ function validateEmail(emailInput, selector) {
 		$('#' + selector).val('');
 	}
 }
+
+function setDropdownScripts() {
+	$('.dropdown').off().click(function (event) {
+	event.preventDefault();
+	$('.dropdown').not(this).removeClass('active');
+	$(this).toggleClass('active');
+	});
+	
+	$(document).click(function (event) {
+	var target = $(event.target);
+	if (!target.closest('.dropdown').length) {
+	$('.dropdown').removeClass('active');
+	}
+	});
+	}

@@ -1,13 +1,13 @@
 <?php
 require '../../ajaxconfig.php';
-
+$cus_id = $_POST['cus_id'];
 $family_list_arr = array();
 $i = 0;
 $live_arr = [1 => 'Live', 2 => 'Alive'];
-$qry = $pdo->query("SELECT id,fam_name,fam_relationship,fam_age,fam_live,fam_occupation,fam_aadhar,fam_mobile FROM family_info ");
+$qry = $pdo->query("SELECT id,fam_name,fam_relationship,fam_age,fam_live,fam_occupation,fam_aadhar,fam_mobile FROM family_info WHERE cus_id = '$cus_id' ");
 
 if ($qry->rowCount() > 0) {
-    // Define the default value for cases where fam_live doesn't match any key in $live_arr
+
     $default_live = "Unknown";
 
     while ($row = $qry->fetch(PDO::FETCH_ASSOC)) {
@@ -35,5 +35,7 @@ if ($qry->rowCount() > 0) {
 
 echo json_encode($family_list_arr);
 $pdo = null; // Close Connection
-?>
+
+
+
 

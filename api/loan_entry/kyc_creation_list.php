@@ -1,6 +1,7 @@
 <?php
 require '../../ajaxconfig.php';
 
+$cus_id = $_POST['cus_id'];
 $kyc_list_arr = array();
 $i = 0;
 
@@ -20,7 +21,7 @@ try {
                                ki.upload 
                         FROM kyc_info ki
                         JOIN proof_info pi ON ki.proof = pi.id
-                        LEFT JOIN family_info fi ON ki.fam_mem = fi.id");
+                        LEFT JOIN family_info fi ON ki.fam_mem = fi.id WHERE ki.cus_id = '$cus_id'");
 
     if (!$qry) {
         throw new Exception("Database query failed: " . implode(" - ", $pdo->errorInfo()));

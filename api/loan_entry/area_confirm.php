@@ -6,7 +6,7 @@ $area_confirm = $_POST['area_confirm'];
 
 $response = array();
 if ($area_confirm == '1') {
-    $stmt = $pdo->prepare("SELECT `res_type`, `res_detail`, `res_address`, `native_address` FROM `loan_entry` WHERE `cus_id` = ?");
+    $stmt = $pdo->prepare("SELECT `res_type`, `res_detail`, `res_address`, `native_address` FROM `customer_profile` WHERE `cus_id` = ?");
     $stmt->execute([$cus_id]);
     $row = $stmt->fetch(PDO::FETCH_ASSOC);
 
@@ -18,7 +18,7 @@ if ($area_confirm == '1') {
     }
 } elseif ($area_confirm == '2') {
     // Fetch occupation info from the database
-    $stmt = $pdo->prepare("SELECT `occupation`, `occ_detail`, `occ_income`, `occ_address` FROM `loan_entry` WHERE `cus_id` = ?");
+    $stmt = $pdo->prepare("SELECT `occupation`, `occ_detail`, `occ_income`, `occ_address` FROM `customer_profile` WHERE `cus_id` = ?");
     $stmt->execute([$cus_id]);
     $row = $stmt->fetch(PDO::FETCH_ASSOC);
 

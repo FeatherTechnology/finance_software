@@ -16,7 +16,7 @@
     <div class="card-body">
         <div class="col-12">
 
-            <table id="loan_table" class="table custom-table">
+            <table id="loan_entry_table" class="table custom-table">
                 <thead>
                     <tr>
                         <th>S.NO</th>
@@ -59,7 +59,7 @@
     </div>
     <br>
     <form id="loan_entry_customer_profile" name="loan_entry_customer_profile">
-        <input type="hidden" id="loan_id">
+        <input type="hidden" id="customer_profile_id" >
         <div class="row gutters">
             <div class="col-12">
                 <div class="card">
@@ -182,6 +182,7 @@
                                     <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
                                         <div class="form-group">
                                             <label for="guarantor_name"> Guarantor Name</label><span class="text-danger">*</span>
+                                            <input type="hidden" id="guarantor_name_edit" >
                                             <select type="text" class="form-control" id="guarantor_name" name="guarantor_name" tabindex="10">
                                                 <option value="Select Guarantor Name">Select Guarantor Name</option>
                                             </select>
@@ -274,7 +275,7 @@
                                     <table id="cus_info"class="table custom-table">
                                         <thead>
                                             <tr>
-                                                <th>S.NO</th>
+                                                <th width="20">S.NO</th>
                                                 <th>Customer ID</th>
                                                 <th>Customer Name</th>
                                                 <th>Mobile Number</th>
@@ -299,7 +300,7 @@
                                     <table id="family_info" class="table custom-table">
                                         <thead>
                                             <tr>
-                                                <th>S.NO</th>
+                                                <th width="20">S.NO</th>
                                                 <th>Customer ID</th>
                                                 <th>Name</th>
                                                 <th>Relationship</th>
@@ -412,6 +413,7 @@
                             <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
                                 <div class="form-group">
                                     <label for="area">Area</label><span class="text-danger">*</span>
+                                    <input type="hidden" id="area_edit">
                                     <select type="text" class="form-control" id="area" name="area" tabindex="27">
                                         <option value="Select Area">Select Area</option>
                                     </select>
@@ -547,7 +549,7 @@
             <div class="col-md-12 ">
                 <div class="text-right">
 
-                    <button type="submit" name="submit_entry_creation" id="submit_entry_creation" class="btn btn-primary" value="Submit" tabindex="34"><span class="icon-check"></span>&nbsp;Submit</button>
+                    <button type="submit" name="submit_customer_profile" id="submit_customer_profile" class="btn btn-primary" value="Submit" tabindex="34"><span class="icon-check"></span>&nbsp;Submit</button>
                     <button type="reset" id ="clear_loan"class="btn btn-outline-secondary" tabindex="35">Clear</button>
                 </div>
             </div>
@@ -566,7 +568,7 @@
         <div class="modal-content" style="background-color: white">
             <div class="modal-header">
                 <h5 class="modal-title" id="exampleModalLongTitle">Add Family Info</h5>
-                <button type="button" class="close" data-dismiss="modal"  aria-label="Close"  onclick=" getFamilyInfoTable()" tabindex="1">
+                <button type="button" class="close" data-dismiss="modal"  aria-label="Close"  onclick="getFamilyInfoTable()" tabindex="1">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
@@ -663,7 +665,7 @@
             </div>
 
             <div class="modal-footer">
-                <button class="btn btn-secondary" data-dismiss="modal" tabindex="1" onclick=" getFamilyInfoTable()">Close</button>
+                <button class="btn btn-secondary" data-dismiss="modal" tabindex="1" onclick="getFamilyInfoTable()">Close</button>
             </div>
         </div>
     </div>

@@ -5,16 +5,12 @@ $response = array();
 
 if (isset($_POST['aline_id'])) {
     $areaId = $_POST['aline_id'];
-
-    // Prepare and execute the query
-    $stmt = $pdo->prepare("
+    $stmt = $pdo->query("
         SELECT lnc.linename 
-        FROM area_creation ac
-        JOIN line_name_creation lnc ON FIND_IN_SET(lnc.id, ac.line_id)
-        WHERE ac.id = ? AND ac.status = 1
+        FROM `area_creation` ac 
+        LEFT JOIN line_name_creation lnc ON ac.line_id = lnc.id
+        WHERE FIND_IN_SET('$areaId', ac.area_id)
     ");
-    
-    $stmt->execute([$areaId]);
 
     // Fetch the result
     if ($stmt->rowCount() > 0) {
