@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jun 11, 2024 at 10:07 AM
+-- Generation Time: Jun 19, 2024 at 06:28 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -59,6 +59,25 @@ CREATE TABLE `area_creation` (
   `update_on` date DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+--
+-- Triggers `area_creation`
+--
+DELIMITER $$
+CREATE TRIGGER `before_delete_area_creation` BEFORE DELETE ON `area_creation` FOR EACH ROW BEGIN
+    DECLARE lineCount INT;
+    
+    SELECT COUNT(*) INTO lineCount
+    FROM users
+    WHERE FIND_IN_SET(OLD.line_id, line) > 0;
+    
+    IF lineCount > 0 THEN
+        SIGNAL SQLSTATE '45000' 
+        SET MESSAGE_TEXT = 'Cannot delete Area creation because line_id is referenced in users table';
+    END IF;
+END
+$$
+DELIMITER ;
+
 -- --------------------------------------------------------
 
 --
@@ -91,7 +110,6 @@ CREATE TABLE `bank_creation` (
   `branch_name` varchar(100) NOT NULL,
   `qr_code` varchar(100) NOT NULL,
   `gpay` varchar(100) NOT NULL,
-  `company_name` varchar(100) NOT NULL,
   `under_branch` varchar(255) NOT NULL,
   `status` varchar(100) NOT NULL DEFAULT '1',
   `insert_login_id` varchar(100) NOT NULL,
@@ -109,6 +127,7 @@ CREATE TABLE `bank_creation` (
 
 CREATE TABLE `bank_info` (
   `id` int(11) NOT NULL,
+  `cus_id` varchar(100) NOT NULL,
   `bank_name` varchar(100) NOT NULL,
   `branch_name` varchar(100) NOT NULL,
   `acc_holder_name` varchar(100) NOT NULL,
@@ -140,6 +159,7 @@ CREATE TABLE `branch_creation` (
   `email_id` varchar(100) NOT NULL,
   `mobile_number` varchar(100) NOT NULL,
   `whatsapp` varchar(100) NOT NULL,
+  `landline_code` varchar(50) DEFAULT NULL,
   `landline` varchar(100) NOT NULL,
   `insert_login_id` int(11) NOT NULL,
   `update_login_id` int(11) NOT NULL,
@@ -172,6 +192,60 @@ CREATE TABLE `company_creation` (
   `update_user_id` int(11) DEFAULT NULL,
   `created_date` datetime DEFAULT current_timestamp(),
   `updated_date` date DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `customer_profile`
+--
+
+CREATE TABLE `customer_profile` (
+  `id` int(11) NOT NULL,
+  `cus_id` varchar(100) NOT NULL,
+  `cus_name` varchar(100) NOT NULL,
+  `gender` varchar(50) NOT NULL,
+  `dob` date NOT NULL,
+  `age` varchar(100) NOT NULL,
+  `mobile1` varchar(100) NOT NULL,
+  `mobile2` varchar(100) NOT NULL,
+  `pic` varchar(100) NOT NULL,
+  `guarantor_name` varchar(100) NOT NULL,
+  `gu_pic` varchar(100) NOT NULL,
+  `cus_data` varchar(100) NOT NULL,
+  `cus_status` varchar(100) NOT NULL,
+  `res_type` varchar(100) DEFAULT NULL,
+  `res_detail` varchar(100) NOT NULL,
+  `res_address` varchar(100) NOT NULL,
+  `native_address` varchar(100) NOT NULL,
+  `occupation` varchar(100) NOT NULL,
+  `occ_detail` varchar(100) NOT NULL,
+  `occ_income` varchar(100) NOT NULL,
+  `occ_address` varchar(100) NOT NULL,
+  `area_confirm` varchar(100) NOT NULL,
+  `area` int(100) NOT NULL,
+  `line` varchar(100) NOT NULL,
+  `cus_limit` varchar(100) NOT NULL,
+  `about_cus` varchar(100) NOT NULL,
+  `insert_login_id` int(11) NOT NULL,
+  `update_login_id` int(11) NOT NULL,
+  `created_on` date DEFAULT NULL,
+  `updated_on` date DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `designation`
+--
+
+CREATE TABLE `designation` (
+  `id` int(11) NOT NULL,
+  `designation` varchar(150) NOT NULL,
+  `insert_login_id` int(11) NOT NULL,
+  `update_login_id` int(11) DEFAULT NULL,
+  `created_on` date DEFAULT NULL,
+  `updated_on` date DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -235,11 +309,24 @@ INSERT INTO `districts` (`id`, `state_id`, `district_name`, `status`) VALUES
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `document_need`
+--
+
+CREATE TABLE `document_need` (
+  `id` int(11) NOT NULL,
+  `cus_profile_id` int(11) NOT NULL,
+  `document_name` varchar(255) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `family_info`
 --
 
 CREATE TABLE `family_info` (
   `id` int(11) NOT NULL,
+  `cus_id` varchar(100) NOT NULL,
   `fam_name` varchar(100) NOT NULL,
   `fam_relationship` varchar(100) NOT NULL,
   `fam_age` varchar(100) NOT NULL,
@@ -261,9 +348,10 @@ CREATE TABLE `family_info` (
 
 CREATE TABLE `kyc_info` (
   `id` int(11) NOT NULL,
+  `cus_id` varchar(100) NOT NULL,
   `proof_of` varchar(100) NOT NULL,
-  `kyc_relationship` varchar(100) NOT NULL,
-  `proof` varchar(100) NOT NULL,
+  `fam_mem` int(11) DEFAULT NULL,
+  `proof` int(11) NOT NULL,
   `proof_detail` varchar(100) NOT NULL,
   `upload` varchar(100) NOT NULL,
   `insert_login_id` int(11) NOT NULL,
@@ -288,6 +376,25 @@ CREATE TABLE `line_name_creation` (
   `created_on` datetime NOT NULL DEFAULT current_timestamp(),
   `updated_on` date DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Triggers `line_name_creation`
+--
+DELIMITER $$
+CREATE TRIGGER `before_delete_line` BEFORE DELETE ON `line_name_creation` FOR EACH ROW BEGIN
+    DECLARE lineCount INT;
+    
+    SELECT COUNT(*) INTO lineCount
+    FROM users
+    WHERE FIND_IN_SET(OLD.id, line) > 0;
+    
+    IF lineCount > 0 THEN
+        SIGNAL SQLSTATE '45000' 
+        SET MESSAGE_TEXT = 'Cannot delete line_id because it is referenced in users table';
+    END IF;
+END
+$$
+DELIMITER ;
 
 -- --------------------------------------------------------
 
@@ -332,6 +439,70 @@ CREATE TABLE `loan_category_creation` (
   `updated_on` date DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+--
+-- Triggers `loan_category_creation`
+--
+DELIMITER $$
+CREATE TRIGGER `before_loan_category_creation` BEFORE DELETE ON `loan_category_creation` FOR EACH ROW BEGIN
+    DECLARE loancatCount INT;
+    
+    SELECT COUNT(*) INTO loancatCount
+    FROM users
+    WHERE FIND_IN_SET(OLD.id, loan_category) > 0;
+    
+    IF loancatCount > 0 THEN
+        SIGNAL SQLSTATE '45000' 
+        SET MESSAGE_TEXT = 'Cannot delete Loan Category Creation because it is referenced in users table';
+    END IF;
+END
+$$
+DELIMITER ;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `loan_entry_loan_calculation`
+--
+
+CREATE TABLE `loan_entry_loan_calculation` (
+  `id` int(11) NOT NULL,
+  `cus_profile_id` int(11) NOT NULL,
+  `loan_id` varchar(50) NOT NULL,
+  `loan_category` varchar(50) NOT NULL,
+  `category_info` varchar(255) NOT NULL,
+  `loan_amount` int(150) NOT NULL,
+  `profit_type` int(11) NOT NULL,
+  `due_method` varchar(50) DEFAULT NULL,
+  `due_type` varchar(50) DEFAULT NULL,
+  `profit_method` varchar(50) DEFAULT NULL,
+  `scheme_due_method` varchar(50) DEFAULT NULL,
+  `scheme_day` varchar(50) DEFAULT NULL,
+  `scheme_name` varchar(100) DEFAULT NULL,
+  `interest_rate` int(150) NOT NULL,
+  `due_period` int(100) NOT NULL,
+  `doc_charge` int(100) NOT NULL,
+  `processing_fees` int(100) NOT NULL,
+  `loan_amnt` int(150) NOT NULL,
+  `principal_amnt` int(150) NOT NULL,
+  `interest_amnt` int(150) NOT NULL,
+  `total_amnt` int(150) NOT NULL,
+  `due_amnt` int(150) NOT NULL,
+  `doc_charge_calculate` int(150) NOT NULL,
+  `processing_fees_calculate` int(150) NOT NULL,
+  `net_cash` int(150) NOT NULL,
+  `loan_date` date NOT NULL,
+  `due_startdate` date NOT NULL,
+  `maturity_date` date NOT NULL,
+  `referred` int(11) NOT NULL,
+  `agent_id` varchar(100) DEFAULT NULL,
+  `agent_name` varchar(150) DEFAULT NULL,
+  `cus_status` int(11) NOT NULL DEFAULT 0,
+  `insert_login_id` int(11) NOT NULL,
+  `update_login_id` int(11) DEFAULT NULL,
+  `created_on` date DEFAULT NULL,
+  `updated_on` date DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
 -- --------------------------------------------------------
 
 --
@@ -353,7 +524,7 @@ INSERT INTO `menu_list` (`id`, `menu`, `link`, `icon`) VALUES
 (1, 'Master', 'master', 'globe'),
 (2, 'Administration', 'admin', 'cog'),
 (3, 'Loan Entry', 'loan_entry', 'cog'),
-(4, 'Approval', 'approval', 'earth'),
+(4, 'Approval', 'approval', 'globe'),
 (5, 'Loan Issue', 'loan_issue', 'globe'),
 (6, 'Collection', 'collection', 'globe'),
 (7, 'Closed', 'closed', 'globe'),
@@ -387,12 +558,27 @@ CREATE TABLE `proof_info` (
 
 CREATE TABLE `property_info` (
   `id` int(11) NOT NULL,
+  `cus_id` varchar(100) NOT NULL,
   `property` varchar(100) NOT NULL,
   `property_detail` varchar(100) NOT NULL,
-  `property_holder` varchar(100) NOT NULL,
-  `prop_relationship` varchar(100) NOT NULL,
+  `property_holder` int(11) NOT NULL,
   `insert_login_id` int(11) NOT NULL,
   `update_login_id` int(11) NOT NULL,
+  `created_on` date DEFAULT NULL,
+  `updated_on` date DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `role`
+--
+
+CREATE TABLE `role` (
+  `id` int(11) NOT NULL,
+  `role` varchar(150) NOT NULL,
+  `insert_login_id` int(11) NOT NULL,
+  `update_login_id` int(11) DEFAULT NULL,
   `created_on` date DEFAULT NULL,
   `updated_on` date DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
@@ -478,9 +664,10 @@ INSERT INTO `sub_menu_list` (`id`, `main_menu`, `sub_menu`, `link`, `icon`) VALU
 (14, 9, 'Accounts', 'accounts', 'upload-to-cloud'),
 (15, 10, 'Customer', 'update_customer', 'upload-to-cloud'),
 (16, 11, 'Customer Data', 'customer_data', 'upload-to-cloud'),
-(17, 12, 'Search', 'search', 'upload-to-cloud'),
+(17, 12, 'Search', 'search_screen', 'upload-to-cloud'),
 (18, 13, 'Reports', 'reports', 'upload-to-cloud'),
-(19, 10, 'Document', 'update_document', 'cloud');
+(19, 10, 'Document', 'update_document', 'cloud'),
+(20, 6, 'Collection Access', 'collection_access', 'upload-to-cloud');
 
 -- --------------------------------------------------------
 
@@ -832,8 +1019,8 @@ CREATE TABLE `users` (
   `id` int(11) NOT NULL,
   `name` varchar(100) NOT NULL,
   `user_code` varchar(100) NOT NULL,
-  `role` varchar(100) NOT NULL,
-  `designation` varchar(100) NOT NULL,
+  `role` int(255) NOT NULL,
+  `designation` int(255) NOT NULL,
   `address` varchar(100) NOT NULL,
   `place` varchar(100) NOT NULL,
   `email` varchar(100) NOT NULL,
@@ -855,7 +1042,7 @@ CREATE TABLE `users` (
 --
 
 INSERT INTO `users` (`id`, `name`, `user_code`, `role`, `designation`, `address`, `place`, `email`, `mobile`, `user_name`, `password`, `branch`, `loan_category`, `line`, `screens`, `insert_login_id`, `update_login_id`, `created_on`, `updated_on`) VALUES
-(1, 'Admin', 'US-001', 'Developer', 'Software Developer', '', '', '', '', 'admin', '123', '1,5,6', '2,4,9', '1,2,4,5,8,9,11', '1,2,3,4,5,6,7,8', '', '', '2024-05-02', '2024-05-02');
+(1, 'Super Admin', 'US-001', 7, 7, '', '', '', '', 'admin', '123', '1', '9', '1', '1,2,3,4,5,6,7,8,11,12,16,13,17', '1', '1', '2024-06-13', '2024-06-14');
 
 --
 -- Indexes for dumped tables
@@ -889,6 +1076,12 @@ ALTER TABLE `bank_creation`
   ADD PRIMARY KEY (`id`);
 
 --
+-- Indexes for table `bank_info`
+--
+ALTER TABLE `bank_info`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- Indexes for table `branch_creation`
 --
 ALTER TABLE `branch_creation`
@@ -907,11 +1100,29 @@ ALTER TABLE `company_creation`
   ADD KEY `Taluk ids` (`taluk`);
 
 --
+-- Indexes for table `customer_profile`
+--
+ALTER TABLE `customer_profile`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `designation`
+--
+ALTER TABLE `designation`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- Indexes for table `districts`
 --
 ALTER TABLE `districts`
   ADD PRIMARY KEY (`id`),
   ADD KEY `State id` (`state_id`);
+
+--
+-- Indexes for table `document_need`
+--
+ALTER TABLE `document_need`
+  ADD PRIMARY KEY (`id`);
 
 --
 -- Indexes for table `family_info`
@@ -923,7 +1134,9 @@ ALTER TABLE `family_info`
 -- Indexes for table `kyc_info`
 --
 ALTER TABLE `kyc_info`
-  ADD PRIMARY KEY (`id`);
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `proof` (`proof`),
+  ADD KEY `fam-mem` (`fam_mem`);
 
 --
 -- Indexes for table `line_name_creation`
@@ -946,15 +1159,35 @@ ALTER TABLE `loan_category_creation`
   ADD KEY `Loan Category` (`loan_category`);
 
 --
+-- Indexes for table `loan_entry_loan_calculation`
+--
+ALTER TABLE `loan_entry_loan_calculation`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `customer profile id` (`cus_profile_id`);
+
+--
 -- Indexes for table `menu_list`
 --
 ALTER TABLE `menu_list`
   ADD PRIMARY KEY (`id`);
 
 --
+-- Indexes for table `proof_info`
+--
+ALTER TABLE `proof_info`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- Indexes for table `property_info`
 --
 ALTER TABLE `property_info`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `property_holder` (`property_holder`);
+
+--
+-- Indexes for table `role`
+--
+ALTER TABLE `role`
   ADD PRIMARY KEY (`id`);
 
 --
@@ -988,7 +1221,9 @@ ALTER TABLE `taluks`
 -- Indexes for table `users`
 --
 ALTER TABLE `users`
-  ADD PRIMARY KEY (`id`);
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `Role id` (`role`),
+  ADD KEY `Designation id` (`designation`);
 
 --
 -- AUTO_INCREMENT for dumped tables
@@ -1019,6 +1254,12 @@ ALTER TABLE `bank_creation`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
+-- AUTO_INCREMENT for table `bank_info`
+--
+ALTER TABLE `bank_info`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
 -- AUTO_INCREMENT for table `branch_creation`
 --
 ALTER TABLE `branch_creation`
@@ -1031,10 +1272,28 @@ ALTER TABLE `company_creation`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
+-- AUTO_INCREMENT for table `customer_profile`
+--
+ALTER TABLE `customer_profile`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `designation`
+--
+ALTER TABLE `designation`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
 -- AUTO_INCREMENT for table `districts`
 --
 ALTER TABLE `districts`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=40;
+
+--
+-- AUTO_INCREMENT for table `document_need`
+--
+ALTER TABLE `document_need`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `family_info`
@@ -1067,15 +1326,33 @@ ALTER TABLE `loan_category_creation`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
+-- AUTO_INCREMENT for table `loan_entry_loan_calculation`
+--
+ALTER TABLE `loan_entry_loan_calculation`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
 -- AUTO_INCREMENT for table `menu_list`
 --
 ALTER TABLE `menu_list`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
 
 --
+-- AUTO_INCREMENT for table `proof_info`
+--
+ALTER TABLE `proof_info`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
 -- AUTO_INCREMENT for table `property_info`
 --
 ALTER TABLE `property_info`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `role`
+--
+ALTER TABLE `role`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
@@ -1094,7 +1371,7 @@ ALTER TABLE `states`
 -- AUTO_INCREMENT for table `sub_menu_list`
 --
 ALTER TABLE `sub_menu_list`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=20;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=21;
 
 --
 -- AUTO_INCREMENT for table `taluks`
@@ -1106,7 +1383,7 @@ ALTER TABLE `taluks`
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- Constraints for dumped tables
@@ -1148,6 +1425,13 @@ ALTER TABLE `districts`
   ADD CONSTRAINT `State id` FOREIGN KEY (`state_id`) REFERENCES `states` (`id`);
 
 --
+-- Constraints for table `kyc_info`
+--
+ALTER TABLE `kyc_info`
+  ADD CONSTRAINT `fam-mem` FOREIGN KEY (`fam_mem`) REFERENCES `family_info` (`id`) ON UPDATE NO ACTION,
+  ADD CONSTRAINT `kyc_info_ibfk_1` FOREIGN KEY (`proof`) REFERENCES `proof_info` (`id`) ON UPDATE NO ACTION;
+
+--
 -- Constraints for table `line_name_creation`
 --
 ALTER TABLE `line_name_creation`
@@ -1158,6 +1442,18 @@ ALTER TABLE `line_name_creation`
 --
 ALTER TABLE `loan_category_creation`
   ADD CONSTRAINT `Loan Category` FOREIGN KEY (`loan_category`) REFERENCES `loan_category` (`id`) ON UPDATE NO ACTION;
+
+--
+-- Constraints for table `loan_entry_loan_calculation`
+--
+ALTER TABLE `loan_entry_loan_calculation`
+  ADD CONSTRAINT `customer profile id` FOREIGN KEY (`cus_profile_id`) REFERENCES `customer_profile` (`id`) ON UPDATE NO ACTION;
+
+--
+-- Constraints for table `property_info`
+--
+ALTER TABLE `property_info`
+  ADD CONSTRAINT `property_holder` FOREIGN KEY (`property_holder`) REFERENCES `family_info` (`id`) ON UPDATE NO ACTION;
 
 --
 -- Constraints for table `sub_menu_list`
@@ -1171,6 +1467,13 @@ ALTER TABLE `sub_menu_list`
 ALTER TABLE `taluks`
   ADD CONSTRAINT `District id` FOREIGN KEY (`district_id`) REFERENCES `districts` (`id`),
   ADD CONSTRAINT `States id` FOREIGN KEY (`state_id`) REFERENCES `states` (`id`);
+
+--
+-- Constraints for table `users`
+--
+ALTER TABLE `users`
+  ADD CONSTRAINT `Designation id` FOREIGN KEY (`designation`) REFERENCES `designation` (`id`) ON UPDATE NO ACTION,
+  ADD CONSTRAINT `Role id` FOREIGN KEY (`role`) REFERENCES `role` (`id`) ON UPDATE NO ACTION;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
