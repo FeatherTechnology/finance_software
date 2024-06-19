@@ -9329,3 +9329,11 @@ td {
 .dropdown.active .dropbtn {
   background-color: #3E8E41;
 }
+
+.img_show {
+  height: 150px;
+  width: 150px;
+  border-radius: 50%;
+  object-fit: cover;
+  background-color: white;
+}
