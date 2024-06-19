@@ -63,13 +63,6 @@ if($customer_profile_id !=''){
     $qry = $pdo->query("UPDATE `customer_profile` SET `cus_id`='$cus_id',`cus_name`='$cus_name',`gender`='$gender',`dob`='$dob',`age`='$age',`mobile1`='$mobile1',`mobile2`='$mobile2',`pic`='$picture',`guarantor_name`='$guarantor_name',`gu_pic`='$gpicture',`cus_data`='$cus_data',`cus_status`='$cus_status',`res_type`='$res_type',`res_detail`='$res_detail',`res_address`='$res_address',`native_address`='$native_address',`occupation`='$occupation',`occ_detail`='$occ_detail',`occ_income`='$occ_income',`occ_address`='$occ_address',`area_confirm`='$area_confirm',`area`='$area',`line`='$line',`cus_limit`='$cus_limit',`about_cus`='$about_cus',`update_login_id`='$user_id',updated_on = now() WHERE `id`='$customer_profile_id'");
     $status = 0; //update
     $last_id =$customer_profile_id;
-
-}else{
-   
-    $qry = $pdo->query("INSERT INTO `customer_profile`(`cus_id`, `cus_name`, `gender`, `dob`, `age`, `mobile1`, `mobile2`, `pic`, `guarantor_name`, `gu_pic`, `cus_data`, `cus_status`, `res_type`, `res_detail`, `res_address`, `native_address`, `occupation`, `occ_detail`, `occ_income`, `occ_address`, `area_confirm`, `area`, `line`, `cus_limit`, `about_cus`, `insert_login_id`, `created_on` ) VALUES ('$cus_id','$cus_name','$gender','$dob','$age','$mobile1','$mobile2','$picture','$guarantor_name','$gpicture','$cus_data','$cus_status','$res_type','$res_detail','$res_address','$native_address','$occupation','$occ_detail','$occ_income','$occ_address','$area_confirm','$area','$line','$cus_limit','$about_cus','$user_id',now())");
-    $status = 1; //Insert
-    $last_id = $pdo->lastInsertId();
-
 }
 
 $result = array('status'=>$status, 'last_id'=> $last_id);

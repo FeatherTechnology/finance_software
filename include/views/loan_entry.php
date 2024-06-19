@@ -74,19 +74,19 @@
                                     <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
                                         <div class="form-group">
                                             <label for="cus_id"> Customer ID</label><span class="text-danger">*</span>
-                                            <input type="text" class="form-control" id="cus_id" name="cus_id"placeholder="Enter Customer ID" tabindex="1" maxlength="14">
+                                            <input type="text" class="form-control personal_info_disble" id="cus_id" name="cus_id" placeholder="Enter Customer ID" tabindex="1" maxlength="14">
                                         </div>
                                     </div>
                                     <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
                                         <div class="form-group">
                                             <label for="cus_name"> Customer Name</label><span class="text-danger">*</span>
-                                            <input type="text" class="form-control" id="cus_name" name="cus_name" pattern="[a-zA-Z\s]+" placeholder="Enter Customer Name" tabindex=" 2">
+                                            <input type="text" class="form-control personal_info_disble" id="cus_name"  name="cus_name" pattern="[a-zA-Z\s]+" placeholder="Enter Customer Name" tabindex=" 2">
                                         </div>
                                     </div>
                                     <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
                                         <div class="form-group">
                                             <label for="gender">Gender</label><span class="text-danger">*</span>
-                                            <select type="text" class="form-control" id="gender" name="gender" tabindex="3">
+                                            <select type="text" class="form-control  personal_info_disble"  id="gender"  name="gender" tabindex="3">
                                                 <option value="Select gender">Select Gender</option>
                                                 <option value="1">Male</option>
                                                 <option value="2">Female</option>
@@ -97,25 +97,25 @@
                                     <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
                                         <div class="form-group">
                                             <label for="dob"> DOB</label>
-                                            <input type="date" class="form-control" id="dob" name="dob" placeholder="Enter Date Of Birth" tabindex="4">
+                                            <input type="date" class="form-control  personal_info_disble" id="dob" name="dob" placeholder="Enter Date Of Birth" tabindex="4">
                                         </div>
                                     </div>
                                     <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
                                         <div class="form-group">
                                             <label for="age"> Age</label>
-                                            <input type="number" class="form-control" id="age" name="age" readonly placeholder="Age" tabindex="5">
+                                            <input type="number" class="form-control  personal_info_disble" id="age" name="age" readonly placeholder="Age" tabindex="5">
                                         </div>
                                     </div>
                                     <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
                                         <div class="form-group">
                                             <label for="mobile1"> Mobile Number 1</label><span class="text-danger">*</span>
-                                            <input type="number" class="form-control" id="mobile1" name="mobile1" placeholder="Enter Mobile Number 1"onKeyPress="if(this.value.length==10) return false;" tabindex="6">
+                                            <input type="number" class="form-control  personal_info_disble" id="mobile1" name="mobile1"  placeholder="Enter Mobile Number 1" onKeyPress="if(this.value.length==10) return false;" tabindex="6">
                                         </div>
                                     </div>
                                     <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
                                         <div class="form-group">
                                             <label for="mobile2"> Mobile Number 2</label>
-                                            <input type="number" class="form-control" id="mobile2" name="mobile2" onKeyPress="if(this.value.length==10) return false;"placeholder="Enter Mobile Number 2" tabindex="7">
+                                            <input type="number" class="form-control  personal_info_disble" id="mobile2" name="mobile2"  onKeyPress="if(this.value.length==10) return false;" placeholder="Enter Mobile Number 2" tabindex="7">
                                         </div>
                                     </div>
                                 </div>
@@ -127,10 +127,15 @@
                                         <div class="form-group">
                                             <label for="pic"> Photo</label><span class="text-danger">*</span><br>
                                             <img id='imgshow' class="img_show" src='img\avatar.png' />
-                                            <input type="file" class="form-control" id="pic" name="pic" tabindex="8">
+                                            <input type="file" class="form-control  personal_info_disble" id="pic" name="pic" tabindex="8">
                                             <input type="hidden" id="per_pic">
                                         </div>
                                     </div>
+                                </div>
+                            </div>
+                            <div class="col-md-12 ">
+                                <div class="text-right">
+                                    <button type="submit" name="submit_personal_info" id="submit_personal_info" class="btn btn-primary" value="Submit" ><span class="icon-check"></span>&nbsp;Submit</button>
                                 </div>
                             </div>
 
@@ -182,7 +187,7 @@
                                     <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
                                         <div class="form-group">
                                             <label for="guarantor_name"> Guarantor Name</label><span class="text-danger">*</span>
-                                            <input type="hidden" id="guarantor_name_edit" >
+                                            <input type="hidden" id="guarantor_name_edit">
                                             <select type="text" class="form-control" id="guarantor_name" name="guarantor_name" tabindex="10">
                                                 <option value="Select Guarantor Name">Select Guarantor Name</option>
                                             </select>
@@ -272,7 +277,7 @@
                         <div class="row">
                             <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
                                 <div class="form-group">
-                                    <table id="cus_info"class="table custom-table">
+                                    <table id="cus_info" class="table custom-table">
                                         <thead>
                                             <tr>
                                                 <th width="20">S.NO</th>
@@ -431,8 +436,8 @@
                 </div>
                 <div class="card">
                     <div class="card-header">
-                        <div class="card-title">Property Info 
-                            <button type="button" class="btn btn-primary" id="add_property" name="add_property" data-toggle="modal" data-target="#add_prop_info_modal" onclick="getPropertyTable()"    style="padding: 5px 35px; float: right;" tabindex='29'><span class="icon-add"></span></button>
+                        <div class="card-title">Property Info
+                            <button type="button" class="btn btn-primary" id="add_property" name="add_property" data-toggle="modal" data-target="#add_prop_info_modal" onclick="getPropertyTable()" style="padding: 5px 35px; float: right;" tabindex='29'><span class="icon-add"></span></button>
                         </div>
                     </div>
                     <div class="card-body">
@@ -500,7 +505,7 @@
                         <div class="row">
                             <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
                                 <div class="form-group">
-                                    <table id="kyc_info"class="table custom-table">
+                                    <table id="kyc_info" class="table custom-table">
                                         <thead>
                                             <tr>
                                                 <th width="20">S.NO</th>
@@ -530,7 +535,7 @@
                             <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
                                 <div class="form-group">
                                     <label for="cus_limit"> Customer Limit</label><span class="text-danger">*</span>
-                                    <input type="number" class="form-control" id="cus_limit" name="cus_limit" placeholder="Enter Limit" value="250000" tabindex="32">
+                                    <input type="number" class="form-control" id="cus_limit" name="cus_limit" placeholder="Enter Limit" tabindex="32">
                                 </div>
                             </div>
                             <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
@@ -550,14 +555,14 @@
                 <div class="text-right">
 
                     <button type="submit" name="submit_customer_profile" id="submit_customer_profile" class="btn btn-primary" value="Submit" tabindex="34"><span class="icon-check"></span>&nbsp;Submit</button>
-                    <button type="reset" id ="clear_loan"class="btn btn-outline-secondary" tabindex="35">Clear</button>
+                    <button type="reset" id="clear_loan" class="btn btn-outline-secondary" tabindex="35">Clear</button>
                 </div>
             </div>
         </div>
     </form>
 
-<!-- -------------------------------------- Loan Calculation START ------------------------------ -->
-<form id="loan_entry_loan_calculation" name="loan_entry_loan_calculation" style="display: none;">
+    <!-- -------------------------------------- Loan Calculation START ------------------------------ -->
+    <form id="loan_entry_loan_calculation" name="loan_entry_loan_calculation" style="display: none;">
         <input type="hidden" id="loan_calculation_id">
         <input type="hidden" id="int_rate_upd">
         <input type="hidden" id="due_period_upd">
@@ -882,7 +887,7 @@
             </div>
         </div>
     </form>
-<!-- -------------------------------------- Loan Calculation END ------------------------------ -->
+    <!-- -------------------------------------- Loan Calculation END ------------------------------ -->
 
 
 </div> <!-- Loan entry Content END - Customer profile & Loan Calculation -->
@@ -896,7 +901,7 @@
         <div class="modal-content" style="background-color: white">
             <div class="modal-header">
                 <h5 class="modal-title" id="exampleModalLongTitle">Add Family Info</h5>
-                <button type="button" class="close" data-dismiss="modal"  aria-label="Close"  onclick="getFamilyInfoTable()" tabindex="1">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close" onclick="getFamilyInfoTable()" tabindex="1">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
@@ -948,14 +953,14 @@
                             <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
                                 <div class="form-group">
                                     <label for="fam_aadhar">Aadhar No</label><span class="text-danger">*</span>
-                                    <input type="text" class="form-control" name="fam_aadhar" id="fam_aadhar" tabindex="1" maxlength="14"  placeholder="Enter Aadhar Number">
+                                    <input type="text" class="form-control" name="fam_aadhar" id="fam_aadhar" tabindex="1" maxlength="14" placeholder="Enter Aadhar Number">
                                     <input type="hidden" id="addaadhar_id" value='0'>
                                 </div>
                             </div>
                             <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
                                 <div class="form-group">
                                     <label for="fam_mobile">Mobile No</label><span class="text-danger">*</span>
-                                    <input type="number" class="form-control" name="fam_mobile" id="fam_mobile" onKeyPress="if(this.value.length==10) return false;"tabindex="1" placeholder="Enter Mobile Number">
+                                    <input type="number" class="form-control" name="fam_mobile" id="fam_mobile" onKeyPress="if(this.value.length==10) return false;" tabindex="1" placeholder="Enter Mobile Number">
                                     <input type="hidden" id="addmobile_id" value='0'>
                                 </div>
                             </div>
@@ -1006,7 +1011,7 @@
         <div class="modal-content" style="background-color: white">
             <div class="modal-header">
                 <h5 class="modal-title" id="exampleModalLongTitle">Add Property Info</h5>
-                <button type="button" class="close" data-dismiss="modal" tabindex="1"  onclick="getPropertyInfoTable()"aria-label="Close">
+                <button type="button" class="close" data-dismiss="modal" tabindex="1" onclick="getPropertyInfoTable()" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
@@ -1014,7 +1019,7 @@
                 <div class="container-fluid">
                     <form id="property_form">
                         <div class="row">
-                        <input type="hidden" name="property_id" id='property_id'>
+                            <input type="hidden" name="property_id" id='property_id'>
 
                             <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
                                 <div class="form-group">
@@ -1096,8 +1101,8 @@
             <div class="modal-body">
                 <div class="container-fluid">
                     <form id="bank_form">
-                        <div class="row" >
-                        <input type="hidden" name="bank_id" id='bank_id'>
+                        <div class="row">
+                            <input type="hidden" name="bank_id" id='bank_id'>
                             <!-- <div class="col-sm-3 col-md-3 col-lg-3"></div>-->
                             <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
                                 <div class="form-group">
@@ -1109,14 +1114,14 @@
                             <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
                                 <div class="form-group">
                                     <label for="branch_name">Branch Name</label><span class="text-danger">*</span>
-                                    <input class="form-control" name="branch_name" id="branch_name" tabindex="1"placeholder="Enter Branch Name">
+                                    <input class="form-control" name="branch_name" id="branch_name" tabindex="1" placeholder="Enter Branch Name">
                                     <input type="hidden" id="addbranch_id" value='0'>
                                 </div>
                             </div>
                             <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
                                 <div class="form-group">
                                     <label for="acc_holder_name">Account Holder Name</label><span class="text-danger">*</span>
-                                    <input class="form-control" name="acc_holder_name" id="acc_holder_name"  tabindex="1"placeholder="Enter Account Holder Name">
+                                    <input class="form-control" name="acc_holder_name" id="acc_holder_name" tabindex="1" placeholder="Enter Account Holder Name">
                                     <input type="hidden" id="addacc_holder_id" value='0'>
                                 </div>
                             </div>
@@ -1130,7 +1135,7 @@
                             <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
                                 <div class="form-group">
                                     <label for="ifsc_code">IFSC Code</label><span class="text-danger">*</span>
-                                    <input class="form-control" name="ifsc_code" id="ifsc_code"  tabindex="1"placeholder="Enter IFSC Code">
+                                    <input class="form-control" name="ifsc_code" id="ifsc_code" tabindex="1" placeholder="Enter IFSC Code">
                                     <input type="hidden" id="addifsc_id" value='0'>
                                 </div>
                             </div>
@@ -1180,7 +1185,7 @@
         <div class="modal-content" style="background-color: white">
             <div class="modal-header">
                 <h5 class="modal-title" id="exampleModalLongTitle">Add KYC Info</h5>
-                <button type="button" class="close" data-dismiss="modal" tabindex="1"  onclick="getKycInfoTable()" aria-label="Close" >
+                <button type="button" class="close" data-dismiss="modal" tabindex="1" onclick="getKycInfoTable()" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
@@ -1188,7 +1193,7 @@
                 <div class="container-fluid">
                     <form id="kyc_form">
                         <div class="row">
-                        <input type="hidden" name="kyc_id" id='kyc_id'>
+                            <input type="hidden" name="kyc_id" id='kyc_id'>
                             <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
                                 <div class="form-group">
                                     <label for="proof_of">Proof Of</label><span class="text-danger">*</span>
@@ -1212,7 +1217,7 @@
                             <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
                                 <div class="form-group">
                                     <label for="kyc_relationship">Relationship</label><span class="text-danger">*</span>
-                                    <input class="form-control" name="kyc_relationship" id="kyc_relationship"  tabindex="1"disabled placeholder="Enter Relationship">
+                                    <input class="form-control" name="kyc_relationship" id="kyc_relationship" tabindex="1" disabled placeholder="Enter Relationship">
                                     <input type="hidden" id="addkycrelationship_id" value='0'>
                                 </div>
                             </div>
@@ -1233,7 +1238,7 @@
                             <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
                                 <div class="form-group">
                                     <label for="proof_detail">Proof Detail</label><span class="text-danger">*</span>
-                                    <input class="form-control" name="proof_detail" id="proof_detail"  tabindex="1" placeholder="Enter Proof Detail">
+                                    <input class="form-control" name="proof_detail" id="proof_detail" tabindex="1" placeholder="Enter Proof Detail">
                                     <input type="hidden" id="addproofdetail_id" value='0'>
                                 </div>
                             </div>
@@ -1246,7 +1251,7 @@
                             </div>
                             <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
                                 <div class="form-group">
-                                    <button name="submit_kyc" id="submit_kyc" class="btn btn-primary"  tabindex="1" style="margin-top: 18px;"><span class="icon-check"></span>&nbsp;Submit</button>
+                                    <button name="submit_kyc" id="submit_kyc" class="btn btn-primary" tabindex="1" style="margin-top: 18px;"><span class="icon-check"></span>&nbsp;Submit</button>
                                     <button type="reset" id="clear_kyc_form" class="btn btn-outline-secondary" style="margin-top: 18px;" tabindex="9">Clear</button>
                                 </div>
                             </div>
@@ -1273,7 +1278,7 @@
                 </div>
             </div>
             <div class="modal-footer">
-                <button class="btn btn-secondary" data-dismiss="modal"  onclick="getKycInfoTable()"tabindex="1">Close</button>
+                <button class="btn btn-secondary" data-dismiss="modal" onclick="getKycInfoTable()" tabindex="1">Close</button>
             </div>
         </div>
     </div>
@@ -1287,31 +1292,31 @@
         <div class="modal-content" style="background-color: white">
             <div class="modal-header">
                 <h5 class="modal-title" id="exampleModalLongTitle">Add Proof</h5>
-                <button type="button" class="close" data-dismiss="modal"  onclick=" fetchProofList()" tabindex="1" aria-label="Close">
+                <button type="button" class="close" data-dismiss="modal" onclick=" fetchProofList()" tabindex="1" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
             <div class="modal-body">
                 <div class="container-fluid">
-                <form id="proof_form">
-                    <div class="row">
-                    <input type="hidden" name="proof_id" id='proof_id'>
-                        <div class="col-sm-3 col-md-3 col-lg-3"></div>
-                        <div class="col-sm-4 col-md-4 col-lg-4">
-                            <div class="form-group">
-                                <label for="addProof_name">Proof</label><span class="text-danger">*</span>
-                                <input class="form-control" name="addProof_name" id="addProof_name" tabindex="1" placeholder="Enter Proof">
-                                <input type="hidden" id="addline_name_id" value='0'>
+                    <form id="proof_form">
+                        <div class="row">
+                            <input type="hidden" name="proof_id" id='proof_id'>
+                            <div class="col-sm-3 col-md-3 col-lg-3"></div>
+                            <div class="col-sm-4 col-md-4 col-lg-4">
+                                <div class="form-group">
+                                    <label for="addProof_name">Proof</label><span class="text-danger">*</span>
+                                    <input class="form-control" name="addProof_name" id="addProof_name" tabindex="1" placeholder="Enter Proof">
+                                    <input type="hidden" id="addline_name_id" value='0'>
+                                </div>
+                            </div>
+                            <div class="col-sm-4 col-md-4 col-lg-4">
+                                <div class="form-group">
+                                    <button name="submit_proof" id="submit_proof" class="btn btn-primary" tabindex="1" style="margin-top: 18px;"><span class="icon-check"></span>&nbsp;Submit</button>
+                                    <button type="reset" id="clear_proof_form" class="btn btn-outline-secondary" style="margin-top: 18px;" tabindex="1">Clear</button>
+                                </div>
                             </div>
                         </div>
-                        <div class="col-sm-4 col-md-4 col-lg-4">
-                            <div class="form-group">
-                                <button name="submit_proof" id="submit_proof" class="btn btn-primary"  tabindex="1" style="margin-top: 18px;"><span class="icon-check"></span>&nbsp;Submit</button>
-                                <button type="reset" id="clear_proof_form" class="btn btn-outline-secondary" style="margin-top: 18px;"  tabindex="1">Clear</button>
-                            </div>
-                        </div>
-                    </div>
-                </form>
+                    </form>
                 </div>
                 <div class="row">
                     <div class="col-12">
@@ -1330,7 +1335,7 @@
 
             </div>
             <div class="modal-footer">
-                <button class="btn btn-secondary" data-dismiss="modal"  onclick="fetchProofList()" tabindex="1">Close</button>
+                <button class="btn btn-secondary" data-dismiss="modal" onclick="fetchProofList()" tabindex="1">Close</button>
             </div>
         </div>
     </div>

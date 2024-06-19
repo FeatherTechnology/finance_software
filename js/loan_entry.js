@@ -13,6 +13,7 @@ $(document).ready(function () {
         aadharList()
         mobileList()
         //clear();
+        $('.personal_info_disble').attr("disabled",false);
     });
 
       $('#add_loan').click(function () {
@@ -503,6 +504,10 @@ $(document).ready(function () {
         let cus_limit = $('#cus_limit').val();
         let about_cus = $('#about_cus').val();
         let customer_profile_id = $('#customer_profile_id').val();
+        if(customer_profile_id ===''){
+            swalError('Warning', 'Please Fill out personal Info!');
+            return false;
+        }
         if (cus_id === '' || cus_name === '' || gender === '' || mobile1 === '' || (pic === undefined && per_pic == '') || guarantor_name === '' || (gu_pic === undefined && gur_pic == '') || area_confirm === '' || area === '' || line === '' || cus_limit === '' || famInfoRowCount === 0 || kycInfoRowCount === 0) {
             swalError('Warning', 'Please Fill out Mandatory fields!');
             return false;
@@ -539,12 +544,6 @@ $(document).ready(function () {
         entryDetail.append('about_cus', about_cus);
         entryDetail.append('customer_profile_id', customer_profile_id)
 
-        // Add customer_profile_id if it exists
-        // let customer_profile_id = $('#customer_profile_id').val();
-        /* if (customer_profile_id) {
-             entryDetail.append('customer_profile_id', customer_profile_id);
-         }*/
-
         // AJAX call to submit data
         $.ajax({
             url: 'api/loan_entry/submit_cus_profile.php',
@@ -558,12 +557,7 @@ $(document).ready(function () {
                 // Handle success response
                 if (response.status == 0) {
                     swalSuccess('Success', 'Loan Entry Updated Successfully!');
-                } else if (response.status == 1) {
-                    swalSuccess('Success', 'Loan Entry Added Successfully!');
-                    // Update customer_profile_id if it was an insert
-                } else {
-
-                }
+                }  
                 $('#customer_profile_id').val(response.last_id);
             },
             error: function () {
@@ -572,52 +566,104 @@ $(document).ready(function () {
         });
     });
 
+    $('#submit_personal_info').click(function () {
+        event.preventDefault();
+        // Validate form fields
+        let pic = $('#pic')[0].files[0];
+        let per_pic = $('#per_pic').val();
+        let cus_id = $('#cus_id').val().replace(/\s/g, '');
+        let cus_name = $("#cus_name").val();
+        let gender = $('#gender').val();
+        let dob = $('#dob').val();
+        let age = $('#age').val();
+        let mobile1 = $('#mobile1').val();
+        let mobile2 = $('#mobile2').val();
+        let customer_profile_id = $('#customer_profile_id').val();
+        if (cus_id === '' || cus_name === '' || gender === '' || mobile1 === '' || (pic === undefined && per_pic == '') ) {
+            swalError('Warning', 'Please Fill out Mandatory fields!');
+            return false;
+        }
+            let personalDetail = new FormData();
+            personalDetail.append('cus_id', cus_id);
+            personalDetail.append('cus_name', cus_name);
+            personalDetail.append('gender', gender);
+            personalDetail.append('dob', dob);
+            personalDetail.append('age', age);
+            personalDetail.append('mobile1', mobile1);
+            personalDetail.append('mobile2', mobile2);
+            personalDetail.append('pic', pic);
+            personalDetail.append('per_pic', per_pic);
+            personalDetail.append('customer_profile_id', customer_profile_id)
+            $.ajax({
+                url: 'api/loan_entry/submit_personal_info.php',
+                type: 'POST',
+                data: personalDetail,
+                contentType: false,
+                processData: false,
+                cache: false,
+                dataType: 'json',
+                success: function (response) {
+                    // Handle success response
+                    if (response.status == 0) {
+                        swalSuccess('Success', 'Personal Info Updated Successfully!');
+                    } else if (response.status == 1) {
+                        swalSuccess('Success', 'Personal Info Added Successfully!');
+                    } else {
+    
+                    }
+                    $('#customer_profile_id').val(response.last_id);
+                    $('.personal_info_disble').attr("disabled", true);     
+       
+                },
+                
+            });
+            //$('.personal_info_disble').attr("disabled",true);      
+       
+    })
+
 
     toggleAddButton()
     toggleKycButton()
     function toggleAddButton() {
         if ($('#fam_info_table').DataTable().rows().count() === 0) {
-            // DataTable is empty
             $('#add_loan').show();
         } else {
-            // DataTable has entries
             $('#add_loan').hide();
         }
     }
     function toggleKycButton() {
         if ($('#kyc_info').DataTable().rows().count() === 0) {
-            // DataTable is empty
             $('#add_loan').show();
         } else {
-            // DataTable has entrie
             $('#add_loan').hide();
         }
     }
     $('#area_confirm').change(function () {
-        let cus_id = $('#cus_id').val().replace(/\s/g, ''); // Assuming you retrieve cus_id somewhere else in your code
-        let area_confirm = $(this).val(); // Get the selected value of area_confirm dropdown
-
+        let cus_id = $('#cus_id').val().replace(/\s/g, ''); 
+        let area_confirm = $(this).val(); 
+    
         $.post('api/loan_entry/area_confirm.php', { cus_id, area_confirm }, function (response) {
-            if (response) {
-                if (area_confirm == '1') { // Resident
-                    $('#res_type').val(response.res_type);
-                    $('#res_detail').val(response.res_detail);
-                    $('#res_address').val(response.res_address);
-                    $('#native_address').val(response.native_address);
-                } else if (area_confirm == '2') { // Occupation
-                    $('#occupation').val(response.occupation);
-                    $('#occ_detail').val(response.occ_detail);
-                    $('#occ_income').val(response.occ_income);
-                    $('#occ_address').val(response.occ_address);
+            if(!response){
+                if (response.error) {
+                    // Handle error
+                    swalError('Error', response.error);
+                } else {
+                    if (area_confirm == '1') { // Resident
+                        $('#res_type').val(response.res_type);
+                        $('#res_detail').val(response.res_detail);
+                        $('#res_address').val(response.res_address);
+                        $('#native_address').val(response.native_address);
+                    } else if (area_confirm == '2') { // Occupation
+                        $('#occupation').val(response.occupation);
+                        $('#occ_detail').val(response.occ_detail);
+                        $('#occ_income').val(response.occ_income);
+                        $('#occ_address').val(response.occ_address);
+                    }
                 }
-            } else {
-                swalError('Error', 'Failed to fetch data from server.');
             }
-        }, 'json');
+        }, 'json')
     });
-
-
-
+    
 
     $('#name_check, #aadhar_check, #mobile_check').on('input', function () {
         var name = $('#name_check').val().trim();
@@ -1193,42 +1239,6 @@ function fetchProofList() {
     });
 }
 
-/*function clear() {
-    // Bind the click event to buttons with the specified class and data attribute
-    $('button[data-dismiss="modal"]').click(function (event) {
-        event.preventDefault();
-
-        // Clear all input fields
-        $('#family_form input').val('');
-
-        // Clear all textarea fields
-        $('textarea').val('');
-
-        // Reset all select elements to their first option
-        $('select').each(function () {
-            $(this).val($(this).find('option:first').val());
-        });
-    });
-}*/
-
-/*function clear() {
-    // Bind the click event to buttons with the specified class and data attribute
-    $('button[data-dismiss="modal"]').click(function (event) {
-        event.preventDefault();
-
-        // Clear all input fields
-        $('input').val('');
-
-        // Clear all textarea fields
-        $('textarea').val('');
-        $('.fam_mem_div').hide();
-
-        // Reset all select elements to their first option
-        $('select').each(function () {
-            $(this).val($(this).find('option:first').val());
-        });
-    });
-}*/
 
 function getAreaName() {
     $.post('api/loan_entry/get_area.php', function (response) {
@@ -1237,7 +1247,7 @@ function getAreaName() {
         $.each(response, function (index, val) {
             let selected = '';
             let editArea = $('#area_edit').val();
-            if (val.id = editArea) {
+            if (val.id == editArea) {
                 selected = 'selected';
             }
             appendAreaOption += "<option value='" + val.id + "' " + selected + ">" + val.areaname + "</option>";
@@ -1352,21 +1362,11 @@ function editCustmerProfile(id) {
         setTimeout(() => {
             $('#guarantor_name').trigger('change');
         }, 1000);
+        $('.personal_info_disble').attr("disabled", true);
     }, 'json');
 }
 
-/*function toggleAddButton(){
-    if ($('#company_creation_table').DataTable().rows().count() === 0) {
-    // DataTable is empty
-    console.log('DataTable is empty');
-    $('#addcompany').show();
-    } else {
-    // DataTable has entries
-    console.log('DataTable has entries');
-    $('#addcompany').hide();
-    }
-    }
-*/
+
 
 // Initial population of name_check dropdown
 
@@ -1719,8 +1719,8 @@ function getLoanCatDetails(id) {
         }else if(response[0].due_type == 'interest'){
             $('#due_type_calc').val('Interest');
         }
-        let cus_limit = $('#cus_limit').val();
-        let loan_limit = response[0].loan_limit;
+        let cus_limit = parseInt($('#cus_limit').val());
+        let loan_limit = parseInt(response[0].loan_limit);
         let min_loan_limit = (cus_limit < loan_limit) ? cus_limit : loan_limit;
         $('#loan_amount_calc').attr('onChange',`if( parseFloat($(this).val()) > '`+min_loan_limit+`' ){ alert("Enter Lesser than '${min_loan_limit}'"); $(this).val(""); }`); //To check value between range
 
