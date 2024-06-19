@@ -5,7 +5,7 @@ require '../../ajaxconfig.php';
 $response = [];
 
     $qry = $pdo->prepare("
-        SELECT ac.id, anc.areaname 
+        SELECT anc.id, anc.areaname 
     FROM area_creation ac
     JOIN area_name_creation anc ON FIND_IN_SET(anc.id, ac.area_id)
     WHERE ac.status = 1
