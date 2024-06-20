@@ -888,7 +888,17 @@
                             <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
                                 <div class="form-group">
                                     <label for="fam_relationship">Relationship</label><span class="text-danger">*</span>
-                                    <input class="form-control" name="fam_relationship" id="fam_relationship" tabindex="1" placeholder="Enter Relationship">
+                                    <select type="text" class="form-control" id="fam_relationship" name="fam_relationship" tabindex="1">
+                                        <option value=""> Select Relationship </option>
+                                        <option value="Father"> Father </option>
+                                        <option value="Mother"> Mother </option>
+                                        <option value="Spouse"> Spouse </option>
+                                        <option value="Son"> Son </option>
+                                        <option value="Daughter"> Daughter </option>
+                                        <option value="Brother"> Brother </option>
+                                        <option value="Sister"> Sister </option>
+                                        <option value="Other"> Other </option>
+                                    </select>
                                     <input type="hidden" id="addrelationship_id" value='0'>
                                 </div>
                             </div>
@@ -996,7 +1006,7 @@
                             <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
                                 <div class="form-group">
                                     <label for="property_detail">Property Detail</label><span class="text-danger">*</span>
-                                    <input class="form-control" name="property_detail" id="property_detail" tabindex="1" placeholder="Enter Property Detail">
+                                    <textarea class="form-control" name="property_detail" id="property_detail" tabindex="1"></textarea>
                                     <input type="hidden" id="addpropdetail_id" value='0'>
                                 </div>
                             </div>
@@ -1189,7 +1199,7 @@
                                     <input type="hidden" id="add_proof" value='0'>
                                 </div>
                             </div>
-                            <div class="col-xl-1 col-lg-1 col-md-1 col-sm-1 col-12" style="margin-top: 18px;">
+                            <div class="col-xl-1 col-lg-1 col-md-1 col-sm-1 col-12" style="margin-top: 18px; padding-left: 0px !important">
                                 <div class="form-group">
                                     <button type="button" class="btn btn-primary modalBtnCss" id="proof_modal_btn" data-toggle="modal" data-target="#add_proof_info_modal" onclick="getProofTable()" tabindex="1">+</button>
                                 </div>

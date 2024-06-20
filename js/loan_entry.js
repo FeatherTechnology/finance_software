@@ -903,6 +903,7 @@ function getFamilyTable() {
         appendDataToTable('#family_creation_table', response, columnMapping);
         setdtable('#family_creation_table');
         $('#family_form input').val('');
+        $('#fam_relationship').val('');
         $('#fam_live').val('0');
     }, 'json')
 }
@@ -973,6 +974,7 @@ function getPropertyTable() {
         setdtable('#property_creation_table');
         $('#property_form input').val('');
         $('#property_holder').val('');
+        $('#property_detail').val('');
     }, 'json')
 }
 
