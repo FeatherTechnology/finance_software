@@ -61,7 +61,7 @@
                                     <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
                                         <div class="form-group">
                                             <label for="cus_id"> Customer ID</label><span class="text-danger">*</span>
-                                            <input type="text" class="form-control personal_info_disble" id="cus_id" name="cus_id" placeholder="Enter Customer ID" tabindex="1" maxlength="14">
+                                            <input type="text" class="form-control personal_info_disble" id="cus_id" name="cus_id" data-type="adhaar-number" placeholder="Enter Customer ID" tabindex="1" maxlength="14">
                                         </div>
                                     </div>
                                     <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
@@ -74,7 +74,7 @@
                                         <div class="form-group">
                                             <label for="gender">Gender</label><span class="text-danger">*</span>
                                             <select type="text" class="form-control  personal_info_disble"  id="gender"  name="gender" tabindex="3">
-                                                <option value="Select gender">Select Gender</option>
+                                                <option value="">Select Gender</option>
                                                 <option value="1">Male</option>
                                                 <option value="2">Female</option>
                                                 <option value="3">Other</option>
@@ -114,7 +114,7 @@
                                             <label for="pic"> Photo</label><span class="text-danger">*</span><br>
                                             <img id='imgshow' class="img_show" src='img\avatar.png' />
                                             <input type="file" class="form-control  personal_info_disble" id="pic" name="pic" tabindex="8">
-                                            <input type="hidden" id="per_pic">
+                                            <input type="hidden" class="personal_info_disble" id="per_pic">
                                         </div>
                                     </div>
                                 </div>
@@ -145,7 +145,7 @@
                                                 <th>Name</th>
                                                 <th>Relationship</th>
                                                 <th>Age</th>
-                                                <th>Live/Alive</th>
+                                                <th>Live/Deceased</th>
                                                 <th>Occupation</th>
                                                 <th>Aadhar No</th>
                                                 <th>Mobile No</th>
@@ -172,7 +172,7 @@
                                             <label for="guarantor_name"> Guarantor Name</label><span class="text-danger">*</span>
                                             <input type="hidden" id="guarantor_name_edit">
                                             <select type="text" class="form-control" id="guarantor_name" name="guarantor_name" tabindex="10">
-                                                <option value="Select Guarantor Name">Select Guarantor Name</option>
+                                                <option value="">Select Guarantor Name</option>
                                             </select>
                                         </div>
                                     </div>
@@ -189,7 +189,7 @@
                                     <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
                                         <div class="form-group">
                                             <label for="pic"> Photo</label><span class="text-danger">*</span><br>
-                                            <img id='imgshows' class="img_show" src='img\avatar.png' />
+                                            <img id='gur_imgshow' class="img_show" src='img\avatar.png' />
                                             <input type="file" class="form-control" id="gu_pic" name="gu_pic" tabindex="12">
                                             <input type="hidden" id="gur_pic">
                                         </div>
@@ -213,7 +213,7 @@
                                 </div>
                             </div>
 
-                            <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                            <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12" style="display:none;">
                                 <div class="form-group">
                                     <label for="cus_status"> Customer Status</label>
                                     <input type="text" class="form-control" id="cus_status" name="cus_status" disabled placeholder="Additional/Renewal" tabindex="14">
@@ -222,81 +222,85 @@
                         </div>
                     </div>
 
-                    <div class="card-header">
-                        <div class="card-title">Data Checking</div>
-                    </div>
-                    <div class="card-body">
-                        <div class="row">
-                            <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
-                                <div class="form-group">
-                                    <label for="name_check">Name</label>
-                                    <select type="text" class="form-control" id="name_check" name="name_check" tabindex="15">
-                                        <option value="Select name">Select Name</option>
-                                    </select>
+                    <div id="data_checking_div" style="display: none;">
+                        <div class="card-header">
+                            <div class="card-title">Data Checking</div>
+                        </div>
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                                    <div class="form-group">
+                                        <label for="name_check">Name</label>
+                                        <select type="text" class="form-control" id="name_check" name="name_check" tabindex="15">
+                                            <option value="">Select Name</option>
+                                        </select>
+                                    </div>
                                 </div>
-                            </div>
-                            <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
-                                <div class="form-group">
-                                    <label for="aadhar_check">Aadhar</label>
-                                    <select type="text" class="form-control" id="aadhar_check" name="aadhar_check" tabindex="16">
-                                        <option value="Select Aadhar">Select Aadhar</option>
-                                    </select>
+                                <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                                    <div class="form-group">
+                                        <label for="aadhar_check">Aadhar</label>
+                                        <select type="text" class="form-control" id="aadhar_check" name="aadhar_check" tabindex="16">
+                                            <option value="">Select Aadhar</option>
+                                        </select>
+                                    </div>
                                 </div>
-                            </div>
-                            <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
-                                <div class="form-group">
-                                    <label for="mobile_check">Mobile</label>
-                                    <select type="text" class="form-control" id="mobile_check" name="mobile_check" tabindex="17">
-                                        <option value="Select Mobile">Select Mobile</option>
-                                    </select>
+                                <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                                    <div class="form-group">
+                                        <label for="mobile_check">Mobile</label>
+                                        <select type="text" class="form-control" id="mobile_check" name="mobile_check" tabindex="17">
+                                            <option value="">Select Mobile</option>
+                                        </select>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
 
-                    <div class="card-header">
-                        <div class="card-title">Customer Data</div>
-                    </div>
-                    <div class="card-body">
-                        <div class="row">
-                            <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
-                                <div class="form-group">
-                                    <table id="cus_info" class="table custom-table">
-                                        <thead>
-                                            <tr>
-                                                <th width="20">S.NO</th>
-                                                <th>Customer ID</th>
-                                                <th>Customer Name</th>
-                                                <th>Mobile Number</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody></tbody>
-                                    </table>
+                    <div id="data_checking_table_div" style="display: none;">
+                        <div class="card-header">
+                            <div class="card-title">Customer Data</div>
+                        </div>
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+                                    <div class="form-group">
+                                        <table id="cus_info" class="table custom-table">
+                                            <thead>
+                                                <tr>
+                                                    <th width="20">S.NO</th>
+                                                    <th>Customer ID</th>
+                                                    <th>Customer Name</th>
+                                                    <th>Mobile Number</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody></tbody>
+                                        </table>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
-
-                    <div class="card-header">
-                        <div class="card-title">Family Data</div>
-                    </div>
-                    <div class="card-body">
-                        <div class="row">
-                            <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
-                                <div class="form-group">
-                                    <table id="family_info" class="table custom-table">
-                                        <thead>
-                                            <tr>
-                                                <th width="20">S.NO</th>
-                                                <th>Customer ID</th>
-                                                <th>Name</th>
-                                                <th>Relationship</th>
-                                                <th>Under Customer Name</th>
-                                                <th>Under Customer ID</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody></tbody>
-                                    </table>
+    
+                        <div class="card-header">
+                            <div class="card-title">Family Data</div>
+                        </div>
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+                                    <div class="form-group">
+                                        <table id="family_info" class="table custom-table">
+                                            <thead>
+                                                <tr>
+                                                    <th width="20">S.NO</th>
+                                                    <th>Customer ID</th>
+                                                    <th>Name</th>
+                                                    <th>Relationship</th>
+                                                    <th>Under Customer Name</th>
+                                                    <th>Under Customer ID</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody></tbody>
+                                        </table>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -313,7 +317,7 @@
                                 <div class="form-group">
                                     <label for="res_type">Residential Type</label>
                                     <select type="text" class="form-control" id="res_type" name="res_type" tabindex="18">
-                                        <option value="0">Select Residential Type</option>
+                                        <option value="">Select Residential Type</option>
                                         <option value="1">Own</option>
                                         <option value="2">Rental</option>
                                         <option value="3">Lease</option>
@@ -364,7 +368,7 @@
                             <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
                                 <div class="form-group">
                                     <label for="occ_income"> Income</label>
-                                    <input type="text" class="form-control" id="occ_income" name="occ_income" placeholder="Enter Income" tabindex="24">
+                                    <input type="number" class="form-control" id="occ_income" name="occ_income" placeholder="Enter Income" tabindex="24">
                                 </div>
                             </div>
                             <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
@@ -387,7 +391,7 @@
                                 <div class="form-group">
                                     <label for="area_confirm">Area Confirm</label><span class="text-danger">*</span>
                                     <select type="text" class="form-control" id="area_confirm" name="area_confirm" tabindex="26">
-                                        <option value="Select Area Confirm">Select Area Confirm</option>
+                                        <option value="">Select Area Confirm</option>
                                         <option value="1">Resident</option>
                                         <option value="2">Occupation</option>
                                     </select>
@@ -398,7 +402,7 @@
                                     <label for="area">Area</label><span class="text-danger">*</span>
                                     <input type="hidden" id="area_edit">
                                     <select type="text" class="form-control" id="area" name="area" tabindex="27">
-                                        <option value="Select Area">Select Area</option>
+                                        <option value="">Select Area</option>
                                     </select>
                                 </div>
                             </div>
@@ -823,7 +827,7 @@
                             <div class="col-xl-1 col-lg-1 col-md-1 col-sm-1 col-12">
                                 <div class="form-group">
                                     <label for="submit_doc_need"> </label>
-                                    <input type="button" class="btn btn-primary modalBtnCss" id="submit_doc_need" name="submit_doc_need" value="Submit" tabindex="29" style="margin: 16px;">
+                                    <input type="button" class="btn btn-primary modalBtnCss" id="submit_doc_need" name="submit_doc_need" value="Add" tabindex="29" style="margin: 16px;">
                                 </div>
                             </div>
                             <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12"></div>
@@ -897,11 +901,11 @@
                             </div>
                             <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
                                 <div class="form-group">
-                                    <label for="fam_live">Live/Alive</label><span class="text-danger">*</span>
+                                    <label for="fam_live">Live/Deceased</label><span class="text-danger">*</span>
                                     <select type="text" class="form-control" id="fam_live" name="fam_live" tabindex="1">
-                                        <option value="0">Select Live/Alive</option>
+                                        <option value="0">Select Live/Deceased</option>
                                         <option value="1">Live</option>
-                                        <option value="2">Alive</option>
+                                        <option value="2">Deceased</option>
                                     </select>
                                     <input type="hidden" id="add_live_id" value='0'>
                                 </div>
@@ -916,7 +920,7 @@
                             <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
                                 <div class="form-group">
                                     <label for="fam_aadhar">Aadhar No</label><span class="text-danger">*</span>
-                                    <input type="text" class="form-control" name="fam_aadhar" id="fam_aadhar" tabindex="1" maxlength="14" placeholder="Enter Aadhar Number">
+                                    <input type="text" class="form-control" name="fam_aadhar" id="fam_aadhar" tabindex="1" maxlength="14" data-type="adhaar-number" placeholder="Enter Aadhar Number">
                                     <input type="hidden" id="addaadhar_id" value='0'>
                                 </div>
                             </div>
@@ -947,7 +951,7 @@
                                     <th>Name</th>
                                     <th>Relationship</th>
                                     <th>Age</th>
-                                    <th>Live/Alive</th>
+                                    <th>Live/Deceased</th>
                                     <th>Occupation</th>
                                     <th>Aadhar No</th>
                                     <th>Mobile No</th>
@@ -1154,7 +1158,7 @@
                                 <div class="form-group">
                                     <label for="proof_of">Proof Of</label><span class="text-danger">*</span>
                                     <select type="text" class="form-control" id="proof_of" name="proof_of" tabindex="1">
-                                        <option value="Select Proof Of">Select Proof Of</option>
+                                        <option value="">Select Proof Of</option>
                                         <option value="1">Customer</option>
                                         <option value="2">Family Member</option>
                                     </select>
