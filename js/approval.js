@@ -1,10 +1,43 @@
 $(document).ready(function () {
-    //Move Loan Entry 
-    $(document).on('click', '.move-loan-entry', function () {
+    $(document).on('click', '.approval-approve', function () {
         let cus_sts_id = $(this).attr('value');
-        let cus_sts = 3;
+        let cus_sts = 4;
         moveToNext(cus_sts_id, cus_sts);
     });
+    $(document).on('click', '.approval-cancel', function () {
+        let cus_sts_id = $(this).attr('value');
+        let cus_sts = 5;
+        $('#add_info_modal').modal('show');
+        $('#exampleModalLongTitle').text('Cancel');
+        $('#customer_profile_id').val(cus_sts_id);
+        $('#customer_status').val(cus_sts);
+        $('#remark').val('');
+    });
+
+    $(document).on('click', '.approval-revoke', function () {
+        let cus_sts_id = $(this).attr('value');
+        let cus_sts = 6;
+        $('#add_info_modal').modal('show');
+        $('#exampleModalLongTitle').text('Revoke');
+        $('#customer_profile_id').val(cus_sts_id);
+        $('#customer_status').val(cus_sts);
+        $('#remark').val('');
+    });
+    $(document).on('click', '#submit_remark', function () {
+        event.preventDefault();
+        let action = $('#exampleModalLongTitle').text().toLowerCase(); // Get action (cancel or revoke)
+        let cus_sts_id = $('#customer_profile_id').val();
+        let cus_sts = $('#customer_status').val();
+        let remark = $('#remark').val();
+
+        if (remark === '') {
+            alert('Please enter a remark.');
+            return;
+        }
+
+        submitForm(action, cus_sts_id, cus_sts, remark);
+    });
+
     // Loan Entry Tab Change Radio buttons
     $(document).on('click', '#add_loan, #back_btn', function () {
         swapTableAndCreation();
@@ -29,12 +62,12 @@ $(document).ready(function () {
     });
 
     $('#back_btn').click(function () {
-        getLoanEntryTable();
+        getApprovalTable();
         clearLoanCalcForm();//To clear Loan Calculation.
         clearCusProfileForm('1');//To Clear Customer Profile
     });
 
-    $(document).on('click', '.edit-loan-entry', function () {
+    $(document).on('click', '.approval-edit', function () {
         let id = $(this).attr('value');
         $('#customer_profile_id').val(id);
         let loanCalcId = $(this).attr('data-id');
@@ -714,18 +747,15 @@ $(document).ready(function () {
 
 //On Load function 
 $(function () {
-    getLoanEntryTable();
+    getApprovalTable();
 });
 
-function getLoanEntryTable() {
-    $.post('api/loan_entry/loan_entry_list.php', function (response) {
+function getApprovalTable() {
+    $.post('api/approval_files/approval_list.php', function (response) {
         var columnMapping = [
             'sno',
             'cus_id',
             'cus_name',
-            'loan_id',
-            'loan_category',
-            'loan_amount',
             'area',
             'linename',
             'branch_name',
@@ -741,13 +771,39 @@ function getLoanEntryTable() {
 function moveToNext(cus_sts_id, cus_sts) {
     $.post('api/common_files/move_to_next.php', { cus_sts_id, cus_sts }, function (response) {
         if (response == '0') {
-            swalSuccess('Success', 'Moved to Approval');
-            getLoanEntryTable();
+            let alertName;
+            if (cus_sts == '4') {
+                alertName = 'Approved Successfully';
+            }
+            else if(cus_sts == '5'){
+                alertName = 'Cancelled Successfully';
+            }
+            else if(cus_sts == '6'){
+                alertName = 'Revoked Successfully';
+            }
+            swalSuccess('Success', alertName);
+            getApprovalTable();
         } else {
-            swalError('Alert', 'Failed to Move to Approval');
+            swalError('Alert', 'Failed To Move');
         }
     }, 'json');
 }
+function submitForm(action, cus_sts_id, cus_sts, remark) {
+    $.post('api/common_files/update_status.php', { cus_sts_id, remark, cus_sts }, function (response) {
+        console.log(cus_sts)
+        if (response == '0') {
+            $('#add_info_modal').modal('hide');
+            moveToNext(cus_sts_id, cus_sts);
+        } else {
+            swalError('Alert', 'Failed to ' + action);
+        }
+    }, 'json');
+}
+
+function closeRemarkModal() {
+    $('#add_info_modal').modal('hide');
+}
+
 function swapTableAndCreation() {
     if ($('.loan_table_content').is(':visible')) {
         $('.loan_table_content').hide();
@@ -783,6 +839,7 @@ function clearCusProfileForm(type) {
 
     // Clear all textarea fields within the specific form
     $('#loan_entry_customer_profile').find('textarea').val('');
+
 
     //clear all upload inputs within the form.
     $('#loan_entry_customer_profile').find('input[type="file"]').val('');

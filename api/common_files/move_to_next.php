@@ -4,8 +4,9 @@ require "../../ajaxconfig.php";
 $user_id = $_SESSION['user_id'];
 
 $cus_sts_tableid = $_POST['cus_sts_id'];
+$cus_sts = $_POST['cus_sts'];
 $result = array();
-$qry = $pdo->query("UPDATE `customer_status` SET `status`='3', `update_login_id`='$user_id', `updated_on`=now() WHERE `id`='$cus_sts_tableid' ");
+$qry = $pdo->query("UPDATE `customer_status` SET `status`='$cus_sts', `update_login_id`='$user_id', `updated_on`=now() WHERE `id`='$cus_sts_tableid' ");
 if($qry){
     $result = 0;
 }
