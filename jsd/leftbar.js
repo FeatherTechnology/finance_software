@@ -2,7 +2,6 @@ $(document).ready(function () {
     // Define the mapping of current_page values to current_module values
     const moduleMapping = {
         'company_creation': 'master',
-        'branch_creation_list': 'master',
         'branch_creation': 'master',
         'loan_category_creation': 'master',
         'area_creation': 'master',

@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jun 19, 2024 at 06:28 AM
+-- Generation Time: Jun 20, 2024 at 01:00 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -186,6 +186,7 @@ CREATE TABLE `company_creation` (
   `mailid` varchar(255) DEFAULT NULL,
   `mobile` varchar(255) DEFAULT NULL,
   `whatsapp` varchar(255) DEFAULT NULL,
+  `landline_code` varchar(100) DEFAULT NULL,
   `landline` varchar(255) DEFAULT NULL,
   `status` int(11) NOT NULL DEFAULT 1,
   `insert_user_id` int(11) DEFAULT NULL,
@@ -214,7 +215,7 @@ CREATE TABLE `customer_profile` (
   `gu_pic` varchar(100) NOT NULL,
   `cus_data` varchar(100) NOT NULL,
   `cus_status` varchar(100) NOT NULL,
-  `res_type` varchar(100) DEFAULT NULL,
+  `res_type` varchar(100) NOT NULL,
   `res_detail` varchar(100) NOT NULL,
   `res_address` varchar(100) NOT NULL,
   `native_address` varchar(100) NOT NULL,
@@ -230,6 +231,24 @@ CREATE TABLE `customer_profile` (
   `insert_login_id` int(11) NOT NULL,
   `update_login_id` int(11) NOT NULL,
   `created_on` date DEFAULT NULL,
+  `updated_on` date DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `customer_status`
+--
+
+CREATE TABLE `customer_status` (
+  `id` int(11) NOT NULL,
+  `cus_id` varchar(100) NOT NULL,
+  `cus_profile_id` int(11) NOT NULL,
+  `loan_calculation_id` int(11) DEFAULT NULL,
+  `status` int(11) NOT NULL,
+  `insert_login_id` int(11) NOT NULL,
+  `update_login_id` int(11) DEFAULT NULL,
+  `created_on` date NOT NULL,
   `updated_on` date DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
@@ -1042,7 +1061,7 @@ CREATE TABLE `users` (
 --
 
 INSERT INTO `users` (`id`, `name`, `user_code`, `role`, `designation`, `address`, `place`, `email`, `mobile`, `user_name`, `password`, `branch`, `loan_category`, `line`, `screens`, `insert_login_id`, `update_login_id`, `created_on`, `updated_on`) VALUES
-(1, 'Super Admin', 'US-001', 7, 7, '', '', '', '', 'admin', '123', '1', '9', '1', '1,2,3,4,5,6,7,8,11,12,16,13,17', '1', '1', '2024-06-13', '2024-06-14');
+(1, 'Super Admin', 'US-001', 7, 7, '', '', '', '', 'admin', '123', '1', '9', '1', '1,2,3,4,5,6,7,8', '1', '1', '2024-06-13', '2024-06-20');
 
 --
 -- Indexes for dumped tables
@@ -1104,6 +1123,13 @@ ALTER TABLE `company_creation`
 --
 ALTER TABLE `customer_profile`
   ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `customer_status`
+--
+ALTER TABLE `customer_status`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `customerProfileId` (`cus_profile_id`);
 
 --
 -- Indexes for table `designation`
@@ -1278,6 +1304,12 @@ ALTER TABLE `customer_profile`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
+-- AUTO_INCREMENT for table `customer_status`
+--
+ALTER TABLE `customer_status`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
 -- AUTO_INCREMENT for table `designation`
 --
 ALTER TABLE `designation`
@@ -1417,6 +1449,12 @@ ALTER TABLE `company_creation`
   ADD CONSTRAINT `District ids` FOREIGN KEY (`district`) REFERENCES `districts` (`id`),
   ADD CONSTRAINT `State ids` FOREIGN KEY (`state`) REFERENCES `states` (`id`),
   ADD CONSTRAINT `Taluk ids` FOREIGN KEY (`taluk`) REFERENCES `taluks` (`id`);
+
+--
+-- Constraints for table `customer_status`
+--
+ALTER TABLE `customer_status`
+  ADD CONSTRAINT `customerProfileId` FOREIGN KEY (`cus_profile_id`) REFERENCES `customer_profile` (`id`) ON UPDATE NO ACTION;
 
 --
 -- Constraints for table `districts`

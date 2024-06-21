@@ -137,7 +137,7 @@ border-style: none;
   justify-content: center;
 }   
 .modalBtnCss{
-  width: 65px;
+  width: 50px;
   height: calc(2.25rem + 2px);
 }
 .form-group-label-emptywith-input{
