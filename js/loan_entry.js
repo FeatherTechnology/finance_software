@@ -85,6 +85,7 @@ $(document).ready(function () {
         let mobileno = $('#mobile1').val();
         if (customerID) {
             dataCheckList(customerID, cus_name, mobileno)
+            existingCustmerProfile(customerID)
         } else {
             removeCustomerID();
         }
@@ -1314,6 +1315,57 @@ function editCustmerProfile(id) {
     }, 'json');
 }
 
+function existingCustmerProfile(cus_id) {
+    $.post('api/loan_entry/customer_profile_existing.php', {cus_id }, function (response) {
+        if(response !=''){
+        $('#customer_profile_id').val(response[0].id);
+        $('#area_edit').val(response[0].area);
+        $('#cus_id').val(response[0].cus_id);
+        $('#cus_name').val(response[0].cus_name);
+        $('#gender').val(response[0].gender);
+        $('#dob').val(response[0].dob);
+        $('#age').val(response[0].age);
+        $('#mobile2').val(response[0].mobile2);
+        $('#mobile1').val(response[0].mobile1);
+        $('#guarantor_name_edit').val(response[0].guarantor_name);
+        $('#cus_data').val(response[0].cus_data);
+        $('#cus_status').val(response[0].cus_status);
+        $('#res_type').val(response[0].res_type);
+        $('#res_detail').val(response[0].res_detail);
+        $('#res_address').val(response[0].res_address);
+        $('#native_address').val(response[0].native_address);
+        $('#occupation').val(response[0].occupation);
+        $('#occ_address').val(response[0].occ_address);
+        $('#occ_detail').val(response[0].occ_detail);
+        $('#occ_income').val(response[0].occ_income);
+        $('#area_confirm').val(response[0].area_confirm);
+        $('#line').val(response[0].line);
+        $('#cus_limit').val(response[0].cus_limit);
+        $('#about_cus').val(response[0].about_cus);
+        dataCheckList(response[0].cus_id, response[0].cus_name, response[0].mobile1)
+        getGuarantorName()
+        getAreaName()
+        setTimeout(() => {
+            getFamilyInfoTable()
+            $('#area').trigger('change');
+            $('#guarantor_name').trigger('change');
+        }, 1000);
+
+        if (response[0].cus_data == 'Existing') {
+            $('#cus_status').show();
+            $('#data_checking_div').show();
+        }
+        let path = "uploads/loan_entry/cus_pic/";
+        $('#per_pic').val(response[0].pic);
+        var img = $('#imgshow');
+        img.attr('src', path + response[0].pic);
+        let paths = "uploads/loan_entry/gu_pic/";
+        $('#gur_pic').val(response[0].gu_pic);
+        var img = $('#gur_imgshow');
+        img.attr('src', paths + response[0].gu_pic);
+    }
+    }, 'json');
+}
 ///////////////////////////////////////////////Customer Profile js End//////////////////////////////
 
 //////////////////////////////////////////////////////////////// Loan Calculation START //////////////////////////////////////////////////////////////////////
