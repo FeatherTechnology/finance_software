@@ -529,7 +529,7 @@
                 <!--- -------------------------------------- Loan Info ------------------------------- -->
                 <div class="card">
                     <div class="card-header">
-                        <div class="card-title">Loan Info</div>
+                        <div class="card-title"></div>
                     </div>
                     
                           
@@ -538,13 +538,7 @@
                        
                 <!--- -------------------------------------- Documents END ------------------------------- -->
 
-                <div class="col-12 mt-3 text-right">
-                    <button name="submit_loan_calculation" id="submit_loan_calculation" class="btn btn-primary" tabindex="30"><span class="icon-check"></span>&nbsp;Submit</button>
-                    <button type="reset" id="clear_loan_calc_form" class="btn btn-outline-secondary" tabindex="31">Clear</button>
-                </div>
-            </div>
-        </div>
-    </form>
+                
     <!-- -------------------------------------- Loan Calculation END ------------------------------ -->
 </div> <!-- Loan entry Content END - Customer profile & Documentation -->
 
