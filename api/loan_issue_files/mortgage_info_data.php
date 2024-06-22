@@ -1,10 +1,9 @@
 <?php
-//Also using in Loan Issue
 require '../../ajaxconfig.php';
 
 $id = $_POST['id'];
 
-$qry = $pdo->query("SELECT * FROM `family_info` WHERE id='$id'");
+$qry = $pdo->query("SELECT * FROM `mortgage_info` WHERE id='$id'");
 if ($qry->rowCount() > 0) {
     $result = $qry->fetchAll(PDO::FETCH_ASSOC);
 }

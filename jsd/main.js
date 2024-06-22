@@ -292,11 +292,8 @@ function appendDataToTable(tableSelector, response, columnMapping) {
 			if (value === 'sno') {
 				$('<td>').text(index + 1).appendTo(row); // Add serial number
 			} else if (item.hasOwnProperty(value)) {
-				if (value === 'action') {
-					// If the key is 'action', insert the HTML content directly
-					$('<td>').html(item[value]).appendTo(row);
-				}else if (value === 'upload') {
-					// If the key is 'action', insert the HTML content directly
+				if (value === 'action' || value === 'upload') {
+					// If the key is 'action' or 'upload', insert the HTML content directly
 					$('<td>').html(item[value]).appendTo(row);
 				}else {
 					// Otherwise, insert the text content
