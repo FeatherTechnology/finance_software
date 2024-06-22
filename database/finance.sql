@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jun 20, 2024 at 01:00 PM
+-- Generation Time: Jun 22, 2024 at 03:40 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -58,25 +58,6 @@ CREATE TABLE `area_creation` (
   `created_on` datetime NOT NULL DEFAULT current_timestamp(),
   `update_on` date DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Triggers `area_creation`
---
-DELIMITER $$
-CREATE TRIGGER `before_delete_area_creation` BEFORE DELETE ON `area_creation` FOR EACH ROW BEGIN
-    DECLARE lineCount INT;
-    
-    SELECT COUNT(*) INTO lineCount
-    FROM users
-    WHERE FIND_IN_SET(OLD.line_id, line) > 0;
-    
-    IF lineCount > 0 THEN
-        SIGNAL SQLSTATE '45000' 
-        SET MESSAGE_TEXT = 'Cannot delete Area creation because line_id is referenced in users table';
-    END IF;
-END
-$$
-DELIMITER ;
 
 -- --------------------------------------------------------
 
@@ -170,6 +151,29 @@ CREATE TABLE `branch_creation` (
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `cheque_info`
+--
+
+CREATE TABLE `cheque_info` (
+  `id` int(11) NOT NULL,
+  `cus_id` int(11) NOT NULL,
+  `cus_profile_id` int(11) NOT NULL,
+  `holder_type` int(11) NOT NULL,
+  `holder_name` varchar(150) NOT NULL,
+  `holder_id` int(11) DEFAULT NULL,
+  `relationship` varchar(50) NOT NULL,
+  `bank_name` varchar(150) NOT NULL,
+  `cheque_cnt` int(11) NOT NULL,
+  `upload` varchar(255) NOT NULL,
+  `insert_login_id` int(11) NOT NULL,
+  `update_login_id` int(11) DEFAULT NULL,
+  `created_on` date DEFAULT NULL,
+  `updated_on` date DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `company_creation`
 --
 
@@ -193,6 +197,25 @@ CREATE TABLE `company_creation` (
   `update_user_id` int(11) DEFAULT NULL,
   `created_date` datetime DEFAULT current_timestamp(),
   `updated_date` date DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `customer_data`
+--
+
+CREATE TABLE `customer_data` (
+  `id` int(11) NOT NULL,
+  `cus_name` varchar(100) NOT NULL,
+  `area` varchar(100) NOT NULL,
+  `mobile` varchar(100) NOT NULL,
+  `loan_cat` varchar(100) NOT NULL,
+  `loan_amount` varchar(100) NOT NULL,
+  `insert_login_id` int(11) NOT NULL,
+  `update_login_id` int(11) NOT NULL,
+  `created_on` date DEFAULT NULL,
+  `updated_on` date DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -228,6 +251,7 @@ CREATE TABLE `customer_profile` (
   `line` varchar(100) NOT NULL,
   `cus_limit` varchar(100) NOT NULL,
   `about_cus` varchar(100) NOT NULL,
+  `remark` varchar(255) DEFAULT NULL,
   `insert_login_id` int(11) NOT NULL,
   `update_login_id` int(11) NOT NULL,
   `created_on` date DEFAULT NULL,
@@ -246,6 +270,7 @@ CREATE TABLE `customer_status` (
   `cus_profile_id` int(11) NOT NULL,
   `loan_calculation_id` int(11) DEFAULT NULL,
   `status` int(11) NOT NULL,
+  `sub_status` int(11) DEFAULT NULL,
   `insert_login_id` int(11) NOT NULL,
   `update_login_id` int(11) DEFAULT NULL,
   `created_on` date NOT NULL,
@@ -328,6 +353,27 @@ INSERT INTO `districts` (`id`, `state_id`, `district_name`, `status`) VALUES
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `document_info`
+--
+
+CREATE TABLE `document_info` (
+  `id` int(11) NOT NULL,
+  `cus_id` int(11) NOT NULL,
+  `cus_profile_id` int(11) NOT NULL,
+  `doc_name` varchar(150) NOT NULL,
+  `doc_type` int(50) NOT NULL,
+  `holder_name` int(11) NOT NULL,
+  `relationship` varchar(50) NOT NULL,
+  `upload` varchar(100) NOT NULL,
+  `insert_login_id` int(11) NOT NULL,
+  `update_login_id` int(11) DEFAULT NULL,
+  `created_on` date DEFAULT NULL,
+  `updated_on` date DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `document_need`
 --
 
@@ -335,6 +381,29 @@ CREATE TABLE `document_need` (
   `id` int(11) NOT NULL,
   `cus_profile_id` int(11) NOT NULL,
   `document_name` varchar(255) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `endorsement_info`
+--
+
+CREATE TABLE `endorsement_info` (
+  `id` int(11) NOT NULL,
+  `cus_id` int(11) NOT NULL,
+  `cus_profile_id` int(11) NOT NULL,
+  `owner_name` int(11) NOT NULL,
+  `relationship` varchar(50) NOT NULL,
+  `vehicle_details` varchar(255) NOT NULL,
+  `endorsement_name` varchar(250) NOT NULL,
+  `key_original` varchar(50) NOT NULL,
+  `rc_original` varchar(50) NOT NULL,
+  `upload` varchar(255) NOT NULL,
+  `insert_login_id` int(11) NOT NULL,
+  `update_login_id` int(11) NOT NULL,
+  `created_on` date DEFAULT NULL,
+  `updated_on` date DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -355,6 +424,26 @@ CREATE TABLE `family_info` (
   `fam_mobile` varchar(100) NOT NULL,
   `insert_login_id` int(11) NOT NULL,
   `update_login_id` int(11) NOT NULL,
+  `created_on` date DEFAULT NULL,
+  `updated_on` date DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `gold_info`
+--
+
+CREATE TABLE `gold_info` (
+  `id` int(11) NOT NULL,
+  `cus_id` int(11) NOT NULL,
+  `cus_profile_id` int(11) NOT NULL,
+  `gold_type` varchar(150) NOT NULL,
+  `purity` varchar(150) NOT NULL,
+  `weight` varchar(150) NOT NULL,
+  `value` varchar(150) NOT NULL,
+  `insert_login_id` int(11) NOT NULL,
+  `update_login_id` int(11) DEFAULT NULL,
   `created_on` date DEFAULT NULL,
   `updated_on` date DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
@@ -395,25 +484,6 @@ CREATE TABLE `line_name_creation` (
   `created_on` datetime NOT NULL DEFAULT current_timestamp(),
   `updated_on` date DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Triggers `line_name_creation`
---
-DELIMITER $$
-CREATE TRIGGER `before_delete_line` BEFORE DELETE ON `line_name_creation` FOR EACH ROW BEGIN
-    DECLARE lineCount INT;
-    
-    SELECT COUNT(*) INTO lineCount
-    FROM users
-    WHERE FIND_IN_SET(OLD.id, line) > 0;
-    
-    IF lineCount > 0 THEN
-        SIGNAL SQLSTATE '45000' 
-        SET MESSAGE_TEXT = 'Cannot delete line_id because it is referenced in users table';
-    END IF;
-END
-$$
-DELIMITER ;
 
 -- --------------------------------------------------------
 
@@ -457,25 +527,6 @@ CREATE TABLE `loan_category_creation` (
   `created_on` date DEFAULT NULL,
   `updated_on` date DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Triggers `loan_category_creation`
---
-DELIMITER $$
-CREATE TRIGGER `before_loan_category_creation` BEFORE DELETE ON `loan_category_creation` FOR EACH ROW BEGIN
-    DECLARE loancatCount INT;
-    
-    SELECT COUNT(*) INTO loancatCount
-    FROM users
-    WHERE FIND_IN_SET(OLD.id, loan_category) > 0;
-    
-    IF loancatCount > 0 THEN
-        SIGNAL SQLSTATE '45000' 
-        SET MESSAGE_TEXT = 'Cannot delete Loan Category Creation because it is referenced in users table';
-    END IF;
-END
-$$
-DELIMITER ;
 
 -- --------------------------------------------------------
 
@@ -525,6 +576,31 @@ CREATE TABLE `loan_entry_loan_calculation` (
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `loan_issue`
+--
+
+CREATE TABLE `loan_issue` (
+  `id` int(11) NOT NULL,
+  `cus_id` int(11) NOT NULL,
+  `cus_profile_id` int(11) NOT NULL,
+  `loan_amnt` int(50) NOT NULL,
+  `net_cash` int(50) NOT NULL,
+  `payment_mode` int(11) NOT NULL,
+  `issue_amnt` int(50) NOT NULL,
+  `transaction_id` varchar(50) DEFAULT NULL,
+  `cheque_no` varchar(50) DEFAULT NULL,
+  `issue_date` date NOT NULL,
+  `issue_person` varchar(50) NOT NULL,
+  `relationship` varchar(50) NOT NULL,
+  `insert_login_id` int(11) NOT NULL,
+  `update_login_id` int(11) DEFAULT NULL,
+  `created_on` date DEFAULT NULL,
+  `updated_on` date DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `menu_list`
 --
 
@@ -553,6 +629,31 @@ INSERT INTO `menu_list` (`id`, `menu`, `link`, `icon`) VALUES
 (11, 'Customer Data', 'customer_data', 'globe'),
 (12, 'Search', 'search', 'globe'),
 (13, 'Reports', 'reports', 'globe');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `mortgage_info`
+--
+
+CREATE TABLE `mortgage_info` (
+  `id` int(11) NOT NULL,
+  `cus_id` int(11) NOT NULL,
+  `cus_profile_id` int(11) NOT NULL,
+  `property_holder_name` int(11) NOT NULL,
+  `relationship` varchar(50) NOT NULL,
+  `property_details` varchar(255) NOT NULL,
+  `mortgage_name` varchar(100) NOT NULL,
+  `designation` varchar(100) NOT NULL,
+  `mortgage_number` varchar(100) NOT NULL,
+  `reg_office` varchar(100) NOT NULL,
+  `mortgage_value` varchar(100) NOT NULL,
+  `upload` varchar(100) NOT NULL,
+  `insert_login_id` int(11) NOT NULL,
+  `update_login_id` int(11) DEFAULT NULL,
+  `created_on` date DEFAULT NULL,
+  `updated_on` date DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -1061,7 +1162,7 @@ CREATE TABLE `users` (
 --
 
 INSERT INTO `users` (`id`, `name`, `user_code`, `role`, `designation`, `address`, `place`, `email`, `mobile`, `user_name`, `password`, `branch`, `loan_category`, `line`, `screens`, `insert_login_id`, `update_login_id`, `created_on`, `updated_on`) VALUES
-(1, 'Super Admin', 'US-001', 7, 7, '', '', '', '', 'admin', '123', '1', '9', '1', '1,2,3,4,5,6,7,8', '1', '1', '2024-06-13', '2024-06-20');
+(1, 'Super Admin', 'US-001', 7, 7, '', '', '', '', 'admin', '123', '1', '9', '1', '1,2,3,4,5,6,7,8,9,10,15,16', '1', '1', '2024-06-13', '2024-06-21');
 
 --
 -- Indexes for dumped tables
@@ -1110,6 +1211,12 @@ ALTER TABLE `branch_creation`
   ADD KEY `taluk_id` (`taluk`);
 
 --
+-- Indexes for table `cheque_info`
+--
+ALTER TABLE `cheque_info`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- Indexes for table `company_creation`
 --
 ALTER TABLE `company_creation`
@@ -1117,6 +1224,12 @@ ALTER TABLE `company_creation`
   ADD KEY `State ids` (`state`),
   ADD KEY `District ids` (`district`),
   ADD KEY `Taluk ids` (`taluk`);
+
+--
+-- Indexes for table `customer_data`
+--
+ALTER TABLE `customer_data`
+  ADD PRIMARY KEY (`id`);
 
 --
 -- Indexes for table `customer_profile`
@@ -1145,15 +1258,33 @@ ALTER TABLE `districts`
   ADD KEY `State id` (`state_id`);
 
 --
+-- Indexes for table `document_info`
+--
+ALTER TABLE `document_info`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- Indexes for table `document_need`
 --
 ALTER TABLE `document_need`
   ADD PRIMARY KEY (`id`);
 
 --
+-- Indexes for table `endorsement_info`
+--
+ALTER TABLE `endorsement_info`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- Indexes for table `family_info`
 --
 ALTER TABLE `family_info`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `gold_info`
+--
+ALTER TABLE `gold_info`
   ADD PRIMARY KEY (`id`);
 
 --
@@ -1192,9 +1323,21 @@ ALTER TABLE `loan_entry_loan_calculation`
   ADD KEY `customer profile id` (`cus_profile_id`);
 
 --
+-- Indexes for table `loan_issue`
+--
+ALTER TABLE `loan_issue`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- Indexes for table `menu_list`
 --
 ALTER TABLE `menu_list`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `mortgage_info`
+--
+ALTER TABLE `mortgage_info`
   ADD PRIMARY KEY (`id`);
 
 --
@@ -1292,9 +1435,21 @@ ALTER TABLE `branch_creation`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
+-- AUTO_INCREMENT for table `cheque_info`
+--
+ALTER TABLE `cheque_info`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
 -- AUTO_INCREMENT for table `company_creation`
 --
 ALTER TABLE `company_creation`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `customer_data`
+--
+ALTER TABLE `customer_data`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
@@ -1322,15 +1477,33 @@ ALTER TABLE `districts`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=40;
 
 --
+-- AUTO_INCREMENT for table `document_info`
+--
+ALTER TABLE `document_info`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
 -- AUTO_INCREMENT for table `document_need`
 --
 ALTER TABLE `document_need`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
+-- AUTO_INCREMENT for table `endorsement_info`
+--
+ALTER TABLE `endorsement_info`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
 -- AUTO_INCREMENT for table `family_info`
 --
 ALTER TABLE `family_info`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `gold_info`
+--
+ALTER TABLE `gold_info`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
@@ -1364,10 +1537,22 @@ ALTER TABLE `loan_entry_loan_calculation`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
+-- AUTO_INCREMENT for table `loan_issue`
+--
+ALTER TABLE `loan_issue`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
 -- AUTO_INCREMENT for table `menu_list`
 --
 ALTER TABLE `menu_list`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
+
+--
+-- AUTO_INCREMENT for table `mortgage_info`
+--
+ALTER TABLE `mortgage_info`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `proof_info`

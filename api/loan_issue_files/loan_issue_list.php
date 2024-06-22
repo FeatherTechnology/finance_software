@@ -17,7 +17,7 @@ if ($qry->rowCount() > 0) {
             <button class='btn btn-outline-secondary'><i class='fa'>&#xf107;</i></button>
             <div class='dropdown-content'>";
             
-            $loanEntryInfo['action'] .= "<a href='#' class='edit-loan-issue' value='" . $loanEntryInfo['id'] . "' data-id='" . $loanEntryInfo['loan_calc_id'] . "' title='Edit details'>Edit</a>";
+            $loanEntryInfo['action'] .= "<a href='#' class='edit-loan-issue' value='" . $loanEntryInfo['id'] . "' data-id='" . $loanEntryInfo['cus_id'] . "' title='Edit details'>Edit</a>";
 
         $loanEntryInfo['action'] .= "</div></div>";
 
