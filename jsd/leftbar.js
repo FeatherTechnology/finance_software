@@ -18,7 +18,7 @@ $(document).ready(function () {
         'update_customer': 'update',
         'update_document': 'update',
         'customer_data': 'customer_data',
-        'search': 'search',
+        'search_screen': 'search',
         'reports': 'reports',
     };
 

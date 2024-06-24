@@ -1,4 +1,4 @@
-<!-- Loan Entry List Start -->
+<!-- Loan Issue List Start -->
 <div class="card loanissue_table_content">
     <div class="card-body">
         <div class="col-12">
@@ -21,7 +21,7 @@
         </div>
     </div>
 </div>
-<!--Loan Entry List End-->
+<!--Loan Issue List End-->
 <div id="loan_issue_content" style="display:none;">
     <div class="text-right">
         <button type="button" class="btn btn-primary" id="back_btn"><span class="icon-arrow-left"></span>&nbsp; Back </button>
@@ -237,7 +237,7 @@
         </div>
     </form>
 
-    <!-- -------------------------------------- Loan Calculation START ------------------------------ -->
+    <!-- -------------------------------------- Loan Issue START ------------------------------ -->
     <form id="loan_issue_form" name="loan_issue_form" style="display: none;">
         <input type="hidden" id="due_period_calc">
         <input type="hidden" id="profit_type_calc">
@@ -476,8 +476,8 @@
             </div>
         </div>
     </form>
-    <!-- -------------------------------------- Loan Calculation END ------------------------------ -->
-</div> <!-- Loan entry Content END - Customer profile & Loan Calculation -->
+    <!-- -------------------------------------- Loan Issue END ------------------------------ -->
+</div> <!-- Loan Issue Content END - Customer profile & Loan Issue -->
 
 
 <!-- ------------------------------------------------------------ Cheque Info Modal START ------------------------------------------------------------- -->

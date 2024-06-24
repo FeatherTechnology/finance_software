@@ -3,7 +3,7 @@ require '../../ajaxconfig.php';
 
 $id = $_POST['id'];
 
-$qry = $pdo->query("SELECT cus_id, cus_name, cus_data, mobile1, areaname, pic, lc.loan_category, lelc.loan_amnt, lelc.principal_amnt, lelc.interest_amnt, lelc.total_amnt, lelc.due_amnt, lelc.doc_charge_calculate, lelc.processing_fees_calculate, lelc.net_cash,lelc.loan_date, lelc.due_startdate, lelc.maturity_date, lelc.due_period, lelc.profit_type, lelc.due_method, lelc.scheme_due_method, lelc.scheme_day
+$qry = $pdo->query("SELECT cp.cus_id, cp.cus_name, cp.cus_data, cp.mobile1, anc.areaname, cp.pic, lc.loan_category, lelc.loan_amnt, lelc.principal_amnt, lelc.interest_amnt, lelc.total_amnt, lelc.due_amnt, lelc.doc_charge_calculate, lelc.processing_fees_calculate, lelc.net_cash,lelc.loan_date, lelc.due_startdate, lelc.maturity_date, lelc.due_period, lelc.profit_type, lelc.due_method, lelc.scheme_due_method, lelc.scheme_day
 FROM loan_entry_loan_calculation lelc 
 JOIN customer_profile cp ON lelc.cus_profile_id = cp.id 
 JOIN area_name_creation anc ON cp.area = anc.id 

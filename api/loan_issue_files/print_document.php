@@ -28,6 +28,62 @@
 <?php
 require "../../ajaxconfig.php";
 $cus_profile_id = $_POST['cus_profile_id'];
+?>
+<!---////////////////////////////////////////////////////////////////////////Personal Info start////////////////////////////////////////////////////////-->
+<table class="table custom-table">
+    <thead>
+        <tr>
+            <th colspan="7">Personal Info</th>
+        </tr>
+        <tr>
+            <th width="20">S.NO</th>
+            <th>Customer ID</th>
+            <th>Customer Name</th>
+            <th>Area</th>
+            <th>Line</th>
+            <th>Branch</th>
+            <th>Mobile</th>
+        </tr>
+    </thead>
+    <tbody>
+        <?php
+        $qry = $pdo->query("SELECT cp.id, cp.cus_id, cp.cus_name, anc.areaname AS area, lnc.linename, bc.branch_name , cp.mobile1   
+        FROM customer_profile cp 
+        LEFT JOIN line_name_creation lnc ON cp.line = lnc.id
+        LEFT JOIN area_name_creation anc ON cp.area = anc.id
+        LEFT JOIN area_creation ac ON cp.line = ac.line_id
+        LEFT JOIN branch_creation bc ON ac.branch_id = bc.id
+        LEFT JOIN customer_status cs ON cp.id = cs.cus_profile_id
+        WHERE cp.id= '$cus_profile_id'");
+        if ($qry->rowCount() > 0) {
+            $a = 1;
+            while ($personal_info = $qry->fetchObject()) {
+        ?>
+                <tr>
+                    <td><?php echo $a++; ?></td>
+                    <td><?php echo $personal_info->cus_id; ?></td>
+                    <td><?php echo $personal_info->cus_name; ?></td>
+                    <td><?php echo $personal_info->area; ?></td>
+                    <td><?php echo $personal_info->linename; ?></td>
+                    <td><?php echo $personal_info->branch_name; ?></td>
+                    <td><?php echo $personal_info->mobile1; ?></td>
+                </tr>
+            <?php
+            }
+        } else {
+            ?>
+            <tr>
+                <td colspan="7">
+                    <center>No data available in table</center>
+                </td>
+            </tr>
+        <?php
+        }
+        ?>
+    </tbody>
+</table> </br></br>
+<!--////////////////////////////////////////////////////////////////////Personal Info End//////////////////////////////////////////////////////////////-->
+<?php
 /////////////////////////////////////////////////////////////////////////// Document Need START ////////////////////////////////////////////////////////
 $qry = $pdo->query("SELECT document_name FROM document_need where cus_profile_id = '$cus_profile_id' ");
 ?>
