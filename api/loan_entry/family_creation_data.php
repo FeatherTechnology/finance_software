@@ -1,4 +1,5 @@
 <?php
+//Also using in Loan Issue
 require '../../ajaxconfig.php';
 
 $id = $_POST['id'];

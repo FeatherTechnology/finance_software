@@ -14,13 +14,13 @@ $(document).ready(function () {
     $('#submit_company_creation').click(function () {
         event.preventDefault();
         //Validation
-        let company_name = $('#company_name').val(); let address = $('#address').val(); let state = $('#state').val(); let district = $('#district').val(); let taluk = $('#taluk').val(); let place = $('#place').val(); let pincode = $('#pincode').val(); let website = $('#website').val(); let mailid = $('#mailid').val(); let mobile = $('#mobile').val(); let whatsapp = $('#whatsapp').val(); let landline = $('#landline').val(); let companyid = $('#companyid').val();
+        let company_name = $('#company_name').val(); let address = $('#address').val(); let state = $('#state').val(); let district = $('#district').val(); let taluk = $('#taluk').val(); let place = $('#place').val(); let pincode = $('#pincode').val(); let website = $('#website').val(); let mailid = $('#mailid').val(); let mobile = $('#mobile').val(); let whatsapp = $('#whatsapp').val(); let landline_code = $('#landline_code').val(); let landline = $('#landline').val(); let companyid = $('#companyid').val();
         if (company_name === '' || address === '' || state === '' || district === '' || taluk === '' || pincode === '') {
             swalError('Warning', 'Please Fill out Mandatory fields!');
             return false;
         } else {
             /////////////////////////// submit page AJAX /////////////////////////////////////
-            $.post('api/company_creation_files/submit_company_creation.php', { company_name, address, state, district, taluk, place, pincode, website, mailid, mobile, whatsapp, landline, companyid }, function (response) {
+            $.post('api/company_creation_files/submit_company_creation.php', { company_name, address, state, district, taluk, place, pincode, website, mailid, mobile, whatsapp, landline_code, landline, companyid }, function (response) {
                 if (response == '1') {
                     swalSuccess('Success', 'Company Added Successfully!');
                 } else {
@@ -54,6 +54,7 @@ $(document).ready(function () {
             $('#mailid').val(response[0].mailid);
             $('#mobile').val(response[0].mobile);
             $('#whatsapp').val(response[0].whatsapp);
+            $('#landline_code').val(response[0].landline_code);
             $('#landline').val(response[0].landline);
 
             setTimeout(() => {

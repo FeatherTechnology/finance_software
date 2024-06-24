@@ -29,7 +29,7 @@
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.7/dist/sweetalert2.all.min.js"></script>
 
 <script type="text/javascript" src="jsd/datatables.min.js"></script>
-<script type="text/javascript" language="javascript"></script>
+<!-- <script type="text/javascript" language="javascript"></script> -->
 
 <!-- Slimscroll JS -->
 <script src="vendor/slimscroll/slimscroll.min.js"></script>

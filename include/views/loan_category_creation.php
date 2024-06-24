@@ -121,14 +121,13 @@
                                             </div>
                                         </div>
                                     </div>
+                                </div>
+                                <div class="row">
                                     <div class="col-md-3 col-sm-4">
                                         <div class="form-group">
                                             <label for="due_period_min">Due Period</label><span class="text-danger">*</span>
                                             <div class="input-group">
                                                 <input type="number" class="form-control due_period_minmax" id="due_period_min" name="due_period_min" tabindex="8" placeholder="Enter Min Due Period">
-                                                <div class="input-group-append">
-                                                    <span class="input-group-text">%</span>
-                                                </div>
                                             </div>
                                         </div>
                                     </div>
@@ -137,12 +136,11 @@
                                             <label for="due_period_max"> </label>
                                             <div class="input-group">
                                                 <input type="number" class="form-control form-group-label-emptywith-input due_period_minmax" id="due_period_max" name="due_period_max" tabindex="9" placeholder="Enter Max Due Period">
-                                                <div class="input-group-append form-group-label-emptywith-input">
-                                                    <span class="input-group-text">%</span>
-                                                </div>
                                             </div>
                                         </div>
                                     </div>
+                                </div>
+                                <div class="row">
                                     <div class="col-md-3 col-sm-4">
                                         <div class="form-group">
                                             <label for="doc_charge_min">Document Charge</label><span class="text-danger">*</span>
@@ -165,6 +163,8 @@
                                             </div>
                                         </div>
                                     </div>
+                                </div>
+                                <div class="row">
                                     <div class="col-md-3 col-sm-4">
                                         <div class="form-group">
                                             <label for="processing_fee_min">Processing Fee</label><span class="text-danger">*</span>
@@ -187,6 +187,8 @@
                                             </div>
                                         </div>
                                     </div>
+                                </div>
+                                <div class="row">
                                     <div class="col-md-3 col-sm-4">
                                         <div class="form-group">
                                             <label for="overdue_penalty">Overdue Penalty</label><span class="text-danger">*</span>
@@ -342,9 +344,9 @@
                                     <label for="scheme_due_method">Due Method</label><span class="text-danger">*</span>
                                     <select class="form-control" id="scheme_due_method" name="scheme_due_method" tabindex="3">
                                         <option value="">Select Due Method</option>
-                                        <option value="monthly">Monthly</option>
-                                        <option value="weekly">Weekly</option>
-                                        <option value="daily">Daily</option>
+                                        <option value="1">Monthly</option>
+                                        <option value="2">Weekly</option>
+                                        <option value="3">Daily</option>
                                     </select>
                                 </div>
                             </div>
@@ -376,9 +378,6 @@
                                     <label for="scheme_due_period">Due Period</label><span class="text-danger">*</span>
                                     <div class="input-group">
                                         <input type="number" class="form-control" id="scheme_due_period" name="scheme_due_period" tabindex="6" placeholder="Enter Min Due Period">
-                                        <div class="input-group-append">
-                                            <span class="input-group-text">%</span>
-                                        </div>
                                     </div>
                                 </div>
                             </div>

@@ -125,10 +125,13 @@
                                             <input type="number" class="form-control" id="whatsapp" name="whatsapp" placeholder="Enter Whatsapp Number" onKeyPress="if(this.value.length==10) return false;" tabindex="11">
                                         </div>
                                     </div>
-                                    <div class="col-md-4 col-sm-6">
+                                    <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
                                         <div class="form-group">
-                                            <label for="landline">Landline No.</label>
-                                            <input type="number" class="form-control" id="landline" name="landline" placeholder="Enter Landline Number" onKeyPress="if(this.value.length==10) return false;" tabindex="12">
+                                            <label for="landline">Landline Number</label>
+                                            <div class="input-group" style="gap:12px">
+                                                <input type="number" class="form-control" id="landline_code" name="landline_code" tabindex="12" placeholder="Enter Code" style="max-width: 95px;">
+                                                <input type="number" class="form-control" id="landline" name="landline" onKeyPress="if(this.value.length==8) return false;" placeholder="Enter Landline Number" tabindex="13">
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -136,8 +139,8 @@
                         </div>
 
                         <div class="col-12 mt-3 text-right">
-                            <button name="submit_company_creation" id="submit_company_creation" class="btn btn-primary" tabindex="13"><span class="icon-check"></span>&nbsp;Submit</button>
-                            <button type="reset" class="btn btn-outline-secondary" tabindex="14">Clear</button>
+                            <button name="submit_company_creation" id="submit_company_creation" class="btn btn-primary" tabindex="14"><span class="icon-check"></span>&nbsp;Submit</button>
+                            <button type="reset" class="btn btn-outline-secondary" tabindex="15">Clear</button>
                         </div>
 
                     </div>
