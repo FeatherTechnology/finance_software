@@ -85,9 +85,14 @@ $(document).ready(function () {
         let mobileno = $('#mobile1').val();
         if (customerID) {
             dataCheckList(customerID, cus_name, mobileno)
-            existingCustmerProfile(customerID)
         } else {
             removeCustomerID();
+        }
+                
+        let cus_id_upd = $('#cus_id_upd').val();
+        if(customerID !='' && customerID != cus_id_upd){
+            existingCustmerProfile(customerID)
+            $('#cus_id_upd').val(customerID);
         }
     });
 
@@ -1317,8 +1322,48 @@ function editCustmerProfile(id) {
 
 function existingCustmerProfile(cus_id) {
     $.post('api/loan_entry/customer_profile_existing.php', {cus_id }, function (response) {
-        if(response !=''){
-        $('#customer_profile_id').val(response[0].id);
+        $('#customer_profile_id').val('');
+        if(response =='New'){
+            $('#area_edit').val('');
+            $('#cus_name').val('');
+            $('#gender').val('');
+            $('#dob').val('');
+            $('#age').val('');
+            $('#mobile2').val('');
+            $('#mobile1').val('');
+            $('#guarantor_name_edit').val('');
+            $('#relationship').val('');
+            $('#cus_data').val('New');
+            $('#cus_status').val('');
+            $('#res_type').val('');
+            $('#res_detail').val('');
+            $('#res_address').val('');
+            $('#native_address').val('');
+            $('#occupation').val('');
+            $('#occ_address').val('');
+            $('#occ_detail').val('');
+            $('#occ_income').val('');
+            $('#area_confirm').val('');
+            $('#line').val('');
+            $('#cus_limit').val('');
+            $('#about_cus').val('');
+
+            $('#cus_status').hide();
+            $('#data_checking_div').hide();
+            $('#data_checking_table_div').hide();
+
+            getFamilyInfoTable()
+            getGuarantorName()
+            getAreaName()
+            
+            $('#per_pic').val('');
+            var img = $('#imgshow');
+            img.attr('src', 'img/avatar.png');
+
+            $('#gur_pic').val('');
+            var img = $('#gur_imgshow');
+            img.attr('src', 'img/avatar.png');
+        }else{
         $('#area_edit').val(response[0].area);
         $('#cus_id').val(response[0].cus_id);
         $('#cus_name').val(response[0].cus_name);
@@ -1328,7 +1373,7 @@ function existingCustmerProfile(cus_id) {
         $('#mobile2').val(response[0].mobile2);
         $('#mobile1').val(response[0].mobile1);
         $('#guarantor_name_edit').val(response[0].guarantor_name);
-        $('#cus_data').val(response[0].cus_data);
+        $('#cus_data').val('Existing');
         $('#cus_status').val(response[0].cus_status);
         $('#res_type').val(response[0].res_type);
         $('#res_detail').val(response[0].res_detail);
@@ -1351,10 +1396,9 @@ function existingCustmerProfile(cus_id) {
             $('#guarantor_name').trigger('change');
         }, 1000);
 
-        if (response[0].cus_data == 'Existing') {
-            $('#cus_status').show();
-            $('#data_checking_div').show();
-        }
+
+        $('#cus_status').show();
+        $('#data_checking_div').show();
         let path = "uploads/loan_entry/cus_pic/";
         $('#per_pic').val(response[0].pic);
         var img = $('#imgshow');
@@ -1545,8 +1589,9 @@ $(document).ready(function () {
         event.preventDefault();
         let docName = $('#doc_need_calc').val();
         let cusProfileId = $('#customer_profile_id').val();
+        let cusID = $('#cus_id').val();
         if (docName != '') {
-            $.post('api/loan_entry/loan_calculation/submit_document_need.php', { docName, cusProfileId }, function (response) {
+            $.post('api/loan_entry/loan_calculation/submit_document_need.php', { docName, cusProfileId, cusID }, function (response) {
                 // if (response == '1') {
                 //     swalError('Warning', 'Document Need Already Exists!');
                 // } else if (response == '2') {
@@ -1582,6 +1627,7 @@ $(document).ready(function () {
             $('#refresh_cal').trigger('click'); //For calculate once again if user missed to refresh calculation
             let formData = {
                 'customer_profile_id': customerProfileId,
+                'cus_id': $('#cus_id').val(),
                 'loan_id_calc': $('#loan_id_calc').val(),
                 'loan_category_calc': $('#loan_category_calc').val(),
                 'category_info_calc': $('#category_info_calc').val(),
