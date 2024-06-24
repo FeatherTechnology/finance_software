@@ -32,15 +32,13 @@ if (!empty($_FILES['cq_upload']['name'])) {
 
 $status = 0;
 if ($id != '') {
-    $qry = $pdo->query("UPDATE `cheque_info` SET `cus_id`='$cus_id',`cus_profile_id`='$customer_profile_id',`holder_type`='$cq_holder_type',`holder_name`='$cq_holder_name',`holder_id`='$cq_holder_id',`relationship`='$cq_relationship',`bank_name`='$cq_bank_name',`cheque_cnt`='$cheque_count',`update_login_id`='$user_id',`updated_on`=now() WHERE id = '$id' ");
+    $qry = $pdo->query("UPDATE `cheque_info` SET `cus_id`='$cus_id',`cus_profile_id`='$customer_profile_id',`holder_type`='$cq_holder_type',`holder_name`='$cq_holder_name',`holder_id`='$cq_holder_id',`relationship`='$cq_relationship',`bank_name`='$cq_bank_name',`cheque_cnt`='$cheque_count',`upload`= '$picture',`update_login_id`='$user_id',`updated_on`=now() WHERE id = '$id' ");
     $status = 1; //update
     $last_id = $id;
 } else {
-    $qry = $pdo->query("INSERT INTO `cheque_info`( `cus_id`, `cus_profile_id`, `holder_type`, `holder_name`, `holder_id`, `relationship`, `bank_name`, `cheque_cnt`, `insert_login_id`, `created_on`) VALUES ('$cus_id','$customer_profile_id','$cq_holder_type','$cq_holder_name','$cq_holder_id','$cq_relationship','$cq_bank_name','$cheque_count','$user_id',now() )");
+    $qry = $pdo->query("INSERT INTO `cheque_info`( `cus_id`, `cus_profile_id`, `holder_type`, `holder_name`, `holder_id`, `relationship`, `bank_name`, `cheque_cnt`, `upload`, `insert_login_id`, `created_on`) VALUES ('$cus_id','$customer_profile_id','$cq_holder_type','$cq_holder_name','$cq_holder_id','$cq_relationship','$cq_bank_name','$cheque_count','$picture','$user_id',now() )");
     $status = 2; //Insert
     $last_id = $pdo->lastInsertId();
 }
-
-// INSERT INTO `cheque_upload`(`id`, `cus_id`, `cus_profile_id`, `cheque_info_id`, `cheque_upload_name`) VALUES ('[value-1]','$cus_id','$customer_profile_id','[value-4]','[value-5]')
 
 echo json_encode($status);
