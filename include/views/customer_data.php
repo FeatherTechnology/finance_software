@@ -118,7 +118,6 @@
                                     <input type="hidden" id="addamt_id" value='0'>
                                 </div>
                             </div>
-                           
                             <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
                                 <div class="form-group">
                                     <button name="submit_new" id="submit_new" class="btn btn-primary" tabindex="1" style="margin-top: 18px;"><span class="icon-check"></span>&nbsp;Submit</button>

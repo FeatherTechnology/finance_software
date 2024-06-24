@@ -1,5 +1,4 @@
 $(document).ready(function () {
-
     $('.new_table_content').show();
     $('.existing_table_content').hide();
     // Event handler for radio buttons
@@ -21,7 +20,6 @@ $(document).ready(function () {
             swalError('Warning', 'Please Fill out Mandatory fields!');
             return false;
         }
-
         $.post('api/customer_data_files/get_existing_mobiles.php', { mobile: mobile }, function (response) {
             if (response.exists) {
                 // Show an alert with the customer status if the mobile number already exists
@@ -41,7 +39,6 @@ $(document).ready(function () {
                 else if (response.status == 5) {
                     statusMsg = "Cancel in Approval";
                 }
-
                 else if (response.status == 6) {
                     statusMsg = "Revoke in Approval";
                 }
@@ -64,31 +61,24 @@ $(document).ready(function () {
             }
         }, 'json');
     })
-
     $('#mobile').change(function () {
         checkMobileNo($(this).val(), $(this).attr('id'));
     });
-    
     $(document).on('click', '.newPromoDeleteBtn', function () {
         var id = $(this).attr('value');
         swalConfirm('Delete', 'Do you want to Delete the Customer Details?', getNewPromoDelete, id);
         return;
     });
-
     /*$(document).on('click', '.existingNeedBtn', function () {
         let cus_id = $(this).val();// Get the customer ID from the checkbox value
         swalConfirm('Move', 'Do you want to Move the Customer Profile?', getConfirm, cus_id);
         return;
     });*/
-
-
-
 })
 $(function () {
     getNewPromotionTable()
     getExistingPromotionTable()
 });
-
 function getNewPromotionTable() {
     $.post('api/customer_data_files/get_new_promotion.php', function (response) {
         var columnMapping = [
@@ -105,7 +95,6 @@ function getNewPromotionTable() {
         $('#new_form input').val('');
     }, 'json')
 }
-
 function getNewPromoDelete(id) {
     $.post('api/customer_data_files/delete_new_promotion.php', { id }, function (response) {
         if (response == '1') {
@@ -116,7 +105,6 @@ function getNewPromoDelete(id) {
         }
     }, 'json');
 }
-
 function getExistingPromotionTable() {
     $.post('api/customer_data_files/get_existing_promotion.php', function (response) {
         var columnMapping = [
@@ -137,5 +125,5 @@ function getExistingPromotionTable() {
 }
 /*function getConfirm(cus_id) {
     localStorage.setItem('currentPage', 'loan_entry');
-    window.location.href = 'home.php';      
+    window.location.href = 'home.php';
 }*/
