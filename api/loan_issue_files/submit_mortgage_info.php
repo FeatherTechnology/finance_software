@@ -29,7 +29,7 @@ if (!empty($_FILES['mort_upload']['name'])) {
     }
     move_uploaded_file($pic_temp, $path . $picture);
 } else {
-    $picture = $_POST['mort_upload_edit'];
+    $picture = (isset($_POST['mort_upload_edit'])) ? $_POST['mort_upload_edit'] : ''; 
 }
 
 $status = 0;

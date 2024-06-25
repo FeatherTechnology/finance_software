@@ -61,7 +61,7 @@ $(document).ready(function () {
         let cq_upload_edit = $('#cq_upload_edit').val();
         let customer_profile_id = $('#customer_profile_id').val();
         let cheque_info_id = $('#cheque_info_id').val();
-        if (cq_holder_type === '' || cq_holder_name === '' || cq_relationship === '' || cq_bank_name === '' || cheque_count =='' || (cq_upload === undefined && cq_upload_edit == '')) {
+        if (cq_holder_type === '' || cq_holder_name === '' || cq_relationship === '' || cq_bank_name === '' || cheque_count =='') {
             swalError('Warning', 'Please Fill out Mandatory fields!');
             return false;
         }
@@ -156,7 +156,7 @@ $(document).ready(function () {
         let cus_id = $('#cus_id').val();
         let customer_profile_id = $('#customer_profile_id').val();
         
-        if(doc_name =='' || doc_type =='' || doc_holder_name =='' || doc_relationship =='' || (doc_upload === undefined && doc_upload_edit == '')){
+        if(doc_name =='' || doc_type =='' || doc_holder_name =='' || doc_relationship ==''){
             swalError('Warning', 'Please Fill out Mandatory fields!');
             return false;
         }
@@ -243,7 +243,7 @@ $(document).ready(function () {
         let mort_upload = $('#mort_upload')[0].files[0];
         let mort_upload_edit = $('#mort_upload_edit').val();
         
-        if(property_holder_name =='' || mort_relationship =='' || mort_property_details =='' || mortgage_name =='' || mort_designation =='' || mortgage_no =='' || reg_office =='' || mortgage_value =='' || (mort_upload === undefined && mort_upload_edit == '')){
+        if(property_holder_name =='' || mort_relationship =='' || mort_property_details =='' || mortgage_name =='' || mort_designation =='' || mortgage_no =='' || reg_office =='' || mortgage_value ==''){
             swalError('Warning', 'Please Fill out Mandatory fields!');
             return false;
         }
@@ -335,7 +335,7 @@ $(document).ready(function () {
         let cus_id = $('#cus_id').val();
         let customer_profile_id = $('#customer_profile_id').val();
         
-        if(owner_name =='' || owner_relationship =='' || vehicle_details =='' || endorsement_name =='' || key_original =='' || rc_original =='' || (endorsement_upload === undefined && endorsement_upload_edit == '')){
+        if(owner_name =='' || owner_relationship =='' || vehicle_details =='' || endorsement_name =='' || key_original =='' || rc_original ==''){
             swalError('Warning', 'Please Fill out Mandatory fields!');
             return false;
         }
@@ -524,7 +524,8 @@ function swapTableAndCreation() {
         $('.loanissue_table_content').show();
         $('#loan_issue_content').hide();
         $('#back_btn').hide();
-        $('#documentation').trigger('click')
+        $('#documentation').trigger('click');
+        refreshIssueInfo();
     }
 }
 
@@ -1018,6 +1019,18 @@ function getIssuePerson(cus_name){
         });
         $('#issue_person').empty().append(appendOption);
     }, 'json');    
+}
+
+function refreshIssueInfo(){
+    $('#payment_mode').val('');
+    $('#transaction_id').val('');
+    $('#chequeno').val('');
+    $('#issue_amount').val('');
+    $('#issue_person').val('');
+    $('#issue_relationship').val('');
+    $('.transaction').hide();
+    $('.checque').hide();
+    $('.cash_issue').hide();
 }
 
 // Function to check if all values in an object are not empty

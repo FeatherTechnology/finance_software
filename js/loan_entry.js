@@ -2156,6 +2156,11 @@ function isFormDataValid(formData) {
         }
     }
 
+    let docNeedRowCount = $('#doc_need_table').DataTable().rows().count();
+    if(docNeedRowCount <= 0){
+        return false;
+    }
+    
     return true;
 }
 

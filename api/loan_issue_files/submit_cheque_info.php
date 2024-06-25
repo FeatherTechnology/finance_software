@@ -27,7 +27,7 @@ if (!empty($_FILES['cq_upload']['name'])) {
     }
     move_uploaded_file($pic_temp, $path . $picture);
 } else {
-    $picture = $_POST['cq_upload_edit'];
+    $picture = (isset($_POST['cq_upload_edit'])) ? $_POST['cq_upload_edit'] : '';
 }
 
 $status = 0;
