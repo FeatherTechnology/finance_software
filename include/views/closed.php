@@ -119,27 +119,6 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                 <!--   <tr>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td>
-                                            <div class='dropdown'>
-                                                <button class='btn btn-outline-secondary'><i class='fa'>&#xf107;</i></button>
-                                                <div class='dropdown-content'>
-                                                    <a href='#' data-toggle="modal" data-target="#due_chart_model" title='Edit details'>Due Chart</a>
-                                                    <a href='#' data-toggle="modal" data-target="#penalty_model" title='Edit details'>Penalty Chart</a>
-                                                    <a href='#' data-toggle="modal" data-target="#fine_model" title='Edit details'>Fine Chart</a>
-                                                </div>
-                                            </div>
-                                        </td>
-                                        <td><button class="closed_remark btn btn-primary" data-toggle="modal" data-target="#closed_remark_model">View</button></td>
-                                    </tr>-->
                                 </tbody>
                             </table>
                         </div>

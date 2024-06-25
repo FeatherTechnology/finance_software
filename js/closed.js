@@ -21,7 +21,7 @@ $(document).ready(function () {
             }
         }, 'json');
 
-     getClosedLoanList(cus_id);
+        getClosedLoanList(cus_id);
 
     })
 
@@ -29,15 +29,19 @@ $(document).ready(function () {
         event.preventDefault();
         $('#closed_main_container,.back_to_closed_list').hide();
         $('#closed_list').show();
+        getClosedListTable();
     })
-
+    $('#closed_remark_model').on('hidden.bs.modal', function() {
+        $('#closed_remark_form')[0].reset();
+    });
+    
     $('#submit_closed_remark').click(function (event) {
         event.preventDefault();
         if (validate()) {
-            let cus_profile_id=$('#cus_profile_id').val();
+            let cus_profile_id = $('#cus_profile_id').val();
             let sub_status = $('#sub_status').val();
             let remark = $('#remark').val();
-            $.post('api/closed_files/closed_submit.php', {sub_status,remark,cus_profile_id }, function (response) {
+            $.post('api/closed_files/closed_submit.php', { sub_status, remark, cus_profile_id }, function (response) {
                 if (response == '1') {
                     swalSuccess('Success', 'Closed Info Updated Successfully!');
                     $('#closed_remark_form input').val('');
@@ -46,34 +50,41 @@ $(document).ready(function () {
                     $('#closed_remark_model').modal('hide');
                     let cus_id = $('#cus_id').val();
                     getClosedLoanList(cus_id);
-                } else{
-                    swalError('Error','Failed to Closed');
-                }           
-            },'json');
-        }else{
+                } else {
+                    swalError('Error', 'Failed to Closed');
+                }
+            }, 'json');
+        } else {
             swalError('Warning', 'Kindly Fill Mandatory Fields');
         }
     });
-    
-    // setDropdownScripts();
-    $(document).on('click', '.due-chart', function() {
-       
+
+    $(document).on('click', '.due-chart', function () {
+
         $('#due_chart_model').modal('show');
     });
-    $(document).on('click', '.penalty-chart', function() {
+
+    $(document).on('click', '.penalty-chart', function () {
+       
         $('#penalty_model').modal('show');
     });
 
-    $(document).on('click', '.fine-chart', function(e) {
+    $(document).on('click', '.fine-chart', function () {
+       
         $('#fine_model').modal('show');
     });
-    $(document).on('click', '.closed-view', function() {
+
+    $(document).on('click', '.closed-view', function () {
+       
         let id = $(this).attr('value');
         $('#cus_profile_id').val(id)
         $('#closed_remark_model').modal('show');
     });
 
+
 });
+
+
 $(function () {
     getClosedListTable();
 });
@@ -92,10 +103,9 @@ function getClosedListTable() {
         ];
         appendDataToTable('#closed_list_table', response, columnMapping);
         setdtable('#closed_list_table');
-        //Dropdown in List Screen
-        //setDropdownScripts();
     }, 'json');
 }
+
 function validate() {
     let response = true;
     let sub_status = $('#sub_status').val(); let cus_profile_id = $('#cus_profile_id').val();
@@ -104,6 +114,7 @@ function validate() {
     }
     return response;
 }
+
 function getClosedLoanList(cus_id) {
     $.post('api/common_files/closed_loan_list.php', { cus_id }, function (response) {
         var columnMapping = [
@@ -124,6 +135,7 @@ function getClosedLoanList(cus_id) {
         setDropdownScripts();
     }, 'json');
 }
+
 function closeChartsModal() {
     $('#due_chart_model').modal('hide');
     $('#penalty_model').modal('hide');

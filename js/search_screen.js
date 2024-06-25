@@ -37,6 +37,7 @@ $(document).ready(function () {
         let cus_id = $('#cus_id').val(); let cus_name = $('#cus_name').val(); let area = $('#cus_area').val(); let mobile = $('#cus_mobile').val();
         if (validate()) {
             //ajax function
+            
         }
     })
     setDropdownScripts();

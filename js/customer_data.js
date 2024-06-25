@@ -48,6 +48,9 @@ $(document).ready(function () {
                 else if (response.status == 8) {
                     statusMsg = "Closed";
                 }
+                else if (response.status == 9) {
+                    statusMsg = "Closed";
+                }
                 swalError('Warning', 'Mobile number already exists. Customer status: ' + statusMsg);
                 return false;
             } else {
@@ -60,7 +63,10 @@ $(document).ready(function () {
                 });
             }
         }, 'json');
-    })
+    }) 
+    
+    
+    
     $('#mobile').change(function () {
         checkMobileNo($(this).val(), $(this).attr('id'));
     });
@@ -69,12 +75,16 @@ $(document).ready(function () {
         swalConfirm('Delete', 'Do you want to Delete the Customer Details?', getNewPromoDelete, id);
         return;
     });
+   
+    
     /*$(document).on('click', '.existingNeedBtn', function () {
         let cus_id = $(this).val();// Get the customer ID from the checkbox value
         swalConfirm('Move', 'Do you want to Move the Customer Profile?', getConfirm, cus_id);
         return;
     });*/
 })
+
+
 $(function () {
     getNewPromotionTable()
     getExistingPromotionTable()

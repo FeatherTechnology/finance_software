@@ -1,7 +1,7 @@
 <?php
 require '../../ajaxconfig.php';
 
-$status = [4 => 'Approved',5 => 'Cancel',6 => 'Revoke',7 => 'Loan Issued',8 => 'Closed'];
+$status = [4 => 'Approved',5 => 'Cancel',6 => 'Revoke',7 => 'Loan Issued',8 => 'Closed',9=>'Closed'];
 $sub_status = [1=>'Consider',2=>'Reject'];
 $existing_promo_arr = array();
 $i=0;
