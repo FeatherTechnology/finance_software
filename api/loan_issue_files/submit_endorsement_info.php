@@ -27,7 +27,7 @@ if (!empty($_FILES['endorsement_upload']['name'])) {
     }
     move_uploaded_file($pic_temp, $path . $picture);
 } else {
-    $picture = $_POST['endorsement_upload_edit'];
+    $picture = (isset($_POST['endorsement_upload_edit'])) ? $_POST['endorsement_upload_edit'] : '';
 }
 
 $status = 0;

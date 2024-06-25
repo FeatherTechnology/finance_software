@@ -121,12 +121,14 @@ $(document).ready(function () {
         let pic = $('#pic')[0];
         let img = $('#imgshow');
         img.attr('src', URL.createObjectURL(pic.files[0]));
+        checkInputFileSize(this, 200, img)
     })
 
     $('#gu_pic').change(function () {
         let pic = $('#gu_pic')[0];
         let img = $('#gur_imgshow');
         img.attr('src', URL.createObjectURL(pic.files[0]));
+        checkInputFileSize(this, 200, img)
     })
 
     /////family Modal////
@@ -2211,6 +2213,11 @@ function isFormDataValid(formData) {
         }
     }
 
+    let docNeedRowCount = $('#doc_need_table').DataTable().rows().count();
+    if(docNeedRowCount <= 0){
+        return false;
+    }
+    
     return true;
 }
 

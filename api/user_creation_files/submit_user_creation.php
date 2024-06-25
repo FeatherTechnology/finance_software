@@ -16,6 +16,7 @@ $password = $_POST['password'];
 $branch_name = implode(',', $_POST['branch_name']);
 $line_name = implode(',', $_POST['line_name']);
 $loan_category = implode(',', $_POST['loan_category']);
+$collection_access = $_POST['collection_access'];
 $submenus = implode(',', $_POST['submenus']);
 $id = $_POST['id'];
 
@@ -25,13 +26,13 @@ if ($qry->rowCount() > 0) {
     $last_id = '0'; //Already exists.
 } else {
     if ($id != '0' && $id != '') {
-        $qry = $pdo->query("UPDATE `users` SET `name`='$name',`user_code`='$user_code',`role`='$role',`designation`='$designation',`address`='$address',`place`='$place',`email`='$email',`mobile`='$mobile_no',`user_name`='$user_name',`password`='$password',`branch`='$branch_name',`loan_category`='$loan_category',`line`='$line_name',`screens`='$submenus',`update_login_id`='$user_id',`updated_on`=now() WHERE `id`='$id'");
+        $qry = $pdo->query("UPDATE `users` SET `name`='$name',`user_code`='$user_code',`role`='$role',`designation`='$designation',`address`='$address',`place`='$place',`email`='$email',`mobile`='$mobile_no',`user_name`='$user_name',`password`='$password',`branch`='$branch_name',`loan_category`='$loan_category',`line`='$line_name', `collection_access`= '$collection_access',`screens`='$submenus',`update_login_id`='$user_id',`updated_on`=now() WHERE `id`='$id'");
         if ($qry) {
             $status = '1';
             $last_id = $id;
         }
     } else {
-        $qry = $pdo->query("INSERT INTO `users`(`name`, `user_code`, `role`, `designation`, `address`, `place`, `email`, `mobile`, `user_name`, `password`, `branch`, `loan_category`, `line`, `screens`, `insert_login_id`, `created_on`) VALUES ('$name','$user_code','$role','$designation','$address','$place','$email','$mobile_no','$user_name','$password','$branch_name','$loan_category','$line_name','$submenus','$user_id',now())");
+        $qry = $pdo->query("INSERT INTO `users`(`name`, `user_code`, `role`, `designation`, `address`, `place`, `email`, `mobile`, `user_name`, `password`, `branch`, `loan_category`, `line`, `collection_access`, `screens`, `insert_login_id`, `created_on`) VALUES ('$name','$user_code','$role','$designation','$address','$place','$email','$mobile_no','$user_name','$password','$branch_name','$loan_category','$line_name', '$collection_access', '$submenus','$user_id',now())");
         if ($qry) {
             $status ='2'; 
             $last_id = $pdo->lastInsertId();

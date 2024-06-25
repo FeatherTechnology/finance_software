@@ -25,7 +25,7 @@ if (!empty($_FILES['doc_upload']['name'])) {
     }
     move_uploaded_file($pic_temp, $path . $picture);
 } else {
-    $picture = $_POST['doc_upload_edit'];
+    $picture = (isset($_POST['doc_upload_edit'])) ? $_POST['doc_upload_edit'] : '';
 }
 
 $status = 0;

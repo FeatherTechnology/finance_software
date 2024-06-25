@@ -126,6 +126,7 @@ $(document).ready(function () {
             branch_name: $('#branch_name').val(),
             line_name: $('#line_name').val(),
             loan_category: $('#loan_category').val(),
+            collection_access: $('#collection_access').val(),
             submenus: selectedSubmenuIds,
             id: $('#user_creation_id').val()
         }
@@ -169,6 +170,7 @@ $(document).ready(function () {
             $('#user_name').val(response[0].user_name);
             $('#password').val(response[0].password);
             $('#confirm_password').val(response[0].password);
+            $('#collection_access').val(response[0].collection_access);
 
             setTimeout(() => {
                 getUserID(id)

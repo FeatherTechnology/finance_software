@@ -5,5 +5,6 @@ Customer status Details:
 4 = Approve in Approval;
 5 = Cancel in Approval;
 6 = Revoke in Approval;
-7 = Loan Issue;
-8 = Closed;
+7 = Loan Issued;
+8 = To Closed [When Loan Balance Amount is 0, status has to change to '8' on collection screen. To Move Closed.];
+9 = Closed;

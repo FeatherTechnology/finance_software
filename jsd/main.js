@@ -384,4 +384,25 @@ function setDropdownScripts() {
 	$('.dropdown').removeClass('active');
 	}
 	});
+}
+
+function checkInputFileSize(input, allowdsize, img) {
+	if (input.files.length > 0) {
+		const fileSize = input.files[0].size; // Get the size of the selected file
+		const maxSize = allowdsize * 1024; // Maximum size in bytes (200 KB)
+		console.log(fileSize)
+		if (fileSize > maxSize) {
+			alert("Maximum File Size " + allowdsize + " KB. Please select a smaller file.");
+			input.value = ''; // Clear the selected file
+			img.attr('src', 'img/avatar.png');
+		}
 	}
+}
+
+function setCurrentDate(field_id) {
+    const curDate = new Date();
+    const curYear = curDate.getFullYear();
+    const curMonth = curDate.getMonth() + 1;
+    const curDay = curDate.getDate();
+    $(field_id).val(`${curYear}-${curMonth < 10 ? '0' + curMonth : curMonth}-${curDay < 10 ? '0' + curDay : curDay}`);
+}
