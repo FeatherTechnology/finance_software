@@ -199,7 +199,7 @@ $(document).ready(function () {
             swalError('Warning', 'Please Fill out Mandatory fields!');
             return false;
         } else {
-            $.post('api/loan_entry/submit_property.php', { cus_id, property, property_detail, property_holder, property_id }, function (response) {
+            $.post('api/loan_entry/submit_property.php', { cus_id, property, property_detail, property_holder, property_id ,cus_profile_id}, function (response) {
                 if (response == '1') {
                     swalSuccess('Success', 'Property Info Added Successfully!');
                 } else {
@@ -272,7 +272,7 @@ $(document).ready(function () {
             swalError('Warning', 'Please Fill out Mandatory fields!');
             return false;
         } else {
-            $.post('api/loan_entry/submit_bank.php', { cus_id, bank_name, branch_name, acc_holder_name, acc_number, ifsc_code, bank_id }, function (response) {
+            $.post('api/loan_entry/submit_bank.php', { cus_id, bank_name, branch_name, acc_holder_name, acc_number, ifsc_code, bank_id,cus_profile_id }, function (response) {
                 if (response == '1') {
                     swalSuccess('Success', 'Bank Info Added Successfully!');
                 } else {
@@ -322,6 +322,7 @@ $(document).ready(function () {
             if (proof_of !== 'Customer') {
                 kycDetail.append('fam_mem', fam_mem);
             }
+            kycDetail.append('cus_profile_id', cus_profile_id)
             kycDetail.append('cus_id', cus_id)
             kycDetail.append('proof', proof)
             kycDetail.append('proof_detail', proof_detail)
@@ -970,7 +971,8 @@ function getGrelationshipName(guarantorId) {
 
 function getPropertyTable() {
     let cus_id = $('#cus_id').val().replace(/\s/g, '');
-    $.post('api/loan_entry/property_creation_list.php', { cus_id }, function (response) {
+    let cus_profile_id=$('#customer_profile_id').val()
+    $.post('api/loan_entry/property_creation_list.php', { cus_id,cus_profile_id }, function (response) {
         var columnMapping = [
             'sno',
             'property',
@@ -989,7 +991,8 @@ function getPropertyTable() {
 
 function getPropertyInfoTable() {
     let cus_id = $('#cus_id').val().replace(/\s/g, '');
-    $.post('api/loan_entry/property_creation_list.php', { cus_id }, function (response) {
+    let cus_profile_id=$('#customer_profile_id').val();
+    $.post('api/loan_entry/property_creation_list.php', { cus_id ,cus_profile_id}, function (response) {
         var columnMapping = [
             'sno',
             'property',
@@ -1051,7 +1054,8 @@ function getBankDelete(id) {
 
 function getBankTable() {
     let cus_id = $('#cus_id').val().replace(/\s/g, '');
-    $.post('api/loan_entry/bank_creation_list.php', { cus_id }, function (response) {
+    let cus_profile_id=$('#customer_profile_id').val();
+    $.post('api/loan_entry/bank_creation_list.php', { cus_id ,cus_profile_id}, function (response) {
         var columnMapping = [
             'sno',
             'bank_name',
@@ -1069,7 +1073,8 @@ function getBankTable() {
 
 function getBankInfoTable() {
     let cus_id = $('#cus_id').val().replace(/\s/g, '');
-    $.post('api/loan_entry/bank_creation_list.php', { cus_id }, function (response) {
+    let cus_profile_id=$('#customer_profile_id').val()
+    $.post('api/loan_entry/bank_creation_list.php', { cus_id,cus_profile_id }, function (response) {
         var columnMapping = [
             'sno',
             'bank_name',
@@ -1100,7 +1105,8 @@ function getKycDelete(id) {
 
 function getKycTable() {
     let cus_id = $('#cus_id').val().replace(/\s/g, '');
-    $.post('api/loan_entry/kyc_creation_list.php', { cus_id }, function (response) {
+    let cus_profile_id=$('#customer_profile_id').val()
+    $.post('api/loan_entry/kyc_creation_list.php', {cus_id,cus_profile_id}, function (response) {
         var columnMapping = [
             'sno',
             'proof_of',
@@ -1122,7 +1128,8 @@ function getKycTable() {
 
 function getKycInfoTable() {
     let cus_id = $('#cus_id').val().replace(/\s/g, '');
-    $.post('api/loan_entry/kyc_creation_list.php', { cus_id }, function (response) {
+    let cus_profile_id=$('#customer_profile_id').val()
+    $.post('api/loan_entry/kyc_creation_list.php', { cus_id ,cus_profile_id}, function (response) {
         var columnMapping = [
             'sno',
             'proof_of',
@@ -1306,6 +1313,10 @@ function editCustmerProfile(id) {
         if (response[0].cus_data == 'Existing') {
             $('#cus_status').show();
             $('#data_checking_div').show();
+        }else{
+            $('#cus_status').hide();
+            $('#data_checking_div').hide();
+            $('#data_checking_table_div').hide();
         }
         let path = "uploads/loan_entry/cus_pic/";
         $('#per_pic').val(response[0].pic);

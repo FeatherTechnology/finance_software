@@ -99,18 +99,19 @@
                                         <div class="form-group">
                                             <label for="cus_id"> Customer ID</label><span class="text-danger">*</span>
                                             <input type="text" class="form-control personal_info_disble" id="cus_id" name="cus_id" data-type="adhaar-number" placeholder="Enter Customer ID" tabindex="1" maxlength="14">
+                                            <input type="hidden" id="cus_id_upd" name="cus_id_upd" >
                                         </div>
                                     </div>
                                     <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
                                         <div class="form-group">
                                             <label for="cus_name"> Customer Name</label><span class="text-danger">*</span>
-                                            <input type="text" class="form-control personal_info_disble" id="cus_name" name="cus_name" pattern="[a-zA-Z\s]+" placeholder="Enter Customer Name" tabindex=" 2">
+                                            <input type="text" class="form-control personal_info_disble" id="cus_name"  name="cus_name" pattern="[a-zA-Z\s]+" placeholder="Enter Customer Name" tabindex=" 2">
                                         </div>
                                     </div>
                                     <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
                                         <div class="form-group">
                                             <label for="gender">Gender</label><span class="text-danger">*</span>
-                                            <select type="text" class="form-control  personal_info_disble" id="gender" name="gender" tabindex="3">
+                                            <select type="text" class="form-control  personal_info_disble"  id="gender"  name="gender" tabindex="3">
                                                 <option value="">Select Gender</option>
                                                 <option value="1">Male</option>
                                                 <option value="2">Female</option>
@@ -133,13 +134,13 @@
                                     <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
                                         <div class="form-group">
                                             <label for="mobile1"> Mobile Number 1</label><span class="text-danger">*</span>
-                                            <input type="number" class="form-control  personal_info_disble" id="mobile1" name="mobile1" placeholder="Enter Mobile Number 1" onKeyPress="if(this.value.length==10) return false;" tabindex="6">
+                                            <input type="number" class="form-control  personal_info_disble" id="mobile1" name="mobile1"  placeholder="Enter Mobile Number 1" onKeyPress="if(this.value.length==10) return false;" tabindex="6">
                                         </div>
                                     </div>
                                     <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
                                         <div class="form-group">
                                             <label for="mobile2"> Mobile Number 2</label>
-                                            <input type="number" class="form-control  personal_info_disble" id="mobile2" name="mobile2" onKeyPress="if(this.value.length==10) return false;" placeholder="Enter Mobile Number 2" tabindex="7">
+                                            <input type="number" class="form-control  personal_info_disble" id="mobile2" name="mobile2"  onKeyPress="if(this.value.length==10) return false;" placeholder="Enter Mobile Number 2" tabindex="7">
                                         </div>
                                     </div>
                                 </div>
@@ -158,7 +159,7 @@
                             </div>
                             <div class="col-md-12 ">
                                 <div class="text-right">
-                                    <button type="submit" name="submit_personal_info" id="submit_personal_info" class="btn btn-primary" value="Submit"><span class="icon-check"></span>&nbsp;Submit</button>
+                                    <button type="submit" name="submit_personal_info" id="submit_personal_info" class="btn btn-primary" value="Submit" ><span class="icon-check"></span>&nbsp;Submit</button>
                                 </div>
                             </div>
                         </div>
