@@ -39,11 +39,14 @@
                         <div class="card-header">
                             <h5 class="card-title">Personal Info</h5>
                         </div>
+                        <input type="hidden" name="pending_sts" id="pending_sts" value="" />
+                        <input type="hidden" name="od_sts" id="od_sts" value="" />
+                        <input type="hidden" name="due_nil_sts" id="due_nil_sts" value="" />
+
                         <div class="card-body">
                             <div class="row">
                                 <div class="col-8">
-                                    <div class="row">
-
+                                    <div class="row">                                        
                                         <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
                                             <div class="form-group">
                                                 <label for="cus_id">Customer ID</label>
@@ -131,11 +134,16 @@
                 <div class="card-header">
                     <h5 class="card-title">Collection Info</h5>
                 </div>
+
+                <input type="hidden" name="loan_category_id" id="loan_category_id" >
+                <input type="hidden" name="cp_id" id="cp_id" >
+                <input type="hidden" name="status" id="status" >
+                <input type="hidden" name="sub_status" id="sub_status" >
+
                 <div class="card-body">
                     <div class="row">
                         <div class="col-12">
                             <div class="row">
-
                                 <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
                                     <div class="form-group">
                                         <label for="disabledInput">Total Amount</label>&nbsp;<span class="text-danger totspan">*</span>
@@ -341,6 +349,15 @@
                 </div>
             </div>
             <!-- /////////////////////////////////////////////////// Collection Track END ///////////////////////////////////////// -->
+            
+            <!-- Submit Button Start -->
+            <div class="col-md-12 coll_details" style="display: none;">
+                <div class="text-right">
+                    <button type="submit" name="submit_collection" id="submit_collection" class="btn btn-primary" value="Submit" tabindex='40'><span class="icon-check"></span>&nbsp;Submit</button>
+                    <!-- <button type="reset" class="btn btn-outline-secondary" tabindex="20">Clear</button> -->
+                </div>
+            </div>
+            <!-- Submit Button End -->
 
         </div>
 

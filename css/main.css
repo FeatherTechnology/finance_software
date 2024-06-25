@@ -9218,6 +9218,8 @@ i {
   transition-duration: .5s;
   transition-property: transform, box-shadow;
   transform: none;
+  box-shadow: 0 0 4px rgba(0, 0, 0, .5), 0 2px 4px rgba(0, 0, 0, .5);
+  cursor: pointer;
 }
 
 .selector-item_radio:checked+.selector-item_label {

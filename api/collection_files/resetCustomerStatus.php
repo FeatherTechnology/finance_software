@@ -1,20 +1,15 @@
 <?php
-session_start();
-include('../ajaxconfig.php');
-
-if (isset($_SESSION['userid'])) {
-    $user_id = $_SESSION['userid'];
-}
+require '../../ajaxconfig.php';
 
 if (isset($_POST['cus_id'])) {
     $cus_id = preg_replace('/\D/', '', $_POST['cus_id']);
     // $cus_id = $_POST['cus_id'];
 }
 
-$req_arr = array();
-$qry = $con->query("SELECT req_id FROM in_issue where cus_id = $cus_id and (cus_status >= 14 and cus_status < 20) ORDER BY CAST(req_id AS UNSIGNED) ASC ");
-while ($row = $qry->fetch_assoc()) {
-    $req_arr[] = $row['req_id'];
+$cp_arr = array();
+$qry = $pdo->query("SELECT li.cus_profile_id as cp_id FROM loan_issue li JOIN customer_status cs ON li.cus_profile_id = cs.cus_profile_id  where li.cus_id = '$cus_id' and cs.status =7  ORDER BY li.cus_profile_id ASC ");
+while ($row = $qry->fetch()) {
+    $cp_arr[] = $row['cp_id'];
 }
 
 
@@ -30,40 +25,40 @@ $loan_arr = array();
 $coll_arr = array();
 $response = array(); //Final array to return
 
-$req_id = 0;
+$cp_id = 0;
 $i = 0;
-foreach ($req_arr as $req_id) {
+foreach ($cp_arr as $cp_id) {
         
-        $response['req_id'][$i] = $req_id;
+        $response['cp_id'][$i] = $cp_id;
 
-        $result = $con->query("SELECT * FROM `acknowlegement_loan_calculation` WHERE req_id = $req_id ");
-    if ($result->num_rows > 0) {
-        $row = $result->fetch_assoc();
+        $result = $pdo->query("SELECT * FROM `loan_entry_loan_calculation` WHERE cus_profile_id = $cp_id ");
+    if ($result->rowCount() > 0) {
+        $row = $result->fetch();
         $loan_arr = $row;
 
-        if ($loan_arr['tot_amt_cal'] == '' || $loan_arr['tot_amt_cal'] == null) {
+        if ($loan_arr['total_amnt'] == '' || $loan_arr['total_amnt'] == null) {
             //(For monthly interest total amount will not be there, so take principals)
-            $response['total_amt'] = intVal($loan_arr['principal_amt_cal']);
+            $response['total_amt'] = intVal($loan_arr['principal_amnt']);
             $response['loan_type'] = 'interest';
             $loan_arr['loan_type'] = 'interest';
         } else {
-            $response['total_amt'] = intVal($loan_arr['tot_amt_cal']);
+            $response['total_amt'] = intVal($loan_arr['total_amnt']);
             $response['loan_type'] = 'emi';
             $loan_arr['loan_type'] = 'emi';
         }
 
 
-        if ($loan_arr['due_amt_cal'] == '' || $loan_arr['due_amt_cal'] == null) {
+        if ($loan_arr['due_amnt'] == '' || $loan_arr['due_amnt'] == null) {
             //(For monthly interest Due amount will not be there, so take interest)
-            $response['due_amt'] = intVal($loan_arr['int_amt_cal']);
+            $response['due_amt'] = intVal($loan_arr['interest_amnt']);
         } else {
-            $response['due_amt'] = intVal($loan_arr['due_amt_cal']); //Due amount will remain same
+            $response['due_amt'] = intVal($loan_arr['due_amnt']); //Due amount will remain same
         }
     }
     $coll_arr = array();
-    $result = $con->query("SELECT * FROM `collection` WHERE req_id ='" . $req_id . "' ");
-    if ($result->num_rows > 0) {
-        while ($row = $result->fetch_assoc()) {
+    $result = $pdo->query("SELECT * FROM `collection` WHERE cus_profile_id ='" . $cp_id . "' ");
+    if ($result->rowCount() > 0) {
+        while ($row = $result->fetch()) {
             $coll_arr[] = $row;
         }
         $total_paid = 0;
@@ -76,7 +71,7 @@ foreach ($req_arr as $req_id) {
             $total_paid_int += intVal($tot['int_amt_track']);
             $pre_closure += intVal($tot['pre_close_waiver']); //get pre closure value to subract to get balance amount
         }
-        //total paid amount will be all records again request id should be summed
+        //total paid amount will be all records again cp id should be summed
         $response['total_paid'] = ($loan_arr['loan_type'] == 'emi') ? $total_paid : $total_paid_princ;
         $response['total_paid_int'] = $total_paid_int;
         $response['pre_closure'] = $pre_closure;
@@ -88,7 +83,7 @@ foreach ($req_arr as $req_id) {
             $response['due_amt'] = calculateNewInterestAmt($loan_arr, $response);
         }
 
-        $response = calculateOthers($loan_arr, $response, $con, $req_id);
+        $response = calculateOthers($loan_arr, $response, $pdo, $cp_id);
     } else {
         //If collection table dont have rows means there is no payment against that request, so total paid will be 0
         $response['total_paid'] = 0;
@@ -102,18 +97,18 @@ foreach ($req_arr as $req_id) {
             $response['due_amt'] = calculateNewInterestAmt($loan_arr, $response);
         }
 
-        $response = calculateOthers($loan_arr, $response, $con, $req_id);
+        $response = calculateOthers($loan_arr, $response, $pdo, $cp_id);
     }
     //To get the collection charges
-    $result = $con->query("SELECT SUM(coll_charge) as coll_charge FROM `collection_charges` WHERE req_id = '" . $req_id . "' ");
-    $row = $result->fetch_assoc();
+    $result = $pdo->query("SELECT SUM(coll_charge) as coll_charge FROM `collection_charges` WHERE cus_profile_id = '" . $cp_id . "' ");
+    $row = $result->fetch();
     if ($row['coll_charge'] != null) {
 
         $coll_charges = $row['coll_charge'];
 
-        $result = $con->query("SELECT SUM(coll_charge_track) as coll_charge_track,SUM(coll_charge_waiver) as coll_charge_waiver FROM `collection` WHERE req_id = '" . $req_id . "' ");
-        if ($result->num_rows > 0) {
-            $row = $result->fetch_assoc();
+        $result = $pdo->query("SELECT SUM(coll_charge_track) as coll_charge_track,SUM(coll_charge_waiver) as coll_charge_waiver FROM `collection` WHERE cus_profile_id = '" . $cp_id . "' ");
+        if ($result->rowCount() > 0) {
+            $row = $result->fetch();
             $coll_charge_track = $row['coll_charge_track'];
             $coll_charge_waiver = $row['coll_charge_waiver'];
         } else {
@@ -149,13 +144,6 @@ foreach ($req_arr as $req_id) {
         $response['due_nil_customer'][$i] = false;
     }
 
-    //If balance equals to zero, then it should be moved to closed
-    if ($response['balance'] == 0 or $response['balance'] == '0') {
-        $response['closed_customer'][$i] = true;
-    } else {
-        $response['closed_customer'][$i] = false;
-    }
-
     $response['balAmnt'][$i] =  $response['balance'];
 
     $i++;
@@ -163,18 +151,15 @@ foreach ($req_arr as $req_id) {
 
 //for knowing the customer status for due followup screen
 //this will give the customer's sub status in the order of Legal, Error, OD, Due Nill, Pending, Current
-$response['follow_cus_sts'] = checkStatusOfCustomer($response, $loan_arr, $cus_id, $con);
+$response['follow_cus_sts'] = checkStatusOfCustomer($response, $loan_arr, $cus_id, $pdo);
 
-function calculateOthers($loan_arr, $response, $con, $req_id)
+function calculateOthers($loan_arr, $response, $pdo, $cp_id)
 {
-    // if(isset($_POST['req_id'])){
-    //     $req_id = $_POST['req_id'];
-    // }
-    // $req_id = '11';//***************************************************************************************************************************************************
-    $due_start_from = $loan_arr['due_start_from'];
-    $maturity_month = $loan_arr['maturity_month'];
+    //**************************************************************************************************************************************************
+    $due_start_from = $loan_arr['due_startdate'];
+    $maturity_month = $loan_arr['maturity_date'];
 
-    if ($loan_arr['due_method_calc'] == 'Monthly' || $loan_arr['due_method_scheme'] == '1') {
+    if ($loan_arr['due_method'] == 'Monthly' || $loan_arr['scheme_due_method'] == '1') {
         //Convert Date to Year and month, because with date, it will use exact date to loop months, instead of taking end of month
         $due_start_from = date('Y-m', strtotime($due_start_from));
         $maturity_month = date('Y-m', strtotime($maturity_month));
@@ -190,24 +175,19 @@ function calculateOthers($loan_arr, $response, $con, $req_id)
         $interval = new DateInterval('P1M'); // Create a one month interval
 
         $count = 0;
-        // $qry = $con->query("DELETE FROM penalty_charges where req_id = '$req_id' and (penalty_date != '' or penalty_date != NULL ) ");
 
         while ($start_date_obj < $end_date_obj && $start_date_obj < $current_date_obj) {
             //To raise penalty in seperate table
             $penalty_raised_date  = $start_date_obj->format('Y-m');
             // If due month exceeded
             if ($loan_arr['scheme_name'] == '' || $loan_arr['scheme_name'] == null) {
-                $result = $con->query("SELECT overdue FROM `loan_calculation` WHERE loan_category = '" . $loan_arr['loan_category'] . "' and sub_category = '" . $loan_arr['sub_category'] . "' ");
+                $result = $pdo->query("SELECT  overdue_penalty as overdue FROM `loan_category_creation` WHERE `id` = '" . $loan_arr['loan_category'] . "' ");
             } else {
-                $result = $con->query("SELECT overdue FROM `loan_scheme` WHERE loan_category = '" . $loan_arr['loan_category'] . "' and sub_category = '" . $loan_arr['sub_category'] . "' ");
+                $result = $pdo->query("SELECT overdue_penalty_percent as overdue FROM `scheme` WHERE `id` = '" . $loan_arr['loan_category'] . "' ");
             }
-            $row = $result->fetch_assoc();
+            $row = $result->fetch();
             $penalty_per = $row['overdue']; //get penalty percentage to insert
             $penalty = number_format(($response['due_amt'] * $penalty_per) / 100);
-
-
-            // $qry = $con->query("INSERT into penalty_charges (`req_id`,`penalty_date`, `penalty`, `created_date`) values ('$req_id','$penalty_raised_date','$penalty',current_timestamp)");
-
 
             $start_date_obj->add($interval);
             $count++; //Count represents how many months are exceeded
@@ -223,8 +203,12 @@ function calculateOthers($loan_arr, $response, $con, $req_id)
 
         //To check whether due has been nil with other charges
 
-        $qry = $con->query("SELECT c.due_amt_track,c.pre_close_waiver,c.princ_amt_track,pc.penalty,pc.paid_amnt AS paid_amntpc,pc.waiver_amnt AS waiver_amntpc,cc.coll_charge,cc.paid_amnt AS paid_amntcc,cc.waiver_amnt AS waiver_amntcc FROM ( SELECT req_id, SUM(due_amt_track) AS due_amt_track,SUM(pre_close_waiver) AS pre_close_waiver,SUM(princ_amt_track) AS princ_amt_track FROM collection WHERE req_id = '$req_id' ) c LEFT JOIN ( SELECT req_id, SUM(penalty) AS penalty, SUM(paid_amnt) AS paid_amnt, SUM(waiver_amnt) AS waiver_amnt FROM penalty_charges WHERE req_id = '$req_id' GROUP BY req_id ) pc ON c.req_id = pc.req_id LEFT JOIN ( SELECT req_id, SUM(coll_charge) AS coll_charge, SUM(paid_amnt) AS paid_amnt, SUM(waiver_amnt) AS waiver_amnt FROM collection_charges WHERE req_id = '$req_id' GROUP BY req_id ) cc ON c.req_id = cc.req_id ");
-        $row = $qry->fetch_assoc();
+        $qry = $pdo->query("SELECT c.due_amt_track, c.pre_close_waiver, c.princ_amt_track, pc.penalty, pc.paid_amnt AS paid_amntpc, pc.waiver_amnt AS waiver_amntpc, cc.coll_charge, cc.paid_amnt AS paid_amntcc, cc.waiver_amnt AS waiver_amntcc 
+        FROM ( SELECT cus_profile_id, SUM(due_amt_track) AS due_amt_track,SUM(pre_close_waiver) AS pre_close_waiver,SUM(princ_amt_track) AS princ_amt_track FROM collection WHERE cus_profile_id = '$cp_id' ) c 
+        LEFT JOIN ( SELECT cus_profile_id, SUM(penalty) AS penalty, SUM(paid_amnt) AS paid_amnt, SUM(waiver_amnt) AS waiver_amnt FROM penalty_charges WHERE cus_profile_id = '$cp_id' GROUP BY cus_profile_id ) pc ON c.cus_profile_id = pc.cus_profile_id 
+        LEFT JOIN ( SELECT cus_profile_id, SUM(coll_charge) AS coll_charge, SUM(paid_amnt) AS paid_amnt, SUM(waiver_amnt) AS waiver_amnt FROM collection_charges 
+        WHERE cus_profile_id = '$cp_id' GROUP BY cus_profile_id ) cc ON c.cus_profile_id = cc.cus_profile_id ");
+        $row = $qry->fetch();
 
         $due_amt_track = intVal($row['due_amt_track']) + intVal($row['pre_close_waiver']);
 
@@ -255,8 +239,8 @@ function calculateOthers($loan_arr, $response, $con, $req_id)
         $curr_penalty = $row['penalty'] - $row['paid_amntpc'] - $row['waiver_amntpc'];
         $curr_charges = $row['coll_charge'] - $row['paid_amntcc'] - $row['waiver_amntcc'];
 
-        $qry = $con->query("SELECT SUM(principal_amt_cal) as principal_amt_cal,SUM(tot_amt_cal) as tot_amt_cal from acknowlegement_loan_calculation WHERE req_id =$req_id");
-        $row = $qry->fetch_assoc();
+        $qry = $pdo->query("SELECT SUM(principal_amnt) as principal_amt_cal,SUM(total_amnt) as tot_amt_cal from loan_entry_loan_calculation WHERE cus_profile_id =$cp_id");
+        $row = $qry->fetch();
 
         if ($row['tot_amt_cal'] != 0) {
             $total_for_nil = $row['tot_amt_cal'];
@@ -275,14 +259,11 @@ function calculateOthers($loan_arr, $response, $con, $req_id)
             $response['due_nil'] = false;
         }
 
-
-        // //Insert Penalty once again because its showing extra one penalty in collection for current month
-        // $qry = $con->query("INSERT into penalty_charges (`req_id`,`penalty_date`, `penalty`, `created_date`) values ('$req_id','$penalty_raised_date','$penalty',current_timestamp)");
         if ($count > 0) {
 
             if ($loan_arr['loan_type'] == 'interest') {
 
-                $response['pending'] = (($response['due_amt'] * ($count)) - $response['due_amt'] + getTillDateInterest($loan_arr, $response, $con, 'fullstartmonth')) - $response['total_paid_int'];
+                $response['pending'] = (($response['due_amt'] * ($count)) - $response['due_amt'] + getTillDateInterest($loan_arr, $response, $pdo, 'fullstartmonth')) - $response['total_paid_int'];
             } else {
                 //if Due month exceeded due amount will be as pending with how many months are exceeded
                 $response['pending'] = ($response['due_amt'] * $count) - $response['total_paid'] - $response['pre_closure'];
@@ -290,15 +271,15 @@ function calculateOthers($loan_arr, $response, $con, $req_id)
 
             // If due month exceeded
             if ($loan_arr['scheme_name'] == '' || $loan_arr['scheme_name'] == null) {
-                $result = $con->query("SELECT overdue FROM `loan_calculation` WHERE loan_category = '" . $loan_arr['loan_category'] . "' and sub_category = '" . $loan_arr['sub_category'] . "' ");
+                $result = $pdo->query("SELECT  overdue_penalty as overdue FROM `loan_category_creation` WHERE `id` = '" . $loan_arr['loan_category'] . "' ");
             } else {
-                $result = $con->query("SELECT overdue FROM `loan_scheme` WHERE loan_category = '" . $loan_arr['loan_category'] . "' and sub_category = '" . $loan_arr['sub_category'] . "' ");
+                $result = $pdo->query("SELECT overdue_penalty_percent as overdue FROM `scheme` WHERE `id` = '" . $loan_arr['loan_category'] . "' ");
             }
-            $row = $result->fetch_assoc();
+            $row = $result->fetch();
             $penalty_per = number_format($row['overdue'] * $count); //Count represents how many months are exceeded//Number format if percentage exeeded decimals then pernalty may increase
 
-            $result = $con->query("SELECT SUM(penalty_track) as penalty,SUM(penalty_waiver) as penalty_waiver FROM `collection` WHERE req_id = '" . $req_id . "' ");
-            $row = $result->fetch_assoc();
+            $result = $pdo->query("SELECT SUM(penalty_track) as penalty,SUM(penalty_waiver) as penalty_waiver FROM `collection` WHERE cus_profile_id = '" . $cp_id . "' ");
+            $row = $result->fetch();
 
             $penalty = number_format(($response['due_amt'] * $penalty_per) / 100);
             $response['penalty'] = intval($penalty) - (($row['penalty']) ? $row['penalty'] : 0) - (($row['penalty_waiver']) ? $row['penalty_waiver'] : 0);
@@ -344,23 +325,20 @@ function calculateOthers($loan_arr, $response, $con, $req_id)
         $interval = new DateInterval('P1W'); // Create a one Week interval
 
         $count = 0;
-        // $qry = $con->query("DELETE FROM penalty_charges where req_id = '$req_id' and (penalty_date != '' or penalty_date != NULL ) ");
+        // $qry = $pdo->query("DELETE FROM penalty_charges where req_id = '$cp_id' and (penalty_date != '' or penalty_date != NULL ) ");
         while ($start_date_obj < $end_date_obj && $start_date_obj < $current_date_obj) {
             //To raise penalty in seperate table
             $penalty_raised_date  = $start_date_obj->format('Y-m-d');
             // If due month exceeded
             if ($loan_arr['scheme_name'] == '' || $loan_arr['scheme_name'] == null) {
-                $result = $con->query("SELECT overdue FROM `loan_calculation` WHERE loan_category = '" . $loan_arr['loan_category'] . "' and sub_category = '" . $loan_arr['sub_category'] . "' ");
+                $result = $pdo->query("SELECT  overdue_penalty as overdue FROM `loan_category_creation` WHERE `id` = '" . $loan_arr['loan_category'] . "' ");
             } else {
-                $result = $con->query("SELECT overdue FROM `loan_scheme` WHERE loan_category = '" . $loan_arr['loan_category'] . "' and sub_category = '" . $loan_arr['sub_category'] . "' ");
+                $result = $pdo->query("SELECT overdue_penalty_percent as overdue FROM `scheme` WHERE `id` = '" . $loan_arr['loan_category'] . "' ");
             }
-            $row = $result->fetch_assoc();
+            $row = $result->fetch();
             $penalty_per = $row['overdue']; //get penalty percentage to insert
 
             $penalty = number_format(($response['due_amt'] * $penalty_per) / 100);
-
-            // $qry = $con->query("INSERT into penalty_charges (`req_id`,`penalty_date`, `penalty`, `created_date`) values ('$req_id','$penalty_raised_date','$penalty',current_timestamp)");
-
 
             $start_date_obj->add($interval);
             $count++; //Count represents how many months are exceeded
@@ -375,11 +353,12 @@ function calculateOthers($loan_arr, $response, $con, $req_id)
 
         //To check whether due has been nil with other charges
 
-        $qry = $con->query("SELECT c.due_amt_track,c.pre_close_waiver,c.princ_amt_track,pc.penalty,pc.paid_amnt AS paid_amntpc,pc.waiver_amnt AS waiver_amntpc,cc.coll_charge,cc.paid_amnt AS paid_amntcc,cc.waiver_amnt AS waiver_amntcc FROM 
-        ( SELECT req_id, SUM(due_amt_track) AS due_amt_track,SUM(pre_close_waiver) AS pre_close_waiver,SUM(princ_amt_track) AS princ_amt_track FROM collection WHERE req_id = '$req_id' ) c 
-        LEFT JOIN ( SELECT req_id, SUM(penalty) AS penalty, SUM(paid_amnt) AS paid_amnt, SUM(waiver_amnt) AS waiver_amnt FROM penalty_charges WHERE req_id = '$req_id' GROUP BY req_id ) pc ON c.req_id = pc.req_id 
-        LEFT JOIN ( SELECT req_id, SUM(coll_charge) AS coll_charge, SUM(paid_amnt) AS paid_amnt, SUM(waiver_amnt) AS waiver_amnt FROM collection_charges WHERE req_id = '$req_id' GROUP BY req_id ) cc ON c.req_id = cc.req_id ");
-        $row = $qry->fetch_assoc();
+        $qry = $pdo->query("SELECT c.due_amt_track, c.pre_close_waiver, c.princ_amt_track, pc.penalty, pc.paid_amnt AS paid_amntpc, pc.waiver_amnt AS waiver_amntpc, cc.coll_charge, cc.paid_amnt AS paid_amntcc, cc.waiver_amnt AS waiver_amntcc 
+        FROM ( SELECT cus_profile_id, SUM(due_amt_track) AS due_amt_track,SUM(pre_close_waiver) AS pre_close_waiver,SUM(princ_amt_track) AS princ_amt_track FROM collection WHERE cus_profile_id = '$cp_id' ) c 
+        LEFT JOIN ( SELECT cus_profile_id, SUM(penalty) AS penalty, SUM(paid_amnt) AS paid_amnt, SUM(waiver_amnt) AS waiver_amnt FROM penalty_charges WHERE cus_profile_id = '$cp_id' GROUP BY cus_profile_id ) pc ON c.cus_profile_id = pc.cus_profile_id 
+        LEFT JOIN ( SELECT cus_profile_id, SUM(coll_charge) AS coll_charge, SUM(paid_amnt) AS paid_amnt, SUM(waiver_amnt) AS waiver_amnt FROM collection_charges 
+        WHERE cus_profile_id = '$cp_id' GROUP BY cus_profile_id ) cc ON c.cus_profile_id = cc.cus_profile_id ");
+        $row = $qry->fetch();
 
         $due_amt_track = intVal($row['due_amt_track']) + intVal($row['pre_close_waiver']);
         //if sum value is null or empty then assign 0 to it
@@ -405,8 +384,8 @@ function calculateOthers($loan_arr, $response, $con, $req_id)
         $curr_penalty = $row['penalty'] - $row['paid_amntpc'] - $row['waiver_amntpc'];
         $curr_charges = $row['coll_charge'] - $row['paid_amntcc'] - $row['waiver_amntcc'];
 
-        $qry = $con->query("SELECT SUM(principal_amt_cal) as principal_amt_cal,SUM(tot_amt_cal) as tot_amt_cal from acknowlegement_loan_calculation WHERE req_id =$req_id");
-        $row = $qry->fetch_assoc();
+        $qry = $pdo->query("SELECT SUM(principal_amnt) as principal_amt_cal,SUM(total_amnt) as tot_amt_cal from loan_entry_loan_calculation WHERE cus_profile_id =$cp_id");
+        $row = $qry->fetch();
 
         if ($row['tot_amt_cal'] != '') {
             $total_for_nil = $row['tot_amt_cal'];
@@ -430,15 +409,15 @@ function calculateOthers($loan_arr, $response, $con, $req_id)
 
             // If due month exceeded
             if ($loan_arr['scheme_name'] == '' || $loan_arr['scheme_name'] == null) {
-                $result = $con->query("SELECT overdue FROM `loan_calculation` WHERE loan_category = '" . $loan_arr['loan_category'] . "' and sub_category = '" . $loan_arr['sub_category'] . "' ");
+                $result = $pdo->query("SELECT  overdue_penalty as overdue FROM `loan_category_creation` WHERE `id` = '" . $loan_arr['loan_category'] . "' ");
             } else {
-                $result = $con->query("SELECT overdue FROM `loan_scheme` WHERE loan_category = '" . $loan_arr['loan_category'] . "' and sub_category = '" . $loan_arr['sub_category'] . "' ");
+                $result = $pdo->query("SELECT overdue_penalty_percent as overdue FROM `scheme` WHERE `id` = '" . $loan_arr['loan_category'] . "' ");
             }
-            $row = $result->fetch_assoc();
+            $row = $result->fetch();
             $penalty_per = number_format($row['overdue'] * $count); //Count represents how many months are exceeded//Number format if percentage exeeded decimals then pernalty may increase
 
-            $result = $con->query("SELECT SUM(penalty_track) as penalty,SUM(penalty_waiver) as penalty_waiver FROM `collection` WHERE req_id = '" . $req_id . "' ");
-            $row = $result->fetch_assoc();
+            $result = $pdo->query("SELECT SUM(penalty_track) as penalty,SUM(penalty_waiver) as penalty_waiver FROM `collection` WHERE cus_profile_id = '" . $cp_id . "' ");
+            $row = $result->fetch();
 
             $penalty = number_format(($response['due_amt'] * $penalty_per) / 100);
             $response['penalty'] = $penalty - $row['penalty'] - $row['penalty_waiver'];
@@ -464,23 +443,20 @@ function calculateOthers($loan_arr, $response, $con, $req_id)
         $interval = new DateInterval('P1D'); // Create a one Week interval
 
         $count = 0;
-        // $qry = $con->query("DELETE FROM penalty_charges where req_id = '$req_id' and (penalty_date != '' or penalty_date != NULL ) ");
-        // echo "DELETE FROM penalty_charges where req_id = '$req_id' and (penalty_date != '' or penalty_date != NULL ) ";
+
         while ($start_date_obj < $end_date_obj && $start_date_obj < $current_date_obj) {
             //To raise penalty in seperate table
             $penalty_raised_date  = $start_date_obj->format('Y-m-d');
             // If due month exceeded
             if ($loan_arr['scheme_name'] == '' || $loan_arr['scheme_name'] == null) {
-                $result = $con->query("SELECT overdue FROM `loan_calculation` WHERE loan_category = '" . $loan_arr['loan_category'] . "' and sub_category = '" . $loan_arr['sub_category'] . "' ");
+                $result = $pdo->query("SELECT  overdue_penalty as overdue FROM `loan_category_creation` WHERE `id` = '" . $loan_arr['loan_category'] . "' ");
             } else {
-                $result = $con->query("SELECT overdue FROM `loan_scheme` WHERE loan_category = '" . $loan_arr['loan_category'] . "' and sub_category = '" . $loan_arr['sub_category'] . "' ");
+                $result = $pdo->query("SELECT overdue_penalty_percent as overdue FROM `scheme` WHERE `id` = '" . $loan_arr['loan_category'] . "' ");
             }
-            $row = $result->fetch_assoc();
+            $row = $result->fetch();
             $penalty_per = $row['overdue']; //get penalty percentage to insert
 
             $penalty = ($response['due_amt'] * $penalty_per) / 100;
-
-            // $qry = $con->query("INSERT into penalty_charges (`req_id`,`penalty_date`, `penalty`, `created_date`) values ('$req_id','$penalty_raised_date','$penalty',current_timestamp)");
 
             $start_date_obj->add($interval);
             $count++; //Count represents how many months are exceeded
@@ -496,11 +472,12 @@ function calculateOthers($loan_arr, $response, $con, $req_id)
 
         //To check whether due has been nil with other charges
 
-        $qry = $con->query("SELECT c.due_amt_track,c.pre_close_waiver,c.princ_amt_track,pc.penalty,pc.paid_amnt AS paid_amntpc,pc.waiver_amnt AS waiver_amntpc,cc.coll_charge,cc.paid_amnt AS paid_amntcc,cc.waiver_amnt AS waiver_amntcc FROM 
-        ( SELECT req_id, SUM(due_amt_track) AS due_amt_track,sum(pre_close_waiver) as pre_close_waiver,SUM(princ_amt_track) AS princ_amt_track FROM collection WHERE req_id = '$req_id' ) c 
-        LEFT JOIN ( SELECT req_id, SUM(penalty) AS penalty, SUM(paid_amnt) AS paid_amnt, SUM(waiver_amnt) AS waiver_amnt FROM penalty_charges WHERE req_id = '$req_id' GROUP BY req_id ) pc ON c.req_id = pc.req_id 
-        LEFT JOIN ( SELECT req_id, SUM(coll_charge) AS coll_charge, SUM(paid_amnt) AS paid_amnt, SUM(waiver_amnt) AS waiver_amnt FROM collection_charges WHERE req_id = '$req_id' GROUP BY req_id ) cc ON c.req_id = cc.req_id;");
-        $row = $qry->fetch_assoc();
+        $qry = $pdo->query("SELECT c.due_amt_track, c.pre_close_waiver, c.princ_amt_track, pc.penalty, pc.paid_amnt AS paid_amntpc, pc.waiver_amnt AS waiver_amntpc, cc.coll_charge, cc.paid_amnt AS paid_amntcc, cc.waiver_amnt AS waiver_amntcc 
+        FROM ( SELECT cus_profile_id, SUM(due_amt_track) AS due_amt_track,SUM(pre_close_waiver) AS pre_close_waiver,SUM(princ_amt_track) AS princ_amt_track FROM collection WHERE cus_profile_id = '$cp_id' ) c 
+        LEFT JOIN ( SELECT cus_profile_id, SUM(penalty) AS penalty, SUM(paid_amnt) AS paid_amnt, SUM(waiver_amnt) AS waiver_amnt FROM penalty_charges WHERE cus_profile_id = '$cp_id' GROUP BY cus_profile_id ) pc ON c.cus_profile_id = pc.cus_profile_id 
+        LEFT JOIN ( SELECT cus_profile_id, SUM(coll_charge) AS coll_charge, SUM(paid_amnt) AS paid_amnt, SUM(waiver_amnt) AS waiver_amnt FROM collection_charges 
+        WHERE cus_profile_id = '$cp_id' GROUP BY cus_profile_id ) cc ON c.cus_profile_id = cc.cus_profile_id;");
+        $row = $qry->fetch();
 
         $due_amt_track = intVal($row['due_amt_track']) + intVal($row['pre_close_waiver']);
         //if sum value is null or empty then assign 0 to it
@@ -526,8 +503,8 @@ function calculateOthers($loan_arr, $response, $con, $req_id)
         $curr_penalty = $row['penalty'] - $row['paid_amntpc'] - $row['waiver_amntpc'];
         $curr_charges = $row['coll_charge'] - $row['paid_amntcc'] - $row['waiver_amntcc'];
 
-        $qry = $con->query("SELECT SUM(principal_amt_cal) as principal_amt_cal,SUM(tot_amt_cal) as tot_amt_cal from acknowlegement_loan_calculation WHERE req_id =$req_id");
-        $row = $qry->fetch_assoc();
+        $qry = $pdo->query("SELECT SUM(principal_amnt) as principal_amt_cal,SUM(total_amnt) as tot_amt_cal from loan_entry_loan_calculation WHERE cus_profile_id =$cp_id");
+        $row = $qry->fetch();
 
         if ($row['tot_amt_cal'] != '') {
             $total_for_nil = $row['tot_amt_cal'];
@@ -551,15 +528,15 @@ function calculateOthers($loan_arr, $response, $con, $req_id)
 
             // If due month exceeded
             if ($loan_arr['scheme_name'] == '' || $loan_arr['scheme_name'] == null) {
-                $result = $con->query("SELECT overdue FROM `loan_calculation` WHERE loan_category = '" . $loan_arr['loan_category'] . "' and sub_category = '" . $loan_arr['sub_category'] . "' ");
+                $result = $pdo->query("SELECT  overdue_penalty as overdue FROM `loan_category_creation` WHERE `id` = '" . $loan_arr['loan_category'] . "' ");
             } else {
-                $result = $con->query("SELECT overdue FROM `loan_scheme` WHERE loan_category = '" . $loan_arr['loan_category'] . "' and sub_category = '" . $loan_arr['sub_category'] . "' ");
+                $result = $pdo->query("SELECT overdue_penalty_percent as overdue FROM `scheme` WHERE `id` = '" . $loan_arr['loan_category'] . "' ");
             }
-            $row = $result->fetch_assoc();
+            $row = $result->fetch();
             $penalty_per = number_format($row['overdue'] * $count); //Count represents how many months are exceeded//Number format if percentage exeeded decimals then pernalty may increase
 
-            $result = $con->query("SELECT SUM(penalty_track) as penalty,SUM(penalty_waiver) as penalty_waiver FROM `collection` WHERE req_id = '" . $req_id . "' ");
-            $row = $result->fetch_assoc();
+            $result = $pdo->query("SELECT SUM(penalty_track) as penalty,SUM(penalty_waiver) as penalty_waiver FROM `collection` WHERE cus_profile_id = '" . $cp_id . "' ");
+            $row = $result->fetch();
 
             $penalty = number_format(($response['due_amt'] * $penalty_per) / 100);
             $response['penalty'] = intVal($penalty) - intVal($row['penalty']) - intVal($row['penalty_waiver']);
@@ -584,7 +561,7 @@ function calculateOthers($loan_arr, $response, $con, $req_id)
 function calculateNewInterestAmt($loan_arr, $response)
 {
     //to calculate current interest amount based on current balance value//bcoz interest will be calculated based on current balance amt only for interest loan
-    $int = $response['balance'] * ($loan_arr['int_rate'] / 100);
+    $int = $response['balance'] * ($loan_arr['interest_rate'] / 100);
     $curInterest = ceil($int / 5) * 5; //to increase Interest to nearest multiple of 5
     if ($curInterest < $int) {
         $curInterest += 5;
@@ -593,7 +570,7 @@ function calculateNewInterestAmt($loan_arr, $response)
 
     return $response;
 }
-function getTillDateInterest($loan_arr, $response, $con, $data)
+function getTillDateInterest($loan_arr, $response, $pdo, $data)
 {
 
     if ($data == 'from01') {
@@ -627,18 +604,16 @@ function getTillDateInterest($loan_arr, $response, $con, $data)
         //if condition is true then this is , 2 months has been completed.
         //so the pending amt will be only the first month's complete interest amount
 
-
         //to calculate till date interest if loan is interst based
         if ($loan_arr['loan_type'] == 'interest') {
 
             // Get the current month's count of days
-            $currentMonthCount = date('t', strtotime($loan_arr['due_start_from']));
+            $currentMonthCount = date('t', strtotime($loan_arr['due_startdate']));
             // divide current interest amt for one day of current month
             $amtperDay = $response['due_amt'] / intVal($currentMonthCount);
 
-            $st_date = new DateTime(date('Y-m-d', strtotime($loan_arr['due_start_from']))); // start date
+            $st_date = new DateTime(date('Y-m-d', strtotime($loan_arr['due_startdate']))); // start date
             $tdate = new DateTime(date('Y-m-d') . '+1 day'); //current date
-            // $tdate = $tdate->modify('+1 day');//current date +1
             // Calculate the interval between the two dates
             $date_diff = $st_date->diff($tdate);
             // Get the number of days from the interval
@@ -664,106 +639,47 @@ function getTillDateInterest($loan_arr, $response, $con, $data)
         if ($loan_arr['loan_type'] == 'interest') {
 
             // Get the current month's count of days
-            $currentMonthCount = date('t', strtotime($loan_arr['due_start_from']));
+            $currentMonthCount = date('t', strtotime($loan_arr['due_startdate']));
             // divide current interest amt for one day of current month
             $amtperDay = $response['due_amt'] / intVal($currentMonthCount);
 
-            $st_date = new DateTime(date('Y-m-d', strtotime($loan_arr['due_start_from']))); // start date
-            $tdate = new DateTime(date('Y-m-t', strtotime($loan_arr['due_start_from']))); //current date
-            // $tdate = $tdate->modify('+1 day');//current date +1
+            $st_date = new DateTime(date('Y-m-d', strtotime($loan_arr['due_startdate']))); // start date
+            $tdate = new DateTime(date('Y-m-t', strtotime($loan_arr['due_startdate']))); //current date
             // Calculate the interval between the two dates
             $date_diff = $st_date->diff($tdate);
             // Get the number of days from the interval
             $numberOfDays = $date_diff->days;
             $response = ceil($amtperDay * $numberOfDays);
 
-            // //to increase till date Interest to nearest multiple of 5
-            // $cur_amt = ceil($response / 5) * 5; //ceil will set the number to nearest upper integer//i.e ceil(121/5)*5 = 125
-            // if ($cur_amt < $response) {
-            //     $cur_amt += 5;
-            // }
-            // $response = $cur_amt;
         }
     }
     return $response;
 }
 
-function checkStatusOfCustomer($response, $loan_arr, $cus_id, $con)
+function checkStatusOfCustomer($response, $loan_arr, $cus_id, $pdo)
 {
     for ($i = 0; $i < count($response['pending_customer']); $i++) {
 
-        // $pending_sts = ($response['pending_customer'][$i] == 1) ? "true" : "false";
-        // $od_sts = ($response['od_customer'][$i] == 1) ? "true" : "false";
-        // $due_nil_sts = ($response['due_nil_customer'][$i] == 1) ? "true" : "false";
-        // $closed_sts = ($response['closed_customer'][$i] == 1) ? "true" : "false";
-
-
-        $query = $con->query("SELECT cus_status FROM in_issue WHERE cus_id = '$cus_id' and (cus_status >= 14 and cus_status < 20) ");
-        $row = $query->fetch_assoc();
+        // $query = $pdo->query("SELECT cs.status AS cus_status FROM loan_issue li JOIN customer_status cs ON li.cus_profile_id = cs.cus_profile_id  where li.cus_id = '$cus_id' and cs.status =7 ");
+        // $row = $query->fetch();
         $curdate = date('Y-m-d');
-        // if($query->num_rows > 0){
-        //     $cus_status = ($query->fetch_assoc()['cus_status'] == '16') ? "Legal":"Error";
-        //     $response['follow_cus_sts'] = $cus_status;
-        // }else
-        // if($pending_sts == 'true' && $od_sts == 'false'){
-        //     $response['follow_cus_sts'] = 'Pending';
-        // }else if($od_sts == 'true' && $due_nil_sts =='false'){
-        //     $response['follow_cus_sts'] = 'OD';
-        // }elseif($due_nil_sts == 'true'){
-        //     $response['follow_cus_sts'] = 'Due Nil';
-        // }elseif($pending_sts == 'false'){
-        //     if($closed_sts == 'true'){
-        //         $response['follow_cus_sts'] = "Move To Close";
-        //     }else{
-        //         $response['follow_cus_sts'] = 'Current';
-        //     }
-        // }
-// print_r($response['pending_customer']);
-        if (date('Y-m-d', strtotime($loan_arr['due_start_from'])) > date('Y-m-d', strtotime($curdate))) { //If the start date is on upcoming date then the sub status is current, until current date reach due_start_from date.
-            if ($row['cus_status'] == '15') {
-                $response['follow_cus_sts'] = 'Error';
-            } elseif ($row['cus_status'] == '16') {
-                $response['follow_cus_sts'] = 'Legal';
-            } else {
-                $response['follow_cus_sts'] = 'Current';
-            }
+
+        if (date('Y-m-d', strtotime($loan_arr['due_startdate'])) > date('Y-m-d', strtotime($curdate))) { //If the start date is on upcoming date then the sub status is current, until current date reach due_start_from date.
+            $response['follow_cus_sts'] = 'Current';
+
         } else {
             if ($response['pending_customer'][$i] == true && $response['od_customer'][$i] == false) { //using i as 1 so subract it with 1
-                if ($row['cus_status'] == '15') {
-                    $response['follow_cus_sts'] = 'Error';
-                } elseif ($row['cus_status'] == '16') {
-                    $response['follow_cus_sts'] = 'Legal';
-                } else {
-                    $response['follow_cus_sts'] = 'Pending';
-                }
+                $response['follow_cus_sts'] = 'Pending';
+                
             } else if ($response['od_customer'][$i] == true && $response['due_nil_customer'][$i] == false) {
-                if ($row['cus_status'] == '15') {
-                    $response['follow_cus_sts'] = 'Error';
-                } elseif ($row['cus_status'] == '16') {
-                    $response['follow_cus_sts'] = 'Legal';
-                } else {
-                    $response['follow_cus_sts'] = 'OD';
-                }
+                $response['follow_cus_sts'] = 'OD';
+                
             } elseif ($response['due_nil_customer'][$i] == true) {
-                if ($row['cus_status'] == '15') {
-                    $response['follow_cus_sts'] = 'Error';
-                } elseif ($row['cus_status'] == '16') {
-                    $response['follow_cus_sts'] = 'Legal';
-                } else {
-                    $response['follow_cus_sts'] = 'Due Nil';
-                }
+                $response['follow_cus_sts'] = 'Due Nil';
+                
             } elseif ($response['pending_customer'][$i] == false) {
-                if ($row['cus_status'] == '15') {
-                    $response['follow_cus_sts'] = 'Error';
-                } elseif ($row['cus_status'] == '16') {
-                    $response['follow_cus_sts'] = 'Legal';
-                } else {
-                    if ($response['closed_customer'][$i] == true) {
-                        $response['follow_cus_sts'] = "Move To Close";
-                    } else {
-                        $response['follow_cus_sts'] = 'Current';
-                    }
-                }
+                $response['follow_cus_sts'] = 'Current';
+                
             }
         }
     }

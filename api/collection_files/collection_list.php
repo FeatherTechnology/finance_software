@@ -12,7 +12,7 @@ if ($qry->rowCount() > 0) {
     LEFT JOIN area_creation ac ON cp.line = ac.line_id
     LEFT JOIN branch_creation bc ON ac.branch_id = bc.id
     LEFT JOIN customer_status cs ON cp.id = cs.cus_profile_id
-    WHERE cs.status = 7 ORDER BY cp.id DESC");
+    WHERE cs.status = 7 GROUP BY cp.cus_id ORDER BY cp.id DESC");
     if ($qry->rowCount() > 0) {
         while ($collectionInfo = $qry->fetch(PDO::FETCH_ASSOC)) {
             $collectionInfo['action'] = "<a href='#' class='collection-details' value='" . $collectionInfo['cus_id'] . "'><button class='btn btn-primary'>Collect</button></a>";
