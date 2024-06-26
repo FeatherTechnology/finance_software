@@ -14,6 +14,9 @@ $(document).ready(function(){
 
     $('#collection_mode').change(function(){
         var collection_mode = $(this).val();
+        if(collection_mode != ''){
+            getBankNames();
+        }
         //Clear All Value initially
         $('#trans_id').val('')
         $('#trans_date').val('')
@@ -42,6 +45,7 @@ $(document).ready(function(){
         $('#back_to_coll_list').hide();
         $('.coll_details').show();
         $('#back_to_loan_list').show();
+        setCurrentDate('#collection_date'); //To set collection date.
         
         //To get the loan category ID to store when collection form submitted
         $.ajax({
@@ -51,8 +55,14 @@ $(document).ready(function(){
             type:'post',
             cache: false,
             success:function(response){
-                var loan_category_id = response['loan_category'];
-                $('#loan_category_id').val(loan_category_id)
+                $('#loan_category_id').val(response['loan_category']);
+
+                if(response['collection_access'] =='2'){
+                    $('.collection_access_div').hide();
+
+                }else{
+                    $('.collection_access_div').show();
+                }
             }
         })
         var status = $(this).closest('#loan_list_table tbody tr').find('td:nth-child(7)').text()
@@ -249,14 +259,41 @@ $(document).ready(function(){
     });
     
     $(document).on('click','#back_to_loan_list', function(){
+        let cusid = $('#cus_id').val();
+        OnLoadFunctions(cusid);
+        $('.clearFields').val('');
         $('.colls-cntnr').show();
         $('#back_to_coll_list').show();
         $('.coll_details').hide();
         $('#back_to_loan_list').hide();
+        $('#collection_mode').trigger('change');
+    });
+
+    $('#due_amt_track, #princ_amt_track, #int_amt_track, #penalty_track , #coll_charge_track').blur(function(){
+        
+        var due_amt_track = ($('#due_amt_track').val()!='') ? $('#due_amt_track').val() : 0;
+        var penalty_track = ($('#penalty_track').val()!='') ? $('#penalty_track').val() : 0;
+        var coll_charge_track = ($('#coll_charge_track').val()!='') ? $('#coll_charge_track').val() : 0;
+        var princ_amt_track = ($('#princ_amt_track').val()!='') ? $('#princ_amt_track').val() : 0;
+        var int_amt_track = ($('#int_amt_track').val()!='') ? $('#int_amt_track').val() : 0;
+        
+        var total_paid_track = parseInt(due_amt_track) + parseInt(princ_amt_track) + parseInt(int_amt_track) + parseInt(penalty_track) + parseInt(coll_charge_track);
+        $('#total_paid_track').val(total_paid_track)
+    });
+
+    $('#pre_close_waiver , #penalty_waiver , #coll_charge_waiver').blur(function(){
+        
+        var pre_close_waiver = ($('#pre_close_waiver').val()!='') ? $('#pre_close_waiver').val() : 0;
+        var penalty_waiver = ($('#penalty_waiver').val()!='') ? $('#penalty_waiver').val() : 0;
+        var coll_charge_waiver = ($('#coll_charge_waiver').val()!='') ? $('#coll_charge_waiver').val() : 0;
+
+        var total_waiver = parseInt(pre_close_waiver) + parseInt(penalty_waiver) + parseInt(coll_charge_waiver);
+        $('#total_waiver').val(total_waiver)
     });
 
     $(document).on('click','.due-chart', function(){
         var cp_id = $(this).attr('value');
+        var cus_id = $('#cus_id').val();
         dueChartList(cp_id,cus_id); // To show Due Chart List.
         setTimeout(()=>{
             $('.print_due_coll').click(function(){
@@ -276,7 +313,7 @@ $(document).ready(function(){
                 }).then((result) => {
                     if (result.isConfirmed) {
                         $.ajax({
-                            url:'collectionFile/print_collection.php',
+                            url:'api/collection_files/print_collection.php',
                             data:{'coll_id':id},
                             type:'post',
                             cache:false,
@@ -293,29 +330,133 @@ $(document).ready(function(){
     });
     
     $(document).on('click','.penalty-chart', function(){
-        var cp_id = $(this).attr('value');
+        let cp_id = $(this).attr('value');
+        let cus_id = $('#cus_id').val();
         $.ajax({
             //to insert penalty by on click
-            url: 'collectionFile/getLoanDetails.php',
-                data: {'cp_id':cp_id,'cus_id':cus_id},
-                dataType:'json',
-                type:'post',
-                cache: false,
-                success: function(response){
-                    penaltyChartList(cp_id,cus_id); //To show Penalty List.
-                }
+            url: 'api/collection_files/collection_loan_details.php',
+            data: {'cp_id':cp_id},
+            dataType:'json',
+            type:'post',
+            cache: false,
+            success: function(response){
+                penaltyChartList(cp_id,cus_id); //To show Penalty List.
+            }
         })
     });
     
-    $(document).on('click','.coll-charge-chart', function(){
+    $(document).on('click','.fine-chart', function(){
         var cp_id = $(this).attr('value');
         collectionChargeChartList(cp_id) //To Show Fine Chart List
     });
 
-    $(document).on('click','.coll-charge', function(){
-        var cp_id = $(this).attr('value');
-        resetcollCharges(cp_id);  //Fine
-    }); 
+    // $(document).on('click','.coll-charge', function(){
+    //     var cp_id = $(this).attr('value');
+    //     resetcollCharges(cp_id);  //Fine
+    // }); 
+
+    $('#submit_collection').click(function(event){
+        event.preventDefault();
+        $(this).attr('disabled', true);
+        let collData = {
+            'cp_id' : $('#cp_id').val(),
+            'cus_id' : $('#cus_id').val(),
+            'cus_name' : $('#cus_name').val(),
+            'area_id' : $('#area_id').val(),
+            'branch_id' : $('#branch_id').val(),
+            'line_id' : $('#line_id').val(),
+            'loan_category_id' : $('#loan_category_id').val(),
+            'status' : $('#status').val(),
+            'sub_status' : $('#sub_status').val(),
+            'tot_amt' : $('#tot_amt').val(),
+            'paid_amt' : $('#paid_amt').val(),
+            'bal_amt' : $('#bal_amt').val(),
+            'due_amt' : $('#due_amt').val(),
+            'pending_amt' : $('#pending_amt').val(),
+            'payable_amt' : $('#payable_amt').val(),
+            'penalty' : $('#penalty').val(),
+            'coll_charge' : $('#coll_charge').val(),
+            'due_amt_track' : $('#due_amt_track').val(),
+            'princ_amt_track' : $('#princ_amt_track').val(),
+            'int_amt_track' : $('#int_amt_track').val(),
+            'penalty_track' : $('#penalty_track').val(),
+            'coll_charge_track' : $('#coll_charge_track').val(),
+            'total_paid_track' : $('#total_paid_track').val(),
+            'pre_close_waiver' : $('#pre_close_waiver').val(),
+            'penalty_waiver' : $('#penalty_waiver').val(),
+            'coll_charge_waiver' : $('#coll_charge_waiver').val(),
+            'total_waiver' : $('#total_waiver').val(),
+            'collection_date' : $('#collection_date').val(),
+            'collection_id' : $('#collection_id').val(),
+            'collection_mode' : $('#collection_mode').val(),
+            'bank_id' : $('#bank_id').val(),
+            'cheque_no' : $('#cheque_no').val(),
+            'trans_id' : $('#trans_id').val(),
+            'trans_date' : $('#trans_date').val()
+        }
+
+        if(isFormDataValid(collData)){
+            $.post('api/collection_files/submit_collection.php', collData, function(response){
+                if(response == '1'){
+                    swalSuccess('Success', 'Collection Added Successfully.');
+
+                }else if(response == '2'){
+                    swalError('Error', 'Failed to Insert Collection');
+                    
+                }else if(response == '3'){
+                    swalSuccess('Success', 'Moved to Closed Successfully.');
+                }
+                $('#submit_collection').attr('disabled', false);
+                $('#back_to_loan_list').trigger('click');
+            },'json');
+        }else{
+            swalError('Warning', 'Kindly Fill the Mandatory Fields!');
+            $('#submit_collection').attr('disabled', false);
+        }
+    });//submit END.
+
+    $(document).on('click', '.due-chart', function() {
+        $('#due_chart_model').modal('show');
+    });
+
+    $(document).on('click', '.penalty-chart', function() {
+        $('#penalty_model').modal('show');
+    });
+
+    $(document).on('click', '.fine-chart', function(e) {
+        $('#fine_model').modal('show');
+    });
+
+    $(document).on('click', '.fine-form', function(e) {
+        let cpid = $(this).attr('value');
+        $('#fine_cp_id').val(cpid);
+        $('#fine_form_modal').modal('show');
+        setCurrentDate('#fine_date');
+        getFineFormTable(cpid);
+    });
+
+    //Fine Submit
+    $('#fine_form_submit').click(function(event){
+        event.preventDefault();
+        let fine_cp_id = $('#fine_cp_id').val();
+        let cus_id = $('#cus_id').val();
+        let fine_date = $('#fine_date').val();
+        let fine_purpose = $('#fine_purpose').val();
+        let fine_Amnt = $('#fine_Amnt').val();
+
+        if(fine_cp_id =='' || cus_id =='' || fine_date =='' || fine_purpose =='' || fine_Amnt ==''){
+            swalError('Warning', 'Kindly Fill the Mandatory Fields!');
+        }else{
+            $.post('api/collection_files/submit_fine_form.php', {fine_cp_id, cus_id, fine_date, fine_purpose, fine_Amnt}, function(response){
+                if(response == '1'){
+                    swalSuccess('Success', 'Fine Added Successfully.');
+                    getFineFormTable(fine_cp_id);
+                }else{
+                    swalError('Error', 'Failed to Add Fine');
+                }
+            },'json');
+        }
+    })
 
 });
 /////////////////////////////////////////////////////////////////////////   Document END /////////////////////////////////////////////////////////////////////////
@@ -363,12 +504,33 @@ function getPersonalInfo(cusId){
             $('#cus_branch').val(response[0].branch_name);
             $('#cus_line').val(response[0].linename);
             $('#cus_mobile').val(response[0].mobile1);
+            $('#area_id').val(response[0].area_id);
+            $('#line_id').val(response[0].line_id);
+            $('#branch_id').val(response[0].branch_id);
     
             let path = "uploads/loan_entry/cus_pic/";
             var img = $('#cus_image');
             img.attr('src', path + response[0].pic);
         }
     },'json');
+}
+
+function getBankNames(){
+    $.ajax({
+        url: 'api/common_files/bank_name_list.php',
+        data: {},
+        dataType: 'json',
+        type: 'post',
+        cache :false,
+        success: function(response){
+            $('#bank_id').empty();
+            $('#bank_id').append('<option value="">Select Bank Name</option>');
+            $.each(response,function(ind,val){
+                $('#bank_id').append('<option value="'+val['id']+'">'+val['bank_name']+'</option>');
+            })
+
+        }
+    })
 }
 
 function OnLoadFunctions(cus_id){
@@ -437,3 +599,101 @@ function OnLoadFunctions(cus_id){
             hideOverlay();//loader stop
         }); 
 }//Auto Load function END
+
+//validation
+function isFormDataValid(collData){
+    if(collData['total_paid_track'] =='' || collData['total_paid_track'] == null || collData['total_paid_track'] == undefined){
+        return false;
+    }
+
+    if(collData['collection_mode'] =='' || collData['collection_mode'] == null || collData['collection_mode'] == undefined){
+        return false;
+        
+    }else if(collData['collection_mode'] =='2'){//cheque
+        if (collData['bank_id'] == '' || collData['bank_id'] == null || collData['bank_id'] == undefined || collData['cheque_no'] == '' || collData['cheque_no'] == null || collData['cheque_no'] == undefined || collData['trans_id'] == '' || collData['trans_id'] == null || collData['trans_id'] == undefined || collData['trans_date'] == '' || collData['trans_date'] == null || collData['trans_date'] == undefined) {
+            return false;
+        }
+    }else if(['3','4','5'].includes(collData['collection_mode'])){ //ECS / IMPS/NEFT/RTGS / UPI Transaction
+        if (collData['bank_id'] == '' || collData['bank_id'] == null || collData['bank_id'] == undefined || collData['trans_id'] == '' || collData['trans_id'] == null || collData['trans_id'] == undefined || collData['trans_date'] == '' || collData['trans_date'] == null || collData['trans_date'] == undefined) {
+            return false;
+        }
+    }
+
+    return true;
+}
+
+function closeChartsModal() {
+    $('#due_chart_model').modal('hide');
+    $('#penalty_model').modal('hide');
+    $('#fine_model').modal('hide');
+}
+
+function closeFineChartModal(){
+    $('#fine_form_modal').modal('hide');
+    let cus_id = $('#cus_id').val();
+    OnLoadFunctions(cus_id);
+}
+
+function getFineFormTable(cp_id){
+    $.post('api/collection_files/fine_form_list.php', {cp_id}, function(response){
+        let fineColumn =[
+            'sno',
+            'coll_date',
+            'coll_purpose',
+            'coll_charge'
+        ];
+        appendDataToTable('#fine_form_table', response, fineColumn);
+        setdtable('#fine_form_table');
+
+        $('#fine_purpose').val('');
+        $('#fine_Amnt').val('');
+    },'json');
+}
+
+//Due Chart List
+function dueChartList(cp_id,cus_id){
+    $.ajax({
+        url: 'api/collection_files/get_due_chart_list.php',
+        data: {'cp_id':cp_id,'cus_id':cus_id},
+        type:'post',
+        cache: false,
+        success: function(response){
+            $('#due_chart_table_div').empty();
+            $('#due_chart_table_div').html(response);
+        }
+    }).then(function(){
+
+        $.post('api/collection_files/get_due_method_name.php',{cp_id},function(response){
+            $('#dueChartTitle').text('Due Chart ( '+ response['due_method'] + ' - '+ response['loan_type'] +' )');
+        },'json');
+    })
+
+}
+
+//Penalty Chart List
+function penaltyChartList(cp_id,cus_id){
+    $.ajax({
+        url: 'api/collection_files/get_penalty_chart_list.php',
+        data: {'cp_id':cp_id,'cus_id':cus_id},
+        type:'post',
+        cache: false,
+        success: function(response){
+            $('#penalty_chart_table_div').empty()
+            $('#penalty_chart_table_div').html(response)
+        }
+    });//Ajax End.
+}
+
+//Collection Charge Chart List
+function collectionChargeChartList(cp_id){
+    $.ajax({
+        url: 'api/collection_files/get_fine_chart_list.php',
+        data: {'cp_id':cp_id},
+        type:'post',
+        cache: false,
+        success: function(response){
+            $('#fine_chart_table_div').empty()
+            $('#fine_chart_table_div').html(response)
+        }
+    });//Ajax End.
+}

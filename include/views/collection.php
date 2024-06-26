@@ -63,18 +63,21 @@
                                             <div class="form-group">
                                                 <label for="cus_area">Area</label>
                                                 <input type="text" class="form-control" id="cus_area" name="cus_area" tabindex="3" disabled>
+                                                <input type="hidden" id="area_id" name="area_id" >
                                             </div>
                                         </div>
                                         <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
                                             <div class="form-group">
                                                 <label for="cus_branch">Branch</label>
                                                 <input type="text" class="form-control" id="cus_branch" name="cus_branch" tabindex="4" disabled>
+                                                <input type="hidden" id="branch_id" name="branch_id" >
                                             </div>
                                         </div>
                                         <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
                                             <div class="form-group">
                                                 <label for="cus_line">Line</label>
                                                 <input type="text" class="form-control" id="cus_line" name="cus_line" tabindex="5" disabled>
+                                                <input type="hidden" id="line_id" name="line_id" >
                                             </div>
                                         </div>
                                         <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
@@ -223,68 +226,69 @@
                                 <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12 emiLoanDiv">
                                     <div class="form-group">
                                         <label for="disabledInput">Due Amount</label>&nbsp;<span class="text-danger">*</span>
-                                        <input type="text" class="form-control" id="due_amt_track" name="due_amt_track" value='' placeholder='Enter Due Amount' tabindex='16'>
+                                        <input type="number" class="form-control clearFields" id="due_amt_track" name="due_amt_track" value='' placeholder='Enter Due Amount' tabindex='16'>
                                     </div>
                                 </div>
                                 <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12 intLoanDiv" style="display: none;">
                                     <div class="form-group">
                                         <label for="disabledInput">Principal Amount</label>&nbsp;<span class="text-danger">*</span>
-                                        <input type="text" class="form-control" id="princ_amt_track" name="princ_amt_track" value='' placeholder='Enter Principal Amount' tabindex='17'>
+                                        <input type="number" class="form-control clearFields" id="princ_amt_track" name="princ_amt_track" value='' placeholder='Enter Principal Amount' tabindex='17'>
                                     </div>
                                 </div>
                                 <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12 intLoanDiv" style="display: none;">
                                     <div class="form-group">
                                         <label for="disabledInput">Interest Amount</label>&nbsp;<span class="text-danger">*</span>
-                                        <input type="text" class="form-control" id="int_amt_track" name="int_amt_track" value='' placeholder='Enter Interest Amount' tabindex='18'>
+                                        <input type="number" class="form-control clearFields" id="int_amt_track" name="int_amt_track" value='' placeholder='Enter Interest Amount' tabindex='18'>
                                     </div>
                                 </div>
                                 <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
                                     <div class="form-group">
                                         <label for="disabledInput">Penalty</label>&nbsp;<span class="text-danger">*</span>
-                                        <input type="text" class="form-control" id="penalty_track" name="penalty_track" value='' placeholder='Enter Penalty Amount' tabindex='19'>
+                                        <input type="number" class="form-control clearFields" id="penalty_track" name="penalty_track" value='' placeholder='Enter Penalty Amount' tabindex='19'>
                                     </div>
                                 </div>
                                 <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
                                     <div class="form-group">
                                         <label for="disabledInput">Fine</label>&nbsp;<span class="text-danger">*</span>
-                                        <input type="text" class="form-control" id="coll_charge_track" name="coll_charge_track" value='' placeholder='Enter Fine' tabindex='20'>
+                                        <input type="number" class="form-control clearFields" id="coll_charge_track" name="coll_charge_track" value='' placeholder='Enter Fine' tabindex='20'>
                                     </div>
                                 </div>
                                 <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
                                     <div class="form-group">
                                         <label for="disabledInput">Total Paid</label>
-                                        <input type="text" readonly class="form-control" id="total_paid_track" name="total_paid_track" value='' tabindex='21'>
+                                        <input type="number" readonly class="form-control clearFields" id="total_paid_track" name="total_paid_track" value='' tabindex='21'>
                                     </div>
                                 </div>
                             </div>
                             
                             <!-- Waiver Access if the user have collection access. -->
-                            <div class="row collection_access">
+                            <div class="row collection_access_div">
                                 <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
                                     <div class="form-group">
                                         <label for="disabledInput">Pre Closure</label>
-                                        <input type="text" class="form-control" id="pre_close_waiver" name="pre_close_waiver" value='' placeholder='Enter Pre Closure Amount' tabindex='22'>
+                                        <input type="number" class="form-control clearFields" id="pre_close_waiver" name="pre_close_waiver" value='' placeholder='Enter Pre Closure Amount' tabindex='22'>
                                     </div>
                                 </div>
                                 <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
                                     <div class="form-group">
                                         <label for="disabledInput">Penalty Waiver</label>
-                                        <input type="text" class="form-control" id="penalty_waiver" name="penalty_waiver" value='' placeholder='Enter Penalty Waiver' tabindex='23'>
+                                        <input type="number" class="form-control clearFields" id="penalty_waiver" name="penalty_waiver" value='' placeholder='Enter Penalty Waiver' tabindex='23'>
                                     </div>
                                 </div>
                                 <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
                                     <div class="form-group">
                                         <label for="disabledInput">Fine Waiver</label>
-                                        <input type="text" class="form-control" id="coll_charge_waiver" name="coll_charge_waiver" value='' placeholder='Enter Fine Waiver' tabindex='24'>
+                                        <input type="number" class="form-control clearFields" id="coll_charge_waiver" name="coll_charge_waiver" value='' placeholder='Enter Fine Waiver' tabindex='24'>
                                     </div>
                                 </div>
                                 <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
                                     <div class="form-group">
                                         <label for="disabledInput">Total Waiver</label>
-                                        <input type="text" readonly class="form-control" id="total_waiver" name="total_waiver" value='' tabindex='25'>
+                                        <input type="number" readonly class="form-control clearFields" id="total_waiver" name="total_waiver" value='' tabindex='25'>
                                     </div>
                                 </div>
                             </div>
+                            <!-- Waiver Access if the user have collection access. -->
 
                             <div class="row">    
                                 <div class="col-12"><hr></div>
@@ -303,7 +307,7 @@
                                 <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
                                     <div class="form-group">
                                         <label for="disabledInput">Collection Mode</label>&nbsp;<span class="text-danger">*</span>
-                                        <select class='form-control' id='collection_mode' name='collection_mode' tabindex='28'>
+                                        <select class='form-control clearFields' id='collection_mode' name='collection_mode' tabindex='28'>
                                             <option value=''>Select Collection Mode</option>
                                             <option value='1'>Cash</option>
                                             <option value='2'>Cheque</option>
@@ -353,8 +357,7 @@
             <!-- Submit Button Start -->
             <div class="col-md-12 coll_details" style="display: none;">
                 <div class="text-right">
-                    <button type="submit" name="submit_collection" id="submit_collection" class="btn btn-primary" value="Submit" tabindex='40'><span class="icon-check"></span>&nbsp;Submit</button>
-                    <!-- <button type="reset" class="btn btn-outline-secondary" tabindex="20">Clear</button> -->
+                    <button type="submit" name="submit_collection" id="submit_collection" class="btn btn-primary" value="Submit" tabindex='33'><span class="icon-check"></span>&nbsp;Submit</button>
                 </div>
             </div>
             <!-- Submit Button End -->
@@ -363,3 +366,171 @@
 
     </div>
 </div>
+<div id="printcollection" style="display: none"></div>
+<!-- /////////////////////////////////////////////////////////////////// Due Chart Modal Start ////////////////////////////////////////////////////////////////////// -->
+<div class="modal fade bd-example-modal-lg" id="due_chart_model" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg " role="document" style="max-width: 70% !important">
+        <div class="modal-content" style="background-color: white">
+            <div class="modal-header">
+                <h5 class="modal-title" id="dueChartTitle">Due Chart</h5>
+                <button type="button" class="close" data-dismiss="modal" tabindex="1" aria-label="Close" onclick="closeChartsModal()">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="container-fluid" id="due_chart_table_div">
+                    <table class="table custom-table">
+                        <thead>
+                            <th>Due No.</th>
+                            <th>Due Month</th>
+                            <th>Month</th>
+                            <th>Due Amount</th>
+                            <th>Pending</th>
+                            <th>Payable</th>
+                            <th>Collection Date</th>
+                            <th>Collection Amount</th>
+                            <th>Balance Amount</th>
+                            <th>Pre Closure</th>
+                            <th>Role</th>
+                            <th>User ID</th>
+                            <th>Collection Method</th>
+                            <th>Action</th>
+                        </thead>
+                        <tbody>
+                        </tbody>
+                    </table>
+                </div>
+
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" data-dismiss="modal" onclick="closeChartsModal()" tabindex="4">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- /////////////////////////////////////////////////////////////////// Due Chart Modal END ////////////////////////////////////////////////////////////////////// -->
+<!-- /////////////////////////////////////////////////////////////////// Penalty Chart Modal Start ////////////////////////////////////////////////////////////////////// -->
+<div class="modal fade" id="penalty_model" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-lg " role="document">
+        <div class="modal-content" style="background-color: white">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLongTitle">Penalty Chart</h5>
+                <button type="button" class="close" data-dismiss="modal" tabindex="1" aria-label="Close" onclick="closeChartsModal()">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="container-fluid">
+                    <div class="row" id="penalty_chart_table_div">
+                        <table class="table custom-table">
+                            <thead>
+                                <th>S No.</th>
+                                <th>Penalty Date</th>
+                                <th>Penalty</th>
+                                <th>Paid Date</th>
+                                <th>Paid Amount</th>
+                                <th>Balance Amount</th>
+                                <th>Waiver Amount</th>
+                            </thead>
+                        </table>
+                    </div>
+                </div>
+
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" data-dismiss="modal"  onclick="closeChartsModal()" tabindex="4">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- /////////////////////////////////////////////////////////////////// Penalty Chart Modal END ////////////////////////////////////////////////////////////////////// -->
+<!-- /////////////////////////////////////////////////////////////////// Fine Chart Modal Start ////////////////////////////////////////////////////////////////////// -->
+<div class="modal fade" id="fine_model" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-lg " role="document">
+        <div class="modal-content" style="background-color: white">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLongTitle">Fine Chart</h5>
+                <button type="button" class="close" data-dismiss="modal" tabindex="1" aria-label="Close"  onclick="closeChartsModal()">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body overflow-x-cls" id="fine_chart_table_div">
+                <table class="table custom-table">
+                    <thead>
+                        <th>S No.</th>
+                        <th>Date</th>
+                        <th>Fine</th>
+                        <th>Purpose</th>
+                        <th>Paid Date</th>
+                        <th>Paid Amount</th>
+                        <th>Balance Amount</th>
+                        <th>Waiver Amount</th>
+                    </thead>
+                </table>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" data-dismiss="modal"  onclick="closeChartsModal()" tabindex="4">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- /////////////////////////////////////////////////////////////////// Fine Chart Modal END ////////////////////////////////////////////////////////////////////// -->
+
+<!-- /////////////////////////////////////////////////////////////////// Fine Add Modal START ////////////////////////////////////////////////////////////// -->
+<div class="modal fade" id="fine_form_modal" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content" style="background-color: white">
+            <div class="modal-header">
+                <h5 class="modal-title" id="myLargeModalLabel">Add Fine</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close" onclick="closeFineChartModal()">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body"> 
+                <div class="row">
+                    <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                        <div class="form-group">
+                            <label for="coll_date "> Date  </label> <span class="required">&nbsp;*</span>
+                            <input type="hidden" class="form-control" id="fine_cp_id" name="fine_cp_id" >
+                            <input type="text" class="form-control" id="fine_date" name="fine_date" readonly tabindex='1' >
+                        </div>
+                    </div>
+                    <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                        <div class="form-group">
+                            <label for="coll_purpose"> Purpose  </label> <span class="required">&nbsp;*</span>
+                            <input type="text" class="form-control" id="fine_purpose" name="fine_purpose" placeholder="Enter Purpose" onkeydown="return /[a-z ]/i.test(event.key)" tabindex='2'>
+                        </div>
+                    </div>
+                    <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                        <div class="form-group">
+                            <label for="coll_amnt"> Amount </label> <span class="required">&nbsp;*</span>
+                            <input type="number" class="form-control" id="fine_Amnt" name="fine_Amnt" placeholder="Enter Amount"  tabindex='3'>
+                        </div>
+                    </div>
+                    <div class="col-xl-2 col-lg-2 col-md-6 col-sm-4 col-12">
+                        <button type="button" tabindex="4" name="fine_form_submit" id="fine_form_submit" class="btn btn-primary" style="margin-top: 19px;">Submit</button>
+                    </div>
+                </div>
+                </br>
+                <div>
+                    <table id="fine_form_table" class="table custom-table">
+                        <thead>
+                            <tr>
+                                <th width="15%"> S.No </th>
+                                <th> Date </th>
+                                <th> Purpose </th>
+                                <th> Amount </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal" onclick="closeFineChartModal()">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- /////////////////////////////////////////////////////////////////// Fine Add Modal END ////////////////////////////////////////////////////////////////////// -->

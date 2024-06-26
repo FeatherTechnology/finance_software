@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jun 22, 2024 at 03:40 PM
+-- Generation Time: Jun 26, 2024 at 03:38 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -109,6 +109,7 @@ CREATE TABLE `bank_creation` (
 CREATE TABLE `bank_info` (
   `id` int(11) NOT NULL,
   `cus_id` varchar(100) NOT NULL,
+  `cus_profile_id` varchar(255) NOT NULL,
   `bank_name` varchar(100) NOT NULL,
   `branch_name` varchar(100) NOT NULL,
   `acc_holder_name` varchar(100) NOT NULL,
@@ -156,7 +157,7 @@ CREATE TABLE `branch_creation` (
 
 CREATE TABLE `cheque_info` (
   `id` int(11) NOT NULL,
-  `cus_id` int(11) NOT NULL,
+  `cus_id` varchar(100) NOT NULL,
   `cus_profile_id` int(11) NOT NULL,
   `holder_type` int(11) NOT NULL,
   `holder_name` varchar(150) NOT NULL,
@@ -170,6 +171,78 @@ CREATE TABLE `cheque_info` (
   `created_on` date DEFAULT NULL,
   `updated_on` date DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `collection`
+--
+
+CREATE TABLE `collection` (
+  `id` int(11) NOT NULL COMMENT 'Primary Key',
+  `coll_code` varchar(255) DEFAULT NULL,
+  `cus_profile_id` int(11) DEFAULT NULL,
+  `cus_id` varchar(255) DEFAULT NULL,
+  `cus_name` varchar(255) DEFAULT NULL,
+  `branch` varchar(255) DEFAULT NULL,
+  `area` varchar(255) DEFAULT NULL,
+  `line` varchar(255) DEFAULT NULL,
+  `loan_category` varchar(255) DEFAULT NULL,
+  `coll_status` varchar(255) DEFAULT NULL,
+  `coll_sub_status` varchar(255) DEFAULT NULL,
+  `tot_amt` varchar(255) DEFAULT NULL,
+  `paid_amt` varchar(255) DEFAULT NULL,
+  `bal_amt` varchar(255) DEFAULT NULL,
+  `due_amt` varchar(255) DEFAULT NULL,
+  `pending_amt` varchar(255) DEFAULT NULL,
+  `payable_amt` varchar(255) DEFAULT NULL,
+  `penalty` varchar(255) DEFAULT NULL,
+  `coll_charge` varchar(255) DEFAULT NULL,
+  `coll_mode` varchar(255) DEFAULT NULL,
+  `bank_id` varchar(10) NOT NULL,
+  `cheque_no` varchar(255) DEFAULT NULL,
+  `trans_id` varchar(255) DEFAULT NULL,
+  `trans_date` date DEFAULT NULL,
+  `coll_date` datetime DEFAULT current_timestamp(),
+  `due_amt_track` varchar(255) NOT NULL DEFAULT '0',
+  `princ_amt_track` varchar(255) DEFAULT '0',
+  `int_amt_track` varchar(255) DEFAULT '0',
+  `penalty_track` varchar(255) NOT NULL DEFAULT '0',
+  `coll_charge_track` varchar(255) NOT NULL DEFAULT '0',
+  `total_paid_track` varchar(255) NOT NULL DEFAULT '0',
+  `pre_close_waiver` varchar(255) NOT NULL DEFAULT '0',
+  `penalty_waiver` varchar(255) NOT NULL DEFAULT '0',
+  `coll_charge_waiver` varchar(255) NOT NULL DEFAULT '0',
+  `total_waiver` varchar(255) NOT NULL DEFAULT '0',
+  `insert_login_id` varchar(255) DEFAULT NULL,
+  `update_login_id` varchar(255) DEFAULT NULL,
+  `delete_login_id` varchar(255) DEFAULT NULL,
+  `created_date` datetime DEFAULT NULL COMMENT 'Create Time',
+  `updated_date` datetime DEFAULT current_timestamp() COMMENT 'Update Time'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `collection_charges`
+--
+
+CREATE TABLE `collection_charges` (
+  `id` int(11) NOT NULL COMMENT 'Primary Key',
+  `cus_profile_id` int(11) DEFAULT NULL,
+  `cus_id` varchar(255) DEFAULT NULL,
+  `coll_date` varchar(255) DEFAULT NULL,
+  `coll_purpose` varchar(255) DEFAULT NULL,
+  `coll_charge` varchar(255) NOT NULL DEFAULT '0',
+  `paid_date` varchar(255) DEFAULT NULL,
+  `paid_amnt` varchar(255) DEFAULT '0',
+  `waiver_amnt` varchar(255) DEFAULT '0',
+  `status` int(11) DEFAULT NULL,
+  `insert_login_id` varchar(255) DEFAULT NULL,
+  `update_login_id` varchar(255) DEFAULT NULL,
+  `created_date` datetime DEFAULT NULL COMMENT 'Create Time',
+  `updated_date` datetime DEFAULT current_timestamp() COMMENT 'Update Time'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 
 -- --------------------------------------------------------
 
@@ -271,6 +344,8 @@ CREATE TABLE `customer_status` (
   `loan_calculation_id` int(11) DEFAULT NULL,
   `status` int(11) NOT NULL,
   `sub_status` int(11) DEFAULT NULL,
+  `closed_date` date DEFAULT NULL,
+  `remark` varchar(255) DEFAULT NULL,
   `insert_login_id` int(11) NOT NULL,
   `update_login_id` int(11) DEFAULT NULL,
   `created_on` date NOT NULL,
@@ -358,7 +433,7 @@ INSERT INTO `districts` (`id`, `state_id`, `district_name`, `status`) VALUES
 
 CREATE TABLE `document_info` (
   `id` int(11) NOT NULL,
-  `cus_id` int(11) NOT NULL,
+  `cus_id` varchar(100) NOT NULL,
   `cus_profile_id` int(11) NOT NULL,
   `doc_name` varchar(150) NOT NULL,
   `doc_type` int(50) NOT NULL,
@@ -380,6 +455,7 @@ CREATE TABLE `document_info` (
 CREATE TABLE `document_need` (
   `id` int(11) NOT NULL,
   `cus_profile_id` int(11) NOT NULL,
+  `cus_id` varchar(100) NOT NULL,
   `document_name` varchar(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
@@ -391,7 +467,7 @@ CREATE TABLE `document_need` (
 
 CREATE TABLE `endorsement_info` (
   `id` int(11) NOT NULL,
-  `cus_id` int(11) NOT NULL,
+  `cus_id` varchar(100) NOT NULL,
   `cus_profile_id` int(11) NOT NULL,
   `owner_name` int(11) NOT NULL,
   `relationship` varchar(50) NOT NULL,
@@ -436,7 +512,7 @@ CREATE TABLE `family_info` (
 
 CREATE TABLE `gold_info` (
   `id` int(11) NOT NULL,
-  `cus_id` int(11) NOT NULL,
+  `cus_id` varchar(100) NOT NULL,
   `cus_profile_id` int(11) NOT NULL,
   `gold_type` varchar(150) NOT NULL,
   `purity` varchar(150) NOT NULL,
@@ -457,6 +533,7 @@ CREATE TABLE `gold_info` (
 CREATE TABLE `kyc_info` (
   `id` int(11) NOT NULL,
   `cus_id` varchar(100) NOT NULL,
+  `cus_profile_id` varchar(255) NOT NULL,
   `proof_of` varchar(100) NOT NULL,
   `fam_mem` int(11) DEFAULT NULL,
   `proof` int(11) NOT NULL,
@@ -537,6 +614,7 @@ CREATE TABLE `loan_category_creation` (
 CREATE TABLE `loan_entry_loan_calculation` (
   `id` int(11) NOT NULL,
   `cus_profile_id` int(11) NOT NULL,
+  `cus_id` varchar(100) NOT NULL,
   `loan_id` varchar(50) NOT NULL,
   `loan_category` varchar(50) NOT NULL,
   `category_info` varchar(255) NOT NULL,
@@ -581,7 +659,7 @@ CREATE TABLE `loan_entry_loan_calculation` (
 
 CREATE TABLE `loan_issue` (
   `id` int(11) NOT NULL,
-  `cus_id` int(11) NOT NULL,
+  `cus_id` varchar(255) NOT NULL,
   `cus_profile_id` int(11) NOT NULL,
   `loan_amnt` int(50) NOT NULL,
   `net_cash` int(50) NOT NULL,
@@ -638,7 +716,7 @@ INSERT INTO `menu_list` (`id`, `menu`, `link`, `icon`) VALUES
 
 CREATE TABLE `mortgage_info` (
   `id` int(11) NOT NULL,
-  `cus_id` int(11) NOT NULL,
+  `cus_id` varchar(100) NOT NULL,
   `cus_profile_id` int(11) NOT NULL,
   `property_holder_name` int(11) NOT NULL,
   `relationship` varchar(50) NOT NULL,
@@ -654,6 +732,23 @@ CREATE TABLE `mortgage_info` (
   `created_on` date DEFAULT NULL,
   `updated_on` date DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `penalty_charges`
+--
+
+CREATE TABLE `penalty_charges` (
+  `cus_profile_id` varchar(255) DEFAULT NULL,
+  `penalty_date` varchar(255) DEFAULT NULL,
+  `penalty` varchar(255) DEFAULT NULL,
+  `paid_date` varchar(255) DEFAULT NULL,
+  `paid_amnt` varchar(255) DEFAULT '0',
+  `waiver_amnt` varchar(255) DEFAULT '0',
+  `created_date` datetime DEFAULT current_timestamp(),
+  `updated_time` datetime DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 
 -- --------------------------------------------------------
 
@@ -679,6 +774,7 @@ CREATE TABLE `proof_info` (
 CREATE TABLE `property_info` (
   `id` int(11) NOT NULL,
   `cus_id` varchar(100) NOT NULL,
+  `cus_profile_id` varchar(255) NOT NULL,
   `property` varchar(100) NOT NULL,
   `property_detail` varchar(100) NOT NULL,
   `property_holder` int(11) NOT NULL,
@@ -786,8 +882,7 @@ INSERT INTO `sub_menu_list` (`id`, `main_menu`, `sub_menu`, `link`, `icon`) VALU
 (16, 11, 'Customer Data', 'customer_data', 'upload-to-cloud'),
 (17, 12, 'Search', 'search_screen', 'upload-to-cloud'),
 (18, 13, 'Reports', 'reports', 'upload-to-cloud'),
-(19, 10, 'Document', 'update_document', 'cloud'),
-(20, 6, 'Collection Access', 'collection_access', 'upload-to-cloud');
+(19, 10, 'Document', 'update_document', 'cloud');
 
 -- --------------------------------------------------------
 
@@ -1150,6 +1245,7 @@ CREATE TABLE `users` (
   `branch` varchar(255) NOT NULL,
   `loan_category` varchar(255) NOT NULL,
   `line` varchar(255) NOT NULL,
+  `collection_access` int(11) NOT NULL,
   `screens` varchar(255) NOT NULL,
   `insert_login_id` varchar(100) NOT NULL,
   `update_login_id` varchar(100) NOT NULL,
@@ -1161,8 +1257,8 @@ CREATE TABLE `users` (
 -- Dumping data for table `users`
 --
 
-INSERT INTO `users` (`id`, `name`, `user_code`, `role`, `designation`, `address`, `place`, `email`, `mobile`, `user_name`, `password`, `branch`, `loan_category`, `line`, `screens`, `insert_login_id`, `update_login_id`, `created_on`, `updated_on`) VALUES
-(1, 'Super Admin', 'US-001', 7, 7, '', '', '', '', 'admin', '123', '1', '9', '1', '1,2,3,4,5,6,7,8,9,10,15,16', '1', '1', '2024-06-13', '2024-06-21');
+INSERT INTO `users` (`id`, `name`, `user_code`, `role`, `designation`, `address`, `place`, `email`, `mobile`, `user_name`, `password`, `branch`, `loan_category`, `line`, `collection_access`, `screens`, `insert_login_id`, `update_login_id`, `created_on`, `updated_on`) VALUES
+(1, 'Super Admin', 'US-001', 7, 7, '', '', '', '', 'admin', '123', '1', '9', '1', 1, '1,2,3,4,5,6,7,8,9,10,11,12,15,16,17', '1', '1', '2024-06-13', '2024-06-26');
 
 --
 -- Indexes for dumped tables
@@ -1215,6 +1311,20 @@ ALTER TABLE `branch_creation`
 --
 ALTER TABLE `cheque_info`
   ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `collection`
+--
+ALTER TABLE `collection`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `Profileid` (`cus_profile_id`);
+
+--
+-- Indexes for table `collection_charges`
+--
+ALTER TABLE `collection_charges`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `cusprofileid` (`cus_profile_id`);
 
 --
 -- Indexes for table `company_creation`
@@ -1441,6 +1551,18 @@ ALTER TABLE `cheque_info`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
+-- AUTO_INCREMENT for table `collection`
+--
+ALTER TABLE `collection`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'Primary Key';
+
+--
+-- AUTO_INCREMENT for table `collection_charges`
+--
+ALTER TABLE `collection_charges`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'Primary Key';
+
+--
 -- AUTO_INCREMENT for table `company_creation`
 --
 ALTER TABLE `company_creation`
@@ -1626,6 +1748,18 @@ ALTER TABLE `branch_creation`
   ADD CONSTRAINT `district_id` FOREIGN KEY (`district`) REFERENCES `districts` (`id`),
   ADD CONSTRAINT `state_id` FOREIGN KEY (`state`) REFERENCES `states` (`id`),
   ADD CONSTRAINT `taluk_id` FOREIGN KEY (`taluk`) REFERENCES `taluks` (`id`);
+
+--
+-- Constraints for table `collection`
+--
+ALTER TABLE `collection`
+  ADD CONSTRAINT `Profileid` FOREIGN KEY (`cus_profile_id`) REFERENCES `customer_profile` (`id`) ON UPDATE NO ACTION;
+
+--
+-- Constraints for table `collection_charges`
+--
+ALTER TABLE `collection_charges`
+  ADD CONSTRAINT `cusprofileid` FOREIGN KEY (`cus_profile_id`) REFERENCES `customer_profile` (`id`) ON UPDATE NO ACTION;
 
 --
 -- Constraints for table `company_creation`

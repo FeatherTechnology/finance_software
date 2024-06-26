@@ -7,7 +7,7 @@ if (isset($_POST['cus_id'])) {
 }
 
 $cp_arr = array();
-$qry = $pdo->query("SELECT li.cus_profile_id as cp_id FROM loan_issue li JOIN customer_status cs ON li.cus_profile_id = cs.cus_profile_id  where li.cus_id = '$cus_id' and cs.status =7  ORDER BY li.cus_profile_id ASC ");
+$qry = $pdo->query("SELECT li.cus_profile_id as cp_id FROM loan_issue li JOIN customer_status cs ON li.cus_profile_id = cs.cus_profile_id  where li.cus_id = '$cus_id' and cs.status =7  ORDER BY li.cus_profile_id DESC ");
 while ($row = $qry->fetch()) {
     $cp_arr[] = $row['cp_id'];
 }

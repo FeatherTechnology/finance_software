@@ -10,13 +10,12 @@ if ($id != '0' && $id != '') {
 
     $qry = $pdo->query("SELECT loan_id FROM loan_entry_loan_calculation WHERE loan_id !='' ORDER BY id DESC ");
     if ($qry->rowCount() > 0) {
-        $qry_info = $qry->fetch(); //LD-001
-        $usr_code_f = substr($qry_info['loan_id'], 0, 3);
-        $usr_code_s = substr($qry_info['loan_id'], 3, 5);
-        $final_code = str_pad($usr_code_s + 1, 3, 0, STR_PAD_LEFT);
-        $loan_ID_final = $usr_code_f.$final_code;
+        $qry_info = $qry->fetch(); //LID-101
+        $l_no = ltrim(strstr($qry_info['loan_id'], '-'), '-'); 
+        $l_no = $l_no+1;
+        $loan_ID_final = "LID-"."$l_no";
     } else {
-        $loan_ID_final = "LD-" . "001";
+        $loan_ID_final = "LID-" . "101";
     }
 }
 echo json_encode($loan_ID_final);

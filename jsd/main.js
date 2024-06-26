@@ -404,5 +404,5 @@ function setCurrentDate(field_id) {
     const curYear = curDate.getFullYear();
     const curMonth = curDate.getMonth() + 1;
     const curDay = curDate.getDate();
-    $(field_id).val(`${curYear}-${curMonth < 10 ? '0' + curMonth : curMonth}-${curDay < 10 ? '0' + curDay : curDay}`);
+    $(field_id).val(`${curDay < 10 ? '0' + curDay : curDay}-${curMonth < 10 ? '0' + curMonth : curMonth}-${curYear}`);
 }

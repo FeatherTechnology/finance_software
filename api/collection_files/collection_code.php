@@ -5,7 +5,7 @@ $myStr = 'COL';
 $selectIC = $pdo->query("SELECT coll_code FROM `collection` WHERE coll_code != '' ");
 if($selectIC->rowCount()>0)
 {
-    $codeAvailable = $pdo->query("SELECT coll_code FROM collection WHERE coll_code != '' ORDER BY coll_id DESC LIMIT 1");
+    $codeAvailable = $pdo->query("SELECT coll_code FROM collection WHERE coll_code != '' ORDER BY id DESC LIMIT 1");
     while($row = $codeAvailable->fetch()){
         $ac2 = $row["coll_code"];
     }

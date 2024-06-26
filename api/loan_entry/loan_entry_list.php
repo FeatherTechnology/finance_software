@@ -12,6 +12,7 @@ LEFT JOIN area_name_creation anc ON cp.area = anc.id
 LEFT JOIN area_creation ac ON cp.line = ac.line_id
 LEFT JOIN branch_creation bc ON ac.branch_id = bc.id
 LEFT JOIN customer_status cs ON cp.id = cs.cus_profile_id
+-- JOIN users u ON FIND_IN_SET(cp.line, u.line) AND FIND_IN_SET(lelc.loan_category, u.loan_category)
 WHERE 1 ORDER BY cp.id DESC");
 if ($qry->rowCount() > 0) {
     while ($loanEntryInfo = $qry->fetch(PDO::FETCH_ASSOC)) {

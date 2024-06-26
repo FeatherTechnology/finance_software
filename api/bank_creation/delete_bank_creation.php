@@ -7,7 +7,9 @@ $qry = $pdo->prepare("SELECT qr_code FROM bank_creation WHERE id = $id ");
 if ($qry->execute()) {
     $row = $qry->fetch(PDO::FETCH_ASSOC);
 
-    unlink("../../uploads/bank_creation/qr_code/" . $row['qr_code']);
+    if($row['qr_code'] !=''){
+        unlink("../../uploads/bank_creation/qr_code/" . $row['qr_code']);
+    }
 
     $qry = $pdo->query("DELETE FROM `bank_creation` WHERE `id` = '$id'");
 }
