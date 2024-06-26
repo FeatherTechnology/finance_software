@@ -141,4 +141,7 @@ function closeChartsModal() {
     $('#penalty_model').modal('hide');
     $('#fine_model').modal('hide');
     $('#closed_remark_model').modal('hide');
+    $('#closed_remark_form input').val('');
+    $('#closed_remark_form select').val('');
+    $('#closed_remark_form textarea').val('');
 }

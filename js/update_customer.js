@@ -1002,7 +1002,7 @@ function getBankInfoTable() {
 function getKycDelete(id) {
     let cus_id = $('#cus_id').val().replace(/\s/g, '');
     let cus_profile_id = $('#customer_profile_id').val();
-    $.post('api/loan_entry/delete_kyc_creation.php', { id, cus_id, cus_profile_id }, function (response) {
+    $.post('api/update_customer_files/customer_delete_kyc_creation.php', { id, cus_id, cus_profile_id }, function (response) {
         if (response == '0') {
             swalError('Warning', 'Have to maintain atleast one Kyc Info');
         } else if (response == '1') {

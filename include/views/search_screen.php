@@ -27,8 +27,8 @@
                                     </div>
                                     <div class="col-md-4 col-sm-6">
                                         <div class="form-group">
-                                            <label for="cus_area">Area</label><span class="text-danger">*</span>
-                                            <input type="text" class="form-control" id="cus_area" name="cus_area" placeholder="Enter Area" tabindex="3">
+                                            <label for="area">Area</label><span class="text-danger">*</span>
+                                            <input type="text" class="form-control" id="area" name="area" placeholder="Enter Area" tabindex="3">
                                         </div>
                                     </div>
                                     <div class="col-md-4 col-sm-6">
@@ -38,7 +38,7 @@
                                         </div>
                                     </div>
                                     <div class="col-12 mt-3 text-right">
-                                        <button name="submit_search" id="submit_search" class="btn btn-primary" tabindex="5"><span class="icon-check"></span>&nbsp;Submit</button>
+                                        <button name="submit_search" id="submit_search" class="btn btn-primary" tabindex="5"><span class="icon-check"></span>&nbsp;Search</button>
                                         <button type="reset" class="btn btn-outline-secondary" tabindex="6">Clear</button>
                                     </div>
                                 </div>
@@ -49,15 +49,15 @@
             </form>
 
             <!----------------------------- CARD END SEARCH FORM------------------------------>
-            <div class="card mt-3" id="custome_list">
+            <div class="card" id="custome_list" style="display:none">
                 <div class="card-header">
                     <h5 class="card-title">Customer List</h5>
                 </div>
                 <div class="card-body">
-                    <div class="row">
-                        <table class="table custom-table">
+                    <div class="col-12">
+                        <table id="search_table" class="table custom-table">
                             <thead>
-                                <th>S No.</th>
+                                <th width="20">S No.</th>
                                 <th>Customer ID</th>
                                 <th>Customer Name</th>
                                 <th>Area</th>
@@ -67,7 +67,7 @@
                                 <th>Action</th>
                             </thead>
                             <tbody>
-                                <tr>
+                                <!-- <tr>
                                     <td></td>
                                     <td></td>
                                     <td></td>
@@ -76,7 +76,7 @@
                                     <td></td>
                                     <td></td>
                                     <td><button class="view_customer btn btn-primary">View</button></td>
-                                </tr>
+                                </tr> -->
                             </tbody>
                         </table>
                     </div>
@@ -87,8 +87,8 @@
                     <h5 class="card-title">Customer Status&nbsp;<button type="button" id="back_to_search" style="float:right" class="btn btn-primary">Back</button></h5>
                 </div>
                 <div class="card-body">
-                    <div class="row">
-                        <table class="table custom-table">
+                    <div class="col-12">
+                        <table id="status_table" class="table custom-table">
                             <thead>
                                 <tr>
                                     <th>S No.</th>
@@ -108,7 +108,7 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr>
+                                <!-- <tr>
                                     <td></td>
                                     <td></td>
                                     <td></td>
@@ -138,7 +138,7 @@
                                             </div>
                                         </div>
                                     </td>
-                                </tr>
+                                </tr> -->
                             </tbody>
                         </table>
                     </div>
@@ -253,32 +253,35 @@
         <div class="modal-content" style="background-color: white">
             <div class="modal-header">
                 <h5 class="modal-title" id="exampleModalLongTitle">Closed Remark</h5>
-                <button type="button" class="close" data-dismiss="modal" tabindex="1" aria-label="Close">
+                <button type="button" class="close" data-dismiss="modal" onclick="closeChartsModal()" tabindex="1" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
             <div class="modal-body">
                 <div class="container-fluid">
-                    <div class="row">
-                        <div class="col-sm-2 col-md-2 col-lg-2"></div>
-                        <div class="col-sm-4 col-md-4 col-lg-4">
-                            <div class="form-group">
-                                <label for="sub_status">Sub Status</label>
-                                <input class="form-control" name="sub_status" id="sub_status" tabindex="2" disabled>
+                    <form id="closed_remark_form" method="post">
+                    <input type="hidden" id="cus_profile_id">
+                        <div class="row">
+                            <div class="col-sm-2 col-md-2 col-lg-2"></div>
+                            <div class="col-sm-4 col-md-4 col-lg-4">
+                                <div class="form-group">
+                                    <label for="sub_status">Sub Status</label>
+                                    <input class="form-control" name="sub_status" id="sub_status" tabindex="2" disabled>
+                                </div>
+                            </div>
+                            <div class="col-sm-4 col-md-4 col-lg-4">
+                                <div class="form-group">
+                                    <label for="remark">Remark</label>
+                                    <textarea class="form-control" name="remark" id="remark" tabindex="3" disabled></textarea>
+                                </div>
                             </div>
                         </div>
-                        <div class="col-sm-4 col-md-4 col-lg-4">
-                            <div class="form-group">
-                                <label for="remark">Remark</label>
-                                <textarea class="form-control" name="remark" id="remark" tabindex="3" disabled></textarea>
-                            </div>
-                        </div>
-                    </div>
+                    </form>
                 </div>
 
             </div>
             <div class="modal-footer">
-                <button class="btn btn-secondary" data-dismiss="modal" tabindex="4">Close</button>
+                <button class="btn btn-secondary" data-dismiss="modal" onclick="closeChartsModal()" tabindex="4">Close</button>
             </div>
         </div>
     </div>
@@ -291,7 +294,7 @@
         <div class="modal-content" style="background-color: white">
             <div class="modal-header">
                 <h5 class="modal-title" id="exampleModalLongTitle">Due Chart</h5>
-                <button type="button" class="close" data-dismiss="modal" tabindex="1" aria-label="Close">
+                <button type="button" class="close" data-dismiss="modal" onclick="closeChartsModal()" tabindex="1" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
@@ -321,7 +324,7 @@
 
             </div>
             <div class="modal-footer">
-                <button class="btn btn-secondary" data-dismiss="modal" tabindex="4">Close</button>
+                <button class="btn btn-secondary" data-dismiss="modal" onclick="closeChartsModal()" tabindex="4">Close</button>
             </div>
         </div>
     </div>
@@ -333,7 +336,7 @@
         <div class="modal-content" style="background-color: white">
             <div class="modal-header">
                 <h5 class="modal-title" id="exampleModalLongTitle">Penalty Chart</h5>
-                <button type="button" class="close" data-dismiss="modal" tabindex="1" aria-label="Close">
+                <button type="button" class="close" data-dismiss="modal" onclick="closeChartsModal()" tabindex="1" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
@@ -356,7 +359,7 @@
 
             </div>
             <div class="modal-footer">
-                <button class="btn btn-secondary" data-dismiss="modal" tabindex="4">Close</button>
+                <button class="btn btn-secondary" data-dismiss="modal" onclick="closeChartsModal()" tabindex="4">Close</button>
             </div>
         </div>
     </div>
@@ -368,7 +371,7 @@
         <div class="modal-content" style="background-color: white">
             <div class="modal-header">
                 <h5 class="modal-title" id="exampleModalLongTitle">Fine Chart</h5>
-                <button type="button" class="close" data-dismiss="modal" tabindex="1" aria-label="Close">
+                <button type="button" class="close" data-dismiss="modal" onclick="closeChartsModal()" tabindex="1" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
@@ -392,7 +395,7 @@
 
             </div>
             <div class="modal-footer">
-                <button class="btn btn-secondary" data-dismiss="modal" tabindex="4">Close</button>
+                <button class="btn btn-secondary" data-dismiss="modal" onclick="closeChartsModal()" tabindex="4">Close</button>
             </div>
         </div>
     </div>
