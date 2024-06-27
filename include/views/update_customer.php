@@ -54,7 +54,7 @@
                                     <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
                                         <div class="form-group">
                                             <label for="cus_id"> Customer ID</label><span class="text-danger">*</span>
-                                            <input type="text" class="form-control personal_info_disble" id="cus_id" name="cus_id" data-type="adhaar-number" placeholder="Enter Customer ID" tabindex="1" maxlength="14">
+                                            <input type="text" class="form-control" id="cus_id" name="cus_id" tabindex="1" readonly>
                                         </div>
                                     </div>
                                     <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
@@ -1235,12 +1235,16 @@
                             </div>
                             <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
                                 <div class="form-group">
-                                    <label for="cq_upload">Upload</label><span class="text-danger">*</span>
-                                    <input type="file" class="form-control" name="cq_upload" id="cq_upload" tabindex="8">
+                                    <label for="cq_upload">Upload</label>
+                                    <input type="file" class="form-control" name="cq_upload" id="cq_upload" tabindex="8" multiple>
                                     <input type="hidden" id="cq_upload_edit">
                                 </div>
                             </div>
+                        </div>
 
+                        <div class="row" id="cheque_no"></div>
+
+                        <div class="row">
                             <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
                                 <div class="form-group">
                                     <label for="" style="visibility:hidden"></label><br>

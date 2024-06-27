@@ -1,15 +1,20 @@
 <?php
 require '../../ajaxconfig.php';
+@session_start();
+$user_id = $_SESSION['user_id'];
 $cus_id = $_POST['cus_id'];
 $loan_list_arr = array();
 $status = [3 =>'Move',4 => 'Approved',5 => 'Cancel',6 => 'Revoke',7 => 'Loan Issued',8 => 'Closed'];
 $sub_status = [''=>'',1=>'Consider',2=>'Reject'];
 $qry = $pdo->query("SELECT lelc.cus_profile_id, lelc.cus_id, lelc.loan_id, lc.loan_category, lelc.loan_date,cs.closed_date,lelc.loan_amount, cs.status, cs.sub_status
 FROM loan_entry_loan_calculation lelc
+JOIN customer_profile cp ON cp.id = lelc.cus_profile_id
 JOIN loan_category_creation lcc ON lelc.loan_category = lcc.id
 JOIN loan_category lc ON lcc.loan_category = lc.id
 JOIN customer_status cs ON lelc.id = cs.loan_calculation_id
-WHERE lelc.cus_id = '$cus_id' ORDER BY lelc.id DESC");
+JOIN users u ON FIND_IN_SET(cp.line, u.line)
+JOIN users us ON FIND_IN_SET(lelc.loan_category, us.loan_category)
+WHERE lelc.cus_id = '$cus_id' AND u.id ='$user_id' AND us.id ='$user_id' ORDER BY lelc.id DESC");
 if ($qry->rowCount() > 0) {
     while ($loanInfo = $qry->fetch(PDO::FETCH_ASSOC)) {
         $loanInfo['status'] = $status[$loanInfo['status']];

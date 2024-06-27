@@ -16,6 +16,7 @@ $(document).ready(function(){
         var collection_mode = $(this).val();
         if(collection_mode != ''){
             getBankNames();
+            getChequeList();
         }
         //Clear All Value initially
         $('#trans_id').val('')
@@ -73,45 +74,7 @@ $(document).ready(function(){
         $('#sub_status').val(sub_status)
         
         //To get Collection Code
-        $.ajax({
-            url:'api/collection_files/collection_code.php',
-            data:{},
-            dataType: 'json',
-            type: 'post',
-            cache: false,
-            success: function(response){
-                $('#collection_id').val(response)
-            }
-        });
-
-        //To get Cheque List
-        // $.ajax({
-        //     url:'collectionFile/getChequeList.php',
-        //     data:{'cp_id':cp_id},
-        //     dataType: 'json',
-        //     type: 'post',
-        //     cache: false,
-        //     success: function(response){
-        //         $('#cheque_no').empty()
-        //         $('#cheque_no').append('<option value="">Select Cheque No</option>');
-        //         for(var i=0;i<response.length;i++){
-        //             $('#cheque_no').append('<option value="'+response[i]['cheque_no_id']+'">'+response[i]['cheque_no']+'</option>');
-        //         }
-        //         $('#cheque_no').change(function(){
-        //             var cheque_no = $(this).val();
-        //             if(cheque_no != ''){
-        //                 for(var i=0;i<response.length;i++){
-        //                     if(cheque_no == response[i]['cheque_no_id']){
-        //                         var holder_name = response[i]['cheque_holder_name'];
-        //                     }
-        //                 }
-        //                 $('.chequeSpan').text('* ' + holder_name);
-        //             }else{
-        //                 $('.chequeSpan').text("*");
-        //             }
-        //         })
-        //     }
-        // });
+        getCollectionCode();
         
         //in this file, details gonna fetch by request ID, Not by customer ID (Because we need loan details from particular request ID)
         $.ajax({
@@ -347,7 +310,7 @@ $(document).ready(function(){
     
     $(document).on('click','.fine-chart', function(){
         var cp_id = $(this).attr('value');
-        collectionChargeChartList(cp_id) //To Show Fine Chart List
+        fineChartList(cp_id) //To Show Fine Chart List
     });
 
     // $(document).on('click','.coll-charge', function(){
@@ -357,6 +320,7 @@ $(document).ready(function(){
 
     $('#submit_collection').click(function(event){
         event.preventDefault();
+        getCollectionCode();
         $(this).attr('disabled', true);
         let collData = {
             'cp_id' : $('#cp_id').val(),
@@ -533,6 +497,25 @@ function getBankNames(){
     })
 }
 
+function getChequeList(){
+    let cp_id = $('#cp_id').val();
+    $.ajax({
+        url: 'api/common_files/cheque_no_list.php',
+        data: {cp_id},
+        dataType: 'json',
+        type: 'post',
+        cache :false,
+        success: function(response){
+            $('#cheque_no').empty();
+            $('#cheque_no').append('<option value="">Select Cheque No</option>');
+            $.each(response,function(ind,val){
+                $('#cheque_no').append('<option value="'+val['id']+'">'+val['cheque_no']+'</option>');
+            })
+
+        }
+    })
+}
+
 function OnLoadFunctions(cus_id){
     //To get loan sub Status
     var pending_arr = [];
@@ -600,6 +583,18 @@ function OnLoadFunctions(cus_id){
         }); 
 }//Auto Load function END
 
+function getCollectionCode(){
+    $.ajax({
+        url:'api/collection_files/collection_code.php',
+        data:{},
+        dataType: 'json',
+        type: 'post',
+        cache: false,
+        success: function(response){
+            $('#collection_id').val(response)
+        }
+    });
+}
 //validation
 function isFormDataValid(collData){
     if(collData['total_paid_track'] =='' || collData['total_paid_track'] == null || collData['total_paid_track'] == undefined){
@@ -684,8 +679,8 @@ function penaltyChartList(cp_id,cus_id){
     });//Ajax End.
 }
 
-//Collection Charge Chart List
-function collectionChargeChartList(cp_id){
+//Fine Chart List
+function fineChartList(cp_id){
     $.ajax({
         url: 'api/collection_files/get_fine_chart_list.php',
         data: {'cp_id':cp_id},

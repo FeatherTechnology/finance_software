@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jun 26, 2024 at 03:38 PM
+-- Generation Time: Jun 27, 2024 at 03:54 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -170,6 +170,39 @@ CREATE TABLE `cheque_info` (
   `update_login_id` int(11) DEFAULT NULL,
   `created_on` date DEFAULT NULL,
   `updated_on` date DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `cheque_no_list`
+--
+
+CREATE TABLE `cheque_no_list` (
+  `id` int(11) NOT NULL,
+  `cus_id` varchar(250) DEFAULT NULL,
+  `cus_profile_id` int(11) DEFAULT NULL,
+  `cheque_info_id` int(11) DEFAULT NULL,
+  `cheque_no` varchar(200) DEFAULT NULL,
+  `used_status` int(11) NOT NULL DEFAULT 0,
+  `insert_login_id` int(11) DEFAULT NULL,
+  `update_login_id` int(11) DEFAULT NULL,
+  `created_on` date DEFAULT NULL,
+  `updated_on` date DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `cheque_upd`
+--
+
+CREATE TABLE `cheque_upd` (
+  `id` int(11) NOT NULL,
+  `cus_id` varchar(250) DEFAULT NULL,
+  `cus_profile_id` int(11) DEFAULT NULL,
+  `cheque_info_id` int(11) DEFAULT NULL,
+  `uploads` varchar(255) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -1258,7 +1291,8 @@ CREATE TABLE `users` (
 --
 
 INSERT INTO `users` (`id`, `name`, `user_code`, `role`, `designation`, `address`, `place`, `email`, `mobile`, `user_name`, `password`, `branch`, `loan_category`, `line`, `collection_access`, `screens`, `insert_login_id`, `update_login_id`, `created_on`, `updated_on`) VALUES
-(1, 'Super Admin', 'US-001', 7, 7, '', '', '', '', 'admin', '123', '1', '9', '1', 1, '1,2,3,4,5,6,7,8,9,10,11,12,15,16,17', '1', '1', '2024-06-13', '2024-06-26');
+(1, 'Super Admin', 'US-001', 7, 7, '', '', '', '', 'admin', '123', '1', '9', '1', 1, '1,2,3,4,5,6,7,8,9,10,11,12,15,16,17', '1', '1', '2024-06-13', '2024-06-27'),
+(2, 'Testing User', 'US-002', 9, 9, '', '', '', '', 'testing', '123', '33,34', '9,10', '5,7', 1, '1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17', '1', '2', '2024-06-27', '2024-06-27');
 
 --
 -- Indexes for dumped tables
@@ -1310,6 +1344,18 @@ ALTER TABLE `branch_creation`
 -- Indexes for table `cheque_info`
 --
 ALTER TABLE `cheque_info`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `cheque_no_list`
+--
+ALTER TABLE `cheque_no_list`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `cheque_upd`
+--
+ALTER TABLE `cheque_upd`
   ADD PRIMARY KEY (`id`);
 
 --
@@ -1551,6 +1597,18 @@ ALTER TABLE `cheque_info`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
+-- AUTO_INCREMENT for table `cheque_no_list`
+--
+ALTER TABLE `cheque_no_list`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `cheque_upd`
+--
+ALTER TABLE `cheque_upd`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
 -- AUTO_INCREMENT for table `collection`
 --
 ALTER TABLE `collection`
@@ -1722,7 +1780,7 @@ ALTER TABLE `taluks`
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- Constraints for dumped tables

@@ -33,12 +33,15 @@ function moneyFormatIndia($num) {
 $loan_list_arr = array();
 $qry = $pdo->query("SELECT lelc.cus_profile_id as cp_id, lelc.cus_id, lelc.loan_id, lc.loan_category, li.issue_date, lelc.loan_amount, us.collection_access
 FROM loan_entry_loan_calculation lelc
+JOIN customer_profile cp ON lelc.cus_profile_id = cp.id
 JOIN loan_category_creation lcc ON lelc.loan_category = lcc.id
 JOIN loan_category lc ON lcc.loan_category = lc.id
 JOIN customer_status cs ON lelc.id = cs.loan_calculation_id
 JOIN loan_issue li ON lelc.cus_profile_id = li.cus_profile_id
 LEFT JOIN users us ON us.id = '$user_id'
-WHERE lelc.cus_id = '$cus_id' AND cs.status = 7 ORDER BY lelc.id DESC");
+JOIN users u ON FIND_IN_SET(cp.line, u.line)
+JOIN users urs ON FIND_IN_SET(lelc.loan_category, urs.loan_category)
+WHERE lelc.cus_id = '$cus_id' AND cs.status = 7 AND u.id ='$user_id' AND urs.id ='$user_id' ORDER BY lelc.id DESC ");
 if ($qry->rowCount() > 0) {
     $curdate = date('Y-m-d');
     $i=1;

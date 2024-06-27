@@ -1,7 +1,7 @@
 <?php
 require '../../ajaxconfig.php';
-$status = [3 => 'Move',4 => 'Approved', 5 => 'Cancel', 6 => 'Revoke', 7 => 'Loan Issued', 8 => 'Closed'];
-$sub_status = [1 => 'Consider', 2 => 'Reject'];
+$status = [3 => 'Move',4 => 'Approved', 5 => 'Cancel', 6 => 'Revoke', 7 => 'Loan Issued', 8 => 'Closed', 9=>'Closed'];
+$sub_status = [''=>'',1 => 'Consider', 2 => 'Reject'];
 $update_doc_list_arr = array();
 $cus_id = $_POST['cus_id'];
 

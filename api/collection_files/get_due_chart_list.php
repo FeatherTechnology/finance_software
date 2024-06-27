@@ -148,7 +148,7 @@ function moneyFormatIndia($num)
     ?>
 
     <thead>
-        <tr>
+        <tr><!-- Showing Collection Due Month Start and balance -->
             <th width="15"> Due No </th>
             <th width="8%"> Due Month </th>
             <th> Month </th>
@@ -326,7 +326,7 @@ function moneyFormatIndia($num)
                     $bal_amt = $loan_amt - $due_amt_track - $waiver;
                 }
         ?>
-                <tr>
+                <tr> <!-- Showing From loan date to due start date. if incase due paid before due start date it has to show seperatly in top row. -->
                     <td></td>
                     <td></td>
                     <td></td>
@@ -437,7 +437,7 @@ function moneyFormatIndia($num)
                     }
 
                 ?>
-                    <tr>
+                    <tr> <!-- Showing From Due Start date to Maurity date -->
                         <?php
                         if ($loanFrom['due_method'] == 'Monthly' || $loanFrom['scheme_due_method'] == '1') { //this is for monthly loan to check lastcusduemonth comparision
                             if (date('Y-m', strtotime($lastCusdueMonth)) != date('Y-m', strtotime($row['coll_date']))) {
@@ -573,7 +573,7 @@ function moneyFormatIndia($num)
 
                 <?php $lastCusdueMonth = date('d-m-Y', strtotime($cusDueMonth)); //assign this cusDueMonth to check if coll date is already showed before
                 }
-            } else {
+            } else { //if not paid on due month. else part will show.
                 ?>
                 <tr>
                     <td><?php echo $i; ?></td>
@@ -997,20 +997,10 @@ function calculateOthers($loan_arr, $response, $date, $pdo)
         $qry = $pdo->query("SELECT sum(due_amt_track) as due_amt_track, sum(pre_close_waiver) as pre_close_waiver from `collection` 
         where cus_profile_id = $cp_id 
         AND 
-        (
-            (
-                YEAR(trans_date) = YEAR('$current_date') AND MONTH(trans_date) <= MONTH('$current_date')
-            ) OR (
-                YEAR(trans_date) < YEAR('$current_date')
-            )
-        )
-        OR
-        (
-            (
-                YEAR(coll_date) = YEAR('$current_date') AND MONTH(coll_date) <= MONTH('$current_date')
-            ) OR (
-                YEAR(coll_date) < YEAR('$current_date')
-            )
+        ( 
+            ( ( YEAR(trans_date) = YEAR('$date') AND MONTH(trans_date) <= MONTH('$date') ) OR ( YEAR(trans_date) < YEAR('$date') ) AND trans_date !='0000-00-00') 
+            OR 
+            ( ( YEAR(coll_date) = YEAR('$date') AND MONTH(coll_date) <= MONTH('$date') ) OR ( YEAR(coll_date) < YEAR('$date') ) )
         ) ");
         if ($qry->rowCount() > 0) {
             $rowss = $qry->fetch();

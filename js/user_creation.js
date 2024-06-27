@@ -546,7 +546,7 @@ function getLineName(branchId) {
 }
 
 function getLoanCategoryName(loan_cat_edit_it) {
-    $.post('api/common_files/get_loan_category_creation.php', function (response) {
+    $.post('api/common_files/loan_category_creation_list.php', function (response) {
         loan_category.clearStore();
         $.each(response, function (index, val) {
             let selected = '';
