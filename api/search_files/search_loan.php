@@ -29,11 +29,11 @@ if ($qry->rowCount() > 0) {
                 <i class='fa'>&#xf107;</i>
             </button>
             <div class='dropdown-content'>
-                <a href='#' class='customer-profile' value='" . $row['cus_id'] . "'>Customer Profile</a>
-                <a href='#' class='loan-calculation' value='" . $row['cus_id'] . "'>Loan Calculation</a>
-                <a href='#' class='documentation' value='" . $row['cus_id'] . "'>Documentation</a>
+                <a href='#' class='customer-profile' value='" . $row['cus_profile_id'] . "'>Customer Profile</a>
+                <a href='#' class='loan-calculation' value='" . $row['cus_profile_id'] . "'>Loan Calculation</a>
+                <a href='#' class='documentation' value='" . $row['cus_profile_id'] . "'>Documentation</a>
                 <a href='#' class='closed-remark' value='" . $row['cus_profile_id'] . "'>Remark View</a>
-                <a href='#' class='noc-summary' value='" . $row['cus_id'] . "'>Noc Summary</a>
+                <a href='#' class='noc-summary' value='" . $row['cus_profile_id'] . "'>Noc Summary</a>
             </div>
         </div>";
 

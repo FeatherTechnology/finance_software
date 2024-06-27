@@ -1034,6 +1034,16 @@
                             <input type="hidden" name="kyc_id" id='kyc_id'>
                             <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
                                 <div class="form-group">
+                                    <label for="kycloan_id">Loan ID</label><span class="text-danger">*</span>
+                                    <select type="text" class="form-control" id="kycloan_id" name="kycloan_id" tabindex="1">
+                                        <option value="">Select Loan ID</option>
+                                    </select>
+                                    <input type="hidden" id="customer_profile_id" value='0'>
+                                </div>
+                            </div>
+                            
+                            <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                                <div class="form-group">
                                     <label for="proof_of">Proof Of</label><span class="text-danger">*</span>
                                     <select type="text" class="form-control" id="proof_of" name="proof_of" tabindex="1">
                                         <option value="">Select Proof Of</option>

@@ -15,6 +15,7 @@ $(document).ready(function () {
         $('#mortgage_info_card').hide();
         $('#endorsement_info_card').hide();
         $('#gold_info_card').hide();
+       
     });
 
     $(document).on('click', '.edit-cus-update', function () {
@@ -23,6 +24,7 @@ $(document).ready(function () {
         
         swapTableAndCreation();
         editCustmerProfile(id)
+    
 
     });
 
@@ -208,6 +210,10 @@ $(document).ready(function () {
         swalConfirm('Delete', 'Do you want to Delete the Property Details?', getPropertyDelete, id);
         return;
     });
+    $(document).on('click', '#kyc_form', function () {
+        let customerID = $('#cus_id').val().trim().replace(/\s/g, '');
+        getKycLoanId(customerID);    
+    });
 
     $('#property_holder').change(function () {
         var propertyHolderId = $(this).val();
@@ -223,7 +229,7 @@ $(document).ready(function () {
         if (proofOf == "2") { // Family Member selected
             $('.fam_mem_div').show();
             $('#kyc_relationship').val('');
-            getFamilyMember();
+            getFamilyMember('Select Family Member', '#fam_mem');
         } else { // Customer or any other selection
             $('.fam_mem_div').hide();
             $('#kyc_relationship').val('Customer');
@@ -290,7 +296,7 @@ $(document).ready(function () {
         let cus_profile_id = $('#customer_profile_id').val();
         let cus_id = $('#cus_id').val().replace(/\s/g, '');
         let upload = $('#upload')[0].files[0]; let kyc_upload = $('#kyc_upload').val();
-        let proof_of = $('#proof_of').val(); let fam_mem = $("#fam_mem").val(); let proof = $('#proof').val(); let proof_detail = $('#proof_detail').val(); let kyc_id = $('#kyc_id').val();
+      let proof_of = $('#proof_of').val(); let fam_mem = $("#fam_mem").val(); let proof = $('#proof').val(); let proof_detail = $('#proof_detail').val(); let kyc_id = $('#kyc_id').val();
         if (cus_profile_id == '') {
             swalError('Warning', 'Kindly Fill the Personal Info');
             return false;
@@ -304,6 +310,7 @@ $(document).ready(function () {
             if (proof_of !== 'Customer') {
                 kycDetail.append('fam_mem', fam_mem);
             }
+          
             kycDetail.append('cus_profile_id', cus_profile_id)
             kycDetail.append('cus_id', cus_id)
             kycDetail.append('proof', proof)
@@ -345,7 +352,7 @@ $(document).ready(function () {
                     $('.fam_mem_div').hide();
                     $('#fam_mem').val('');
                 } else {
-                    getFamilyMember();
+                    getFamilyMember('Select Family Member', '#fam_mem');
                     setTimeout(() => {
                         $("#fam_mem").val(response[0].fam_mem);
                     }, 100);
@@ -862,6 +869,18 @@ function getGuarantorName() {
         $('#guarantor_name').empty().append(appendGuarantorOption);
     }, 'json');
 }
+function getKycLoanId() {
+    let cus_id = $('#cus_id').val().replace(/\s/g, '');
+    $.post('api/update_customer_files/get_kyc_loan.php', { cus_id }, function (response) {
+        let appendLoanIdOption = '';
+        appendLoanIdOption += "<option value='0'>Select Loan ID</option>";
+        $.each(response, function (index, val) {
+            let selected = '';
+            appendLoanIdOption += "<option value='" + val.cus_profile_id + "' " + selected + ">" + val.loan_id + "</option>";
+        });
+        $('#kycloan_id').empty().append(appendLoanIdOption);
+    }, 'json');
+}
 
 function getGrelationshipName(guarantorId) {
     $.ajax({
@@ -1052,17 +1071,17 @@ function getKycInfoTable() {
     }, 'json')
 }
 
-function getFamilyMember() {
-    let cus_id = $('#cus_id').val().replace(/\s/g, '');
-    $.post('api/loan_entry/get_guarantor_name.php', { cus_id }, function (response) {
-        let appendHolderOption = '';
-        appendHolderOption += "<option value=''>Select Family Member</option>";
-        $.each(response, function (index, val) {
-            appendHolderOption += "<option value='" + val.id + "'>" + val.fam_name + "</option>";
-        });
-        $('#fam_mem').empty().append(appendHolderOption);
-    }, 'json');
-}
+// function getFamilyMember(optn, selector) {
+//     let cus_id = $('#cus_id').val().replace(/\s/g, '');
+//     $.post('api/loan_entry/get_guarantor_name.php', { cus_id }, function (response) {
+//         let appendHolderOption = '';
+//         appendHolderOption += "<option value=''>"+optn+"</option>";
+//         $.each(response, function (index, val) {
+//             appendHolderOption += "<option value='" + val.id + "'>" + val.fam_name + "</option>";
+//         });
+//         $(selector).empty().append(appendHolderOption);
+//     }, 'json');
+// }
 
 function getKycRelationshipName(familyMemberId) {
     $.ajax({
