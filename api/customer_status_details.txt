@@ -8,3 +8,4 @@ Customer status Details:
 7 = Loan Issued;
 8 = To Closed [When Loan Balance Amount is 0, status has to change to '8' on collection screen. To Move Closed.];
 9 = Closed;
+10 = Move to NOC;

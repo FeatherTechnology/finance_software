@@ -35,9 +35,11 @@ $(document).ready(function () {
             $('.cq_fam_member').hide();
             let cus_profile_id = $('#customer_profile_id').val();
             getNameRelationship(cus_profile_id, holderType);
-        } else {
+        } else if(holderType == '3') {
             getFamilyMember('Select Family Member', '#cq_fam_mem');
             $('.cq_fam_member').show();
+        } else{
+            $('.cq_fam_member').hide();
         }
     });
 
@@ -140,6 +142,9 @@ $(document).ready(function () {
                 setTimeout(() => {
                     $('#cq_fam_mem').val(response.result[0].holder_id);
                 }, 1000);
+            }else{
+                $('#cq_fam_mem').val('');
+                $('.cq_fam_member').hide();
             }
 
             $('#cheque_no').empty();
@@ -601,6 +606,7 @@ function getRelationship(id, selector) {
 }
 
 function emptyholderFields() {
+    $('#cq_fam_mem').val('');
     $('#cq_holder_name').val('');
     $('#cq_holder_name').attr('data-id', '');
     $('#cq_relationship').val('');
