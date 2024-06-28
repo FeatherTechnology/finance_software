@@ -4,6 +4,10 @@
         <div>
             <form id="search_form" name="search_form" method="post" enctype="multipart/form-data">
                 <!-- Row start -->
+                <input type="hidden" name="pending_sts" id="pending_sts" value="" />
+                <input type="hidden" name="od_sts" id="od_sts" value="" />
+                <input type="hidden" name="due_nil_sts" id="due_nil_sts" value="" />
+                <input type="hidden" name="bal_amt" id="bal_amt" value="bal_amt" />
                 <div class="row gutters">
                     <div class="col-12">
                         <div class="card">
@@ -1106,7 +1110,7 @@
                             <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
                                 <div class="form-group">
                                     <label for="agent_id_calc">Agent ID</label><span class="text-danger">*</span>
-                                    <select class="form-control" id="agent_id_calc" name="agent_id_calc"disabled  tabindex="26">
+                                    <select class="form-control" id="agent_id_calc" name="agent_id_calc" disabled tabindex="26">
                                         <option value="">Select Agent ID</option>
                                     </select>
                                 </div>

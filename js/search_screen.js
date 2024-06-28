@@ -15,7 +15,7 @@ $(document).ready(function () {
         $('#customer_status').show();
         $('#custome_list, #search_form').hide();
         let cus_id = $('#cust_id').val().replace(/\s/g, '');
-        getLoanTable(cus_id);
+        OnLoadFunctions(cus_id)
     })
     $(document).on('click', '.noc-summary', function (event) {
         event.preventDefault();
@@ -283,8 +283,8 @@ function getSearchTable(data) {
         setDropdownScripts();
     }
 }
-function getLoanTable(cus_id) {
-    $.post('api/search_files/search_loan.php', { cus_id }, function (response) {
+function getLoanTable(cus_id,pending_sts,od_sts,due_nil_sts,balAmnt) {
+    $.post('api/search_files/search_loan.php', { cus_id,pending_sts,od_sts,due_nil_sts,balAmnt}, function (response) {
         var columnMapping = [
             'sno',
             'loan_date',
@@ -355,7 +355,48 @@ function dueChartList(cp_id,cus_id){
         }
     });//Ajax End.
     }
+
+    function OnLoadFunctions(cus_id){
+        //To get loan sub Status
+        var pending_arr = [];
+        var od_arr = [];
+        var due_nil_arr = [];
+        var balAmnt = [];
+        $.ajax({
+            url: 'api/collection_files/resetCustomerStatus.php',
+            data: {'cus_id':cus_id},
+            dataType:'json',
+            type:'post',
+            cache: false,
+            success: function(response){
+                if(response.length != 0){
     
+                    for(var i=0;i< response['pending_customer'].length;i++){
+                        pending_arr[i] = response['pending_customer'][i]
+                        od_arr[i] = response['od_customer'][i]
+                        due_nil_arr[i] = response['due_nil_customer'][i]
+                        balAmnt[i] = response['balAmnt'][i]
+                    }
+                    var pending_sts = pending_arr.join(',');
+                    $('#pending_sts').val(pending_sts);
+                    var od_sts = od_arr.join(',');
+                    $('#od_sts').val(od_sts);
+                    var due_nil_sts = due_nil_arr.join(',');
+                    $('#due_nil_sts').val(due_nil_sts);
+                    balAmnt = balAmnt.join(',');
+                }
+            }
+        }).then(function(){
+                showOverlay();//loader start
+                var pending_sts = $('#pending_sts').val()
+                var od_sts = $('#od_sts').val()
+                var due_nil_sts = $('#due_nil_sts').val()
+                var bal_amt = balAmnt;
+                getLoanTable(cus_id,pending_sts,od_sts,due_nil_sts,bal_amt)    
+                hideOverlay();//loader stop
+            }); 
+    }//Auto Load function END
+
 /////////////////////////////////////////////////////////////////////////customer profile//////////////////////////////////////////////
 function getFamilyInfoTable() {
     let cus_id = $('#cus_id').val().replace(/\s/g, '');

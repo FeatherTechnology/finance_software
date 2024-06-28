@@ -24,6 +24,12 @@ $(document).ready(function () {
         getClosedLoanList(cus_id);
 
     })
+    
+        $(document).on('click', '.closed-move', function () {
+            let cus_id = $(this).attr('value');
+            let cus_sts = 10;
+            moveToNext(cus_id, cus_sts);
+        });
 
     $('#back_to_closed_list').click(function (event) {
         event.preventDefault();
@@ -153,9 +159,23 @@ function getClosedListTable() {
         ];
         appendDataToTable('#closed_list_table', response, columnMapping);
         setdtable('#closed_list_table');
+        setDropdownScripts();
     }, 'json');
 }
-
+function moveToNext(cus_id, cus_sts) {
+    $.post('api/closed_files/close_move_to_next.php', { cus_id, cus_sts }, function (response) {
+        if (response == '0') {
+            let alertName;
+            if (cus_sts == '10') {
+                alertName = 'Moved To NOC';
+            }
+            swalSuccess('Success', alertName);
+            getClosedListTable();
+        } else {
+            swalError('Alert', 'Failed To Move');
+        }
+    }, 'json');
+}
 function validate() {
     let response = true;
     let sub_status = $('#sub_status').val(); let cus_profile_id = $('#cus_profile_id').val();
@@ -236,4 +256,4 @@ function dueChartList(cp_id,cus_id){
                     $('#fine_chart_table_div').html(response)
                 }
             });//Ajax End.
-            }
+            } 
