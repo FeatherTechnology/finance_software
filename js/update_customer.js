@@ -1256,7 +1256,17 @@ $(document).ready(function () {
         }
     });
 
-    $('#submit_cheque_info').click(function (event) {
+    $('#cheque_count').keyup(function () {
+        $('#cheque_no').empty();
+        let cnt = $(this).val();
+        if (cnt != '') {
+            for (let i = 1; i <= cnt; i++) {
+                $('#cheque_no').append("<div class='col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12'><div class='form-group'><input type='number' class='form-control chequeno' name='chequeno[]' id='chequeno'/> </div></div>")
+            }
+        }
+    });
+
+    $('#submit_cheque_info').click(function(event){
         event.preventDefault();
         let cus_id = $('#cus_id_upd').val();
         let cq_holder_type = $('#cq_holder_type').val();
@@ -1265,11 +1275,19 @@ $(document).ready(function () {
         let cq_relationship = $('#cq_relationship').val();
         let cq_bank_name = $('#cq_bank_name').val();
         let cheque_count = $('#cheque_count').val();
-        let cq_upload = $('#cq_upload')[0].files[0];
+        let cq_upload = $('#cq_upload')[0].files;
         let cq_upload_edit = $('#cq_upload_edit').val();
         let customer_profile_id = $('#customer_profile_id').val();
         let cheque_info_id = $('#cheque_info_id').val();
-        if (cq_holder_type === '' || cq_holder_name === '' || cq_relationship === '' || cq_bank_name === '' || cheque_count == '' || (cq_upload === undefined && cq_upload_edit == '')) {
+        
+        let chequeNoArr = []; //for storing cheque no
+        let i = 0;
+        $('.chequeno').each(function () {//cheque numbers input box
+            chequeNoArr[i] = $(this).val();//store each numbers in an array
+            i++;
+        });
+
+        if (cq_holder_type === '' || cq_holder_name === '' || cq_relationship === '' || cq_bank_name === '' || cheque_count =='' ) {
             swalError('Warning', 'Please Fill out Mandatory fields!');
             return false;
         }
@@ -1282,9 +1300,14 @@ $(document).ready(function () {
         chequeInfo.append('cq_bank_name', cq_bank_name)
         chequeInfo.append('cq_upload', cq_upload)
         chequeInfo.append('cq_upload_edit', cq_upload_edit)
+        chequeInfo.append('cheque_no', chequeNoArr)
         chequeInfo.append('cus_id', cus_id)
         chequeInfo.append('customer_profile_id', customer_profile_id)
         chequeInfo.append('id', cheque_info_id)
+
+        for (var a = 0; a < cq_upload.length; a++) {
+            chequeInfo.append('cq_upload[]', cq_upload[a])
+        }
 
         $.ajax({
             url: 'api/loan_issue_files/submit_cheque_info.php',
@@ -1311,35 +1334,42 @@ $(document).ready(function () {
 
     $(document).on('click', '.chequeActionBtn', function () {
         let id = $(this).attr('value');
-        $.post('api/loan_issue_files/cheque_info_data.php', { id }, function (response) {
-            $('#cq_holder_type').val(response[0].holder_type);
-            $('#cq_holder_name').val(response[0].holder_name);
-            $('#cq_holder_name').attr('data-id', response[0].holder_id);
-            $('#cq_relationship').val(response[0].relationship);
-            $('#cq_bank_name').val(response[0].bank_name);
-            $('#cheque_count').val(response[0].cheque_cnt);
-            $('#cq_upload_edit').val(response[0].upload);
-            $('#cheque_info_id').val(response[0].id);
-            if (response[0].holder_type == '3') {
+        $.post('api/loan_issue_files/cheque_info_data.php', {id}, function(response){
+            $('#cq_holder_type').val(response.result[0].holder_type);
+            $('#cq_holder_name').val(response.result[0].holder_name);
+            $('#cq_holder_name').attr('data-id',response.result[0].holder_id);
+            $('#cq_relationship').val(response.result[0].relationship);
+            $('#cq_bank_name').val(response.result[0].bank_name);
+            $('#cheque_count').val(response.result[0].cheque_cnt);
+            $('#cq_upload_edit').val(response.result[0].upload);
+            $('#cheque_info_id').val(response.result[0].id);
+            if(response.result[0].holder_type == '3'){
                 getFamilyMember('Select Family Member', '#cq_fam_mem')
                 $('.cq_fam_member').show();
                 setTimeout(() => {
-                    $('#cq_fam_mem').val(response[0].holder_id);
+                    $('#cq_fam_mem').val(response.result[0].holder_id);
                 }, 1000);
             }else{
                 $('#cq_fam_mem').val('');
                 $('.cq_fam_member').hide();
             }
             
-        }, 'json');
+            $('#cheque_no').empty();
+            for (let key in response.no) {
+                let cheque = response.no[key];
+                $('#cheque_no').append("<div class='col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12'><div class='form-group'><input type='number' class='form-control chequeno' name='chequeno[]' id='chequeno' value='" + cheque['cheque_no'] + "'/> </div></div>");
+            }
+
+        },'json');
     });
 
     $(document).on('click', '.chequeDeleteBtn', function () {
         let id = $(this).attr('value');
         swalConfirm('Delete', 'Are you sure you want to delete this Cheque?', deleteChequeInfo, id);
     });
-
-    $('#clear_cheque_form').click(function () {
+    
+    $('#clear_cheque_form').click(function(){
+        $('#cheque_no').empty();
         $('#cheque_info_id').val('');
         $('.cq_fam_member').hide();
     });
@@ -1801,12 +1831,12 @@ function getChequeInfoTable() {
     }, 'json');
 }
 
-function deleteChequeInfo(id) {
-    $.post('api/loan_issue_files/delete_cheque_info.php', { id }, function (response) {
-        if (response == '1') {
-            swalSuccess('success', 'Cheque Info Deleted Successfully');
-            getDocCreationTable();
-        } else {
+function deleteChequeInfo(id){
+    $.post('api/loan_issue_files/delete_cheque_info.php', {id}, function(response){
+        if(response =='1'){
+            swalSuccess('success','Cheque Info Deleted Successfully');
+            getChequeCreationTable();
+        }else{
             swalError('Alert', 'Delete Failed')
         }
     }, 'json');

@@ -1,5 +1,5 @@
 <?php
-//Also using in Loan Issue
+//Also using in Loan Issue, NOC
 require '../../ajaxconfig.php';
 
 $id = $_POST['id'];

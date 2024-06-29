@@ -1,6 +1,7 @@
 <?php
 require '../../ajaxconfig.php';
-
+@session_start();
+$user_id = $_SESSION['user_id'];
 $loan_entry_list_arr = array();
 $qry = $pdo->query("SELECT cp.id, cp.cus_id, cp.cus_name, lelc.loan_id, lc.loan_category, lelc.loan_amount, anc.areaname AS area, lnc.linename, bc.branch_name , cp.mobile1, lelc.id as loan_calc_id, cs.id as cus_sts_id, cs.status as c_sts 
 FROM customer_profile cp 
@@ -12,7 +13,7 @@ LEFT JOIN area_name_creation anc ON cp.area = anc.id
 LEFT JOIN area_creation ac ON cp.line = ac.line_id
 LEFT JOIN branch_creation bc ON ac.branch_id = bc.id
 LEFT JOIN customer_status cs ON cp.id = cs.cus_profile_id
-WHERE 1 ORDER BY cp.id DESC");
+WHERE cp.insert_login_id = '$user_id' AND (cs.status = '1' OR cs.status = '2') ORDER BY cp.id DESC");
 if ($qry->rowCount() > 0) {
     while ($loanEntryInfo = $qry->fetch(PDO::FETCH_ASSOC)) {
         $loanEntryInfo['action'] = "<div class='dropdown'>

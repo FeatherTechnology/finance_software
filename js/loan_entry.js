@@ -2215,8 +2215,10 @@ function isFormDataValid(formData) {
 
     let docNeedRowCount = $('#doc_need_table').DataTable().rows().count();
     if(docNeedRowCount <= 0){
+        $('#doc_need_table').DataTable().destroy();
         return false;
     }
+        $('#doc_need_table').DataTable().destroy();
     
     return true;
 }

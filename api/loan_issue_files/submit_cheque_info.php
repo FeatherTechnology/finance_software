@@ -9,36 +9,50 @@ $cq_holder_id = $_POST['cq_holder_id'];
 $cq_relationship = $_POST['cq_relationship'];
 $cq_bank_name = $_POST['cq_bank_name'];
 $cheque_count = $_POST['cheque_count'];
+$cheque_upd_no  = explode(',', $_POST['cheque_no']); //stored each numbers in an array
 $customer_profile_id = $_POST['customer_profile_id'];
 $cus_id = $_POST['cus_id'];
 $id = $_POST['id'];
 
-
-if (!empty($_FILES['cq_upload']['name'])) {
-    $path = "../../uploads/loan_issue/cheque_info/";
-    $picture = $_FILES['cq_upload']['name'];
-    $pic_temp = $_FILES['cq_upload']['tmp_name'];
-    $picfolder = $path . $picture;
-    $fileExtension = pathinfo($picfolder, PATHINFO_EXTENSION); //get the file extention
-    $picture = uniqid() . '.' . $fileExtension;
-    while (file_exists($path . $picture)) {
-        //this loop will continue until it generates a unique file name
-        $picture = uniqid() . '.' . $fileExtension;
-    }
-    move_uploaded_file($pic_temp, $path . $picture);
-} else {
-    $picture = (isset($_POST['cq_upload_edit'])) ? $_POST['cq_upload_edit'] : '';
-}
-
 $status = 0;
 if ($id != '') {
-    $qry = $pdo->query("UPDATE `cheque_info` SET `cus_id`='$cus_id',`cus_profile_id`='$customer_profile_id',`holder_type`='$cq_holder_type',`holder_name`='$cq_holder_name',`holder_id`='$cq_holder_id',`relationship`='$cq_relationship',`bank_name`='$cq_bank_name',`cheque_cnt`='$cheque_count',`upload`= '$picture',`update_login_id`='$user_id',`updated_on`=now() WHERE id = '$id' ");
+    $pdo->query("DELETE FROM `cheque_upd` WHERE cheque_info_id = '$id'");
+    $pdo->query("DELETE FROM `cheque_no_list` WHERE cheque_info_id = '$id'");
+    $qry = $pdo->query("UPDATE `cheque_info` SET `cus_id`='$cus_id',`cus_profile_id`='$customer_profile_id',`holder_type`='$cq_holder_type',`holder_name`='$cq_holder_name',`holder_id`='$cq_holder_id',`relationship`='$cq_relationship',`bank_name`='$cq_bank_name',`cheque_cnt`='$cheque_count',`update_login_id`='$user_id',`updated_on`=now() WHERE id = '$id' ");
     $status = 1; //update
     $last_id = $id;
 } else {
-    $qry = $pdo->query("INSERT INTO `cheque_info`( `cus_id`, `cus_profile_id`, `holder_type`, `holder_name`, `holder_id`, `relationship`, `bank_name`, `cheque_cnt`, `upload`, `insert_login_id`, `created_on`) VALUES ('$cus_id','$customer_profile_id','$cq_holder_type','$cq_holder_name','$cq_holder_id','$cq_relationship','$cq_bank_name','$cheque_count','$picture','$user_id',now() )");
+    $qry = $pdo->query("INSERT INTO `cheque_info`( `cus_id`, `cus_profile_id`, `holder_type`, `holder_name`, `holder_id`, `relationship`, `bank_name`, `cheque_cnt`, `insert_login_id`, `created_on`) VALUES ('$cus_id','$customer_profile_id','$cq_holder_type','$cq_holder_name','$cq_holder_id','$cq_relationship','$cq_bank_name','$cheque_count','$user_id',now() )");
     $status = 2; //Insert
     $last_id = $pdo->lastInsertId();
+}
+
+if (!empty($_FILES['cq_upload']['name'])) {
+    $filesArray = $_FILES['cq_upload']; //files passed as array
+    
+    foreach ($filesArray['name'] as $key => $val) {
+        $fileName = basename($filesArray['name'][$key]);
+        $targetFilePath = "../../uploads/loan_issue/cheque_info/" . $fileName;
+
+        $fileExtension = pathinfo($targetFilePath, PATHINFO_EXTENSION);
+
+        $uniqueFileName = uniqid() . '.' . $fileExtension;
+        while (file_exists("../../uploads/loan_issue/cheque_info/" . $uniqueFileName)) {
+            $uniqueFileName = uniqid() . '.' . $fileExtension;
+        }
+
+        // Upload file to server  
+        if (move_uploaded_file($filesArray["tmp_name"][$key], "../../uploads/loan_issue/cheque_info/" . $uniqueFileName)) {
+            $update =  $pdo->query("INSERT INTO `cheque_upd`(`cus_id`, `cus_profile_id`, `cheque_info_id`, `uploads`) VALUES ('$cus_id','$customer_profile_id','$last_id','$uniqueFileName')");
+        }
+    }
+}
+
+if ($cheque_upd_no != '') {
+    
+    foreach ($cheque_upd_no as $chequeNo) {
+        $insert  = $pdo->query("INSERT INTO `cheque_no_list`(`cus_id`, `cus_profile_id`, `cheque_info_id`, `cheque_no`, `insert_login_id`, `created_on`) VALUES ('$cus_id','$customer_profile_id','$last_id','$chequeNo','$user_id',now())");
+    }
 }
 
 echo json_encode($status);

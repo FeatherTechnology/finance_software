@@ -541,11 +541,15 @@
                             <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
                                 <div class="form-group">
                                     <label for="cq_upload">Upload</label>
-                                    <input type="file" class="form-control" name="cq_upload" id="cq_upload" tabindex="8">
+                                    <input type="file" class="form-control cq_upload" name="cq_upload[]" id="cq_upload" tabindex="8" multiple>
                                     <input type="hidden" id="cq_upload_edit">
                                 </div>
                             </div>
+                        </div>
 
+                        <div class="row" id="cheque_no"></div>
+                                
+                        <div class="row">
                             <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
                                 <div class="form-group">
                                     <label for="" style="visibility:hidden"></label><br>
