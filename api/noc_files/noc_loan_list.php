@@ -38,7 +38,7 @@ JOIN customer_status cs ON lelc.id = cs.loan_calculation_id
 JOIN loan_issue li ON lelc.cus_profile_id = li.cus_profile_id
 JOIN users u ON FIND_IN_SET(cp.line, u.line)
 JOIN users urs ON FIND_IN_SET(lelc.loan_category, urs.loan_category)
-WHERE lelc.cus_id = '$cus_id' AND cs.status = 10 AND u.id ='$user_id' AND urs.id ='$user_id' ORDER BY lelc.id DESC ");
+WHERE lelc.cus_id = '$cus_id' AND (cs.status = 10 OR cs.status = 11) AND u.id ='$user_id' AND urs.id ='$user_id' ORDER BY lelc.id DESC ");
 if ($qry->rowCount() > 0) {
     while ($loanInfo = $qry->fetch(PDO::FETCH_ASSOC)) {
         $loanInfo['issue_date'] = date('d-m-Y', strtotime($loanInfo['issue_date']));

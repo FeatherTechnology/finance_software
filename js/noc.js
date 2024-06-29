@@ -6,7 +6,13 @@ $(document).ready(function () {
         let cusid = $(this).attr('value');
         getPersonalInfo(cusid);
         getNOCLoanList(cusid);
-    })
+    });
+    $(document).on('click', '#remove-noc', function (event) {
+        event.preventDefault();
+        let cid = $(this).attr('value');
+        swalConfirm('Remove', 'Do you want to remove the NOC?', removenoc, cid);
+        return;
+    });
     $('#back_to_noc_list').click(function (event) {
         event.preventDefault();
         $('#noc_main_container,.back_to_noc_list').hide();
@@ -17,16 +23,17 @@ $(document).ready(function () {
         $('#noc_summary,.back_to_loan_list').show();
         $('#loan_list, #personal_info,.back_to_noc_list').hide();
         let cp_id = $(this).attr('value');
+        $('#cp_id').val(cp_id)
         callAllFunctions(cp_id);
     })
 
-    $(document).on('click','#remark_view',function(event){
+    $(document).on('click', '#remark_view', function (event) {
         event.preventDefault();
         let cp_id = $(this).attr('value');
-        $.post('api/noc_files/closed_remark_details.php', {cp_id}, function(response){
+        $.post('api/noc_files/closed_remark_details.php', { cp_id }, function (response) {
             $('#sub_status').val(response['sub_status']);
             $('#remark').val(response['remark']);
-        },'json');
+        }, 'json');
     });
 
     $('#back_to_loan_list').click(function (event) {
@@ -35,51 +42,109 @@ $(document).ready(function () {
         $('#loan_list, #personal_info,.back_to_noc_list').show();
     });
 
-    // $('#noc_member').change(function(){
-    //     let noc_member = $(this).val();
-    //     $.post('api/noc_files/noc_member.php', {noc_member}, function(response){
-    //         $('#noc_relation').val(response['name']);
-    //     },'json');
-    // });
-    
     $('#noc_member').change(function () {
         let id = $(this).val();
-        if (id != '' && id != 'Customer') {
+        let cus_name = $('#cus_name').val();
+        if (id != '' && id != cus_name) {
             getRelationship(id);
-        } else if (id == 'Customer') {
+        } else if (id == cus_name) {
             $('#noc_relation').val('Customer');
         } else {
             $('#noc_relation').val('');
         }
-        
-        setTimeout(() => {
-            let date = $('#date_of_noc').val();
-            let formattedDate = formatDate(date);
-            let name = $('#noc_member').find(":selected").text();
-            let relationship = $('#noc_relation').val();
-    
-            let chequeTable = $('#noc_cheque_list_table').DataTable();
-            updateColumns(chequeTable, formattedDate, 6, name, 7, relationship, 8);
-    
-            let mortTable = $('#noc_mortgage_list_table').DataTable();
-            updateColumns(mortTable, formattedDate, 7, name, 8, relationship, 9);
-    
-            let endorseTable = $('#noc_endorsement_list_table').DataTable();
-            updateColumns(endorseTable, formattedDate, 7, name, 8, relationship, 9);
-    
-            let docTable = $('#noc_document_list_table').DataTable();
-            updateColumns(docTable, formattedDate, 5, name, 6, relationship, 7);
-    
-            let goldTable = $('#noc_gold_list_table').DataTable();
-            updateColumns(goldTable, formattedDate, 4, name, 5, relationship, 6);
+
+        setTimeout(() => { 
+            setValuesInTables();
         }, 1000);
+    });
+
+    $(document).on('click','.noc_cheque_chkbx, .noc_mortgage_chkbx, .noc_endorsement_chkbx, .noc_doc_info_chkbx, .noc_gold_chkbx',function(){
+        setValuesInTables();
+        removeValuesInTables();
     });
 
     $('#submit_noc').click(function (event) {
         event.preventDefault();
-        if (validate()) {
-            //form submit
+
+        let chequeId=[];
+        let mortId=[];
+        let endorsementId=[];
+        let docId=[];
+        let goldId=[];
+
+        $('.noc_cheque_chkbx').each(function(){
+            if($(this).is(':checked') && $(this).attr('data-id') == '0'){
+                chequeId.push($(this).val());
+            }
+        });
+        
+        $('.noc_mortgage_chkbx').each(function(){
+            if($(this).is(':checked') && $(this).attr('data-id') == '0'){
+                mortId.push($(this).val());
+            }
+        });
+        
+        $('.noc_endorsement_chkbx').each(function(){
+            if($(this).is(':checked') && $(this).attr('data-id') == '0'){
+                endorsementId.push($(this).val());
+            }
+        });
+        
+        $('.noc_doc_info_chkbx').each(function(){
+            if($(this).is(':checked') && $(this).attr('data-id') == '0'){
+                docId.push($(this).val());
+            }
+        });
+        
+        $('.noc_gold_chkbx').each(function(){
+            if($(this).is(':checked') && $(this).attr('data-id') == '0'){
+                goldId.push($(this).val());
+            }
+        });
+
+        let cheque_list_cnt = $('#noc_cheque_list_table').DataTable().rows().count();
+        let mort_list_cnt = $('#noc_mortgage_list_table').DataTable().rows().count();
+        let endorsemnt_list_cnt = $('#noc_endorsement_list_table').DataTable().rows().count();
+        let doc_list_cnt = $('#noc_document_list_table').DataTable().rows().count();
+        let gold_list_cnt = $('#noc_gold_list_table').DataTable().rows().count();
+
+        let date_of_noc = $('#date_of_noc').val();
+        let noc_member = $('#noc_member').val();
+        let noc_relation = $('#noc_relation').val();
+        let cpid = $('#cp_id').val();
+        let cus_id = $('#cus_id').val();
+
+        if (date_of_noc =='' || noc_member =='' || noc_relation ==''){
+            swalError('Warning', 'kindly fill the mandatory fields.');
+            return;
         }
+
+        let nocData = {
+            'chequeId' : chequeId,
+            'mortId'   : mortId,
+            'endorsementId' : endorsementId,
+            'docId' : docId,
+            'goldId' : goldId,
+            'date_of_noc' : date_of_noc,
+            'noc_member' : noc_member,
+            'noc_relation' : noc_relation,
+            'cpid' : cpid,
+            'cus_id' : cus_id,
+            'cheque_list_cnt' : cheque_list_cnt,
+            'mort_list_cnt' : mort_list_cnt,
+            'endorsemnt_list_cnt' : endorsemnt_list_cnt,
+            'doc_list_cnt' : doc_list_cnt,
+            'gold_list_cnt' : gold_list_cnt
+        }
+
+        $.post('api/noc_files/submit_noc.php', nocData , function(response){
+            if(response == '1'){
+                swalSuccess('Success', 'NOC submitted successfully.');
+                callAllFunctions(cpid);
+            }else{
+                swalError('Error', 'NOC submission failed.');
+            }
+        },'json');
     });
 
 
@@ -104,7 +169,9 @@ function getNOCList() {
             'action'
         ];
         appendDataToTable('#noc_list_table', response, nocColumns);
-        setdtable('#noc_list_table')
+        setdtable('#noc_list_table');
+        //Dropdown in List Screen
+        setDropdownScripts();
     }, 'json');
 }
 
@@ -126,7 +193,7 @@ function getPersonalInfo(cus_id) {
 function getNOCLoanList(cus_id) {
     $.ajax({
         url: 'api/noc_files/noc_loan_list.php',
-        data: { 'cus_id': cus_id},
+        data: { 'cus_id': cus_id },
         type: 'post',
         dataType: 'json',
         cache: false,
@@ -150,24 +217,27 @@ function getNOCLoanList(cus_id) {
     });
 }
 
-function callAllFunctions(cp_id){
+function callAllFunctions(cp_id) {
     getChequeList(cp_id);
     getMortgageList(cp_id);
     getEndorsementList(cp_id);
     getOtherDocumentList(cp_id);
     getGoldList(cp_id);
-    // setCurrentDate('#date_of_noc');
     {
         // Get today's date
         var today = new Date().toISOString().split('T')[0];
         //Set NOC date
         $('#date_of_noc').val(today);
     }
+    $('#noc_relation').val('');
     getFamilyMember();
+    setTimeout(() => {
+        setSubmittedDisabled();
+    }, 1000);
 }
 
 function getChequeList(cp_id) {
-    $.post('api/noc_files/noc_cheque_list.php', {cp_id}, function(response){
+    $.post('api/noc_files/noc_cheque_list.php', { cp_id }, function (response) {
         let nocChequeColumns = [
             'sno',
             'holder_type',
@@ -175,18 +245,19 @@ function getChequeList(cp_id) {
             'relationship',
             'bank_name',
             'cheque_no',
-            'd_noc',
-            'h_person',
-            'relation',
+            'date_of_noc',
+            'noc_member',
+            'noc_relationship',
             'action'
         ];
         appendDataToTable('#noc_cheque_list_table', response, nocChequeColumns);
         setdtable('#noc_cheque_list_table');
-    },'json');
+        
+    }, 'json');
 }
 
 function getMortgageList(cp_id) {
-    $.post('api/noc_files/noc_mortgage_list.php', {cp_id}, function(response){
+    $.post('api/noc_files/noc_mortgage_list.php', { cp_id }, function (response) {
         let nocMortgageColumns = [
             'sno',
             'fam_name',
@@ -195,18 +266,18 @@ function getMortgageList(cp_id) {
             'mortgage_name',
             'designation',
             'reg_office',
-            'd_noc',
-            'h_person',
-            'relation',
+            'date_of_noc',
+            'noc_member',
+            'noc_relationship',
             'action'
         ];
         appendDataToTable('#noc_mortgage_list_table', response, nocMortgageColumns);
         setdtable('#noc_mortgage_list_table');
-    },'json');
+    }, 'json');
 }
 
 function getEndorsementList(cp_id) {
-    $.post('api/noc_files/noc_endorsement_list.php', {cp_id}, function(response){
+    $.post('api/noc_files/noc_endorsement_list.php', { cp_id }, function (response) {
         let nocEndorseColumns = [
             'sno',
             'fam_name',
@@ -215,49 +286,49 @@ function getEndorsementList(cp_id) {
             'endorsement_name',
             'key_original',
             'rc_original',
-            'd_noc',
-            'h_person',
-            'relation',
+            'date_of_noc',
+            'noc_member',
+            'noc_relationship',
             'action'
         ];
         appendDataToTable('#noc_endorsement_list_table', response, nocEndorseColumns);
         setdtable('#noc_endorsement_list_table');
-    },'json');
+    }, 'json');
 }
 
 function getOtherDocumentList(cp_id) {
-    $.post('api/noc_files/noc_document_info_list.php', {cp_id}, function(response){
+    $.post('api/noc_files/noc_document_info_list.php', { cp_id }, function (response) {
         let nocDocInfoColumns = [
             'sno',
             'doc_name',
             'doc_type',
             'fam_name',
             'upload',
-            'd_noc',
-            'h_person',
-            'relation',
+            'date_of_noc',
+            'noc_member',
+            'noc_relationship',
             'action'
         ];
         appendDataToTable('#noc_document_list_table', response, nocDocInfoColumns);
         setdtable('#noc_document_list_table');
-    },'json');
+    }, 'json');
 }
 
 function getGoldList(cp_id) {
-    $.post('api/noc_files/noc_gold_list.php', {cp_id}, function(response){
+    $.post('api/noc_files/noc_gold_list.php', { cp_id }, function (response) {
         let nocGoldColumns = [
             'sno',
             'gold_type',
             'purity',
             'weight',
-            'd_noc',
-            'h_person',
-            'relation',
+            'date_of_noc',
+            'noc_member',
+            'noc_relationship',
             'action'
         ];
         appendDataToTable('#noc_gold_list_table', response, nocGoldColumns);
         setdtable('#noc_gold_list_table');
-    },'json');
+    }, 'json');
 }
 
 function getFamilyMember() {
@@ -266,7 +337,7 @@ function getFamilyMember() {
     $.post('api/loan_entry/get_guarantor_name.php', { cus_id }, function (response) {
         let appendOption = '';
         appendOption += "<option value=''>Select Member Name</option>";
-        appendOption += "<option value='Customer'>"+cus_name+"</option>";
+        appendOption += "<option value='"+cus_name+"'>" + cus_name + "</option>";
         $.each(response, function (index, val) {
             appendOption += "<option value='" + val.id + "'>" + val.fam_name + "</option>";
         });
@@ -281,30 +352,120 @@ function getRelationship(id) {
     }, 'json');
 }
 
-function updateColumns(table, dnoc, dnocIndex, name, nameIndex, relation, relationIndex) {
-    table.rows().every(function() {
-    var data = this.data();
-    // var updated = false;
-    
-    // if (!data[dnocIndex]) {
-    data[dnocIndex] = dnoc;
-    // updated = true;
-    // }
-    
-    // if (!data[nameIndex]) {
-    data[nameIndex] = name;
-    // updated = true;
-    // }
-    
-    // if (!data[relationIndex]) {
-    data[relationIndex] = relation;
-    // updated = true;
-    // }
+function setValuesInTables(){
+    let member = $('#noc_member').val();
+    let date = $('#date_of_noc').val();
+    let formattedDate = (member !='') ? formatDate(date) : '';
+    let name = (member !='') ? $('#noc_member').find(":selected").text() : '';
+    let relationship = (member !='') ? $('#noc_relation').val() : '';
+    let checked = false;
+    $('.noc_cheque_chkbx').each(function(){
+        if($(this).is(':checked') && $(this).attr('data-id') == '0'){
+            checked = true;
+            $(this).closest('tr').find('td:nth-child(9)').text(relationship);
+            $(this).closest('tr').find('td:nth-child(8)').text(name);
+            $(this).closest('tr').find('td:nth-child(7)').text(formattedDate);
+        }
+    });
+    $('.noc_mortgage_chkbx').each(function(){
+        if($(this).is(':checked') && $(this).attr('data-id') == '0'){
+            checked = true;
+            $(this).closest('tr').find('td:nth-child(10)').text(relationship);
+            $(this).closest('tr').find('td:nth-child(9)').text(name);
+            $(this).closest('tr').find('td:nth-child(8)').text(formattedDate);
+        }
+    });
+    $('.noc_endorsement_chkbx').each(function(){
+        if($(this).is(':checked') && $(this).attr('data-id') == '0'){
+            checked = true;
+            $(this).closest('tr').find('td:nth-child(10)').text(relationship);
+            $(this).closest('tr').find('td:nth-child(9)').text(name);
+            $(this).closest('tr').find('td:nth-child(8)').text(formattedDate);
+        }
+    });
+    $('.noc_doc_info_chkbx').each(function(){
+        if($(this).is(':checked') && $(this).attr('data-id') == '0'){
+            checked = true;
+            $(this).closest('tr').find('td:nth-child(8)').text(relationship);
+            $(this).closest('tr').find('td:nth-child(7)').text(name);
+            $(this).closest('tr').find('td:nth-child(6)').text(formattedDate);
+        }
+    });
+    $('.noc_gold_chkbx').each(function(){
+        if($(this).is(':checked') && $(this).attr('data-id') == '0'){
+            checked = true;
+            $(this).closest('tr').find('td:nth-child(7)').text(relationship);
+            $(this).closest('tr').find('td:nth-child(6)').text(name);
+            $(this).closest('tr').find('td:nth-child(5)').text(formattedDate);
+        }
+    });
 
-    // if (updated) {
-    this.data(data).draw(false);
-    // }
-});
+    if(!checked){
+        swalError('Warning', 'Kindly check Atleast one checkbox');
+        $('#noc_member').val('');
+        $('#noc_relation').val('');
+        return;
+    }
+}
+
+function removeValuesInTables(){
+    $('.noc_cheque_chkbx').each(function(){
+        if(!$(this).is(':checked')){
+            $(this).closest('tr').find('td:nth-child(9)').text('');
+            $(this).closest('tr').find('td:nth-child(8)').text('');
+            $(this).closest('tr').find('td:nth-child(7)').text('');
+        }
+    });
+    $('.noc_mortgage_chkbx').each(function(){
+        if(!$(this).is(':checked')){
+            $(this).closest('tr').find('td:nth-child(10)').text('');
+            $(this).closest('tr').find('td:nth-child(9)').text('');
+            $(this).closest('tr').find('td:nth-child(8)').text('');
+        }
+    });
+    $('.noc_endorsement_chkbx').each(function(){
+        if(!$(this).is(':checked')){
+            $(this).closest('tr').find('td:nth-child(10)').text('');
+            $(this).closest('tr').find('td:nth-child(9)').text('');
+            $(this).closest('tr').find('td:nth-child(8)').text('');
+        }
+    });
+    $('.noc_doc_info_chkbx').each(function(){
+        if(!$(this).is(':checked')){
+            $(this).closest('tr').find('td:nth-child(8)').text('');
+            $(this).closest('tr').find('td:nth-child(7)').text('');
+            $(this).closest('tr').find('td:nth-child(6)').text('');
+        }
+    });
+    $('.noc_gold_chkbx').each(function(){
+        if(!$(this).is(':checked')){
+            $(this).closest('tr').find('td:nth-child(7)').text('');
+            $(this).closest('tr').find('td:nth-child(6)').text('');
+            $(this).closest('tr').find('td:nth-child(5)').text('');
+        }
+    });
+}
+
+function setSubmittedDisabled(){
+    $('.noc_cheque_chkbx, .noc_mortgage_chkbx, .noc_endorsement_chkbx, .noc_doc_info_chkbx, .noc_gold_chkbx').each(function(){
+        if ($(this).attr('data-id') == '1') {
+            $(this).closest('tr').addClass('disabled-row');
+            $(this).attr('checked', true).attr('disabled', true);
+        }
+    });
+
+    var cheque_checkDisabled = $('.noc_cheque_chkbx:disabled').length === $('.noc_cheque_chkbx').length;
+    var mort_checkDisabled = $('.noc_mortgage_chkbx:disabled').length === $('.noc_mortgage_chkbx').length;
+    var endorse_checkDisabled = $('.noc_endorsement_chkbx:disabled').length === $('.noc_endorsement_chkbx').length;
+    var doc_checkDisabled = $('.noc_doc_info_chkbx:disabled').length === $('.noc_doc_info_chkbx').length;
+    var gold_checkDisabled = $('.noc_gold_chkbx:disabled').length === $('.noc_gold_chkbx').length;
+
+    if (cheque_checkDisabled && mort_checkDisabled && endorse_checkDisabled && doc_checkDisabled && gold_checkDisabled ) {
+        $('#submit_noc').hide();
+    }else{
+        $('#submit_noc').show();
+    }
+
 }
 
 function formatDate(inputDate) {
@@ -318,4 +479,15 @@ function validate() {
     let response = true;
 
     return response;
+}
+
+function removenoc(cid){
+    $.post('api/common_files/move_to_next.php', {'cus_sts': '12', 'cus_sts_id': cid}, function(response){
+        if(response =='0'){
+            swalSuccess('Success', 'NOC Removed Successfully.');
+            getNOCList();
+        }else{
+            swalError('Error', 'Something went wrong. Please try again later.');
+        }
+    },'json');
 }

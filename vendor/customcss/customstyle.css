@@ -166,6 +166,10 @@ border-style: none;
 .int-grp{
   margin-top: 8px;
 }
+.disabled-row {
+  opacity: 0.5;
+  pointer-events: none; /* Prevent interaction */
+}
 
 /*Media Query START*/
 @media (max-width: 1024px) {

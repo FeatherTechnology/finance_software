@@ -130,6 +130,7 @@
                 <button class="btn btn-primary back_to_loan_list" id="back_to_loan_list" style="display: none;"><span class="icon-arrow-left"></span> Back</button>
             </div>
             <div class="row gutters" id="noc_summary" style="display:none">
+                <input type="hidden" id="cp_id">
                 <div class="col-12">
                     <div class="card">
                         <div class="card-header">
@@ -248,13 +249,13 @@
                             <div class="row">
                                 <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
                                     <div class="form-group">
-                                        <label for="date_of_noc">Date of NOC</label>
+                                        <label for="date_of_noc">Date of NOC</label><span class="required">*</span>
                                         <input type="date" class="form-control" id="date_of_noc" name="date_of_noc" tabindex="1" readonly>
                                     </div>
                                 </div>
                                 <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
                                     <div class="form-group">
-                                        <label for="noc_member">Member</label>
+                                        <label for="noc_member">Member</label><span class="required">*</span>
                                         <select name="noc_member" id="noc_member" class="form-control" tabindex="2">
                                             <option value="">Select Member Name</option>
                                         </select>
@@ -262,7 +263,7 @@
                                 </div>
                                 <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
                                     <div class="form-group">
-                                        <label for="noc_relation">Relationship</label>
+                                        <label for="noc_relation">Relationship</label><span class="required">*</span>
                                         <input type="text" class="form-control" id="noc_relation" name="noc_relation" tabindex="3" readonly>
                                     </div>
                                 </div>

@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jun 27, 2024 at 03:54 PM
+-- Generation Time: Jun 29, 2024 at 03:58 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -185,6 +185,10 @@ CREATE TABLE `cheque_no_list` (
   `cheque_info_id` int(11) DEFAULT NULL,
   `cheque_no` varchar(200) DEFAULT NULL,
   `used_status` int(11) NOT NULL DEFAULT 0,
+  `noc_status` int(11) NOT NULL DEFAULT 0,
+  `date_of_noc` date DEFAULT NULL,
+  `noc_member` varchar(150) DEFAULT NULL,
+  `noc_relationship` varchar(150) DEFAULT NULL,
   `insert_login_id` int(11) DEFAULT NULL,
   `update_login_id` int(11) DEFAULT NULL,
   `created_on` date DEFAULT NULL,
@@ -473,6 +477,10 @@ CREATE TABLE `document_info` (
   `holder_name` int(11) NOT NULL,
   `relationship` varchar(50) NOT NULL,
   `upload` varchar(100) NOT NULL,
+  `noc_status` int(11) NOT NULL DEFAULT 0,
+  `date_of_noc` date DEFAULT NULL,
+  `noc_member` varchar(150) DEFAULT NULL,
+  `noc_relationship` varchar(150) DEFAULT NULL,
   `insert_login_id` int(11) NOT NULL,
   `update_login_id` int(11) DEFAULT NULL,
   `created_on` date DEFAULT NULL,
@@ -509,6 +517,10 @@ CREATE TABLE `endorsement_info` (
   `key_original` varchar(50) NOT NULL,
   `rc_original` varchar(50) NOT NULL,
   `upload` varchar(255) NOT NULL,
+  `noc_status` int(11) NOT NULL DEFAULT 0,
+  `date_of_noc` date DEFAULT NULL,
+  `noc_member` varchar(150) DEFAULT NULL,
+  `noc_relationship` varchar(150) DEFAULT NULL,
   `insert_login_id` int(11) NOT NULL,
   `update_login_id` int(11) NOT NULL,
   `created_on` date DEFAULT NULL,
@@ -551,6 +563,10 @@ CREATE TABLE `gold_info` (
   `purity` varchar(150) NOT NULL,
   `weight` varchar(150) NOT NULL,
   `value` varchar(150) NOT NULL,
+  `noc_status` int(11) NOT NULL DEFAULT 0,
+  `date_of_noc` date DEFAULT NULL,
+  `noc_member` varchar(150) DEFAULT NULL,
+  `noc_relationship` varchar(150) DEFAULT NULL,
   `insert_login_id` int(11) NOT NULL,
   `update_login_id` int(11) DEFAULT NULL,
   `created_on` date DEFAULT NULL,
@@ -760,10 +776,51 @@ CREATE TABLE `mortgage_info` (
   `reg_office` varchar(100) NOT NULL,
   `mortgage_value` varchar(100) NOT NULL,
   `upload` varchar(100) NOT NULL,
+  `noc_status` int(11) NOT NULL DEFAULT 0,
+  `date_of_noc` date DEFAULT NULL,
+  `noc_member` varchar(150) DEFAULT NULL,
+  `noc_relationship` varchar(150) DEFAULT NULL,
   `insert_login_id` int(11) NOT NULL,
   `update_login_id` int(11) DEFAULT NULL,
   `created_on` date DEFAULT NULL,
   `updated_on` date DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `noc`
+--
+
+CREATE TABLE `noc` (
+  `id` int(11) NOT NULL,
+  `cus_profile_id` int(11) NOT NULL,
+  `cus_id` int(11) NOT NULL,
+  `cheque_list` int(11) NOT NULL DEFAULT 0,
+  `mortgage_list` int(11) NOT NULL DEFAULT 0,
+  `endorsement_list` int(11) NOT NULL DEFAULT 0,
+  `document_list` int(11) NOT NULL DEFAULT 0,
+  `gold_info` int(11) NOT NULL DEFAULT 0,
+  `noc_status` int(11) NOT NULL DEFAULT 0,
+  `insert_login_id` int(11) NOT NULL,
+  `update_login_id` int(11) DEFAULT NULL,
+  `created_on` date DEFAULT NULL,
+  `updated_on` date DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `noc_ref`
+--
+
+CREATE TABLE `noc_ref` (
+  `id` int(11) NOT NULL,
+  `noc_id` int(11) NOT NULL,
+  `date_of_noc` date NOT NULL,
+  `noc_member` varchar(150) NOT NULL,
+  `noc_relationship` varchar(150) NOT NULL,
+  `created_on` date DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -1291,8 +1348,8 @@ CREATE TABLE `users` (
 --
 
 INSERT INTO `users` (`id`, `name`, `user_code`, `role`, `designation`, `address`, `place`, `email`, `mobile`, `user_name`, `password`, `branch`, `loan_category`, `line`, `collection_access`, `screens`, `insert_login_id`, `update_login_id`, `created_on`, `updated_on`) VALUES
-(1, 'Super Admin', 'US-001', 7, 7, '', '', '', '', 'admin', '123', '1', '9', '1', 1, '1,2,3,4,5,6,7,8,9,10,11,12,15,16,17', '1', '1', '2024-06-13', '2024-06-27'),
-(2, 'Testing User', 'US-002', 9, 9, '', '', '', '', 'testing', '123', '33,34', '9,10', '5,7', 1, '1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17', '1', '2', '2024-06-27', '2024-06-27');
+(1, 'Super Admin', 'US-001', 7, 7, '', '', '', '', 'admin', '123', '1', '9', '1', 1, '1,2,3,4,5,6,7,8,9,10,11,12,13,15,16,17', '1', '1', '2024-06-13', '2024-06-29'),
+(2, 'Testing User', 'US-002', 9, 9, '', '', '', '', 'testing', '123', '33,34', '10,9', '5,7', 1, '1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17', '1', '2', '2024-06-27', '2024-06-28');
 
 --
 -- Indexes for dumped tables
@@ -1494,6 +1551,18 @@ ALTER TABLE `menu_list`
 -- Indexes for table `mortgage_info`
 --
 ALTER TABLE `mortgage_info`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `noc`
+--
+ALTER TABLE `noc`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `noc_ref`
+--
+ALTER TABLE `noc_ref`
   ADD PRIMARY KEY (`id`);
 
 --
@@ -1732,6 +1801,18 @@ ALTER TABLE `menu_list`
 -- AUTO_INCREMENT for table `mortgage_info`
 --
 ALTER TABLE `mortgage_info`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `noc`
+--
+ALTER TABLE `noc`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `noc_ref`
+--
+ALTER TABLE `noc_ref`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --

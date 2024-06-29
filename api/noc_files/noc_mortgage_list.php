@@ -3,13 +3,10 @@ require "../../ajaxconfig.php";
 
 $cheque_info_arr = array();
 $cp_id = $_POST['cp_id'];
-$qry = $pdo->query("SELECT mi.`id`,fi.`fam_name`,mi.`relationship`,mi.`property_details`,mi.`mortgage_name`,mi.`designation`,mi.`reg_office` FROM `mortgage_info` mi LEFT JOIN `family_info` fi ON mi.property_holder_name = fi.id WHERE mi.`cus_profile_id` = '$cp_id'");
+$qry = $pdo->query("SELECT mi.`id`,fi.`fam_name`,mi.`relationship`,mi.`property_details`,mi.`mortgage_name`,mi.`designation`,mi.`reg_office`,mi.`date_of_noc`, mi.`noc_member`, mi.`noc_relationship`,  mi.`noc_status` FROM `mortgage_info` mi LEFT JOIN `family_info` fi ON mi.property_holder_name = fi.id WHERE mi.`cus_profile_id` = '$cp_id'");
 if ($qry->rowCount() > 0) {
     while ($result = $qry->fetch()) {
-        $result['d_noc'] = '';
-        $result['h_person'] = '';
-        $result['relation'] = '';
-        $result['action'] = "<input type='checkbox' class='noc_mortgage_chkbx' name='noc_mortgage_chkbx' value='" . $result['id'] . "' >";
+        $result['action'] = "<input type='checkbox' class='noc_mortgage_chkbx' name='noc_mortgage_chkbx' value='" . $result['id'] . "' data-id='".$result['noc_status']."' >";
         $cheque_info_arr[] = $result;
     }
 }

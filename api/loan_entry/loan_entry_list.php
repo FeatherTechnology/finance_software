@@ -13,7 +13,7 @@ LEFT JOIN area_name_creation anc ON cp.area = anc.id
 LEFT JOIN area_creation ac ON cp.line = ac.line_id
 LEFT JOIN branch_creation bc ON ac.branch_id = bc.id
 LEFT JOIN customer_status cs ON cp.id = cs.cus_profile_id
-WHERE cp.insert_login_id = '$user_id' ORDER BY cp.id DESC");
+WHERE cp.insert_login_id = '$user_id' AND (cs.status = '1' OR cs.status = '2') ORDER BY cp.id DESC");
 if ($qry->rowCount() > 0) {
     while ($loanEntryInfo = $qry->fetch(PDO::FETCH_ASSOC)) {
         $loanEntryInfo['action'] = "<div class='dropdown'>
