@@ -1039,7 +1039,7 @@
                                     <select type="text" class="form-control" id="kycloan_id" name="kycloan_id" tabindex="1">
                                         <option value="">Select Loan ID</option>
                                     </select>
-                                    <input type="hidden" id="customer_profile_id" value='0'>
+                                    <input type="hidden" id="customer_profile_ids" value='0'>
                                 </div>
                             </div>
 
@@ -1112,6 +1112,7 @@
                             <thead>
                                 <tr>
                                     <th width="20">S.No.</th>
+                                    <th>Loan ID</th>
                                     <th>Proof Of</th>
                                     <th>Relationship</th>
                                     <th>Proof</th>

@@ -998,6 +998,7 @@ function getKycTable() {
     $.post('api/update_customer_files/update_kyc_creation_list.php', { cus_id }, function (response) {
         var columnMapping = [
             'sno',
+            'cus_profile_id',
             'proof_of',
             'fam_relationship',
             'proof',
@@ -1213,7 +1214,7 @@ function editCustmerProfile(id) {
 $(document).ready(function () {
     $(document).on('click', '.doc-update', function () {
         let id = $(this).attr('value'); //Customer Profile id From List page.
-        $('#customer_profile_id').val(id);
+        // $('#customer_profile_id').val(id);
         // let cusID = $(this).attr('data-id'); //Cus id From List Page.
         // $('#cus_id_upd').val(cusID);
         //swapTableAndCreation();

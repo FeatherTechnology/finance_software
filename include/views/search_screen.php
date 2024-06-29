@@ -438,7 +438,6 @@
                                         <div class="form-group">
                                             <label for="pic"> Photo</label><span class="text-danger">*</span><br>
                                             <img id='imgshow' class="img_show" src='img\avatar.png' />
-                                            <input type="file" class="form-control  personal_info_disble" id="pic" name="pic" tabindex="8">
                                             <input type="hidden" class="personal_info_disble" id="per_pic">
                                         </div>
                                     </div>
@@ -509,7 +508,6 @@
                                         <div class="form-group">
                                             <label for="pic"> Photo</label><span class="text-danger">*</span><br>
                                             <img id='gur_imgshow' class="img_show" src='img\avatar.png' />
-                                            <input type="file" class="form-control" id="gu_pic" name="gu_pic" disabled tabindex="12">
                                             <input type="hidden" id="gur_pic">
                                         </div>
                                     </div>
@@ -1142,7 +1140,6 @@
                                         <tr>
                                             <th>S.No.</th>
                                             <th>Document Name</th>
-                                            <th>Action</th>
                                         </tr>
                                     </thead>
                                     <tbody> </tbody>

@@ -7,7 +7,9 @@ $i = 0;
 
 try {
     $qry = $pdo->query("SELECT ki.id, 
+                               lelc.cus_profile_id,
                                ki.proof_of, 
+
                                CASE 
                                    WHEN ki.proof_of = 1 THEN 'Customer' 
                                    ELSE fi.fam_name 
@@ -21,6 +23,7 @@ try {
                                ki.upload 
                         FROM kyc_info ki
                         JOIN proof_info pi ON ki.proof = pi.id
+                        LEFT JOIN loan_entry_loan_calculation lelc ON ki.cus_profile_id = lelc.loan_id
                         LEFT JOIN family_info fi ON ki.fam_mem = fi.id WHERE ki.cus_id = '$cus_id'");
 
     if (!$qry) {

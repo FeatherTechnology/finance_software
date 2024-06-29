@@ -8,6 +8,7 @@ $cus_name = isset($_POST['cus_name']) ? $_POST['cus_name'] : '';
 $area = isset($_POST['area']) ? $_POST['area'] : '';
 $mobile = isset($_POST['mobile']) ? $_POST['mobile'] : '';
 
+// Initialize the query with the common part
 $sql = "SELECT cp.cus_id, cp.cus_name, anc.areaname AS area, lnc.linename, bc.branch_name, cp.mobile1
         FROM customer_profile cp 
         LEFT JOIN line_name_creation lnc ON cp.line = lnc.id
@@ -15,24 +16,48 @@ $sql = "SELECT cp.cus_id, cp.cus_name, anc.areaname AS area, lnc.linename, bc.br
         LEFT JOIN area_creation ac ON cp.line = ac.line_id
         LEFT JOIN branch_creation bc ON ac.branch_id = bc.id
         INNER JOIN (SELECT MAX(id) as max_id FROM customer_profile GROUP BY cus_id) latest ON cp.id = latest.max_id 
-        WHERE (:cus_id = '' OR cp.cus_id LIKE :cus_id)
-        AND (:cus_name = '' OR cp.cus_name LIKE :cus_name)
-        AND (:cus_area = '' OR anc.areaname LIKE :cus_area)
-        AND (:mobile = '' OR cp.mobile1 LIKE :mobile)
-        ORDER BY cp.id DESC";
+        WHERE 1=1";
+
+// Create an array to hold the conditions
+$conditions = [];
+$parameters = [];
+
+// Add conditions based on priority
+if (!empty($cus_id)) {
+    $conditions[] = "cp.cus_id LIKE :cus_id";
+    $parameters[':cus_id'] = '%' . $cus_id . '%';
+}
+if (!empty($cus_name)) {
+    $conditions[] = "cp.cus_name LIKE :cus_name";
+    $parameters[':cus_name'] = '%' . $cus_name . '%';
+}
+if (!empty($mobile)) {
+    $conditions[] = "cp.mobile1 LIKE :mobile";
+    $parameters[':mobile'] = '%' . $mobile . '%';
+}
+if (!empty($area)) {
+    $conditions[] = "anc.areaname LIKE :cus_area";
+    $parameters[':cus_area'] = '%' . $area . '%';
+}
+
+// Apply the conditions based on priority
+if (count($conditions) > 0) {
+    $sql .= " AND (" . implode(" OR ", $conditions) . ")";
+}
+
+$sql .= " ORDER BY cp.id DESC";
 
 $stmt = $pdo->prepare($sql);
 
-// Bind parameters
-$stmt->bindValue(':cus_id', '%' . $cus_id . '%', PDO::PARAM_STR);
-$stmt->bindValue(':cus_name', '%' . $cus_name . '%', PDO::PARAM_STR);
-$stmt->bindValue(':cus_area', '%' . $area . '%', PDO::PARAM_STR);
-$stmt->bindValue(':mobile', '%' . $mobile . '%', PDO::PARAM_STR);
 
-// Execute the query
+foreach ($parameters as $key => $value) {
+    $stmt->bindValue($key, $value, PDO::PARAM_STR);
+}
+
+
 $stmt->execute();
 
-// Check if rows are returned
+
 if ($stmt->rowCount() > 0) {
     while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
         $row['action'] = "<div class='dropdown'>

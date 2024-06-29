@@ -7,15 +7,26 @@ $(document).ready(function () {
     });
 
     $('#cus_mobile').change(function () {
-        checkMobileNo($(this).val(), $(this).attr('id'));
+        let mobileValue = $(this).val().trim();  // Retrieve and trim the value of the mobile input
+    
+        // Check if mobileValue is not empty
+        if (mobileValue !== '') {
+            checkMobileNo(mobileValue, $(this).attr('id'));
+        }
     });
+    
 
     $(document).on('click', '.view_customer', function (event) {
         event.preventDefault();
         $('#customer_status').show();
         $('#custome_list, #search_form').hide();
-        let cus_id = $('#cust_id').val().replace(/\s/g, '');
-        OnLoadFunctions(cus_id)
+        let cus_id = $(this).closest('tr').find('td:nth-child(2)').text();
+        // let cus_id = $('#cust_id').val().replace(/\s/g, '');
+        let cus_name = $('#cust_name').val();
+        let area = $('#cus_area').val();
+        let mobile = $('#cus_mobile').val();
+
+        OnLoadFunctions(cus_id,cus_name,area,mobile)
     })
     $(document).on('click', '.noc-summary', function (event) {
         event.preventDefault();
@@ -267,24 +278,24 @@ function validate() {
 function getSearchTable(data) {
     // Assuming response is in JSON format and contains customer data
     let response = JSON.parse(data);
-    if (response && response.length > 0) {
+    // if (response && response.length > 0) {
         var columnMapping = [
             'sno',
             'cus_id',
             'cus_name',
             'area',
-            'linename',
             'branch_name',
+            'linename',
             'mobile1',
             'action'
         ];
         appendDataToTable('#search_table', response, columnMapping);
         setdtable('#search_table');
         setDropdownScripts();
-    }
+    // }
 }
-function getLoanTable(cus_id,pending_sts,od_sts,due_nil_sts,balAmnt) {
-    $.post('api/search_files/search_loan.php', { cus_id,pending_sts,od_sts,due_nil_sts,balAmnt}, function (response) {
+function getLoanTable(cus_id,cus_name,area,mobile,pending_sts,od_sts,due_nil_sts,balAmnt) {
+    $.post('api/search_files/search_loan.php', { cus_id,cus_name,area,mobile,pending_sts,od_sts,due_nil_sts,balAmnt}, function (response) {
         var columnMapping = [
             'sno',
             'loan_date',
@@ -356,7 +367,7 @@ function dueChartList(cp_id,cus_id){
     });//Ajax End.
     }
 
-    function OnLoadFunctions(cus_id){
+    function OnLoadFunctions(cus_id,cus_name,area,mobile){
         //To get loan sub Status
         var pending_arr = [];
         var od_arr = [];
@@ -369,8 +380,7 @@ function dueChartList(cp_id,cus_id){
             type:'post',
             cache: false,
             success: function(response){
-                if(response.length != 0){
-    
+                if(response.follow_cus_sts != null){
                     for(var i=0;i< response['pending_customer'].length;i++){
                         pending_arr[i] = response['pending_customer'][i]
                         od_arr[i] = response['od_customer'][i]
@@ -392,7 +402,7 @@ function dueChartList(cp_id,cus_id){
                 var od_sts = $('#od_sts').val()
                 var due_nil_sts = $('#due_nil_sts').val()
                 var bal_amt = balAmnt;
-                getLoanTable(cus_id,pending_sts,od_sts,due_nil_sts,bal_amt)    
+                getLoanTable(cus_id,cus_name,area,mobile,pending_sts,od_sts,due_nil_sts,balAmnt)    
                 hideOverlay();//loader stop
             }); 
     }//Auto Load function END
@@ -1001,9 +1011,9 @@ function getDocNeedTable(cusProfileId) {
         let loanCategoryColumn = [
             "sno",
             "document_name",
-            "action"
         ]
         appendDataToTable('#doc_need_table', response, loanCategoryColumn);
+        setdtable('#doc_need_table')
     }, 'json');
 }
 
