@@ -6,7 +6,7 @@ $cus_id = $_POST['cus_id'];
 $cus_profile_id = $_POST['cus_profile_id'];
 
 try {
-    $qry = $pdo->query("SELECT * FROM kyc_info WHERE cus_id = '$cus_id' ");
+    $qry = $pdo->query("SELECT * FROM kyc_info WHERE cus_profile_id = '$cus_profile_id' ");
     if ($qry->rowCount() == 1 && $cus_profile_id !='') { //If Only one count of kyc for the customer then restrict to delete.
         $result = '0';
     } else {

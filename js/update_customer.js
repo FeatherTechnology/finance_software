@@ -15,26 +15,28 @@ $(document).ready(function () {
         $('#mortgage_info_card').hide();
         $('#endorsement_info_card').hide();
         $('#gold_info_card').hide();
+
     });
 
     $(document).on('click', '.edit-cus-update', function () {
         let id = $(this).attr('value');
         $('#customer_profile_id').val(id);
-        
+
         swapTableAndCreation();
         editCustmerProfile(id)
+
 
     });
 
     $('input[name=update_type]').click(function () {
         let updateType = $(this).val();
-        if (updateType  == 'cus_profile') {
+        if (updateType == 'cus_profile') {
             $('#cus_update_customer_profile').show(); $('#update_documentation').hide();
 
-        } else if (updateType  == 'loan_doc') {
+        } else if (updateType == 'loan_doc') {
             $('#cus_update_customer_profile').hide(); $('#update_documentation').show();
             getLoanListTable()
-            
+
         }
     })
 
@@ -62,19 +64,9 @@ $(document).ready(function () {
         }
     });
 
-    $('#cus_id').on('blur', function () {
-        let customerID = $('#cus_id').val().trim().replace(/\s/g, '');
-        let cus_name = $('#cus_name').val();
-        let mobileno = $('#mobile1').val();
-        if (customerID) {
-            dataCheckList(customerID, cus_name, mobileno)
-        } else {
-            removeCustomerID();
-        }
-    });
 
     $('#mobile1').on('blur', function () {
-        let cus_id = $('#cus_id').val().trim().replace(/\s/g, '');
+        let cus_id = $('#cus_id_upd').val().trim().replace(/\s/g, '');
         let cus_name = $('#cus_name').val();
         let customerMobile = $(this).val().trim();
         if (customerMobile) {
@@ -84,8 +76,8 @@ $(document).ready(function () {
         }
     });
 
-    $('#cus_id, #cus_name').on('blur', function () {
-        let customerID = $('#cus_id').val().trim().replace(/\s/g, '');
+    $('#cus_name').on('blur', function () {
+        let customerID = $('#cus_id_upd').val().trim().replace(/\s/g, '');
         let customerName = $('#cus_name').val().trim();
         if (customerID && customerName) {
             addPropertyHolder(customerID, customerName);
@@ -111,7 +103,7 @@ $(document).ready(function () {
         event.preventDefault();
         // Validation
         let cus_profile_id = $('#customer_profile_id').val();
-        let cus_id = $('#cus_id').val().replace(/\s/g, ''); // Remove spaces from cus_id
+        let cus_id = $('#cus_id_upd').val().replace(/\s/g, ''); // Remove spaces from cus_id
         let fam_name = $('#fam_name').val();
         let fam_relationship = $('#fam_relationship').val();
         let fam_age = $('#fam_age').val();
@@ -166,7 +158,7 @@ $(document).ready(function () {
         event.preventDefault();
         //Validation
         let cus_profile_id = $('#customer_profile_id').val();
-        let cus_id = $('#cus_id').val().replace(/\s/g, '');
+        let cus_id = $('#cus_id_upd').val().replace(/\s/g, '');
         let property = $('#property').val(); let property_detail = $('#property_detail').val(); let property_holder = $('#property_holder').val(); let property_id = $('#property_id').val();
         if (cus_profile_id == '') {
             swalError('Warning', 'Kindly Fill the Personal Info');
@@ -176,7 +168,7 @@ $(document).ready(function () {
             swalError('Warning', 'Please Fill out Mandatory fields!');
             return false;
         } else {
-            $.post('api/loan_entry/submit_property.php', { cus_id, property, property_detail, property_holder, property_id }, function (response) {
+            $.post('api/loan_entry/submit_property.php', { cus_id, property, property_detail, property_holder, property_id, cus_profile_id }, function (response) {
                 if (response == '1') {
                     swalSuccess('Success', 'Property Info Added Successfully!');
                 } else {
@@ -203,6 +195,10 @@ $(document).ready(function () {
         swalConfirm('Delete', 'Do you want to Delete the Property Details?', getPropertyDelete, id);
         return;
     });
+    $(document).on('click', '#kyc_form', function () {
+        let customerID = $('#cus_id_upd').val().trim().replace(/\s/g, '');
+        getKycLoanId(customerID);
+    });
 
     $('#property_holder').change(function () {
         var propertyHolderId = $(this).val();
@@ -218,7 +214,7 @@ $(document).ready(function () {
         if (proofOf == "2") { // Family Member selected
             $('.fam_mem_div').show();
             $('#kyc_relationship').val('');
-            getFamilyMember();
+            getFamilyMember('Select Family Member', '#fam_mem');
         } else { // Customer or any other selection
             $('.fam_mem_div').hide();
             $('#kyc_relationship').val('Customer');
@@ -239,7 +235,7 @@ $(document).ready(function () {
         event.preventDefault();
         //Validation
         let cus_profile_id = $('#customer_profile_id').val();
-        let cus_id = $('#cus_id').val().replace(/\s/g, '');
+        let cus_id = $('#cus_id_upd').val().replace(/\s/g, '');
         let bank_name = $('#bank_name').val(); let branch_name = $('#branch_name').val(); let acc_holder_name = $('#acc_holder_name').val(); let acc_number = $('#acc_number').val(); let ifsc_code = $('#ifsc_code').val(); let bank_id = $('#bank_id').val();
         if (cus_profile_id == '') {
             swalError('Warning', 'Kindly Fill the Personal Info');
@@ -249,7 +245,7 @@ $(document).ready(function () {
             swalError('Warning', 'Please Fill out Mandatory fields!');
             return false;
         } else {
-            $.post('api/loan_entry/submit_bank.php', { cus_id, bank_name, branch_name, acc_holder_name, acc_number, ifsc_code, bank_id }, function (response) {
+            $.post('api/loan_entry/submit_bank.php', { cus_id, bank_name, branch_name, acc_holder_name, acc_number, ifsc_code, bank_id, cus_profile_id }, function (response) {
                 if (response == '1') {
                     swalSuccess('Success', 'Bank Info Added Successfully!');
                 } else {
@@ -283,7 +279,7 @@ $(document).ready(function () {
         event.preventDefault();
         //Validation
         let cus_profile_id = $('#customer_profile_id').val();
-        let cus_id = $('#cus_id').val().replace(/\s/g, '');
+        let cus_id = $('#cus_id_upd').val().replace(/\s/g, '');
         let upload = $('#upload')[0].files[0]; let kyc_upload = $('#kyc_upload').val();
         let proof_of = $('#proof_of').val(); let fam_mem = $("#fam_mem").val(); let proof = $('#proof').val(); let proof_detail = $('#proof_detail').val(); let kyc_id = $('#kyc_id').val();
         if (cus_profile_id == '') {
@@ -299,6 +295,8 @@ $(document).ready(function () {
             if (proof_of !== 'Customer') {
                 kycDetail.append('fam_mem', fam_mem);
             }
+
+            kycDetail.append('cus_profile_id', cus_profile_id)
             kycDetail.append('cus_id', cus_id)
             kycDetail.append('proof', proof)
             kycDetail.append('proof_detail', proof_detail)
@@ -339,7 +337,7 @@ $(document).ready(function () {
                     $('.fam_mem_div').hide();
                     $('#fam_mem').val('');
                 } else {
-                    getFamilyMember();
+                    getFamilyMember('Select Family Member', '#fam_mem');
                     setTimeout(() => {
                         $("#fam_mem").val(response[0].fam_mem);
                     }, 100);
@@ -463,7 +461,7 @@ $(document).ready(function () {
         let per_pic = $('#per_pic').val();
         let gu_pic = $('#gu_pic')[0].files[0];
         let gur_pic = $('#gur_pic').val();
-        let cus_id = $('#cus_id').val().replace(/\s/g, '');
+        let cus_id = $('#cus_id_upd').val().replace(/\s/g, '');
         let cus_name = $("#cus_name").val();
         let gender = $('#gender').val();
         let dob = $('#dob').val();
@@ -559,31 +557,6 @@ $(document).ready(function () {
         });
     });
 
-    // $('#area_confirm').change(function () {
-    //     let cus_id = $('#cus_id').val().replace(/\s/g, ''); 
-    //     let area_confirm = $(this).val(); 
-
-    //     $.post('api/loan_entry/area_confirm.php', { cus_id, area_confirm }, function (response) {
-    //         if(!response){
-    //             if (response.error) {
-    //                 // Handle error
-    //                 swalError('Error', response.error);
-    //             } else {
-    //                 if (area_confirm == '1') { // Resident
-    //                     $('#res_type').val(response.res_type);
-    //                     $('#res_detail').val(response.res_detail);
-    //                     $('#res_address').val(response.res_address);
-    //                     $('#native_address').val(response.native_address);
-    //                 } else if (area_confirm == '2') { // Occupation
-    //                     $('#occupation').val(response.occupation);
-    //                     $('#occ_detail').val(response.occ_detail);
-    //                     $('#occ_income').val(response.occ_income);
-    //                     $('#occ_address').val(response.occ_address);
-    //                 }
-    //             }
-    //         }
-    //     }, 'json')
-    // });
 
     $('#name_check, #aadhar_check, #mobile_check').on('input', function () {
         var name = $('#name_check').val().trim();
@@ -784,7 +757,7 @@ function removeCustomerEntries() {
 }
 
 function getFamilyInfoTable() {
-    let cus_id = $('#cus_id').val().replace(/\s/g, '');
+    let cus_id = $('#cus_id_upd').val().replace(/\s/g, '');
     $.post('api/loan_entry/family_creation_list.php', { cus_id }, function (response) {
         var columnMapping = [
             'sno',
@@ -802,7 +775,7 @@ function getFamilyInfoTable() {
 }
 
 function getFamilyTable() {
-    let cus_id = $('#cus_id').val().replace(/\s/g, '');
+    let cus_id = $('#cus_id_upd').val().replace(/\s/g, '');
     $.post('api/loan_entry/family_creation_list.php', { cus_id: cus_id }, function (response) {
         var columnMapping = [
             'sno',
@@ -824,7 +797,7 @@ function getFamilyTable() {
 }
 
 function getFamilyDelete(id) {
-    let cus_id = $('#cus_id').val().replace(/\s/g, '');
+    let cus_id = $('#cus_id_upd').val().replace(/\s/g, '');
     let cus_profile_id = $('#customer_profile_id').val();
     $.post('api/loan_entry/delete_family_creation.php', { id, cus_id, cus_profile_id }, function (response) {
         if (response == '0') {
@@ -841,7 +814,7 @@ function getFamilyDelete(id) {
 }
 
 function getGuarantorName() {
-    let cus_id = $('#cus_id').val().replace(/\s/g, '');
+    let cus_id = $('#cus_id_upd').val().replace(/\s/g, '');
     $.post('api/loan_entry/get_guarantor_name.php', { cus_id }, function (response) {
         let appendGuarantorOption = '';
         appendGuarantorOption += "<option value='0'>Select Guarantor Name</option>";
@@ -854,6 +827,18 @@ function getGuarantorName() {
             appendGuarantorOption += "<option value='" + val.id + "' " + selected + ">" + val.fam_name + "</option>";
         });
         $('#guarantor_name').empty().append(appendGuarantorOption);
+    }, 'json');
+}
+function getKycLoanId() {
+    let cus_id = $('#cus_id_upd').val().replace(/\s/g, '');
+    $.post('api/update_customer_files/get_kyc_loan.php', { cus_id }, function (response) {
+        let appendLoanIdOption = '';
+        appendLoanIdOption += "<option value='0'>Select Loan ID</option>";
+        $.each(response, function (index, val) {
+            let selected = '';
+            appendLoanIdOption += "<option value='" + val.cus_profile_id + "' " + selected + ">" + val.loan_id + "</option>";
+        });
+        $('#kycloan_id').empty().append(appendLoanIdOption);
     }, 'json');
 }
 
@@ -875,8 +860,9 @@ function getGrelationshipName(guarantorId) {
 }
 
 function getPropertyTable() {
-    let cus_id = $('#cus_id').val().replace(/\s/g, '');
-    $.post('api/loan_entry/property_creation_list.php', { cus_id }, function (response) {
+    let cus_id = $('#cus_id_upd').val().replace(/\s/g, '');
+
+    $.post('api/update_customer_files/update_property_creation_list.php', { cus_id }, function (response) {
         var columnMapping = [
             'sno',
             'property',
@@ -894,8 +880,9 @@ function getPropertyTable() {
 }
 
 function getPropertyInfoTable() {
-    let cus_id = $('#cus_id').val().replace(/\s/g, '');
-    $.post('api/loan_entry/property_creation_list.php', { cus_id }, function (response) {
+    let cus_id = $('#cus_id_upd').val().replace(/\s/g, '');
+
+    $.post('api/update_customer_files/update_property_creation_list.php', { cus_id }, function (response) {
         var columnMapping = [
             'sno',
             'property',
@@ -909,7 +896,7 @@ function getPropertyInfoTable() {
 }
 
 function getPropertyHolder() {
-    let cus_id = $('#cus_id').val().replace(/\s/g, '');
+    let cus_id = $('#cus_id_upd').val().replace(/\s/g, '');
     $.post('api/loan_entry/get_guarantor_name.php', { cus_id }, function (response) {
         let appendHolderOption = '';
         appendHolderOption += "<option value=''>Select Property Holder</option>";
@@ -956,8 +943,9 @@ function getBankDelete(id) {
 }
 
 function getBankTable() {
-    let cus_id = $('#cus_id').val().replace(/\s/g, '');
-    $.post('api/loan_entry/bank_creation_list.php', { cus_id }, function (response) {
+    let cus_id = $('#cus_id_upd').val().replace(/\s/g, '');
+    //let cus_profile_id=$('#customer_profile_id').val();
+    $.post('api/update_customer_files/update_bank_creation_list.php', { cus_id }, function (response) {
         var columnMapping = [
             'sno',
             'bank_name',
@@ -974,8 +962,9 @@ function getBankTable() {
 }
 
 function getBankInfoTable() {
-    let cus_id = $('#cus_id').val().replace(/\s/g, '');
-    $.post('api/loan_entry/bank_creation_list.php', { cus_id }, function (response) {
+    let cus_id = $('#cus_id_upd').val().replace(/\s/g, '');
+    // let cus_profile_id=$('#customer_profile_id').val()
+    $.post('api/update_customer_files/update_bank_creation_list.php', { cus_id }, function (response) {
         var columnMapping = [
             'sno',
             'bank_name',
@@ -990,9 +979,9 @@ function getBankInfoTable() {
 }
 
 function getKycDelete(id) {
-    let cus_id = $('#cus_id').val().replace(/\s/g, '');
+    let cus_id = $('#cus_id_upd').val().replace(/\s/g, '');
     let cus_profile_id = $('#customer_profile_id').val();
-    $.post('api/loan_entry/delete_kyc_creation.php', { id, cus_id, cus_profile_id }, function (response) {
+    $.post('api/update_customer_files/customer_delete_kyc_creation.php', { id, cus_id, cus_profile_id }, function (response) {
         if (response == '0') {
             swalError('Warning', 'Have to maintain atleast one Kyc Info');
         } else if (response == '1') {
@@ -1005,10 +994,11 @@ function getKycDelete(id) {
 }
 
 function getKycTable() {
-    let cus_id = $('#cus_id').val().replace(/\s/g, '');
-    $.post('api/loan_entry/kyc_creation_list.php', { cus_id }, function (response) {
+    let cus_id = $('#cus_id_upd').val().replace(/\s/g, '');
+    $.post('api/update_customer_files/update_kyc_creation_list.php', { cus_id }, function (response) {
         var columnMapping = [
             'sno',
+            'cus_profile_id',
             'proof_of',
             'fam_relationship',
             'proof',
@@ -1027,8 +1017,8 @@ function getKycTable() {
 }
 
 function getKycInfoTable() {
-    let cus_id = $('#cus_id').val().replace(/\s/g, '');
-    $.post('api/loan_entry/kyc_creation_list.php', { cus_id }, function (response) {
+    let cus_id = $('#cus_id_upd').val().replace(/\s/g, '');
+    $.post('api/update_customer_files/update_kyc_creation_list.php', { cus_id }, function (response) {
         var columnMapping = [
             'sno',
             'proof_of',
@@ -1042,17 +1032,6 @@ function getKycInfoTable() {
     }, 'json')
 }
 
-function getFamilyMember() {
-    let cus_id = $('#cus_id').val().replace(/\s/g, '');
-    $.post('api/loan_entry/get_guarantor_name.php', { cus_id }, function (response) {
-        let appendHolderOption = '';
-        appendHolderOption += "<option value=''>Select Family Member</option>";
-        $.each(response, function (index, val) {
-            appendHolderOption += "<option value='" + val.id + "'>" + val.fam_name + "</option>";
-        });
-        $('#fam_mem').empty().append(appendHolderOption);
-    }, 'json');
-}
 
 function getKycRelationshipName(familyMemberId) {
     $.ajax({
@@ -1176,6 +1155,7 @@ function editCustmerProfile(id) {
         $('#customer_profile_id').val(id);
         $('#area_edit').val(response[0].area);
         $('#cus_id').val(response[0].cus_id);
+        $('#cus_id_upd').val(response[0].cus_id);
         $('#cus_name').val(response[0].cus_name);
         $('#gender').val(response[0].gender);
         $('#dob').val(response[0].dob);
@@ -1212,6 +1192,10 @@ function editCustmerProfile(id) {
         if (response[0].cus_data == 'Existing') {
             $('#cus_status').show();
             $('#data_checking_div').show();
+        } else {
+            $('#cus_status').hide();
+            $('#data_checking_div').hide();
+            $('#data_checking_table_div').hide();
         }
         let path = "uploads/loan_entry/cus_pic/";
         $('#per_pic').val(response[0].pic);
@@ -1225,22 +1209,21 @@ function editCustmerProfile(id) {
         $('#submit_personal_info').attr('disabled', true);
     }, 'json');
 }
-
 ///////////////////////////////////////////////Customer Profile js End//////////////////////////////
-//////////////////////////////////////////////////////////////// Loan Calculation START //////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////// Documentation START //////////////////////////////////////////////////////////////////////
 $(document).ready(function () {
     $(document).on('click', '.doc-update', function () {
         let id = $(this).attr('value'); //Customer Profile id From List page.
-        $('#customer_profile_id').val(id);
-        let cusID = $(this).attr('data-id'); //Cus id From List Page.
-        $('#cus_id').val(cusID);
-    //swapTableAndCreation();
-      //  getDocNeedTable(id);
-      $('#cheque_info_card').show();
-    $('#document_info_card').show();
-    $('#mortgage_info_card').show();
-    $('#endorsement_info_card').show();
-    $('#gold_info_card').show();
+        // $('#customer_profile_id').val(id);
+        // let cusID = $(this).attr('data-id'); //Cus id From List Page.
+        // $('#cus_id_upd').val(cusID);
+        //swapTableAndCreation();
+        //  getDocNeedTable(id);
+        $('#cheque_info_card').show();
+        $('#document_info_card').show();
+        $('#mortgage_info_card').show();
+        $('#endorsement_info_card').show();
+        $('#gold_info_card').show();
         getChequeInfoTable();
         getDocInfoTable();
         getMortInfoTable();
@@ -1249,7 +1232,7 @@ $(document).ready(function () {
     });
 
 
-   
+
     ///////////////////////////////////////////////////////////////////Cheque info START ////////////////////////////////////////////////////////////////////////////
     $('#cq_holder_type').change(function () {
         let holderType = $(this).val();
@@ -1258,22 +1241,24 @@ $(document).ready(function () {
             $('.cq_fam_member').hide();
             let cus_profile_id = $('#customer_profile_id').val();
             getNameRelationship(cus_profile_id, holderType);
-        } else {
+        } else if(holderType == '3') {
             getFamilyMember('Select Family Member', '#cq_fam_mem');
             $('.cq_fam_member').show();
+        } else{
+            $('.cq_fam_member').hide();
         }
     });
 
-    $('#cq_fam_mem').change(function(){
+    $('#cq_fam_mem').change(function () {
         let famMemId = $(this).val();
-        if(famMemId !=''){
+        if (famMemId != '') {
             getNameRelationship(famMemId, '3');
         }
     });
 
-    $('#submit_cheque_info').click(function(event){
+    $('#submit_cheque_info').click(function (event) {
         event.preventDefault();
-        let cus_id = $('#cus_id').val();
+        let cus_id = $('#cus_id_upd').val();
         let cq_holder_type = $('#cq_holder_type').val();
         let cq_holder_name = $("#cq_holder_name").val();
         let cq_holder_id = $("#cq_holder_name").attr('data-id');
@@ -1284,7 +1269,7 @@ $(document).ready(function () {
         let cq_upload_edit = $('#cq_upload_edit').val();
         let customer_profile_id = $('#customer_profile_id').val();
         let cheque_info_id = $('#cheque_info_id').val();
-        if (cq_holder_type === '' || cq_holder_name === '' || cq_relationship === '' || cq_bank_name === '' || cheque_count =='' || (cq_upload === undefined && cq_upload_edit == '')) {
+        if (cq_holder_type === '' || cq_holder_name === '' || cq_relationship === '' || cq_bank_name === '' || cheque_count == '' || (cq_upload === undefined && cq_upload_edit == '')) {
             swalError('Warning', 'Please Fill out Mandatory fields!');
             return false;
         }
@@ -1309,11 +1294,11 @@ $(document).ready(function () {
             processData: false,
             cache: false,
             success: function (response) {
-                if(response =='1'){
+                if (response == '1') {
                     swalSuccess('Success', 'Cheque Info Updated Successfully')
-                }else if(response =='2'){
+                } else if (response == '2') {
                     swalSuccess('Success', 'Cheque Info Added Successfully')
-                }else{
+                } else {
                     swalSuccess('Alert', 'Failed')
                 }
                 getChequeCreationTable();
@@ -1323,51 +1308,55 @@ $(document).ready(function () {
             }
         });
     });
-    
-    $(document).on('click','.chequeActionBtn', function(){
+
+    $(document).on('click', '.chequeActionBtn', function () {
         let id = $(this).attr('value');
-        $.post('api/loan_issue_files/cheque_info_data.php', {id}, function(response){
+        $.post('api/loan_issue_files/cheque_info_data.php', { id }, function (response) {
             $('#cq_holder_type').val(response[0].holder_type);
             $('#cq_holder_name').val(response[0].holder_name);
-            $('#cq_holder_name').attr('data-id',response[0].holder_id);
+            $('#cq_holder_name').attr('data-id', response[0].holder_id);
             $('#cq_relationship').val(response[0].relationship);
             $('#cq_bank_name').val(response[0].bank_name);
             $('#cheque_count').val(response[0].cheque_cnt);
             $('#cq_upload_edit').val(response[0].upload);
             $('#cheque_info_id').val(response[0].id);
-            if(response[0].holder_type == '3'){
+            if (response[0].holder_type == '3') {
                 getFamilyMember('Select Family Member', '#cq_fam_mem')
                 $('.cq_fam_member').show();
                 setTimeout(() => {
                     $('#cq_fam_mem').val(response[0].holder_id);
                 }, 1000);
+            }else{
+                $('#cq_fam_mem').val('');
+                $('.cq_fam_member').hide();
             }
-        },'json');
+            
+        }, 'json');
     });
 
-    $(document).on('click','.chequeDeleteBtn', function(){
+    $(document).on('click', '.chequeDeleteBtn', function () {
         let id = $(this).attr('value');
         swalConfirm('Delete', 'Are you sure you want to delete this Cheque?', deleteChequeInfo, id);
     });
-    
-    $('#clear_cheque_form').click(function(){
+
+    $('#clear_cheque_form').click(function () {
         $('#cheque_info_id').val('');
         $('.cq_fam_member').hide();
     });
     ///////////////////////////////////////////////////////////////////Cheque info END ////////////////////////////////////////////////////////////////////////////
 
     ///////////////////////////////////////////////////////////////////Document info START ////////////////////////////////////////////////////////////////////////////
-    $('#doc_holder_name').change(function(){
+    $('#doc_holder_name').change(function () {
         let id = $(this).val();
-        if(id !=''){
+        if (id != '') {
             getRelationship(id, '#doc_relationship')
-        }else{
+        } else {
             $('#doc_relationship').val('');
         }
-        
+
     });
 
-    $('#submit_doc_info').click(function(event){
+    $('#submit_doc_info').click(function (event) {
         event.preventDefault();
         let doc_name = $('#doc_name').val();
         let doc_type = $('#doc_type').val();
@@ -1376,24 +1365,24 @@ $(document).ready(function () {
         let doc_upload = $('#doc_upload')[0].files[0];
         let doc_upload_edit = $('#doc_upload_edit').val();
         let doc_info_id = $('#doc_info_id').val();
-        let cus_id = $('#cus_id').val();
+        let cus_id = $('#cus_id_upd').val();
         let customer_profile_id = $('#customer_profile_id').val();
-        
-        if(doc_name =='' || doc_type =='' || doc_holder_name =='' || doc_relationship =='' || (doc_upload === undefined && doc_upload_edit == '')){
+
+        if (doc_name == '' || doc_type == '' || doc_holder_name == '' || doc_relationship == '' || (doc_upload === undefined && doc_upload_edit == '')) {
             swalError('Warning', 'Please Fill out Mandatory fields!');
             return false;
         }
 
         let docInfo = new FormData();
-            docInfo.append('doc_name', doc_name);
-            docInfo.append('doc_type', doc_type);
-            docInfo.append('doc_holder_name', doc_holder_name);
-            docInfo.append('doc_relationship', doc_relationship);
-            docInfo.append('doc_upload', doc_upload);
-            docInfo.append('doc_upload_edit', doc_upload_edit);
-            docInfo.append('cus_id', cus_id);
-            docInfo.append('customer_profile_id', customer_profile_id);
-            docInfo.append('id', doc_info_id);
+        docInfo.append('doc_name', doc_name);
+        docInfo.append('doc_type', doc_type);
+        docInfo.append('doc_holder_name', doc_holder_name);
+        docInfo.append('doc_relationship', doc_relationship);
+        docInfo.append('doc_upload', doc_upload);
+        docInfo.append('doc_upload_edit', doc_upload_edit);
+        docInfo.append('cus_id', cus_id);
+        docInfo.append('customer_profile_id', customer_profile_id);
+        docInfo.append('id', doc_info_id);
 
         $.ajax({
             url: 'api/loan_issue_files/submit_document_info.php',
@@ -1403,11 +1392,11 @@ $(document).ready(function () {
             processData: false,
             cache: false,
             success: function (response) {
-                if(response =='1'){
+                if (response == '1') {
                     swalSuccess('Success', 'Document Info Updated Successfully')
-                }else if(response =='2'){
+                } else if (response == '2') {
                     swalSuccess('Success', 'Document Info Added Successfully')
-                }else{
+                } else {
                     swalError('Alert', 'Failed')
                 }
                 getDocCreationTable();
@@ -1417,40 +1406,40 @@ $(document).ready(function () {
         });
     });
 
-    $(document).on('click','.docActionBtn', function(){
+    $(document).on('click', '.docActionBtn', function () {
         let id = $(this).attr('value');
-        $.post('api/loan_issue_files/doc_info_data.php', {id}, function(response){
+        $.post('api/loan_issue_files/doc_info_data.php', { id }, function (response) {
             $('#doc_name').val(response[0].doc_name);
             $('#doc_type').val(response[0].doc_type);
             $('#doc_holder_name').val(response[0].holder_name);
             $('#doc_relationship').val(response[0].relationship);
             $('#doc_upload_edit').val(response[0].upload);
             $('#doc_info_id').val(response[0].id);
-        },'json');
+        }, 'json');
     });
 
-    $(document).on('click','.docDeleteBtn', function(){
+    $(document).on('click', '.docDeleteBtn', function () {
         let id = $(this).attr('value');
         swalConfirm('Delete', 'Are you sure you want to delete this document?', deleteDocInfo, id);
     });
-    
-    $('#clear_doc_form').click(function(){
+
+    $('#clear_doc_form').click(function () {
         $('#doc_info_id').val('');
     })
     ///////////////////////////////////////////////////////////////////Document info END ////////////////////////////////////////////////////////////////////////////
-    
+
     ///////////////////////////////////////////////////////////////////Mortgage info START ////////////////////////////////////////////////////////////////////////////
-    $('#property_holder_name').change(function(){
+    $('#property_holder_name').change(function () {
         let id = $(this).val();
-        if(id !=''){
+        if (id != '') {
             getRelationship(id, '#mort_relationship')
-        }else{
+        } else {
             $('#mort_relationship').val('');
         }
-        
+
     });
 
-    $('#submit_mortgage_info').click(function(event){
+    $('#submit_mortgage_info').click(function (event) {
         event.preventDefault();
         let property_holder_name = $('#property_holder_name').val();
         let mort_relationship = $('#mort_relationship').val();
@@ -1461,30 +1450,30 @@ $(document).ready(function () {
         let reg_office = $('#reg_office').val();
         let mortgage_value = $('#mortgage_value').val();
         let mortgage_info_id = $('#mortgage_info_id').val();
-        let cus_id = $('#cus_id').val();
+        let cus_id = $('#cus_id_upd').val();
         let customer_profile_id = $('#customer_profile_id').val();
         let mort_upload = $('#mort_upload')[0].files[0];
         let mort_upload_edit = $('#mort_upload_edit').val();
-        
-        if(property_holder_name =='' || mort_relationship =='' || mort_property_details =='' || mortgage_name =='' || mort_designation =='' || mortgage_no =='' || reg_office =='' || mortgage_value =='' || (mort_upload === undefined && mort_upload_edit == '')){
+
+        if (property_holder_name == '' || mort_relationship == '' || mort_property_details == '' || mortgage_name == '' || mort_designation == '' || mortgage_no == '' || reg_office == '' || mortgage_value == '' || (mort_upload === undefined && mort_upload_edit == '')) {
             swalError('Warning', 'Please Fill out Mandatory fields!');
             return false;
         }
 
         let mortgageInfo = new FormData();
-            mortgageInfo.append('property_holder_name', property_holder_name);
-            mortgageInfo.append('mort_relationship', mort_relationship);
-            mortgageInfo.append('mort_property_details', mort_property_details);
-            mortgageInfo.append('mortgage_name', mortgage_name);
-            mortgageInfo.append('mort_designation', mort_designation);
-            mortgageInfo.append('mortgage_no', mortgage_no);
-            mortgageInfo.append('reg_office', reg_office);
-            mortgageInfo.append('mortgage_value', mortgage_value);
-            mortgageInfo.append('mort_upload', mort_upload);
-            mortgageInfo.append('mort_upload_edit', mort_upload_edit);
-            mortgageInfo.append('cus_id', cus_id);
-            mortgageInfo.append('customer_profile_id', customer_profile_id);
-            mortgageInfo.append('id', mortgage_info_id);
+        mortgageInfo.append('property_holder_name', property_holder_name);
+        mortgageInfo.append('mort_relationship', mort_relationship);
+        mortgageInfo.append('mort_property_details', mort_property_details);
+        mortgageInfo.append('mortgage_name', mortgage_name);
+        mortgageInfo.append('mort_designation', mort_designation);
+        mortgageInfo.append('mortgage_no', mortgage_no);
+        mortgageInfo.append('reg_office', reg_office);
+        mortgageInfo.append('mortgage_value', mortgage_value);
+        mortgageInfo.append('mort_upload', mort_upload);
+        mortgageInfo.append('mort_upload_edit', mort_upload_edit);
+        mortgageInfo.append('cus_id', cus_id);
+        mortgageInfo.append('customer_profile_id', customer_profile_id);
+        mortgageInfo.append('id', mortgage_info_id);
 
         $.ajax({
             url: 'api/loan_issue_files/submit_mortgage_info.php',
@@ -1494,11 +1483,11 @@ $(document).ready(function () {
             processData: false,
             cache: false,
             success: function (response) {
-                if(response =='1'){
+                if (response == '1') {
                     swalSuccess('Success', 'Mortgage Info Updated Successfully')
-                }else if(response =='2'){
+                } else if (response == '2') {
                     swalSuccess('Success', 'Mortgage Info Added Successfully')
-                }else{
+                } else {
                     swalError('Alert', 'Failed')
                 }
                 getMortCreationTable()
@@ -1508,9 +1497,9 @@ $(document).ready(function () {
         });
     });
 
-    $(document).on('click','.mortActionBtn', function(){
+    $(document).on('click', '.mortActionBtn', function () {
         let id = $(this).attr('value');
-        $.post('api/loan_issue_files/mortgage_info_data.php', {id}, function(response){
+        $.post('api/loan_issue_files/mortgage_info_data.php', { id }, function (response) {
             $('#property_holder_name').val(response[0].property_holder_name);
             $('#mort_relationship').val(response[0].relationship);
             $('#mort_property_details').val(response[0].property_details);
@@ -1521,30 +1510,30 @@ $(document).ready(function () {
             $('#mortgage_value').val(response[0].mortgage_value);
             $('#mort_upload_edit').val(response[0].upload);
             $('#mortgage_info_id').val(response[0].id);
-        },'json');
+        }, 'json');
     });
 
-    $(document).on('click','.mortDeleteBtn', function(){
+    $(document).on('click', '.mortDeleteBtn', function () {
         let id = $(this).attr('value');
         swalConfirm('Delete', 'Are you sure you want to delete this Mortgage?', deleteMortgageInfo, id);
     });
-    
-    $('#clear_mortgage_form').click(function(){
+
+    $('#clear_mortgage_form').click(function () {
         $('#mortgage_info_id').val('');
     })
     ///////////////////////////////////////////////////////////////////Mortgage info END ////////////////////////////////////////////////////////////////////////////
 
     ///////////////////////////////////////////////////////////////////Endorsement info START ////////////////////////////////////////////////////////////////////////////
-    $('#owner_name').change(function(){
+    $('#owner_name').change(function () {
         let id = $(this).val();
-        if(id !=''){
+        if (id != '') {
             getRelationship(id, '#owner_relationship')
-        }else{
+        } else {
             $('#owner_relationship').val('');
-        } 
+        }
     });
 
-    $('#submit_endorsement').click(function(event){
+    $('#submit_endorsement').click(function (event) {
         event.preventDefault();
         let owner_name = $('#owner_name').val();
         let owner_relationship = $('#owner_relationship').val();
@@ -1555,26 +1544,26 @@ $(document).ready(function () {
         let endorsement_upload = $('#endorsement_upload')[0].files[0];
         let endorsement_upload_edit = $('#endorsement_upload_edit').val();
         let endorsement_info_id = $('#endorsement_info_id').val();
-        let cus_id = $('#cus_id').val();
+        let cus_id = $('#cus_id_upd').val();
         let customer_profile_id = $('#customer_profile_id').val();
-        
-        if(owner_name =='' || owner_relationship =='' || vehicle_details =='' || endorsement_name =='' || key_original =='' || rc_original =='' || (endorsement_upload === undefined && endorsement_upload_edit == '')){
+
+        if (owner_name == '' || owner_relationship == '' || vehicle_details == '' || endorsement_name == '' || key_original == '' || rc_original == '' || (endorsement_upload === undefined && endorsement_upload_edit == '')) {
             swalError('Warning', 'Please Fill out Mandatory fields!');
             return false;
         }
 
         let endorsementInfo = new FormData();
-            endorsementInfo.append('owner_name', owner_name);
-            endorsementInfo.append('owner_relationship', owner_relationship);
-            endorsementInfo.append('vehicle_details', vehicle_details);
-            endorsementInfo.append('endorsement_name', endorsement_name);
-            endorsementInfo.append('key_original', key_original);
-            endorsementInfo.append('rc_original', rc_original);
-            endorsementInfo.append('endorsement_upload', endorsement_upload);
-            endorsementInfo.append('endorsement_upload_edit', endorsement_upload_edit);
-            endorsementInfo.append('cus_id', cus_id);
-            endorsementInfo.append('customer_profile_id', customer_profile_id);
-            endorsementInfo.append('id', endorsement_info_id);
+        endorsementInfo.append('owner_name', owner_name);
+        endorsementInfo.append('owner_relationship', owner_relationship);
+        endorsementInfo.append('vehicle_details', vehicle_details);
+        endorsementInfo.append('endorsement_name', endorsement_name);
+        endorsementInfo.append('key_original', key_original);
+        endorsementInfo.append('rc_original', rc_original);
+        endorsementInfo.append('endorsement_upload', endorsement_upload);
+        endorsementInfo.append('endorsement_upload_edit', endorsement_upload_edit);
+        endorsementInfo.append('cus_id', cus_id);
+        endorsementInfo.append('customer_profile_id', customer_profile_id);
+        endorsementInfo.append('id', endorsement_info_id);
 
         $.ajax({
             url: 'api/loan_issue_files/submit_endorsement_info.php',
@@ -1584,11 +1573,11 @@ $(document).ready(function () {
             processData: false,
             cache: false,
             success: function (response) {
-                if(response =='1'){
+                if (response == '1') {
                     swalSuccess('Success', 'Endorsement Info Updated Successfully')
-                }else if(response =='2'){
+                } else if (response == '2') {
                     swalSuccess('Success', 'Endorsement Info Added Successfully')
-                }else{
+                } else {
                     swalError('Alert', 'Failed')
                 }
                 getEndorsementCreationTable()
@@ -1598,9 +1587,9 @@ $(document).ready(function () {
         });
     });
 
-    $(document).on('click','.endorseActionBtn', function(){
+    $(document).on('click', '.endorseActionBtn', function () {
         let id = $(this).attr('value');
-        $.post('api/loan_issue_files/endorsement_info_data.php', {id}, function(response){
+        $.post('api/loan_issue_files/endorsement_info_data.php', { id }, function (response) {
             $('#owner_name').val(response[0].owner_name);
             $('#owner_relationship').val(response[0].relationship);
             $('#vehicle_details').val(response[0].vehicle_details);
@@ -1609,43 +1598,43 @@ $(document).ready(function () {
             $('#rc_original').val(response[0].rc_original);
             $('#endorsement_upload_edit').val(response[0].upload);
             $('#endorsement_info_id').val(response[0].id);
-        },'json');
+        }, 'json');
     });
 
-    $(document).on('click','.endorseDeleteBtn', function(){
+    $(document).on('click', '.endorseDeleteBtn', function () {
         let id = $(this).attr('value');
         swalConfirm('Delete', 'Are you sure you want to delete this Endorsement?', deleteEndorsementInfo, id);
     });
-    
-    $('#clear_endorsement_form').click(function(){
+
+    $('#clear_endorsement_form').click(function () {
         $('#endorsement_info_id').val('');
     });
-    
+
     ///////////////////////////////////////////////////////////////////Endorsement info END ////////////////////////////////////////////////////////////////////////////
 
     ///////////////////////////////////////////////////////////////////Gold info START ////////////////////////////////////////////////////////////////////////////
-    $('#submit_gold_info').click(function(event){
+    $('#submit_gold_info').click(function (event) {
         event.preventDefault();
         let goldInfo = {
-            'cus_id' : $('#cus_id').val(),
-            'customer_profile_id' : $('#customer_profile_id').val(),
-            'gold_type' : $('#gold_type').val(),
-            'purity' : $('#gold_purity').val(),
-            'weight' : $('#gold_weight').val(),
-            'value' : $('#gold_value').val(),
-            'id' : $('#gold_info_id').val(),
+            'cus_id': $('#cus_id_upd').val(),
+            'customer_profile_id': $('#customer_profile_id').val(),
+            'gold_type': $('#gold_type').val(),
+            'purity': $('#gold_purity').val(),
+            'weight': $('#gold_weight').val(),
+            'value': $('#gold_value').val(),
+            'id': $('#gold_info_id').val(),
         };
-        if(goldInfo.gold_type =='' || goldInfo.purity == '' || goldInfo.weight =='' || goldInfo.value ==''){
+        if (goldInfo.gold_type == '' || goldInfo.purity == '' || goldInfo.weight == '' || goldInfo.value == '') {
             swalError('Alert', 'Please fill Mandatory fields');
             return;
         }
 
-        $.post('api/loan_issue_files/submit_gold_info.php', goldInfo, function(response){
-            if(response =='1'){
+        $.post('api/loan_issue_files/submit_gold_info.php', goldInfo, function (response) {
+            if (response == '1') {
                 swalSuccess('Success', 'Gold Info Updated Successfully')
-            }else if(response =='2'){
+            } else if (response == '2') {
                 swalSuccess('Success', 'Gold Info Added Successfully')
-            }else{
+            } else {
                 swalError('Alert', 'Failed')
             }
             getGoldCreationTable()
@@ -1653,30 +1642,30 @@ $(document).ready(function () {
             $('#gold_info_id').val('');
         });
     });
-    
-    $(document).on('click','.goldActionBtn', function(){
+
+    $(document).on('click', '.goldActionBtn', function () {
         let id = $(this).attr('value');
-        $.post('api/loan_issue_files/gold_info_data.php', {id}, function(response){
+        $.post('api/loan_issue_files/gold_info_data.php', { id }, function (response) {
             $('#gold_type').val(response[0].gold_type);
             $('#gold_purity').val(response[0].purity);
             $('#gold_weight').val(response[0].weight);
             $('#gold_value').val(response[0].value);
             $('#gold_info_id').val(response[0].id);
-        },'json');
+        }, 'json');
     });
 
-    $(document).on('click','.goldDeleteBtn', function(){
+    $(document).on('click', '.goldDeleteBtn', function () {
         let id = $(this).attr('value');
         swalConfirm('Delete', 'Are you sure you want to delete this Gold Info?', deleteGoldInfo, id);
     });
-    
-    $('#clear_gold_form').click(function(){
+
+    $('#clear_gold_form').click(function () {
         $('#gold_info_id').val('');
     });
     ///////////////////////////////////////////////////////////////////Gold info END ////////////////////////////////////////////////////////////////////////////
 
     ///////////////////////////////////////////////////////////////////Document Print START ////////////////////////////////////////////////////////////////////////////
-    $(document).on('click','.doc-print',function(){
+    $(document).on('click', '.doc-print', function () {
         let cus_profile_id = $('#customer_profile_id').val();
         // Open a new window or tab
         var printWindow = window.open('', '_blank');
@@ -1686,10 +1675,10 @@ $(document).ready(function () {
             // Load the content into the popup window
             $.ajax({
                 url: 'api/update_customer_files/print_update_document.php',
-                data: {cus_profile_id},
+                data: { cus_profile_id },
                 cache: false,
                 type: "post",
-                success: function(html) {
+                success: function (html) {
                     // Write the content to the new window
                     printWindow.document.open();
                     printWindow.document.write(html);
@@ -1698,7 +1687,7 @@ $(document).ready(function () {
                     // Optionally, print the content
                     printWindow.print();
                 },
-                error: function() {
+                error: function () {
                     // Handle error
                     printWindow.close();
                     alert('Failed to load print content.');
@@ -1717,15 +1706,15 @@ $(function () {
 });
 
 function getLoanListTable() {
-    let cus_id = $('#cus_id').val();
-    $.post('api/update_customer_files/update_document_list.php',{cus_id}, function (response) {
+    let cus_id = $('#cus_id_upd').val();
+    $.post('api/update_customer_files/update_document_list.php', { cus_id }, function (response) {
         var columnMapping = [
             'sno',
             'loan_id',
             'loan_category',
             'loan_date',
             'loan_amount',
-            'maturity_date',
+            'closed_date',
             'c_sts',
             'substatus',
             'action'
@@ -1740,10 +1729,10 @@ function getLoanListTable() {
 
 
 function getFamilyMember(optn, selector) {
-    let cus_id = $('#cus_id').val();
+    let cus_id = $('#cus_id_upd').val();
     $.post('api/loan_entry/get_guarantor_name.php', { cus_id }, function (response) {
         let appendOption = '';
-        appendOption += "<option value=''>"+optn+"</option>";
+        appendOption += "<option value=''>" + optn + "</option>";
         $.each(response, function (index, val) {
             appendOption += "<option value='" + val.id + "'>" + val.fam_name + "</option>";
         });
@@ -1751,32 +1740,33 @@ function getFamilyMember(optn, selector) {
     }, 'json');
 }
 
-function getNameRelationship(id, type){
+function getNameRelationship(id, type) {
     $.post('api/loan_issue_files/get_cus_fam_members.php', { id, type }, function (response) {
         if (type == '1') {
             $('#cq_holder_name').val(response[0].cus_name);
             $('#cq_relationship').val('Customer');
         } else {
             $('#cq_holder_name').val(response[0].fam_name);
-            $('#cq_holder_name').attr('data-id',response[0].id);
+            $('#cq_holder_name').attr('data-id', response[0].id);
             $('#cq_relationship').val(response[0].fam_relationship);
         }
     }, 'json');
 }
 
-function getRelationship(id, selector){
+function getRelationship(id, selector) {
     $.post('api/loan_entry/family_creation_data.php', { id }, function (response) {
         $(selector).val(response[0].fam_relationship);
     }, 'json');
 }
 
-function emptyholderFields(){
+function emptyholderFields() {
+    $('#cq_fam_mem').val('');
     $('#cq_holder_name').val('');
-    $('#cq_holder_name').attr('data-id','');
+    $('#cq_holder_name').attr('data-id', '');
     $('#cq_relationship').val('');
 }
 
-function getChequeCreationTable(){
+function getChequeCreationTable() {
     let cus_profile_id = $('#customer_profile_id').val();
     $.post('api/loan_issue_files/cheque_info_list.php', { cus_profile_id }, function (response) {
         let chequeColumn = [
@@ -1794,7 +1784,7 @@ function getChequeCreationTable(){
     }, 'json');
 }
 
-function getChequeInfoTable(){
+function getChequeInfoTable() {
     let cus_profile_id = $('#customer_profile_id').val();
     $.post('api/loan_issue_files/cheque_info_list.php', { cus_profile_id }, function (response) {
         let chequeColumn = [
@@ -1811,18 +1801,18 @@ function getChequeInfoTable(){
     }, 'json');
 }
 
-function deleteChequeInfo(id){
-    $.post('api/loan_issue_files/delete_cheque_info.php', {id}, function(response){
-        if(response =='1'){
-            swalSuccess('success','Cheque Info Deleted Successfully');
+function deleteChequeInfo(id) {
+    $.post('api/loan_issue_files/delete_cheque_info.php', { id }, function (response) {
+        if (response == '1') {
+            swalSuccess('success', 'Cheque Info Deleted Successfully');
             getDocCreationTable();
-        }else{
+        } else {
             swalError('Alert', 'Delete Failed')
         }
-    },'json');
+    }, 'json');
 }
 
-function getDocCreationTable(){
+function getDocCreationTable() {
     let cus_profile_id = $('#customer_profile_id').val();
     $.post('api/loan_issue_files/doc_info_list.php', { cus_profile_id }, function (response) {
         let docInfoColumn = [
@@ -1839,11 +1829,11 @@ function getDocCreationTable(){
     }, 'json');
 }
 
-function refreshChequeModal(){
+function refreshChequeModal() {
     $('#clear_cheque_form').trigger('click');
 }
 
-function getDocInfoTable(){
+function getDocInfoTable() {
     let cus_profile_id = $('#customer_profile_id').val();
     $.post('api/loan_issue_files/doc_info_list.php', { cus_profile_id }, function (response) {
         let docColumn = [
@@ -1859,22 +1849,22 @@ function getDocInfoTable(){
     }, 'json');
 }
 
-function deleteDocInfo(id){
-    $.post('api/loan_issue_files/delete_doc_info.php', {id}, function(response){
-        if(response =='1'){
-            swalSuccess('success','Doc Info Deleted Successfully');
+function deleteDocInfo(id) {
+    $.post('api/loan_issue_files/delete_doc_info.php', { id }, function (response) {
+        if (response == '1') {
+            swalSuccess('success', 'Doc Info Deleted Successfully');
             getDocCreationTable();
-        }else{
+        } else {
             swalError('Alert', 'Delete Failed')
         }
-    },'json');
+    }, 'json');
 }
 
-function refreshDocModal(){
+function refreshDocModal() {
     $('#clear_doc_form').trigger('click');
 }
 
-function getMortCreationTable(){
+function getMortCreationTable() {
     let cus_profile_id = $('#customer_profile_id').val();
     $.post('api/loan_issue_files/mortgage_info_list.php', { cus_profile_id }, function (response) {
         let mortInfoColumn = [
@@ -1895,7 +1885,7 @@ function getMortCreationTable(){
     }, 'json');
 }
 
-function getMortInfoTable(){
+function getMortInfoTable() {
     let cus_profile_id = $('#customer_profile_id').val();
     $.post('api/loan_issue_files/mortgage_info_list.php', { cus_profile_id }, function (response) {
         let mortgageColumn = [
@@ -1915,22 +1905,22 @@ function getMortInfoTable(){
     }, 'json');
 }
 
-function deleteMortgageInfo(id){
-    $.post('api/loan_issue_files/delete_mortgage_info.php', {id}, function(response){
-        if(response =='1'){
-            swalSuccess('success','Mortgage Info Deleted Successfully');
+function deleteMortgageInfo(id) {
+    $.post('api/loan_issue_files/delete_mortgage_info.php', { id }, function (response) {
+        if (response == '1') {
+            swalSuccess('success', 'Mortgage Info Deleted Successfully');
             getMortCreationTable();
-        }else{
+        } else {
             swalError('Alert', 'Delete Failed')
         }
-    },'json');
+    }, 'json');
 }
 
-function refreshMortModal(){
+function refreshMortModal() {
     $('#clear_mortgage_form').trigger('click');
 }
 
-function getEndorsementCreationTable(){
+function getEndorsementCreationTable() {
     let cus_profile_id = $('#customer_profile_id').val();
     $.post('api/loan_issue_files/endorsement_info_list.php', { cus_profile_id }, function (response) {
         let endorsementInfoColumn = [
@@ -1949,7 +1939,7 @@ function getEndorsementCreationTable(){
     }, 'json');
 }
 
-function getEndorsementInfoTable(){
+function getEndorsementInfoTable() {
     let cus_profile_id = $('#customer_profile_id').val();
     $.post('api/loan_issue_files/endorsement_info_list.php', { cus_profile_id }, function (response) {
         let endorsementColumn = [
@@ -1967,22 +1957,22 @@ function getEndorsementInfoTable(){
     }, 'json');
 }
 
-function deleteEndorsementInfo(id){
-    $.post('api/loan_issue_files/delete_endorsement_info.php', {id}, function(response){
-        if(response =='1'){
-            swalSuccess('success','Endorsement Info Deleted Successfully');
+function deleteEndorsementInfo(id) {
+    $.post('api/loan_issue_files/delete_endorsement_info.php', { id }, function (response) {
+        if (response == '1') {
+            swalSuccess('success', 'Endorsement Info Deleted Successfully');
             getEndorsementCreationTable();
-        }else{
+        } else {
             swalError('Alert', 'Delete Failed')
         }
-    },'json');
+    }, 'json');
 }
 
-function refreshEndorsementModal(){
+function refreshEndorsementModal() {
     $('#clear_endorsement_form').trigger('click');
 }
 
-function getGoldCreationTable(){
+function getGoldCreationTable() {
     let cus_profile_id = $('#customer_profile_id').val();
     $.post('api/loan_issue_files/gold_info_list.php', { cus_profile_id }, function (response) {
         let goldInfoColumn = [
@@ -1998,7 +1988,7 @@ function getGoldCreationTable(){
     }, 'json');
 }
 
-function getGoldInfoTable(){
+function getGoldInfoTable() {
     let cus_profile_id = $('#customer_profile_id').val();
     $.post('api/loan_issue_files/gold_info_list.php', { cus_profile_id }, function (response) {
         let goldColumn = [
@@ -2013,18 +2003,18 @@ function getGoldInfoTable(){
     }, 'json');
 }
 
-function deleteGoldInfo(id){
-    $.post('api/loan_issue_files/delete_gold_info.php', {id}, function(response){
-        if(response =='1'){
-            swalSuccess('success','Gold Info Deleted Successfully');
+function deleteGoldInfo(id) {
+    $.post('api/loan_issue_files/delete_gold_info.php', { id }, function (response) {
+        if (response == '1') {
+            swalSuccess('success', 'Gold Info Deleted Successfully');
             getGoldCreationTable();
-        }else{
+        } else {
             swalError('Alert', 'Delete Failed')
         }
-    },'json');
+    }, 'json');
 }
 
-function refreshGoldModal(){
+function refreshGoldModal() {
     $('#clear_gold_form').trigger('click');
 }
 

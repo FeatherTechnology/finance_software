@@ -13,6 +13,9 @@ if (!empty($_FILES['pic']['name'])) {
         $picture = uniqid() . '.' . $fileExtension;
     }
     move_uploaded_file($pic_temp, $path . $picture);
+
+    //query
+    unlink($path . $pic);
 } else {
     $picture = $_POST['per_pic'];
 }
