@@ -40,6 +40,7 @@
     </div>
     <br>
     <form id="cus_update_customer_profile" name="cus_update_customer_profile">
+        <input type="hidden" id="cus_id_upd" name="cus_id_upd">
         <input type="hidden" id="customer_profile_id">
         <div class="row gutters">
             <div class="col-12">
@@ -523,6 +524,7 @@
     </form>
     <form id="update_documentation" name="update_documentation" style="display: none;">
         <input type="hidden" id="loan_calculation_id">
+        <input type="hidden" id="cus_id_doc" name="cus_id_doc">
 
         <div class="row gutters">
             <div class="col-12">
@@ -537,15 +539,15 @@
                                 <table id="loan_list_table" class="table custom-table">
                                     <thead>
                                         <tr>
-                                        <th width="20">S.NO</th>
-                                        <th>Loan ID</th>
-                                        <th>Loan Category</th>
-                                        <th>Loan Date</th>
-                                        <th>Loan Amount</th>
-                                        <th>Closed Date</th>
-                                        <th>Status</th>
-                                        <th>Sub Status</th>
-                                        <th>Action</th>
+                                            <th width="20">S.NO</th>
+                                            <th>Loan ID</th>
+                                            <th>Loan Category</th>
+                                            <th>Loan Date</th>
+                                            <th>Loan Amount</th>
+                                            <th>Closed Date</th>
+                                            <th>Status</th>
+                                            <th>Sub Status</th>
+                                            <th>Action</th>
                                         </tr>
                                     </thead>
                                     <tbody> </tbody>
@@ -620,7 +622,7 @@
                 <!--- -------------------------------------- Document Info END ------------------------------- -->
 
                 <!--- -------------------------------------- Mortgage Info START ------------------------------- -->
-                <div class="card"id="mortgage_info_card" style="display: none;">
+                <div class="card" id="mortgage_info_card" style="display: none;">
                     <div class="card-header">
                         <div class="card-title">Mortgage Info
                             <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#add_mortgage_info_modal" onclick="getFamilyMember('Select Property Holder Name', '#property_holder_name');getMortCreationTable()" style="padding: 5px 35px; float: right;" tabindex='30'><span class="icon-add"></span></button>
@@ -655,7 +657,7 @@
                 <!--- -------------------------------------- Mortgage Info END ------------------------------- -->
 
                 <!--- -------------------------------------- Endorsement Info START ------------------------------- -->
-                <div class="card"id="endorsement_info_card" style="display: none;">
+                <div class="card" id="endorsement_info_card" style="display: none;">
                     <div class="card-header">
                         <div class="card-title">Endorsement Info
                             <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#add_endorsement_info_modal" onclick="getFamilyMember('Select Proof Of', '#owner_name');getEndorsementCreationTable();" style="padding: 5px 35px; float: right;" tabindex='31'><span class="icon-add"></span></button>
@@ -688,7 +690,7 @@
                 <!--- -------------------------------------- Endorsement Info END ------------------------------- -->
 
                 <!--- -------------------------------------- Gold Info START ------------------------------- -->
-                <div class="card"id="gold_info_card" style="display: none;">
+                <div class="card" id="gold_info_card" style="display: none;">
                     <div class="card-header">
                         <div class="card-title">Gold Info
                             <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#add_gold_info_modal" style="padding: 5px 35px; float: right;" tabindex='31' onclick="getGoldCreationTable()"><span class="icon-add"></span></button>
@@ -1033,6 +1035,16 @@
                             <input type="hidden" name="kyc_id" id='kyc_id'>
                             <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
                                 <div class="form-group">
+                                    <label for="kycloan_id">Loan ID</label><span class="text-danger">*</span>
+                                    <select type="text" class="form-control" id="kycloan_id" name="kycloan_id" tabindex="1">
+                                        <option value="">Select Loan ID</option>
+                                    </select>
+                                    <input type="hidden" id="customer_profile_ids" value='0'>
+                                </div>
+                            </div>
+
+                            <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                                <div class="form-group">
                                     <label for="proof_of">Proof Of</label><span class="text-danger">*</span>
                                     <select type="text" class="form-control" id="proof_of" name="proof_of" tabindex="1">
                                         <option value="">Select Proof Of</option>
@@ -1100,6 +1112,7 @@
                             <thead>
                                 <tr>
                                     <th width="20">S.No.</th>
+                                    <th>Loan ID</th>
                                     <th>Proof Of</th>
                                     <th>Relationship</th>
                                     <th>Proof</th>

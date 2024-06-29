@@ -292,10 +292,11 @@ function appendDataToTable(tableSelector, response, columnMapping) {
 			if (value === 'sno') {
 				$('<td>').text(index + 1).appendTo(row); // Add serial number
 			} else if (item.hasOwnProperty(value)) {
-				if (value === 'action' || value === 'upload' || value ==='charts') {
+				
+				if (value === 'action' || value === 'upload' || value === 'charts' || value === 'info') {
 					// If the key is 'action' or 'upload', insert the HTML content directly
 					$('<td>').html(item[value]).appendTo(row);
-				}else {
+				} else {
 					// Otherwise, insert the text content
 					$('<td>').text(item[value]).appendTo(row);
 				}
@@ -373,16 +374,16 @@ function validateEmail(emailInput, selector) {
 
 function setDropdownScripts() {
 	$('.dropdown').off().click(function (event) {
-	event.preventDefault();
-	$('.dropdown').not(this).removeClass('active');
-	$(this).toggleClass('active');
+		event.preventDefault();
+		$('.dropdown').not(this).removeClass('active');
+		$(this).toggleClass('active');
 	});
-	
+
 	$(document).click(function (event) {
-	var target = $(event.target);
-	if (!target.closest('.dropdown').length) {
-	$('.dropdown').removeClass('active');
-	}
+		var target = $(event.target);
+		if (!target.closest('.dropdown').length) {
+			$('.dropdown').removeClass('active');
+		}
 	});
 }
 
@@ -400,9 +401,9 @@ function checkInputFileSize(input, allowdsize, img) {
 }
 
 function setCurrentDate(field_id) {
-    const curDate = new Date();
-    const curYear = curDate.getFullYear();
-    const curMonth = curDate.getMonth() + 1;
-    const curDay = curDate.getDate();
-    $(field_id).val(`${curDay < 10 ? '0' + curDay : curDay}-${curMonth < 10 ? '0' + curMonth : curMonth}-${curYear}`);
+	const curDate = new Date();
+	const curYear = curDate.getFullYear();
+	const curMonth = curDate.getMonth() + 1;
+	const curDay = curDate.getDate();
+	$(field_id).val(`${curYear}-${curMonth < 10 ? '0' + curMonth : curMonth}-${curDay < 10 ? '0' + curDay : curDay}`);
 }

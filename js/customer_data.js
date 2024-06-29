@@ -48,6 +48,12 @@ $(document).ready(function () {
                 else if (response.status == 8) {
                     statusMsg = "Closed";
                 }
+                else if (response.status == 9) {
+                    statusMsg = "Closed";
+                }
+                else if (response.status == 10) {
+                    statusMsg = "NOC";
+                }
                 swalError('Warning', 'Mobile number already exists. Customer status: ' + statusMsg);
                 return false;
             } else {
@@ -55,12 +61,15 @@ $(document).ready(function () {
                 $.post('api/customer_data_files/submit_new.php', { cus_name, area, mobile, loan_cat, loan_amount, new_promotion_id }, function (response) {
                     if (response == '1') {
                         swalSuccess('Success', 'Customer Data Added Successfully!');
-                        $('#new_form input').val('');
+                       $('#new_form input').val('');
                     }
                 });
             }
         }, 'json');
     })
+
+
+
     $('#mobile').change(function () {
         checkMobileNo($(this).val(), $(this).attr('id'));
     });
@@ -69,15 +78,30 @@ $(document).ready(function () {
         swalConfirm('Delete', 'Do you want to Delete the Customer Details?', getNewPromoDelete, id);
         return;
     });
+    // Reset form fields when modal is hidden
+$('#add_new_list_modal').on('hidden.bs.modal', function () {
+    $('#new_form').trigger('reset'); // Reset the form with id 'new_form'
+});
+
+// Reset form fields when modal backdrop is clicked
+$('#add_new_list_modal').on('click', function (e) {
+    if ($(e.target).hasClass('modal')) {
+        $('#new_form').trigger('reset'); // Reset the form with id 'new_form'
+    }
+});
+
     /*$(document).on('click', '.existingNeedBtn', function () {
         let cus_id = $(this).val();// Get the customer ID from the checkbox value
         swalConfirm('Move', 'Do you want to Move the Customer Profile?', getConfirm, cus_id);
         return;
     });*/
 })
+
+
 $(function () {
     getNewPromotionTable()
     getExistingPromotionTable()
+
 });
 function getNewPromotionTable() {
     $.post('api/customer_data_files/get_new_promotion.php', function (response) {

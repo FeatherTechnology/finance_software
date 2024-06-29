@@ -1,7 +1,7 @@
 <?php
 require '../../ajaxconfig.php';
 
-$status = [4 => 'Approved',5 => 'Cancel',6 => 'Revoke',7 => 'Loan Issued',8 => 'Closed'];
+$status = [4 => 'Approved',5 => 'Cancel',6 => 'Revoke',7 => 'Loan Issued',8 => 'Closed',9=>'Closed',10=>'NOC'];
 $sub_status = [1=>'Consider',2=>'Reject'];
 $existing_promo_arr = array();
 $i=0;
@@ -11,7 +11,7 @@ LEFT JOIN area_name_creation anc ON cp.area = anc.id
 LEFT JOIN area_creation ac ON cp.line = ac.line_id 
 LEFT JOIN branch_creation bc ON ac.branch_id = bc.id LEFT JOIN customer_status cs ON cp.id = cs.cus_profile_id 
 INNER JOIN (SELECT MAX(id) as max_id FROM customer_profile GROUP BY cus_id) latest ON cp.id = latest.max_id 
-WHERE cs.status = '9' AND cs.sub_status = '1' ORDER BY cp.id DESC");
+WHERE (cs.status = '9' AND cs.sub_status = '1' OR cs.status = '10' AND cs.sub_status = '1') ORDER BY cp.id DESC");
 
 if ($qry->rowCount() > 0) {
     while ($row = $qry->fetch(PDO::FETCH_ASSOC)) {
