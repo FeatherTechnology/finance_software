@@ -1640,7 +1640,7 @@ $(document).ready(function () {
             $('#refresh_cal').trigger('click'); //For calculate once again if user missed to refresh calculation
             let formData = {
                 'customer_profile_id': customerProfileId,
-                'cus_id': $('#cus_id').val(),
+                'cus_id': $('#cus_id').val().trim().replace(/\s/g, ''),
                 'loan_id_calc': $('#loan_id_calc').val(),
                 'loan_category_calc': $('#loan_category_calc').val(),
                 'category_info_calc': $('#category_info_calc').val(),
