@@ -279,6 +279,7 @@ $(document).ready(function () {
         event.preventDefault();
         //Validation
         let cus_profile_id = $('#customer_profile_id').val();
+        let kycloan_id = $('#kycloan_id').val();
         let cus_id = $('#cus_id_upd').val().replace(/\s/g, '');
         let upload = $('#upload')[0].files[0]; let kyc_upload = $('#kyc_upload').val();
         let proof_of = $('#proof_of').val(); let fam_mem = $("#fam_mem").val(); let proof = $('#proof').val(); let proof_detail = $('#proof_detail').val(); let kyc_id = $('#kyc_id').val();
@@ -286,7 +287,7 @@ $(document).ready(function () {
             swalError('Warning', 'Kindly Fill the Personal Info');
             return false;
         }
-        if (proof_of === '' || kyc_relationship === '' || proof === '' || proof_detail === '') {
+        if (proof_of === '' || kyc_relationship === '' || proof === '' || proof_detail === '' || kycloan_id === '') {
             swalError('Warning', 'Please Fill out Mandatory fields!');
             return false;
         } else {
@@ -327,35 +328,38 @@ $(document).ready(function () {
     });
 
     $(document).on('click', '.kycActionBtn', function () {
-        var id = $(this).attr('value'); // Get value attribute
-        $.post('api/loan_entry/kyc_creation_data.php', { id: id }, function (response) {
+        var id = $(this).attr('value');
+        $.post('api/update_customer_files/update_kyc_creation_data.php', { id: id }, function (response) {
             if (response && response.length > 0) {
                 $('#kyc_id').val(id);
                 $('#proof_of').val(response[0].proof_of);
-
+                $('#proof').val(response[0].proof);
+                $('#proof_detail').val(response[0].proof_detail);
+                $("#kyc_upload").val(response[0].upload);
+    
                 if (response[0].proof_of == 1) { // Assuming 1 is for customer
                     $('.fam_mem_div').hide();
                     $('#fam_mem').val('');
+                    $('#kyc_relationship').val('Customer');
                 } else {
                     getFamilyMember('Select Family Member', '#fam_mem');
                     setTimeout(() => {
                         $("#fam_mem").val(response[0].fam_mem);
                     }, 100);
                     $('.fam_mem_div').show();
-                }
-                if (response[0].proof_of == 1) {
-                    $('#kyc_relationship').val('Customer');
-                } else {
                     $('#kyc_relationship').val(response[0].fam_relationship);
                 }
-
-                $('#proof').val(response[0].proof);
-                $('#proof_detail').val(response[0].proof_detail);
-                $("#kyc_upload").val(response[0].upload);
+    
+                
+                getKycLoanId(); // Fetch all loan ID options
+                setTimeout(() => {
+                    $('#kycloan_id').val(response[0].cus_profile_id); 
+                }, 500); 
+    
             } else {
                 alert('No data found for the selected KYC ID.');
             }
-        }, 'json')
+        }, 'json');
     });
 
     $('#clear_kyc_form').on('click', function () {
@@ -998,7 +1002,7 @@ function getKycTable() {
     $.post('api/update_customer_files/update_kyc_creation_list.php', { cus_id }, function (response) {
         var columnMapping = [
             'sno',
-            'cus_profile_id',
+            'loan_id',
             'proof_of',
             'fam_relationship',
             'proof',
@@ -1021,6 +1025,7 @@ function getKycInfoTable() {
     $.post('api/update_customer_files/update_kyc_creation_list.php', { cus_id }, function (response) {
         var columnMapping = [
             'sno',
+            'loan_id',
             'proof_of',
             'fam_relationship',
             'proof',
@@ -1031,6 +1036,7 @@ function getKycInfoTable() {
         setdtable('#kyc_info');
     }, 'json')
 }
+
 
 
 function getKycRelationshipName(familyMemberId) {

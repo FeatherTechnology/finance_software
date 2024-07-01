@@ -1,6 +1,6 @@
 <?php
 require '../../ajaxconfig.php';
-$status = [3 => 'Move',4 => 'Approved', 5 => 'Cancel', 6 => 'Revoke', 7 => 'Loan Issued', 8 => 'Closed',9=>'Closed',10=>'NOC', 11=>'NOC'];
+$status = [2=>'Loan Entry',3 => 'Move',4 => 'Approved', 5 => 'Cancel', 6 => 'Revoke', 7 => 'Loan Issued', 8 => 'Closed',9=>'Closed',10=>'NOC',11=>'NOC'];
 $sub_status = [''=>'',1 => 'Consider', 2 => 'Reject'];
 $update_doc_list_arr = array();
 $cus_id = $_POST['cus_id'];
@@ -32,4 +32,5 @@ if ($qry->rowCount() > 0) {
 }
 $pdo = null; //Close Connection.
 echo json_encode($update_doc_list_arr);
+
 

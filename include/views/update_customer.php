@@ -476,6 +476,7 @@
                                         <thead>
                                             <tr>
                                                 <th width="20">S.NO</th>
+                                                <th>Loan ID</th>
                                                 <th>Proof Of</th>
                                                 <th>Relationship</th>
                                                 <th>Proof</th>

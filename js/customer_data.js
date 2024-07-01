@@ -54,6 +54,9 @@ $(document).ready(function () {
                 else if (response.status == 10) {
                     statusMsg = "NOC";
                 }
+                else if (response.status == 11) {
+                    statusMsg = "NOC";
+                }
                 swalError('Warning', 'Mobile number already exists. Customer status: ' + statusMsg);
                 return false;
             } else {
@@ -100,7 +103,8 @@ $('#add_new_list_modal').on('click', function (e) {
 
 $(function () {
     getNewPromotionTable()
-    getExistingPromotionTable()
+    let cus_id =$("#cus_id").val();
+    getExistingPromotionTable(cus_id)
 
 });
 function getNewPromotionTable() {
@@ -129,8 +133,9 @@ function getNewPromoDelete(id) {
         }
     }, 'json');
 }
-function getExistingPromotionTable() {
-    $.post('api/customer_data_files/get_existing_promotion.php', function (response) {
+function getExistingPromotionTable(cus_id) {
+
+    $.post('api/customer_data_files/get_existing_promotion.php',{cus_id} ,function (response) {
         var columnMapping = [
             'id',
             'cus_id',

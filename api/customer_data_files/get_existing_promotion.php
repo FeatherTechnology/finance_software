@@ -1,7 +1,7 @@
 <?php
 require '../../ajaxconfig.php';
 
-$status = [4 => 'Approved',5 => 'Cancel',6 => 'Revoke',7 => 'Loan Issued',8 => 'Closed',9=>'Closed',10=>'NOC'];
+$status = [4 => 'Approved',5 => 'Cancel',6 => 'Revoke',7 => 'Loan Issued',8 => 'Closed',9=>'Closed',10=>'NOC',11=>'NOC'];
 $sub_status = [1=>'Consider',2=>'Reject'];
 $existing_promo_arr = array();
 $i=0;
@@ -17,7 +17,7 @@ if ($qry->rowCount() > 0) {
     while ($row = $qry->fetch(PDO::FETCH_ASSOC)) {
     $row['c_sts'] = $status[$row['c_sts']];
     $row['c_substs'] = $sub_status[$row['c_substs']];
-    $row['action'] = "<input type='checkbox' class='select-checkbox existingNeedBtn' value='" . $row['id'] . "'>";
+    $row['action'] = "<input type='checkbox' class='select-checkbox existingNeedBtn' value='" . $row['cus_id'] . "'>";
 
         $existing_promo_arr[$i] = $row; // Append to the array
         $i++;
