@@ -15,6 +15,7 @@ $(document).ready(function () {
         'closed': 'closed',
         'noc': 'noc',
         'accounts': 'accounts',
+        'bank_clearance': 'accounts',
         'update_customer': 'update',
         'update_document': 'update',
         'customer_data': 'customer_data',
