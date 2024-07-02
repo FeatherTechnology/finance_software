@@ -8,6 +8,7 @@ const intance = new Choices('#area_name', {
 $(document).ready(function () {
     $('.add_area_btn, .back_to_area_btn').click(function () {
         swapTableAndCreation();
+        
     });
 
     $('#branch_name').change(function () {
@@ -161,14 +162,14 @@ $(document).ready(function () {
     });
     ///////////////////////////////////// Delete Screen END  /////////////////////////////////////
 
-    $('#line_name').change(function(){
+    $('#line_name').change(function () {
         let lineID = $('#line_name2').val();
-        $.post('api/area_creation_files/validate_line_name.php', {lineID}, function(response){
-            if(response =='0'){
+        $.post('api/area_creation_files/validate_line_name.php', { lineID }, function (response) {
+            if (response == '0') {
                 swalError('Access Denied', 'Used in User Creation');
                 $('#line_name').val(lineID);
             }
-        },'json');
+        }, 'json');
     });
 
 });//Document END.
@@ -192,7 +193,6 @@ function getAreaCreationTable() {
         setdtable('#area_creation_table');
     }, 'json');
 }
-
 function swapTableAndCreation() {
     if ($('.area_table_content').is(':visible')) {
         $('.area_table_content').hide();
@@ -268,18 +268,9 @@ function getLineNameDropdown() {
 
 function getAreaNameTable() {
     let branch_id = $('#branch_name').val();
+    let params = {'branch_id':branch_id};
     if (branch_id != '') {
-        $.post('api/area_creation_files/area_name_list.php', { branch_id }, function (response) {
-            let lineNameColumn = [
-                "sno",
-                "areaname",
-                "status",
-                "action"
-            ]
-            appendDataToTable('#area_name_table', response, lineNameColumn);
-            setdtable('#area_name_table');
-        }, 'json');
-
+        serverSideTable('#area_name_table', params, 'api/area_creation_files/area_name_list.php');
     } else {
         swalError('Warning', 'Kindly Select the Branch Name');
     }

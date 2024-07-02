@@ -429,20 +429,7 @@ $(function(){
 });
 
 function getCollectionListTable(){
-    $.post('api/collection_files/collection_list.php', function (response) {
-        var columnMapping = [
-            'sno',
-            'cus_id',
-            'cus_name',
-            'area',
-            'linename',
-            'branch_name',
-            'mobile1',
-            'action'
-        ];
-        appendDataToTable('#collection_list_table', response, columnMapping);
-        setdtable('#collection_list_table');
-    }, 'json');
+        serverSideTable('#collection_list_table','', 'api/collection_files/collection_list.php');
 }
 
 function swapTableAndCreation() {

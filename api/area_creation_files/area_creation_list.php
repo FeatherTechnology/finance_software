@@ -19,3 +19,4 @@ if ($qry->rowCount() > 0) {
 $pdo = null; //Close Connection.
 
 echo json_encode($areacreation_list_arr);
+

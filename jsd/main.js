@@ -292,7 +292,7 @@ function appendDataToTable(tableSelector, response, columnMapping) {
 			if (value === 'sno') {
 				$('<td>').text(index + 1).appendTo(row); // Add serial number
 			} else if (item.hasOwnProperty(value)) {
-				
+
 				if (value === 'action' || value === 'upload' || value === 'charts' || value === 'info') {
 					// If the key is 'action' or 'upload', insert the HTML content directly
 					$('<td>').html(item[value]).appendTo(row);
@@ -306,6 +306,55 @@ function appendDataToTable(tableSelector, response, columnMapping) {
 		tableBody.append(row);
 	});
 }
+/////////////////////////////////////////////////////
+
+// Function to append data to table
+function serverSideTable(tableSelector, params, apiUrl) {
+	$(tableSelector).DataTable().destroy();
+	$(tableSelector).DataTable({
+		'order': [[0, "desc"]],
+		'processing': true,
+		'serverSide': true,
+		'serverMethod': 'post',
+		'ajax': {
+			'url': apiUrl,
+			'data': function (data) {
+				var search = $('input[type=search]').val();
+				data.search = search;
+				data.params = params;
+			}
+		},
+		dom: 'lBfrtip',
+		buttons: [
+			{
+				extend: 'excel',
+				title: "Branch List"
+			},
+			{
+				extend: 'colvis',
+				collectionLayout: 'fixed four-column',
+			}
+		],
+		"lengthMenu": [
+			[10, 25, 50, -1],
+			[10, 25, 50, "All"]
+		],
+		'drawCallback': function () {
+			setDropdownScripts()
+		}
+	});
+
+}
+
+
+
+
+
+
+////////////////////////////////////////////////////
+
+
+
 //Swal alert section *************************
 function swalSuccess(title, text) {
 	Swal.fire({

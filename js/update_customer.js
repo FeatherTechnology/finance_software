@@ -619,22 +619,7 @@ $(function () {
 });
 
 function getcusUpdateTable() {
-    $.post('api/update_customer_files/update_customer_list.php', function (response) {
-        var columnMapping = [
-            'sno',
-            'cus_id',
-            'cus_name',
-            'area',
-            'linename',
-            'branch_name',
-            'mobile1',
-            'action'
-        ];
-        appendDataToTable('#cus_update_table', response, columnMapping);
-        setdtable('#cus_update_table');
-        //Dropdown in List Screen
-        setDropdownScripts();
-    }, 'json');
+        serverSideTable('#cus_update_table','', 'api/update_customer_files/update_customer_list.php');
 }
 
 function swapTableAndCreation() {

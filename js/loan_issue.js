@@ -530,23 +530,7 @@ $(function () {
 });
 
 function getLoanIssueTable() {
-    $.post('api/loan_issue_files/loan_issue_list.php', function (response) {
-        var columnMapping = [
-            'sno',
-            'cus_id',
-            'cus_name',
-            'area',
-            'linename',
-            'branch_name',
-            'loan_amount',
-            'mobile1',
-            'action'
-        ];
-        appendDataToTable('#loan_issue_table', response, columnMapping);
-        setdtable('#loan_issue_table');
-        //Dropdown in List Screen
-        setDropdownScripts();
-    }, 'json');
+        serverSideTable('#loan_issue_table','', 'api/loan_issue_files/loan_issue_list.php');
 }
 
 function swapTableAndCreation() {

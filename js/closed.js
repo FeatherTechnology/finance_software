@@ -146,21 +146,7 @@ $(function () {
 });
 
 function getClosedListTable() {
-    $.post('api/closed_files/close_list_table.php', function (response) {
-        var columnMapping = [
-            'sno',
-            'cus_id',
-            'cus_name',
-            'area',
-            'linename',
-            'branch_name',
-            'mobile1',
-            'action'
-        ];
-        appendDataToTable('#closed_list_table', response, columnMapping);
-        setdtable('#closed_list_table');
-        setDropdownScripts();
-    }, 'json');
+        serverSideTable('#closed_list_table','', 'api/closed_files/close_list_table.php');       
 }
 function moveToNext(cus_id, cus_sts) {
     $.post('api/closed_files/close_move_to_next.php', { cus_id, cus_sts }, function (response) {

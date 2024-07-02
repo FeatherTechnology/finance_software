@@ -157,22 +157,7 @@ $(function () {
 });
 
 function getNOCList() {
-    $.post('api/noc_files/noc_list.php', function (response) {
-        let nocColumns = [
-            'sno',
-            'cus_id',
-            'cus_name',
-            'area',
-            'linename',
-            'branch_name',
-            'mobile1',
-            'action'
-        ];
-        appendDataToTable('#noc_list_table', response, nocColumns);
-        setdtable('#noc_list_table');
-        //Dropdown in List Screen
-        setDropdownScripts();
-    }, 'json');
+        serverSideTable('#noc_list_table','', 'api/noc_files/noc_list.php');
 }
 
 function getPersonalInfo(cus_id) {

@@ -83,27 +83,33 @@ $(document).ready(function () {
 
 $(function () {
     getBranchTable()
+
+
 });
+// function getBranchTable() {
+//     $.post('api/branch_creation/branch_creation_list.php', function (response) {
+//         var columnMapping = [
+//             'sno',
+//             'branch_code',
+//             'company_name',
+//             'branch_name',
+//             'place',
+//             'state_name',
+//             'district_name',
+//             'mobile_number',
+//             'email_id',
+//             'action'
+//         ];
+//         appendDataToTable('#branch_create', response, columnMapping);
+//         setdtable('#branch_create');
+
+//     }, 'json')
+// }
+
+
 function getBranchTable() {
-    $.post('api/branch_creation/branch_creation_list.php', function (response) {
-        var columnMapping = [
-            'sno',
-            'branch_code',
-            'company_name',
-            'branch_name',
-            'place',
-            'state_name',
-            'district_name',
-            'mobile_number',
-            'email_id',
-            'action'
-        ];
-        appendDataToTable('#branch_create', response, columnMapping);
-        setdtable('#branch_create');
-
-    }, 'json')
+    serverSideTable('#branch_create','','api/branch_creation/branch_creation_list.php');
 }
-
 function swapTableAndCreation() {
     if ($('.branch_table_content').is(':visible')) {
         $('.branch_table_content').hide();
@@ -214,7 +220,7 @@ function getBranchDelete(id) {
         if (response == '1') {
             swalSuccess('Success', 'Branch Deleted Successfully!');
             getBranchTable();
-        } else if(response == '2'){
+        } else if (response == '2') {
             swalError('Access Denied', 'Used in User Creation');
         } else {
             swalError('Error', 'Failed to Delete Branch');

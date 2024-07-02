@@ -727,25 +727,8 @@ $(function () {
 });
 
 function getLoanEntryTable() {
-    $.post('api/loan_entry/loan_entry_list.php', function (response) {
-        var columnMapping = [
-            'sno',
-            'cus_id',
-            'cus_name',
-            'loan_id',
-            'loan_category',
-            'loan_amount',
-            'area',
-            'linename',
-            'branch_name',
-            'mobile1',
-            'action'
-        ];
-        appendDataToTable('#loan_entry_table', response, columnMapping);
-        setdtable('#loan_entry_table');
-        //Dropdown in List Screen
-        setDropdownScripts();
-    }, 'json');
+       serverSideTable('#loan_entry_table','', 'api/loan_entry/loan_entry_list.php');
+       // setDropdownScripts();   
 }
 function moveToNext(cus_sts_id, cus_sts) {
     $.post('api/common_files/move_to_next.php', { cus_sts_id, cus_sts }, function (response) {
