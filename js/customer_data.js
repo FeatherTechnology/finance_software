@@ -92,12 +92,16 @@ $('#add_new_list_modal').on('click', function (e) {
         $('#new_form').trigger('reset'); // Reset the form with id 'new_form'
     }
 });
+$(document).on('change', '.existingNeedBtn', function () {
+    var cus_id = $(this).attr('value');
+    var checkbox = $(this); // Reference to the checkbox element
+    
+    swalConfirm('Are You Sure', '', getExistingData, cus_id, function() {
+        checkbox.prop('checked', false); // Uncheck the checkbox if the user presses "No"
+    });
+    return;
+});
 
-    /*$(document).on('click', '.existingNeedBtn', function () {
-        let cus_id = $(this).val();// Get the customer ID from the checkbox value
-        swalConfirm('Move', 'Do you want to Move the Customer Profile?', getConfirm, cus_id);
-        return;
-    });*/
 })
 
 
@@ -150,9 +154,20 @@ function getExistingPromotionTable(cus_id) {
         ];
         appendDataToTable('#existing_list_table', response, columnMapping);
         setdtable('#existing_list_table');
+    
     }, 'json')
 }
-/*function getConfirm(cus_id) {
-    localStorage.setItem('currentPage', 'loan_entry');
-    window.location.href = 'home.php';
-}*/
+
+
+
+function getExistingData(cus_id) {
+    $.post('api/customer_data_files/get_existing_data.php', { cus_id }, function (response) {
+        if (response == '1') {
+            swalSuccess("Success", "Existing Data Added Successfully!", "success");
+            // Replace the checkbox with "Needed" text
+            $('.existingNeedBtn[value="' + cus_id + '"]').replaceWith('<span>Needed</span>');
+        } else {
+            swalError("Error", "Failed to Add Existing Data", "error");
+        }
+    });
+}

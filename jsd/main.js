@@ -382,7 +382,7 @@ function swalInfo(title, text) {
 		confirmButtonColor: 'var(--primary-color)',
 	})
 }
-function swalConfirm(title, text, functionname, idvalue) {
+function swalConfirm(title, text, functionname, idvalue, noCallback) {
 	Swal.fire({
 		title: title,
 		text: text,
@@ -395,14 +395,18 @@ function swalConfirm(title, text, functionname, idvalue) {
 	}).then((result) => {
 		if (result.isConfirmed) {
 			functionname(idvalue);
+		} else if (noCallback) {
+			noCallback();
 		}
 	});
 }
 function checkMobileNo(mobileno, selector) {
-	let mobileNoRegex = /[6-9]{1}[0-9]{9}$/;
-	if (!(mobileNoRegex.test(mobileno))) {
-		swalError('Warning', 'Enter valid Mobile Number.')
-		$('#' + selector).val('')
+	if (mobileno != '') {
+		let mobileNoRegex = /[6-9]{1}[0-9]{9}$/;
+		if (!(mobileNoRegex.test(mobileno))) {
+			swalError('Warning', 'Enter valid Mobile Number.')
+			$('#' + selector).val('')
+		}
 	}
 }
 function checkLandlineFormat(number, selector) {
@@ -455,4 +459,17 @@ function setCurrentDate(field_id) {
 	const curMonth = curDate.getMonth() + 1;
 	const curDay = curDate.getDate();
 	$(field_id).val(`${curYear}-${curMonth < 10 ? '0' + curMonth : curMonth}-${curDay < 10 ? '0' + curDay : curDay}`);
+}
+
+function validateField(value, fieldId) {
+	if (value === '') {
+		response = false;
+		event.preventDefault();
+		$('#' + fieldId).css('border', '1px solid #ff0000');
+
+	} else {
+		response = true;
+		$('#' + fieldId).css('border', '1px solid #cecece');
+	}
+	return response;
 }

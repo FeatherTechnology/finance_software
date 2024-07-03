@@ -39,10 +39,10 @@ if ($customer_profile_id != '') {
     $status = 0; //update
     $last_id = $customer_profile_id;
 } else {
-    $qry = $pdo->query("INSERT INTO `customer_profile`(`cus_id`, `cus_name`, `gender`, `dob`, `age`, `mobile1`, `mobile2`, `pic`, `cus_data`, `cus_status`, `insert_login_id`, `created_on` ) VALUES ('$cus_id','$cus_name','$gender','$dob','$age','$mobile1','$mobile2','$picture','$cus_data','$cus_status','$user_id',now())");
+    $qry = $pdo->query("INSERT INTO `customer_profile`(`cus_id`, `cus_name`, `gender`, `dob`, `age`, `mobile1`, `mobile2`, `pic`, `cus_data`, `cus_status`, `insert_login_id`, `created_on` ) VALUES ('$cus_id','$cus_name','$gender','$dob','$age','$mobile1','$mobile2','$picture','$cus_data','$cus_status','$user_id',CURRENT_TIMESTAMP())");
     $status = 1; //Insert
     $last_id = $pdo->lastInsertId();
-    $qry = $pdo->query("INSERT INTO `customer_status`( `cus_id`, `cus_profile_id`, `status`, `insert_login_id`, `created_on`) VALUES ('$cus_id', '$last_id', '1', '$user_id', now() )");
+    $qry = $pdo->query("INSERT INTO `customer_status`( `cus_id`, `cus_profile_id`, `status`, `insert_login_id`, `created_on`) VALUES ('$cus_id', '$last_id', '1', '$user_id',CURRENT_TIMESTAMP() )");
 }
 
 $result = array('status' => $status, 'last_id' => $last_id, 'cus_data' => $cus_data, 'cus_status' => $cus_status, 'pic' => $picture);
