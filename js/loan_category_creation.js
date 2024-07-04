@@ -57,23 +57,33 @@ $(document).ready(function () {
     $('#submit_addloan_category').click(function () {
         event.preventDefault();
         let loanCategoryName = $('#addloan_category_name').val(); let id = $('#addloan_category_id').val();
+        var data = ['addloan_category_name']
+
+        var isValid = true;
+        data.forEach(function (entry) {
+            var fieldIsValid = validateField($('#' + entry).val(), entry);
+            if (!fieldIsValid) {
+                isValid = false;
+            }
+        });
+
         if (loanCategoryName != '') {
-            $.post('api/loan_category_creation/submit_loan_category.php', { loanCategoryName, id }, function (response) {
-                if (response == '1') {
-                    swalSuccess('Success', 'Loan Category Added Successfully!');
-                } else if (response == '0') {
-                    swalSuccess('Success', 'Loan Category Updated Successfully!');
-                } else if (response == '2') {
-                    swalError('Warning', 'Loan Category Already Exists!');
-                }
+            if (isValid) {
+                $.post('api/loan_category_creation/submit_loan_category.php', { loanCategoryName, id }, function (response) {
+                    if (response == '1') {
+                        swalSuccess('Success', 'Loan Category Added Successfully!');
+                    } else if (response == '0') {
+                        swalSuccess('Success', 'Loan Category Updated Successfully!');
+                    } else if (response == '2') {
+                        swalError('Warning', 'Loan Category Already Exists!');
+                    }
 
-                getLoanCategoryTable();
-            }, 'json');
+                    getLoanCategoryTable();
+                }, 'json');
+                clearLoanCategory(); //To Clear All Fields in Loan Category creation.
+            }
 
-        } else {
-            swalError('Warning', 'Kindly Fill the Loan Category!')
         }
-        clearLoanCategory(); //To Clear All Fields in Loan Category creation.
     });
 
     $(document).on('click', '.loancatActionBtn', function () {
@@ -110,23 +120,32 @@ $(document).ready(function () {
             schemeProcessingFeeMax: $('#scheme_processing_fee_max').val(),
             id: $('#add_scheme_id').val()
         }
+        var data = ['add_scheme_name', 'scheme_due_method', 'profit_method', 'scheme_interest_rate', 'scheme_due_period', 'scheme_overdue_penalty', 'doc_charge_type', 'scheme_doc_charge_min', 'scheme_doc_charge_max', 'processing_fee_type', 'scheme_processing_fee_min', 'scheme_processing_fee_max']
+
+        var isValid = true;
+        data.forEach(function (entry) {
+            var fieldIsValid = validateField($('#' + entry).val(), entry);
+            if (!fieldIsValid) {
+                isValid = false;
+            }
+        });
 
         if (isFormDataValid(schemeFormData)) {
-            $.post('api/loan_category_creation/submit_scheme.php', schemeFormData, function (response) {
-                if (response == '0') {
-                    swalError('Warning', 'Processing Failed!');
-                } else if (response == '1') {
-                    swalSuccess('Success', 'Scheme Updated Successfully!');
-                } else if (response == '2') {
-                    swalSuccess('Success', 'Scheme Added Successfully!');
-                } else if (response == '3') {
-                    swalError('Access Denied', 'Scheme Already Added.');
-                }
-                clearSchemeForm();
-                getSchemeTable();
-            }, 'json');
-        } else {
-            swalError('Warning', 'Please Fill out Mandatory fields!');
+            if (isValid) {
+                $.post('api/loan_category_creation/submit_scheme.php', schemeFormData, function (response) {
+                    if (response == '0') {
+                        swalError('Warning', 'Processing Failed!');
+                    } else if (response == '1') {
+                        swalSuccess('Success', 'Scheme Updated Successfully!');
+                    } else if (response == '2') {
+                        swalSuccess('Success', 'Scheme Added Successfully!');
+                    } else if (response == '3') {
+                        swalError('Access Denied', 'Scheme Already Added.');
+                    }
+                    clearSchemeForm();
+                    getSchemeTable();
+                }, 'json');
+            }
         }
     });
 
@@ -199,31 +218,39 @@ $(document).ready(function () {
             id: $('#loan_cat_creation_id').val()
         }
 
+        var data = ['loan_category', 'loan_limit', 'due_method', 'due_type', 'interest_rate_min', 'interest_rate_max', 'due_period_min', 'due_period_max', 'doc_charge_min', 'doc_charge_max', 'processing_fee_min', 'processing_fee_max', 'overdue_penalty', 'loan_cat_creation_id']
 
+        var isValid = true;
+        data.forEach(function (entry) {
+            var fieldIsValid = validateField($('#' + entry).val(), entry);
+            if (!fieldIsValid) {
+                isValid = false;
+            }
+        });
         if (isFormDataValid(formData)) {
             /////////////////////////// submit page AJAX /////////////////////////////////////
             // Concatenate scheme_name if it's an array
             if (Array.isArray(formData.scheme_name)) {
                 formData.scheme_name = formData.scheme_name.join(",");
             }
-            $.post('api/loan_category_creation/submit_loan_category_creation.php', formData, function (response) {
-                if (response == '2') {
-                    swalSuccess('Success', 'Loan Category Added Successfully!');
-                } else if (response == '1') {
-                    swalSuccess('Success', 'Loan Category Updated Successfully!')
-                } else {
-                    swalError('Error', 'Error Occurs!')
+            if (isValid) {
+                $.post('api/loan_category_creation/submit_loan_category_creation.php', formData, function (response) {
+                    if (response == '2') {
+                        swalSuccess('Success', 'Loan Category Added Successfully!');
+                    } else if (response == '1') {
+                        swalSuccess('Success', 'Loan Category Updated Successfully!')
+                    } else {
+                        swalError('Error', 'Error Occurs!')
 
-                }
+                    }
 
-                clearLoanCategoryCreationForm();
-                getLoanCategoryCreationTable();
-                swapTableAndCreation();//to change to div to table content.
+                    clearLoanCategoryCreationForm();
+                    getLoanCategoryCreationTable();
+                    swapTableAndCreation();//to change to div to table content.
 
-            });
+                });
+            }
             /////////////////////////// submit page AJAX END/////////////////////////////////////
-        } else {
-            swalError('Warning', 'Please Fill out Mandatory fields!');
         }
     });
 
@@ -445,7 +472,7 @@ function deleteLoanCategoryCreation(id) {
         } else {
             swalError('Warning', 'Loan Category Creation Delete Failed!');
         }
-    },'json');
+    }, 'json');
 }
 
 function clearSchemeForm() {
@@ -460,20 +487,35 @@ function clearSchemeForm() {
     $('.processing-span-val').text('%');
     $('#doc_charge_type').val('percent');
     $('#processing_fee_type').val('percent');
+    $('input').css('border', '1px solid #cecece');
+    $('select').css('border', '1px solid #cecece');
 }
 
 function clearLoanCategory() {
     $('#addloan_category_name').val('');
     $('#addloan_category_id').val('0');
+    $('#addloan_category_name').css('border', '1px solid #cecece');
+
+
 }
 
 function clearLoanCategoryCreationForm() {
     // Reset all input fields except the ones specified
     $('input:not(#due_method, #profit_method, #doc_charge_type, #processing_fee_type, #doc_charge_type_percent, #doc_charge_type_rupee, #processing_fee_type_percent, #processing_fee_type_rupee)').val('');
-     // Reset all select fields to their first option
-     $('select').each(function () {
+    // Reset all select fields to their first option
+    $('select').each(function () {
         $(this).val($(this).find('option:first').val());
     });
+    $('#due_method').css('border', '1px solid #cecece');
+    $('#profit_method').css('border', '1px solid #cecece');
+    $('#doc_charge_type').css('border', '1px solid #cecece');
+    $('#processing_fee_type').css('border', '1px solid #cecece');
+    $('#doc_charge_type_percent').css('border', '1px solid #cecece');
+    $('#doc_charge_type_rupee').css('border', '1px solid #cecece');
+    $('#processing_fee_type_percent').css('border', '1px solid #cecece');
+    $('#processing_fee_type_rupee').css('border', '1px solid #cecece');
+    $('#loan_category').css('border', '1px solid #cecece');
+    $('#due_type').css('border', '1px solid #cecece');
     // Reset all select fields to their first option
     scheme_choices.clearInput();
     getSchemeDropdown();

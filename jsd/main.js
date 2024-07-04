@@ -462,7 +462,7 @@ function setCurrentDate(field_id) {
 }
 
 function validateField(value, fieldId) {
-	if (value === '') {
+	if (value === '' || value === null || value === undefined) {
 		response = false;
 		event.preventDefault();
 		$('#' + fieldId).css('border', '1px solid #ff0000');

@@ -15,10 +15,15 @@ $(document).ready(function () {
         event.preventDefault();
         //Validation
         let company_name = $('#company_name').val(); let address = $('#address').val(); let state = $('#state').val(); let district = $('#district').val(); let taluk = $('#taluk').val(); let place = $('#place').val(); let pincode = $('#pincode').val(); let website = $('#website').val(); let mailid = $('#mailid').val(); let mobile = $('#mobile').val(); let whatsapp = $('#whatsapp').val(); let landline_code = $('#landline_code').val(); let landline = $('#landline').val(); let companyid = $('#companyid').val();
-        if (company_name === '' || address === '' || state === '' || district === '' || taluk === '' || pincode === '') {
-            swalError('Warning', 'Please Fill out Mandatory fields!');
-            return false;
-        } else {
+        var data = ['company_name', 'address', 'state','place', 'district', 'taluk', 'pincode']
+        var isValid = true;
+        data.forEach(function (entry) {
+            var fieldIsValid = validateField($('#' + entry).val(), entry);
+            if (!fieldIsValid) {
+                isValid = false;
+            }
+        });
+        if (isValid) {
             /////////////////////////// submit page AJAX /////////////////////////////////////
             $.post('api/company_creation_files/submit_company_creation.php', { company_name, address, state, district, taluk, place, pincode, website, mailid, mobile, whatsapp, landline_code, landline, companyid }, function (response) {
                 if (response == '1') {
@@ -112,7 +117,7 @@ function swapTableAndCreation() {
 function getStateList() {
     $.post('api/common_files/get_state_list.php', function (response) {
         let appendStateOption = '';
-        appendStateOption += "<option value='0'>Select State</option>";
+        appendStateOption += "<option value=''>Select State</option>";
         $.each(response, function (index, val) {
             appendStateOption += "<option value='" + val.id + "'>" + val.state_name + "</option>";
         });
@@ -123,7 +128,7 @@ function getStateList() {
 function getDistrictList(state_id) {
     $.post('api/common_files/get_district_list.php', { state_id }, function (response) {
         let appendDistrictOption = '';
-        appendDistrictOption += "<option value='0'>Select District</option>";
+        appendDistrictOption += "<option value=''>Select District</option>";
         $.each(response, function (index, val) {
             appendDistrictOption += "<option value='" + val.id + "'>" + val.district_name + "</option>";
         });
@@ -134,10 +139,15 @@ function getDistrictList(state_id) {
 function getTalukList(district_id) {
     $.post('api/common_files/get_taluk_list.php', { district_id }, function (response) {
         let appendTalukOption = '';
-        appendTalukOption += "<option value='0'>Select Taluk</option>";
+        appendTalukOption += "<option value=''>Select Taluk</option>";
         $.each(response, function (index, val) {
             appendTalukOption += "<option value='" + val.id + "'>" + val.taluk_name + "</option>";
         });
         $('#taluk').empty().append(appendTalukOption);
     }, 'json');
 }
+$('button[type="reset"],  .backBtn').click(function () {
+    event.preventDefault();
+    $('input').css('border', '1px solid #cecece');
+    $('select').css('border', '1px solid #cecece');
+});

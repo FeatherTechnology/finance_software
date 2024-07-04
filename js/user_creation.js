@@ -29,22 +29,30 @@ $(document).ready(function () {
     $('#submit_role').click(function (event) {
         event.preventDefault();
         let role = $('#add_role').val(); let id = $('#role_id').val();
+        var data = ['add_role']
+        var isValid = true;
+        data.forEach(function (entry) {
+            var fieldIsValid = validateField($('#' + entry).val(), entry);
+            if (!fieldIsValid) {
+                isValid = false;
+            }
+        });
         if (role != '') {
-            $.post('api/user_creation_files/submit_role.php', { role, id }, function (response) {
-                if (response == '0') {
-                    swalError('Warning', 'Role Already Exists!');
-                } else if (response == '1') {
-                    swalSuccess('Success', 'Role Updated Successfully!');
-                } else if (response == '2') {
-                    swalSuccess('Success', 'Role Added Successfully!');
-                }
+            if (isValid) {
+                $.post('api/user_creation_files/submit_role.php', { role, id }, function (response) {
+                    if (response == '0') {
+                        swalError('Warning', 'Role Already Exists!');
+                    } else if (response == '1') {
+                        swalSuccess('Success', 'Role Updated Successfully!');
+                    } else if (response == '2') {
+                        swalSuccess('Success', 'Role Added Successfully!');
+                    }
 
-                getRoleTable();
-            }, 'json');
-        } else {
-            swalError('Warning', 'Kindly Fill the Role!')
+                    getRoleTable();
+                }, 'json');
+                clearRole(); //To Clear All Fields in Role creation.
+            }
         }
-        clearRole(); //To Clear All Fields in Role creation.
     });
 
     $(document).on('click', '.roleActionBtn', function () {
@@ -66,22 +74,30 @@ $(document).ready(function () {
     $('#submit_deisgnation').click(function (event) {
         event.preventDefault();
         let designation = $('#add_designation').val(); let id = $('#add_designation_id').val();
+        var data = ['add_designation']
+        var isValid = true;
+        data.forEach(function (entry) {
+            var fieldIsValid = validateField($('#' + entry).val(), entry);
+            if (!fieldIsValid) {
+                isValid = false;
+            }
+        });
         if (designation != '') {
-            $.post('api/user_creation_files/submit_designation.php', { designation, id }, function (response) {
-                if (response == '0') {
-                    swalError('Warning', 'Designation Already Exists!');
-                } else if (response == '1') {
-                    swalSuccess('Success', 'Designation Updated Successfully!');
-                } else if (response == '2') {
-                    swalSuccess('Success', 'Designation Added Successfully!');
-                }
+            if (isValid) {
+                $.post('api/user_creation_files/submit_designation.php', { designation, id }, function (response) {
+                    if (response == '0') {
+                        swalError('Warning', 'Designation Already Exists!');
+                    } else if (response == '1') {
+                        swalSuccess('Success', 'Designation Updated Successfully!');
+                    } else if (response == '2') {
+                        swalSuccess('Success', 'Designation Added Successfully!');
+                    }
 
-                getDesignationTable();
-            }, 'json');
-        } else {
-            swalError('Warning', 'Kindly Fill the Designation!')
+                    getDesignationTable();
+                }, 'json');
+                clearDesignation(); //To Clear All Fields in Designation creation.
+            }
         }
-        clearDesignation(); //To Clear All Fields in Designation creation.
     });
 
     $(document).on('click', '.designationActionBtn', function () {
@@ -125,33 +141,45 @@ $(document).ready(function () {
             confirm_password: $('#confirm_password').val(),
             branch_name: $('#branch_name').val(),
             line_name: $('#line_name').val(),
+            
             loan_category: $('#loan_category').val(),
             collection_access: $('#collection_access').val(),
             submenus: selectedSubmenuIds,
             id: $('#user_creation_id').val()
         }
-        if (isFormDataValid(userFormData)) {
-            $.post('api/user_creation_files/submit_user_creation.php', userFormData, function (response) {
-                if (response.status == '') {
-                    swalError('Error', 'Creation Failed.');
-                } else if (response.status == '1') {
-                    swalSuccess('Success', 'User Updated Successfully!');
-                } else if (response.status == '2') {
-                    swalSuccess('Success', 'User Added Successfully!');
-                } else if (response.status == '3') {
-                    swalError('Warning', 'User Name Already Created.');
-                }
+        console.log($('#branch_name').val())
+        var data = ['name', 'user_id', 'designation', 'role', 'user_name', 'password', 'confirm_password', 'branch_name', 'line_name', 'loan_category', 'loan_category', 'collection_access']
 
-                if (response.status != '' && response.status != '3') {
-                    swapTableAndCreation();
-                }
-                let sessionId = $('#session_user_id').val();
-                if (response.last_id == sessionId) {
-                    getLeftbarMenuList(); //After Submit/Update Leftbar want to refresh to view the changes.
-                }
-            }, 'json');
-        } else {
-            swalError('Warning', 'Kindly Fill the Mandatory Fields!')
+        var isValid = true;
+        data.forEach(function (entry) {
+            var fieldIsValid = validateField($('#' + entry).val(), entry);
+            if (!fieldIsValid) {
+                isValid = false;
+            }
+        });
+
+        if (isFormDataValid(userFormData)) {
+            if (isValid) {
+                $.post('api/user_creation_files/submit_user_creation.php', userFormData, function (response) {
+                    if (response.status == '') {
+                        swalError('Error', 'Creation Failed.');
+                    } else if (response.status == '1') {
+                        swalSuccess('Success', 'User Updated Successfully!');
+                    } else if (response.status == '2') {
+                        swalSuccess('Success', 'User Added Successfully!');
+                    } else if (response.status == '3') {
+                        swalError('Warning', 'User Name Already Created.');
+                    }
+
+                    if (response.status != '' && response.status != '3') {
+                        swapTableAndCreation();
+                    }
+                    let sessionId = $('#session_user_id').val();
+                    if (response.last_id == sessionId) {
+                        getLeftbarMenuList(); //After Submit/Update Leftbar want to refresh to view the changes.
+                    }
+                }, 'json');
+            }
         }
     });
 
@@ -252,6 +280,14 @@ $(document).ready(function () {
 
         // Uncheck and reset all checkboxes
         $('input[type="checkbox"]').prop('checked', false);
+        $('#name').css('border', '1px solid #cecece');
+        $('#user_id').css('border', '1px solid #cecece');
+        $('#role').css('border', '1px solid #cecece');
+        $('#designation').css('border', '1px solid #cecece');
+        $('#user_name').css('border', '1px solid #cecece');
+        $('#password').css('border', '1px solid #cecece');
+        $('#confirm_password').css('border', '1px solid #cecece');
+        $('#collection_access').css('border', '1px solid #cecece');
     });
 
     $('#branch_name').change(function () {
@@ -393,6 +429,7 @@ function getUserID(id) {
 function clearRole() {
     $('#add_role').val('');
     $('#role_id').val('0');
+    $('#add_role').css('border', '1px solid #cecece');
 }
 
 function getRoleTable() {
@@ -440,6 +477,7 @@ function deleteRole(id) {
 function clearDesignation() {
     $('#add_designation').val('');
     $('#add_designation_id').val('0');
+    $('#add_designation').css('border', '1px solid #cecece');
 }
 
 function getDesignationTable() {
@@ -480,7 +518,7 @@ function getDesignationDropdown(designation_name_id) {
         });
         $('#designation').empty().append(appendLineNameOption);
 
-        clearRole();
+        clearDesignation()
     }, 'json');
 }
 

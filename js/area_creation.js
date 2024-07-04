@@ -8,7 +8,7 @@ const intance = new Choices('#area_name', {
 $(document).ready(function () {
     $('.add_area_btn, .back_to_area_btn').click(function () {
         swapTableAndCreation();
-        
+
     });
 
     $('#branch_name').change(function () {
@@ -20,27 +20,37 @@ $(document).ready(function () {
     $('#submit_addline').click(function () {
         event.preventDefault();
         let linename = $('#addline_name').val(); let branch_id = $('#branch_name').val(); let id = $('#addline_name_id').val();
+        var data = ['addline_name',]
+
+        var isValid = true;
+        data.forEach(function (entry) {
+            var fieldIsValid = validateField($('#' + entry).val(), entry);
+            if (!fieldIsValid) {
+                isValid = false;
+            }
+        });
+
         if (branch_id == '') {
             swalError('Warning', 'Kindly select Branch Name!');
         } else {
             if (linename != '') {
-                $.post('api/area_creation_files/submit_line_name.php', { linename, branch_id, id }, function (response) {
-                    if (response == '1') {
-                        swalSuccess('Success', 'Line Added Successfully!');
-                    } else if (response == '0') {
-                        swalSuccess('Success', 'Line Updated Successfully!');
-                    } else if (response == '2') {
-                        swalError('Warning', 'Line Name Already Exists!');
-                    }
+                if (isValid) {
+                    $.post('api/area_creation_files/submit_line_name.php', { linename, branch_id, id }, function (response) {
+                        if (response == '1') {
+                            swalSuccess('Success', 'Line Added Successfully!');
+                        } else if (response == '0') {
+                            swalSuccess('Success', 'Line Updated Successfully!');
+                        } else if (response == '2') {
+                            swalError('Warning', 'Line Name Already Exists!');
+                        }
 
-                    getLineNameTable();
-                }, 'json');
+                        getLineNameTable();
+                    }, 'json');
+                    clearLineNameFields(); //To Clear All Fields in line name creation.
+                }
 
-            } else {
-                swalError('Warning', 'Kindly Fill the Line Name!')
             }
         }
-        clearLineNameFields(); //To Clear All Fields in line name creation.
     });
 
     $(document).on('click', '.linenameActionBtn', function () {
@@ -62,29 +72,38 @@ $(document).ready(function () {
     $('#submit_addarea').click(function () {
         event.preventDefault();
         let areaname = $('#addarea_name').val(); let status = $('#area_status').val(); let branch_id = $('#branch_name').val(); let id = $('#addarea_name_id').val();
+        var data = ['addarea_name', 'area_status',]
+
+        var isValid = true;
+        data.forEach(function (entry) {
+            var fieldIsValid = validateField($('#' + entry).val(), entry);
+            if (!fieldIsValid) {
+                isValid = false;
+            }
+        });
         if (branch_id == '') {
             swalError('Warning', 'Kindly select Branch Name!');
         } else {
             if (areaname != '' && status != '' && status != null) {
-                $.post('api/area_creation_files/submit_area_name.php', { areaname, status, branch_id, id }, function (response) {
-                    if (response == '1') {
-                        swalSuccess('Success', 'Area Added Successfully!');
-                    } else if (response == '0') {
-                        swalSuccess('Success', 'Area Updated Successfully!');
-                    } else if (response == '2') {
-                        swalError('Warning', 'Area Name Already Exists!');
-                    } else if (response == '3') {
-                        swalError('Access Denied', 'Used in Area Creation.');
-                    }
+                if (isValid) {
+                    $.post('api/area_creation_files/submit_area_name.php', { areaname, status, branch_id, id }, function (response) {
+                        if (response == '1') {
+                            swalSuccess('Success', 'Area Added Successfully!');
+                        } else if (response == '0') {
+                            swalSuccess('Success', 'Area Updated Successfully!');
+                        } else if (response == '2') {
+                            swalError('Warning', 'Area Name Already Exists!');
+                        } else if (response == '3') {
+                            swalError('Access Denied', 'Used in Area Creation.');
+                        }
 
-                    getAreaNameTable();
-                }, 'json');
+                        getAreaNameTable();
+                    }, 'json');
+                    clearAreaNameFields();
+                }
 
-            } else {
-                swalError('Warning', 'Please Fill out fields!')
             }
         }
-        clearAreaNameFields();
     });
 
     $(document).on('click', '.areanameActionBtn', function () {
@@ -107,10 +126,17 @@ $(document).ready(function () {
         event.preventDefault();
         //Validation
         let branch_id = $('#branch_name').val(); let line_id = $('#line_name').val(); let area_id = $('#area_name').val(); let id = $('#area_creation_id').val();
-        if (branch_id === '' || line_id === '' || (area_id == '' || area_id == null)) {
-            swalError('Warning', 'Please Fill out Mandatory fields!');
-            return false;
-        } else {
+        var data = [ 'branch_name','line_name','area_name']
+        
+        var isValid = true;
+        data.forEach(function (entry) {
+            var fieldIsValid = validateField($('#'+entry).val(), entry);
+            if (!fieldIsValid) {
+                isValid = false;
+            }
+        });
+
+        if (isValid) {
             /////////////////////////// submit page AJAX /////////////////////////////////////
             area_id = area_id.join(",");
             $.post('api/area_creation_files/submit_area_creation.php', { branch_id, line_id, area_id, id }, function (response) {
@@ -268,7 +294,7 @@ function getLineNameDropdown() {
 
 function getAreaNameTable() {
     let branch_id = $('#branch_name').val();
-    let params = {'branch_id':branch_id};
+    let params = { 'branch_id': branch_id };
     if (branch_id != '') {
         serverSideTable('#area_name_table', params, 'api/area_creation_files/area_name_list.php');
     } else {
@@ -372,9 +398,17 @@ function clearAreaNameFields() {
     $('#addarea_name').val('');
     $('#area_status').val('');
     $('#addarea_name_id').val('0');
+    $('#area_status').css('border', '1px solid #cecece');
+    $('#addarea_name').css('border', '1px solid #cecece');
 }
 
 function clearLineNameFields() {
     $('#addline_name').val('');
     $('#addline_name_id').val('0');
+    $('#addline_name').css('border', '1px solid #cecece');
 }
+$('button[type="reset"], .back_to_area_btn').click(function (event) {
+    event.preventDefault();
+    $('#branch_name').css('border', '1px solid #cecece');
+    $('#line_name').css('border', '1px solid #cecece');
+});
