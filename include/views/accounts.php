@@ -247,7 +247,7 @@ function moneyFormatIndia($num1) {
         <div class="card" id="expenses_card" style="display: none;">
             <div class="card-header">
                 <h3 class="card-title">Expenses</h3>
-                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#add_expenses_modal" style="padding: 5px 35px; float: right;" tabindex='30'><span class="icon-add"></span></button>
+                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#add_expenses_modal" id="expenses_add" style="padding: 5px 35px; float: right;" tabindex='30'><span class="icon-add"></span></button>
             </div>
             <div class="card-body">
                 <div class="row">
@@ -341,7 +341,7 @@ function moneyFormatIndia($num1) {
                             </div>
                             <div class="col-sm-3 col-md-3 col-lg-3">
                                 <div class="form-group">
-                                    <select class="form-control" name="expenses_bank_name" id="expenses_bank_name">
+                                    <select class="form-control" name="expenses_bank_name" id="expenses_bank_name" disabled>
                                         <option value="">Select Bank</option>
                                     </select>
                                 </div>
@@ -368,26 +368,26 @@ function moneyFormatIndia($num1) {
                                     <label for="expenses_category">Expenses Category</label><span class="text-danger">*</span>
                                     <select class="form-control" name="expenses_category" id="expenses_category" tabindex="3">
                                         <option value="">Select Expenses Category</option>
-                                        <option value="Pooja">Pooja</option>
-                                        <option value="Vehicle">Vehicle</option>
-                                        <option value="Fuel">Fuel</option>
-                                        <option value="Stationary">Stationary</option>
-                                        <option value="Press">Press</option>
-                                        <option value="Food">Food</option>
-                                        <option value="Rent">Rent</option>
-                                        <option value="EB">EB</option>
-                                        <option value="Mobilebill">Mobile bill</option>
-                                        <option value="OfficeMaintenance">Office Maintenance</option>
-                                        <option value="Salary">Salary</option>
-                                        <option value="Tax & Auditor">Tax & Auditor</option>
-                                        <option value="Int Less">Int Less</option>
-                                        <option value="Agent Incentive">Agent Incentive</option>
-                                        <option value="Common">Common</option>
-                                        <option value="Other">Other</option>
+                                        <option value="1">Pooja</option>
+                                        <option value="2">Vehicle</option>
+                                        <option value="3">Fuel</option>
+                                        <option value="4">Stationary</option>
+                                        <option value="5">Press</option>
+                                        <option value="6">Food</option>
+                                        <option value="7">Rent</option>
+                                        <option value="8">EB</option>
+                                        <option value="9">Mobile bill</option>
+                                        <option value="10">Office Maintenance</option>
+                                        <option value="11">Salary</option>
+                                        <option value="12">Tax & Auditor</option>
+                                        <option value="13">Int Less</option>
+                                        <option value="14">Agent Incentive</option>
+                                        <option value="15">Common</option>
+                                        <option value="16">Other</option>
                                     </select>
                                 </div>
                             </div>
-                            <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                            <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12 agentDiv" style="display: none;">
                                 <div class="form-group">
                                     <label for="agent_name">Agent Name</label><span class="text-danger">*</span>
                                     <select class="form-control" name="agent_name" id="agent_name" tabindex="4">
@@ -395,13 +395,13 @@ function moneyFormatIndia($num1) {
                                     </select>
                                 </div>
                             </div>
-                            <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                            <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12 agentDiv" style="display: none;">
                                 <div class="form-group">
                                     <label for="expenses_total_issued">Total Issued</label><span class="text-danger">*</span>
                                     <input class="form-control" name="expenses_total_issued" id="expenses_total_issued" tabindex="5">
                                 </div>
                             </div>
-                            <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                            <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12 agentDiv" style="display: none;">
                                 <div class="form-group">
                                     <label for="expenses_total_amnt">Total Amount</label><span class="text-danger">*</span>
                                     <input class="form-control" name="expenses_total_amnt" id="expenses_total_amnt" tabindex="6">
@@ -434,7 +434,7 @@ function moneyFormatIndia($num1) {
                         <table id="expenses_creation_table" class="table custom-table">
                             <thead>
                                 <tr>
-                                    <th>S.NO</th>
+                                    <th width='10'>S.NO</th>
                                     <th>Invoice ID</th>
                                     <th>Branch</th>
                                     <th>Expense Category</th>
