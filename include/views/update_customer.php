@@ -783,7 +783,7 @@
                                 <div class="form-group">
                                     <label for="fam_live">Live/Deceased</label><span class="text-danger">*</span>
                                     <select type="text" class="form-control" id="fam_live" name="fam_live" tabindex="1">
-                                        <option value="0">Select Live/Deceased</option>
+                                        <option value="">Select Live/Deceased</option>
                                         <option value="1">Live</option>
                                         <option value="2">Deceased</option>
                                     </select>

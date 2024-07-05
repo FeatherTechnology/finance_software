@@ -230,6 +230,8 @@ $(document).ready(function(){
         $('.coll_details').hide();
         $('#back_to_loan_list').hide();
         $('#collection_mode').trigger('change');
+        $('input').css('border', '1px solid #cecece');
+        $('select').css('border', '1px solid #cecece');
     });
 
     $('#due_amt_track, #princ_amt_track, #int_amt_track, #penalty_track , #coll_charge_track').blur(function(){
@@ -374,7 +376,6 @@ $(document).ready(function(){
                 $('#back_to_loan_list').trigger('click');
             },'json');
         }else{
-            swalError('Warning', 'Kindly Fill the Mandatory Fields!');
             $('#submit_collection').attr('disabled', false);
         }
     });//submit END.
@@ -407,10 +408,17 @@ $(document).ready(function(){
         let fine_date = $('#fine_date').val();
         let fine_purpose = $('#fine_purpose').val();
         let fine_Amnt = $('#fine_Amnt').val();
+        var data = [ 'fine_cp_id','cus_id','fine_date','fine_purpose','fine_Amnt']
+        
+        var isValid = true;
+        data.forEach(function (entry) {
+            var fieldIsValid = validateField($('#'+entry).val(), entry);
+            if (!fieldIsValid) {
+                isValid = false;
+            }
+        });
 
-        if(fine_cp_id =='' || cus_id =='' || fine_date =='' || fine_purpose =='' || fine_Amnt ==''){
-            swalError('Warning', 'Kindly Fill the Mandatory Fields!');
-        }else{
+        if(isValid){
             $.post('api/collection_files/submit_fine_form.php', {fine_cp_id, cus_id, fine_date, fine_purpose, fine_Amnt}, function(response){
                 if(response == '1'){
                     swalSuccess('Success', 'Fine Added Successfully.');
@@ -583,25 +591,35 @@ function getCollectionCode(){
     });
 }
 //validation
-function isFormDataValid(collData){
-    if(collData['total_paid_track'] =='' || collData['total_paid_track'] == null || collData['total_paid_track'] == undefined){
-        return false;
+function isFormDataValid(collData) {
+    let isValid = true;
+
+    // Validate total_paid_track
+    if (!validateField(collData['total_paid_track'], 'total_paid_track')) {
+        isValid = false;
     }
 
-    if(collData['collection_mode'] =='' || collData['collection_mode'] == null || collData['collection_mode'] == undefined){
-        return false;
-        
-    }else if(collData['collection_mode'] =='2'){//cheque
-        if (collData['bank_id'] == '' || collData['bank_id'] == null || collData['bank_id'] == undefined || collData['cheque_no'] == '' || collData['cheque_no'] == null || collData['cheque_no'] == undefined || collData['trans_id'] == '' || collData['trans_id'] == null || collData['trans_id'] == undefined || collData['trans_date'] == '' || collData['trans_date'] == null || collData['trans_date'] == undefined) {
-            return false;
-        }
-    }else if(['3','4','5'].includes(collData['collection_mode'])){ //ECS / IMPS/NEFT/RTGS / UPI Transaction
-        if (collData['bank_id'] == '' || collData['bank_id'] == null || collData['bank_id'] == undefined || collData['trans_id'] == '' || collData['trans_id'] == null || collData['trans_id'] == undefined || collData['trans_date'] == '' || collData['trans_date'] == null || collData['trans_date'] == undefined) {
-            return false;
+    // Validate collection_mode
+    if (!validateField(collData['collection_mode'], 'collection_mode')) {
+        isValid = false;
+    } else {
+        if (collData['collection_mode'] == '2') { // cheque
+            if (!validateField(collData['bank_id'], 'bank_id') ||
+                !validateField(collData['cheque_no'], 'cheque_no') ||
+                !validateField(collData['trans_id'], 'trans_id') ||
+                !validateField(collData['trans_date'], 'trans_date')) {
+                isValid = false;
+            }
+        } else if (['3', '4', '5'].includes(collData['collection_mode'])) { // ECS / IMPS/NEFT/RTGS / UPI Transaction
+            if (!validateField(collData['bank_id'], 'bank_id') ||
+                !validateField(collData['trans_id'], 'trans_id') ||
+                !validateField(collData['trans_date'], 'trans_date')) {
+                isValid = false;
+            }
         }
     }
 
-    return true;
+    return isValid;
 }
 
 function closeChartsModal() {
@@ -629,6 +647,7 @@ function getFineFormTable(cp_id){
 
         $('#fine_purpose').val('');
         $('#fine_Amnt').val('');
+        $('input').css('border', '1px solid #cecece');
     },'json');
 }
 

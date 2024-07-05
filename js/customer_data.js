@@ -12,14 +12,28 @@ $(document).ready(function () {
             $('.existing_table_content').show();
         }
     });
-    $('#submit_new').click(function () {
+    $('#submit_new').click(function (event) {
         event.preventDefault();
-        //Validation
-        let cus_name = $('#cus_name').val(); let area = $('#area').val(); let mobile = $('#mobile').val(); let loan_cat = $('#loan_cat').val(); let loan_amount = $('#loan_amount').val(); let new_promotion_id = $('#new_Promotion_id').val();
-        if (cus_name === '' || area === '' || mobile === '' || loan_cat === '' || loan_amount === '') {
-            swalError('Warning', 'Please Fill out Mandatory fields!');
-            return false;
-        }
+
+        // Collect form data
+        let cus_name = $('#cus_name').val();
+        let area = $('#area').val();
+        let mobile = $('#mobile').val();
+        let loan_cat = $('#loan_cat').val();
+        let loan_amount = $('#loan_amount').val();
+        let new_promotion_id = $('#new_Promotion_id').val();
+
+        // Fields to validate
+        var data = ['cus_name', 'area', 'mobile', 'loan_cat', 'loan_amount'];
+
+        // Validate fields
+        var isValid = true;
+        data.forEach(function (entry) {
+            var fieldIsValid = validateField($('#' + entry).val(), entry);
+            if (!fieldIsValid) {
+                isValid = false;
+            }
+        });
         $.post('api/customer_data_files/get_existing_mobiles.php', { mobile: mobile }, function (response) {
             if (response.exists) {
                 // Show an alert with the customer status if the mobile number already exists
@@ -59,17 +73,21 @@ $(document).ready(function () {
                 }
                 swalError('Warning', 'Mobile number already exists. Customer status: ' + statusMsg);
                 return false;
-            } else {
+            } if (isValid) {
                 // Proceed with form submission
                 $.post('api/customer_data_files/submit_new.php', { cus_name, area, mobile, loan_cat, loan_amount, new_promotion_id }, function (response) {
                     if (response == '1') {
                         swalSuccess('Success', 'Customer Data Added Successfully!');
-                       $('#new_form input').val('');
+                        $('#new_form input').val('');
+                        $('#new_form input').css('border', '1px solid #cecece');
+                    } else {
+                        swalError('Error', 'Failed to add customer data.');
                     }
                 });
             }
         }, 'json');
-    })
+
+    });
 
 
 
@@ -82,32 +100,35 @@ $(document).ready(function () {
         return;
     });
     // Reset form fields when modal is hidden
-$('#add_new_list_modal').on('hidden.bs.modal', function () {
-    $('#new_form').trigger('reset'); // Reset the form with id 'new_form'
-});
-
-// Reset form fields when modal backdrop is clicked
-$('#add_new_list_modal').on('click', function (e) {
-    if ($(e.target).hasClass('modal')) {
+    $('#add_new_list_modal').on('hidden.bs.modal', function () {
         $('#new_form').trigger('reset'); // Reset the form with id 'new_form'
-    }
-});
-$(document).on('change', '.existingNeedBtn', function () {
-    var cus_id = $(this).attr('value');
-    var checkbox = $(this); // Reference to the checkbox element
-    
-    swalConfirm('Are You Sure', '', getExistingData, cus_id, function() {
-        checkbox.prop('checked', false); // Uncheck the checkbox if the user presses "No"
+        $('#new_form input').css('border', '1px solid #cecece');
+
     });
-    return;
-});
+
+    // Reset form fields when modal backdrop is clicked
+    $('#add_new_list_modal').on('click', function (e) {
+        if ($(e.target).hasClass('modal')) {
+            $('#new_form').trigger('reset'); // Reset the form with id 'new_form'
+            $('#new_form input').css('border', '1px solid #cecece');
+        }
+    });
+    $(document).on('change', '.existingNeedBtn', function () {
+        var cus_id = $(this).attr('value');
+        var checkbox = $(this); // Reference to the checkbox element
+
+        swalConfirm('Are You Sure', '', getExistingData, cus_id, function () {
+            checkbox.prop('checked', false); // Uncheck the checkbox if the user presses "No"
+        });
+        return;
+    });
 
 })
 
 
 $(function () {
     getNewPromotionTable()
-    let cus_id =$("#cus_id").val();
+    let cus_id = $("#cus_id").val();
     getExistingPromotionTable(cus_id)
 
 });
@@ -125,6 +146,7 @@ function getNewPromotionTable() {
         appendDataToTable('#new_list_table', response, columnMapping);
         setdtable('#new_list_table');
         $('#new_form input').val('');
+        $('#new_form input').css('border', '1px solid #cecece');
     }, 'json')
 }
 function getNewPromoDelete(id) {
@@ -139,7 +161,7 @@ function getNewPromoDelete(id) {
 }
 function getExistingPromotionTable(cus_id) {
 
-    $.post('api/customer_data_files/get_existing_promotion.php',{cus_id} ,function (response) {
+    $.post('api/customer_data_files/get_existing_promotion.php', { cus_id }, function (response) {
         var columnMapping = [
             'id',
             'cus_id',
@@ -154,7 +176,7 @@ function getExistingPromotionTable(cus_id) {
         ];
         appendDataToTable('#existing_list_table', response, columnMapping);
         setdtable('#existing_list_table');
-    
+
     }, 'json')
 }
 
