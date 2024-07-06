@@ -13,8 +13,9 @@ $expenses_total_issued = $_POST['expenses_total_issued'];
 $expenses_total_amnt = $_POST['expenses_total_amnt'];
 $description = $_POST['description'];
 $expenses_amnt = $_POST['expenses_amnt'];
+$expenses_trans_id = $_POST['expenses_trans_id'];
 
-$qry = $pdo->query("INSERT INTO `expenses`(`coll_mode`, `bank_id`, `invoice_id`, `branch`, `expenses_category`, `agent_id`, `total_issued`, `total_amount`, `description`, `amount`, `insert_login_id`, `created_on`) VALUES ('$coll_mode','$bank_id','$invoice_id','$branch_name','$expenses_category','$agent_name','$expenses_total_issued','$expenses_total_amnt','$description','$expenses_amnt','$user_id',now() )");
+$qry = $pdo->query("INSERT INTO `expenses`(`coll_mode`, `bank_id`, `invoice_id`, `branch`, `expenses_category`, `agent_id`, `total_issued`, `total_amount`, `description`, `amount`, `trans_id`, `insert_login_id`, `created_on`) VALUES ('$coll_mode','$bank_id','$invoice_id','$branch_name','$expenses_category','$agent_name','$expenses_total_issued','$expenses_total_amnt','$description','$expenses_amnt', '$expenses_trans_id','$user_id',now() )");
 
 if ($qry) {
     $result = 1;

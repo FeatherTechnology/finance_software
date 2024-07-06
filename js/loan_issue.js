@@ -1094,6 +1094,8 @@ function isFormDataValid(formData) {
             formData['issue_amount'] == '' || formData['issue_amount'] == null || formData['issue_amount'] == undefined) {
             return false;
         }
+    } else if (formData['payment_mode'] == '') { //if Empty
+        return false;
     }
 
     return true;
