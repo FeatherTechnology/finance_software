@@ -230,8 +230,8 @@ $(document).ready(function(){
         $('.coll_details').hide();
         $('#back_to_loan_list').hide();
         $('#collection_mode').trigger('change');
-        $('input').css('border', '1px solid #cecece');
-        $('select').css('border', '1px solid #cecece');
+        $('#coll_main_container input').css('border', '1px solid #cecece');
+        $('#coll_main_container select').css('border', '1px solid #cecece');
     });
 
     $('#due_amt_track, #princ_amt_track, #int_amt_track, #penalty_track , #coll_charge_track').blur(function(){
@@ -319,7 +319,9 @@ $(document).ready(function(){
     //     var cp_id = $(this).attr('value');
     //     resetcollCharges(cp_id);  //Fine
     // }); 
-
+    $('#collection_mode').on('change', function () {
+        resetValidation();
+    });
     $('#submit_collection').click(function(event){
         event.preventDefault();
         getCollectionCode();
@@ -590,10 +592,27 @@ function getCollectionCode(){
         }
     });
 }
+function resetValidation() {
+    const fieldsToReset = [
+        'bank_id', 'cheque_no', 'trans_id',
+        'trans_date']
+    fieldsToReset.forEach(fieldId => {
+        $('#' + fieldId).css('border', '1px solid #cecece');
+
+    });
+}
 //validation
 function isFormDataValid(collData) {
     let isValid = true;
-
+    if (!validateField(collData['due_amt_track'], 'due_amt_track')) {
+        isValid = false;
+    }
+    if (!validateField(collData['penalty_track'], 'penalty_track')) {
+        isValid = false;
+    }
+    if (!validateField(collData['coll_charge_track'], 'coll_charge_track')) {
+        isValid = false;
+    }
     // Validate total_paid_track
     if (!validateField(collData['total_paid_track'], 'total_paid_track')) {
         isValid = false;
@@ -604,21 +623,26 @@ function isFormDataValid(collData) {
         isValid = false;
     } else {
         if (collData['collection_mode'] == '2') { // cheque
-            if (!validateField(collData['bank_id'], 'bank_id') ||
-                !validateField(collData['cheque_no'], 'cheque_no') ||
-                !validateField(collData['trans_id'], 'trans_id') ||
-                !validateField(collData['trans_date'], 'trans_date')) {
-                isValid = false;
-            }
+            let validations = [
+                validateField(collData['bank_id'], 'bank_id'),
+                validateField(collData['cheque_no'], 'cheque_no'),
+                validateField(collData['trans_id'], 'trans_id'),
+                validateField(collData['trans_date'], 'trans_date')
+            ];
+             if (!validations.every(result => result)) {
+            isValid = false;
+        }
         } else if (['3', '4', '5'].includes(collData['collection_mode'])) { // ECS / IMPS/NEFT/RTGS / UPI Transaction
-            if (!validateField(collData['bank_id'], 'bank_id') ||
-                !validateField(collData['trans_id'], 'trans_id') ||
-                !validateField(collData['trans_date'], 'trans_date')) {
+            let validations = [
+                validateField(collData['bank_id'], 'bank_id'),
+                validateField(collData['trans_id'], 'trans_id'),
+                validateField(collData['trans_date'], 'trans_date')
+            ];
+            if (!validations.every(result => result)) {
                 isValid = false;
             }
         }
     }
-
     return isValid;
 }
 
@@ -647,7 +671,8 @@ function getFineFormTable(cp_id){
 
         $('#fine_purpose').val('');
         $('#fine_Amnt').val('');
-        $('input').css('border', '1px solid #cecece');
+        $('#fine_purpose').css('border', '1px solid #cecece');
+        $('#fine_Amnt').css('border', '1px solid #cecece');
     },'json');
 }
 

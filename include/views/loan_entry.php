@@ -392,7 +392,7 @@
                                 <div class="form-group">
                                     <label for="area_confirm">Area Confirm</label><span class="text-danger">*</span>
                                     <select type="text" class="form-control" id="area_confirm" name="area_confirm" tabindex="26">
-                                        <option value=" ">Select Area Confirm</option>
+                                        <option value="">Select Area Confirm</option>
                                         <option value="1">Resident</option>
                                         <option value="2">Occupation</option>
                                     </select>

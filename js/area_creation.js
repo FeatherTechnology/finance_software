@@ -126,7 +126,7 @@ $(document).ready(function () {
         event.preventDefault();
         //Validation
         let branch_id = $('#branch_name').val(); let line_id = $('#line_name').val(); let area_id = $('#area_name').val(); let id = $('#area_creation_id').val();
-        var data = [ 'branch_name','line_name','area_name']
+        var data = [ 'branch_name','line_name']
         
         var isValid = true;
         data.forEach(function (entry) {
@@ -135,8 +135,8 @@ $(document).ready(function () {
                 isValid = false;
             }
         });
-
-        if (isValid) {
+        let isMultiSelectValid = validateMultiSelectField('area_name',intance);
+        if (isValid && isMultiSelectValid) {
             /////////////////////////// submit page AJAX /////////////////////////////////////
             area_id = area_id.join(",");
             $.post('api/area_creation_files/submit_area_creation.php', { branch_id, line_id, area_id, id }, function (response) {
@@ -400,6 +400,7 @@ function clearAreaNameFields() {
     $('#addarea_name_id').val('0');
     $('#area_status').css('border', '1px solid #cecece');
     $('#addarea_name').css('border', '1px solid #cecece');
+    $('#area_name').closest('.choices').find('.choices__inner').css('border', '1px solid #cecece');
 }
 
 function clearLineNameFields() {

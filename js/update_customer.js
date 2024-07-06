@@ -207,9 +207,11 @@ $(document).ready(function () {
         swalConfirm('Delete', 'Do you want to Delete the Property Details?', getPropertyDelete, id);
         return;
     });
-    $(document).on('click', '#kyc_form', function () {
+    $(document).on('click', '#add_kyc', function () {
         let customerID = $('#cus_id_upd').val().trim().replace(/\s/g, '');
         getKycLoanId(customerID);
+        getKycTable();
+        fetchProofList();
     });
 
     $('#property_holder').change(function () {
@@ -520,16 +522,22 @@ $(document).ready(function () {
             swalError('Warning', 'Please Fill out personal Info!');
             return false;
         }
-        if ((area_confirm == '1') && (res_type == '' || res_detail == '' || res_address == '' || native_address == '')) {
-            swalError('Warning', 'Please Fill out Residential Info!');
-            return false;
+        
+        var areaData = [];
+        if (area_confirm == '1') {
+            areaData = ['res_type', 'res_detail', 'res_address', 'native_address'];
+        } else if (area_confirm == '2') {
+            areaData = ['occupation', 'occ_detail', 'occ_income', 'occ_address'];
+        } 
+        var isValid = true;
+        areaData.forEach(function (entry) {
+            var fValid = validateField($('#' + entry).val(), entry);
+            if (!fValid) {
+                isValid = false;
+            }
+        });
 
-        } else if ((area_confirm == '2') && (occupation == '' || occ_detail == '' || occ_income == '' || occ_address == '')) {
-            swalError('Warning', 'Please Fill out Occupation Info!');
-            return false;
-
-        }
-        var data = ['cus_id', 'cus_name', 'gender', 'mobile1', 'guarantor_name', 'area_confirm', 'area', 'line', 'cus_limit']
+        data = ['cus_name', 'gender', 'mobile1', 'guarantor_name', 'area_confirm', 'area', 'line', 'cus_limit'];
 
         var isValid = true;
         data.forEach(function (entry) {
@@ -540,13 +548,12 @@ $(document).ready(function () {
         });
 
         if (gu_pic === undefined && gur_pic === '') {
-            swalError('Warning', 'Please Insert Guarantor Image!');
-            return false;
+            let isUploadValid = validateField('', 'gu_pic');
+            let isHiddenValid = validateField('', 'gur_pic');
+            if (!isUploadValid || !isHiddenValid) {
+                isValid = false;
+            }
         }
-        // if (cus_name === '' || gender === '' || mobile1 === '' || (pic === undefined && per_pic == '') || guarantor_name === '' || (gu_pic === undefined && gur_pic == '') || area_confirm === '' || area === '' || line === '' || cus_limit === '' || famInfoRowCount === 0 || kycInfoRowCount === 0) {
-        //     swalError('Warning', 'Please Fill out Mandatory fields!');
-        //     return false;
-        // }
 
         if (isValid) {
             if (famInfoRowCount === 0 || kycInfoRowCount === 0) {
@@ -695,8 +702,8 @@ function clearCusProfileForm(type) {
         } else if (type == '2') {
             cusid = 'customer_profile_id';
         }
-        $('input').css('border', '1px solid #cecece');
-        $('select').css('border', '1px solid #cecece');
+        $('#cus_update_customer_profile input').css('border', '1px solid #cecece');
+        $('#cus_update_customer_profile select').css('border', '1px solid #cecece');
         if (id !== cusid && id != 'cus_id' && id != 'cus_name' && id != 'dob' && id != 'mobile1' && id != 'mobile2' && id != 'pic' && id != 'age' && id != 'per_pic') {
             $(this).val('');
         }
@@ -827,8 +834,8 @@ function getFamilyTable() {
         appendDataToTable('#family_creation_table', response, columnMapping);
         setdtable('#family_creation_table');
         $('#family_form input').val('');
-        $('input').css('border', '1px solid #cecece');
-        $('select').css('border', '1px solid #cecece');
+        $('#family_form input').css('border', '1px solid #cecece');
+        $('#family_form select').css('border', '1px solid #cecece');
         $('#fam_relationship').val('');
         $('#fam_live').val('');
     }, 'json')
@@ -912,8 +919,8 @@ function getPropertyTable() {
         appendDataToTable('#property_creation_table', response, columnMapping);
         setdtable('#property_creation_table');
         $('#property_form input').val('');
-        $('input').css('border', '1px solid #cecece');
-        $('select').css('border', '1px solid #cecece');
+        $('#property_form input').css('border', '1px solid #cecece');
+        $('#property_form select').css('border', '1px solid #cecece');
         $('textarea').css('border', '1px solid #cecece');
         $('#property_holder').val('');
         $('#property_detail').val('');
@@ -999,7 +1006,7 @@ function getBankTable() {
         appendDataToTable('#bank_creation_table', response, columnMapping);
         setdtable('#bank_creation_table');
         $('#bank_form input').val('');
-        $('input').css('border', '1px solid #cecece');
+        $('#bank_form input').css('border', '1px solid #cecece');
 
     }, 'json')
 }
@@ -1052,8 +1059,8 @@ function getKycTable() {
         appendDataToTable('#kyc_creation_table', response, columnMapping);
         setdtable('#kyc_creation_table');
         $('#kyc_form input').val('');
-        $('input').css('border', '1px solid #cecece');
-        $('select').css('border', '1px solid #cecece');
+        $('#kyc_form input').css('border', '1px solid #cecece');
+        $('#kyc_form select').css('border', '1px solid #cecece');
         $('#Kyc_form.fam_mem_div').hide();
         $('#kyc_form select').each(function () {
             $(this).val($(this).find('option:first').val());
@@ -1127,9 +1134,11 @@ function fetchProofList() {
             $('#proof').empty().append('<option value="">Select proof</option>');
             $.each(response, function (index, proof) {
                 $('#proof').append('<option value="' + proof.id + '">' + proof.addProof_name + '</option>');
-                $('input').css('border', '1px solid #cecece');
+                //$('input').css('border', '1px solid #cecece');
             });
             $('#proof_form input').val('');
+            $('#proof_form input').css('border', '1px solid #cecece');
+
         }
     });
 }
@@ -1425,8 +1434,8 @@ $(document).ready(function () {
     $('#clear_cheque_form').click(function () {
         $('#cheque_no').empty();
         $('#cheque_info_id').val('');
-        $('input').css('border', '1px solid #cecece');
-        $('select').css('border', '1px solid #cecece');
+        $('#cheque_info_form input').css('border', '1px solid #cecece');
+        $('#cheque_info_form select').css('border', '1px solid #cecece');
         $('.cq_fam_member').hide();
     });
     ///////////////////////////////////////////////////////////////////Cheque info END ////////////////////////////////////////////////////////////////////////////
@@ -1454,10 +1463,6 @@ $(document).ready(function () {
         let cus_id = $('#cus_id_upd').val();
         let customer_profile_id = $('#customer_profile_id').val();
 
-        // if (doc_name == '' || doc_type == '' || doc_holder_name == '' || doc_relationship == '' || (doc_upload === undefined && doc_upload_edit == '')) {
-        //     swalError('Warning', 'Please Fill out Mandatory fields!');
-        //     return false;
-        // }
         var data = ['doc_name', 'doc_type', 'doc_holder_name', 'doc_relationship']
 
         var isValid = true;
@@ -1468,8 +1473,11 @@ $(document).ready(function () {
             }
         });
         if (doc_upload === undefined && doc_upload_edit === '') {
-            swalError('Warning', 'Please Upload Document !');
-            return false;
+            let isUploadValid = validateField('', 'doc_upload');
+            let isHiddenValid = validateField('', 'doc_upload_edit');
+            if (!isUploadValid || !isHiddenValid) {
+                isValid = false;
+            }
         }
         if (isValid) {
             let docInfo = new FormData();
@@ -1525,8 +1533,9 @@ $(document).ready(function () {
 
     $('#clear_doc_form').click(function () {
         $('#doc_info_id').val('');
-        $('input').css('border', '1px solid #cecece');
-        $('select').css('border', '1px solid #cecece');
+        $('#doc_upload_edit').val('');
+        $('#doc_info_form input').css('border', '1px solid #cecece');
+        $('#doc_info_form select').css('border', '1px solid #cecece');
     })
     ///////////////////////////////////////////////////////////////////Document info END ////////////////////////////////////////////////////////////////////////////
 
@@ -1567,8 +1576,11 @@ $(document).ready(function () {
             }
         });
         if (mort_upload === undefined && mort_upload_edit === '') {
-            swalError('Warning', 'Please Upload Mortgage File !');
-            return false;
+            let isUploadValid = validateField('', 'mort_upload');
+            let isHiddenValid = validateField('', 'mort_upload_edit');
+            if (!isUploadValid || !isHiddenValid) {
+                isValid = false;
+            }
         }
         if (isValid) {
             let mortgageInfo = new FormData();
@@ -1632,9 +1644,10 @@ $(document).ready(function () {
 
     $('#clear_mortgage_form').click(function () {
         $('#mortgage_info_id').val('');
-        $('input').css('border', '1px solid #cecece');
-        $('select').css('border', '1px solid #cecece');
-        $('textarea').css('border', '1px solid #cecece');
+        $('#mort_upload_edit').val('');
+        $('#mortgage_form input').css('border', '1px solid #cecece');
+        $('#mortgage_form select').css('border', '1px solid #cecece');
+        $('#mortgage_form textarea').css('border', '1px solid #cecece');
     })
     ///////////////////////////////////////////////////////////////////Mortgage info END ////////////////////////////////////////////////////////////////////////////
 
@@ -1661,11 +1674,6 @@ $(document).ready(function () {
         let endorsement_info_id = $('#endorsement_info_id').val();
         let cus_id = $('#cus_id_upd').val();
         let customer_profile_id = $('#customer_profile_id').val();
-
-        // if (owner_name == '' || owner_relationship == '' || vehicle_details == '' || endorsement_name == '' || key_original == '' || rc_original == '' || (endorsement_upload === undefined && endorsement_upload_edit == '')) {
-        //     swalError('Warning', 'Please Fill out Mandatory fields!');
-        //     return false;
-        // }
         var data = ['owner_name', 'owner_relationship', 'vehicle_details', 'endorsement_name', 'key_original', 'rc_original']
 
         var isValid = true;
@@ -1676,11 +1684,12 @@ $(document).ready(function () {
             }
         });
         if (endorsement_upload === undefined && endorsement_upload_edit === '') {
-            swalError('Warning', 'Please Upload Endrosement File !');
-            return false;
+            let isUploadValid = validateField('', 'endorsement_upload');
+            let isHiddenValid = validateField('', 'endorsement_upload_edit');
+            if (!isUploadValid || !isHiddenValid) {
+                isValid = false;
+            }
         }
-
-
         if (isValid) {
             let endorsementInfo = new FormData();
             endorsementInfo.append('owner_name', owner_name);
@@ -1740,9 +1749,10 @@ $(document).ready(function () {
 
     $('#clear_endorsement_form').click(function () {
         $('#endorsement_info_id').val('');
-        $('input').css('border', '1px solid #cecece');
-        $('select').css('border', '1px solid #cecece');
-        $('textarea').css('border', '1px solid #cecece');
+        $('#endorsement_upload_edit').val('');
+        $('#endorsement_form input').css('border', '1px solid #cecece');
+        $('#endorsement_form select').css('border', '1px solid #cecece');
+        $('#endorsement_form textarea').css('border', '1px solid #cecece');
     });
 
     ///////////////////////////////////////////////////////////////////Endorsement info END ////////////////////////////////////////////////////////////////////////////
@@ -1802,8 +1812,8 @@ $(document).ready(function () {
 
     $('#clear_gold_form').click(function () {
         $('#gold_info_id').val('');
-        $('input').css('border', '1px solid #cecece');
-        $('select').css('border', '1px solid #cecece');
+        $('#gold_form input').css('border', '1px solid #cecece');
+        $('#gold_form select').css('border', '1px solid #cecece');
     });
     / ///////////////////////////////////////////////////////////////////Gold info END ////////////////////////////////////////////////////////////////////////////
 

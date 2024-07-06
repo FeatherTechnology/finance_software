@@ -462,14 +462,26 @@ function setCurrentDate(field_id) {
 }
 
 function validateField(value, fieldId) {
-	if (value === '' || value === null || value === undefined) {
-		response = false;
-		event.preventDefault();
-		$('#' + fieldId).css('border', '1px solid #ff0000');
-
-	} else {
-		response = true;
-		$('#' + fieldId).css('border', '1px solid #cecece');
-	}
-	return response;
+    let response; // Declare the variable locally
+    if (value === '' || value === null || value === undefined) {
+        response = false;
+        $('#' + fieldId).css('border', '1px solid #ff0000');
+        swalError('Warning', 'Please fill out mandatory fields!');
+    } else {
+        response = true;
+        $('#' + fieldId).css('border', '1px solid #cecece');
+    }
+    return response;
+}
+function validateMultiSelectField(fieldId, choicesInstance) {
+    const selectedValues = choicesInstance.getValue(true);
+    const choicesElement = $('#' + fieldId).closest('.choices'); // Targeting the Choices.js container
+    
+    if (selectedValues.length === 0) {
+        choicesElement.find('.choices__inner').css('border', '1px solid #ff0000');
+        return false;
+    } else {
+        choicesElement.find('.choices__inner').css('border', '1px solid #cecece');
+        return true;
+    }
 }

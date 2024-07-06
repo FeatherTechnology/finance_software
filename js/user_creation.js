@@ -141,14 +141,14 @@ $(document).ready(function () {
             confirm_password: $('#confirm_password').val(),
             branch_name: $('#branch_name').val(),
             line_name: $('#line_name').val(),
-            
+
             loan_category: $('#loan_category').val(),
             collection_access: $('#collection_access').val(),
             submenus: selectedSubmenuIds,
             id: $('#user_creation_id').val()
         }
         console.log($('#branch_name').val())
-        var data = ['name', 'user_id', 'designation', 'role', 'user_name', 'password', 'confirm_password', 'branch_name', 'line_name', 'loan_category', 'loan_category', 'collection_access']
+        var data = ['name', 'user_id', 'designation', 'role', 'user_name', 'password', 'confirm_password', 'collection_access']
 
         var isValid = true;
         data.forEach(function (entry) {
@@ -157,9 +157,12 @@ $(document).ready(function () {
                 isValid = false;
             }
         });
+        let isBranchNameValid = validateMultiSelectField('branch_name', branch_name);
+        let isLineNameValid = validateMultiSelectField('line_name', line_name);
+        let isLoanCategoryValid = validateMultiSelectField('loan_category', loan_category);
 
         if (isFormDataValid(userFormData)) {
-            if (isValid) {
+            if (isValid && isBranchNameValid && isLineNameValid && isLoanCategoryValid) {
                 $.post('api/user_creation_files/submit_user_creation.php', userFormData, function (response) {
                     if (response.status == '') {
                         swalError('Error', 'Creation Failed.');
@@ -288,6 +291,9 @@ $(document).ready(function () {
         $('#password').css('border', '1px solid #cecece');
         $('#confirm_password').css('border', '1px solid #cecece');
         $('#collection_access').css('border', '1px solid #cecece');
+        $('#branch_name').closest('.choices').find('.choices__inner').css('border', '1px solid #cecece');
+        $('#loan_category').closest('.choices').find('.choices__inner').css('border', '1px solid #cecece');
+        $('#line_name').closest('.choices').find('.choices__inner').css('border', '1px solid #cecece');
     });
 
     $('#branch_name').change(function () {

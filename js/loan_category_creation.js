@@ -487,8 +487,8 @@ function clearSchemeForm() {
     $('.processing-span-val').text('%');
     $('#doc_charge_type').val('percent');
     $('#processing_fee_type').val('percent');
-    $('input').css('border', '1px solid #cecece');
-    $('select').css('border', '1px solid #cecece');
+    $('#add_scheme_details input').css('border', '1px solid #cecece');
+    $('#add_scheme_details select').css('border', '1px solid #cecece');
 }
 
 function clearLoanCategory() {

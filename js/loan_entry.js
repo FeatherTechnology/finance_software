@@ -544,16 +544,26 @@ $(document).ready(function () {
             swalError('Warning', 'Please Fill out personal Info!');
             return false;
         }
-        if ((area_confirm == '1') && (res_type == '' || res_detail == '' || res_address == '' || native_address == '')) {
-            swalError('Warning', 'Please Fill out Residential Info!');
-            return false;
-
-        } else if ((area_confirm == '2') && (occupation == '' || occ_detail == '' || occ_income == '' || occ_address == '')) {
-            swalError('Warning', 'Please Fill out Occupation Info!');
-            return false;
-
+        if (area_confirm === '1') {
+            resetValidate(['res_type', 'res_detail', 'res_address', 'native_address']);
+        } else if (area_confirm === '2') {
+            resetValidate(['occupation', 'occ_detail', 'occ_income', 'occ_address']);
         }
-        var data = ['cus_id', 'cus_name', 'gender', 'mobile1', 'guarantor_name', 'area_confirm', 'area', 'line', 'cus_limit']
+        var areaData = [];
+        if (area_confirm == '1') {
+            areaData = ['res_type', 'res_detail', 'res_address', 'native_address'];
+        } else if (area_confirm == '2') {
+            areaData = ['occupation', 'occ_detail', 'occ_income', 'occ_address'];
+        }
+        var isValid = true;
+        areaData.forEach(function (entry) {
+            var fValid = validateField($('#' + entry).val(), entry);
+            if (!fValid) {
+                isValid = false;
+            }
+        });
+
+        data = ['cus_name', 'gender', 'mobile1', 'guarantor_name', 'area_confirm', 'area', 'line', 'cus_limit'];
 
         var isValid = true;
         data.forEach(function (entry) {
@@ -562,10 +572,12 @@ $(document).ready(function () {
                 isValid = false;
             }
         });
-
         if (gu_pic === undefined && gur_pic === '') {
-            swalError('Warning', 'Please Insert Guarantor Image!');
-            return false;
+            let isUploadValid = validateField('', 'gu_pic');
+            let isHiddenValid = validateField('', 'gur_pic');
+            if (!isUploadValid || !isHiddenValid) {
+                isValid = false;
+            }
         }
         // if (cus_name === '' || gender === '' || mobile1 === '' || (pic === undefined && per_pic == '') || guarantor_name === '' || (gu_pic === undefined && gur_pic == '') || area_confirm === '' || area === '' || line === '' || cus_limit === '' || famInfoRowCount === 0 || kycInfoRowCount === 0) {
         //     swalError('Warning', 'Please Fill out Mandatory fields!');
@@ -658,6 +670,7 @@ $(document).ready(function () {
         //     swalError('Warning', 'Please Fill out Mandatory fields!');
         //     return false;
         // }
+
         if (isValid) {
             let personalDetail = new FormData();
             personalDetail.append('cus_id', cus_id);
@@ -815,6 +828,11 @@ function swapTableAndCreation() {
         $('#customer_profile').trigger('click')
     }
 }
+function resetValidate(fields) {
+    fields.forEach(function (field) {
+        $('#' + field).css('border', '1px solid #cecece');
+    });
+}
 
 function clearCusProfileForm(type) {
     // Clear input fields except those with IDs 'loan_id_calc' and 'loan_date_calc'
@@ -827,8 +845,8 @@ function clearCusProfileForm(type) {
         } else if (type == '2') {
             cusid = 'customer_profile_id';
         }
-        $('input').css('border', '1px solid #cecece');
-        $('select').css('border', '1px solid #cecece');
+        $('#loan_entry_customer_profile input').css('border', '1px solid #cecece');
+        $('#loan_entry_customer_profile select').css('border', '1px solid #cecece');
         if (id !== cusid && id != 'cus_id' && id != 'cus_name' && id != 'dob' && id != 'mobile1' && id != 'mobile2' && id != 'pic' && id != 'age' && id != 'per_pic') {
             $(this).val('');
         }
@@ -960,8 +978,8 @@ function getFamilyTable() {
         appendDataToTable('#family_creation_table', response, columnMapping);
         setdtable('#family_creation_table');
         $('#family_form input').val('');
-        $('input').css('border', '1px solid #cecece');
-        $('select').css('border', '1px solid #cecece');
+        $('#family_form input').css('border', '1px solid #cecece');
+        $('#family_form select').css('border', '1px solid #cecece');
         $('#fam_relationship').val('');
         $('#fam_live').val('');
     }, 'json')
@@ -1033,8 +1051,8 @@ function getPropertyTable() {
         appendDataToTable('#property_creation_table', response, columnMapping);
         setdtable('#property_creation_table');
         $('#property_form input').val('');
-        $('input').css('border', '1px solid #cecece');
-        $('select').css('border', '1px solid #cecece');
+        $('#property_form input').css('border', '1px solid #cecece');
+        $('#property_form select').css('border', '1px solid #cecece');
         $('textarea').css('border', '1px solid #cecece');
         $('#property_holder').val('');
         $('#property_detail').val('');
@@ -1120,7 +1138,7 @@ function getBankTable() {
         appendDataToTable('#bank_creation_table', response, columnMapping);
         setdtable('#bank_creation_table');
         $('#bank_form input').val('');
-        $('input').css('border', '1px solid #cecece');
+        $('#bank_form input').css('border', '1px solid #cecece');
 
     }, 'json')
 }
@@ -1173,8 +1191,8 @@ function getKycTable() {
         appendDataToTable('#kyc_creation_table', response, columnMapping);
         setdtable('#kyc_creation_table');
         $('#kyc_form input').val('');
-        $('input').css('border', '1px solid #cecece');
-        $('select').css('border', '1px solid #cecece');
+        $('#kyc_form input').css('border', '1px solid #cecece');
+        $('#kyc_form select').css('border', '1px solid #cecece');
         $('#Kyc_form.fam_mem_div').hide();
         $('#kyc_form select').each(function () {
             $(this).val($(this).find('option:first').val());
@@ -1260,7 +1278,7 @@ function fetchProofList() {
                 $('#proof').append('<option value="' + proof.id + '">' + proof.addProof_name + '</option>');
             });
             $('#proof_form input').val('');
-            $('input').css('border', '1px solid #cecece');
+            $('#proof_form input').css('border', '1px solid #cecece');
 
         }
     });
@@ -1479,6 +1497,7 @@ function existingCustmerProfile(cus_id) {
         }
     }, 'json');
 }
+
 ///////////////////////////////////////////////Customer Profile js End//////////////////////////////
 
 //////////////////////////////////////////////////////////////// Loan Calculation START //////////////////////////////////////////////////////////////////////
@@ -1539,6 +1558,9 @@ $(document).ready(function () {
         $('#due_startdate_calc').val('');
         $('#maturity_date_calc').val('');
     });
+    $('#profit_type_calc').on('change', function () {
+        resetValidation();
+    });
 
     $('#refresh_cal').click(function () {
         $('.int-diff').text('*'); $('.due-diff').text('*'); $('.doc-diff').text('*'); $('.proc-diff').text('*'); $('.refresh_loan_calc').val('');
@@ -1565,9 +1587,10 @@ $(document).ready(function () {
 
             }
             changeInttoBen();
-        } else {
-            swalError('Warning', 'Kindly Fill the Calculation fields.')
         }
+        // else {
+        //     swalError('Warning', 'Kindly Fill the Calculation fields.')
+        // }
     });
 
     {
@@ -2234,34 +2257,70 @@ function getLoanDaily(loan_amt, int_rate, due_period, doc_charge, proc_fee) {
     var net_cash = parseInt(princ_amt) - parseInt(doc_charge) - parseInt(proc_fee); //Net cash will be calculated by subracting other charges
     $('#net_cash_calc').val(parseInt(net_cash).toFixed(0));
 }
+function resetValidation() {
+    const fieldsToReset = [
+        'due_method_calc', 'due_type_calc', 'profit_method_calc',
+        'interest_rate_calc', 'due_period_calc', 'doc_charge_calc', 'processing_fees_calc',
+        'scheme_due_method_calc', 'scheme_name_calc', 'scheme_day_calc',
+        'agent_id_calc', 'agent_name_calc', 'doc_need_calc'
+    ];
 
+    fieldsToReset.forEach(fieldId => {
+        $('#' + fieldId).css('border', '1px solid #cecece');
+
+    });
+}
 // Function to check if all values in an object are not empty
 function isFormDataValid(formData) {
     let isValid = true;
+    const excludedFields = [
+        'loan_amnt_calc', 'principal_amnt_calc', 'interest_amnt_calc', 'total_amnt_calc',
+        'processing_fees_calculate', 'net_cash_calc',
+        'due_amnt_calc', 'doc_charge_calculate',
+        'id', 'category_info_calc', 'due_method_calc', 'due_type_calc', 'profit_method_calc',
+        'scheme_due_method_calc', 'scheme_day_calc', 'scheme_name_calc', 'agent_id_calc', 'due_period_calc', 'interest_rate_calc', 'processing_fees_calc', 'doc_charge_calc',
+        'agent_name_calc', 'customer_profile_id'
+    ];
 
+    // Validate all fields except the excluded ones
     for (let key in formData) {
-        if (key != 'id' && key != 'category_info_calc' && key != 'due_method_calc' && key != 'due_type_calc' && key != 'profit_method_calc' && key != 'scheme_due_method_calc' && key != 'scheme_day_calc' && key != 'scheme_name_calc' && key != 'agent_id_calc' && key != 'agent_name_calc' && key != 'customer_profile_id') {
+        if (!excludedFields.includes(key)) {
             if (!validateField(formData[key], key)) {
                 isValid = false;
             }
         }
     }
 
+    // Additional validation based on specific conditions
     if (formData['profit_type_calc'] == '0') { // Calculation
-        if (!validateField(formData['due_method_calc'], 'due_method_calc') ||
-            !validateField(formData['due_type_calc'], 'due_type_calc') ||
-            !validateField(formData['profit_method_calc'], 'profit_method_calc')) {
+        let validationResults = [
+            validateField(formData['due_method_calc'], 'due_method_calc'),
+            validateField(formData['due_type_calc'], 'due_type_calc'),
+            validateField(formData['profit_method_calc'], 'profit_method_calc'),
+            validateField(formData['interest_rate_calc'], 'interest_rate_calc'),
+            validateField(formData['due_period_calc'], 'due_period_calc'),
+            validateField(formData['doc_charge_calc'], 'doc_charge_calc'),
+            validateField(formData['processing_fees_calc'], 'processing_fees_calc')
+        ];
+        if (!validationResults.every(result => result)) {
             isValid = false;
         }
-    } else if (formData['profit_type_calc'] == '1') { // Scheme
-        if (!validateField(formData['scheme_due_method_calc'], 'scheme_due_method_calc') ||
-            !validateField(formData['scheme_name_calc'], 'scheme_name_calc')) {
-            isValid = false;
+    }
+    else if (formData['profit_type_calc'] == '1') {
+        let validationResults = [
+            validateField(formData['scheme_due_method_calc'], 'scheme_due_method_calc'),
+            validateField(formData['scheme_name_calc'], 'scheme_name_calc'),
+            validateField(formData['doc_charge_calc'], 'doc_charge_calc'),
+            validateField(formData['processing_fees_calc'], 'processing_fees_calc')
+        ];
+
+        if (formData['scheme_due_method_calc'] == '2') {
+            validationResults.push(validateField(formData['scheme_day_calc'], 'scheme_day_calc'));
         }
-        if (formData['scheme_due_method_calc'] == '2') { // Weekly
-            if (!validateField(formData['scheme_day_calc'], 'scheme_day_calc')) {
-                isValid = false;
-            }
+
+        // Check if all validations passed
+        if (!validationResults.every(result => result)) {
+            isValid = false;
         }
     }
 
@@ -2272,16 +2331,22 @@ function isFormDataValid(formData) {
         }
     }
 
-    let docNeedRowCount = $('#doc_need_table').DataTable().rows().count();
+    // Check the number of rows in the doc_need_table DataTable
+    let docNeedTable = $('#doc_need_table').DataTable();
+    let docNeedRowCount = docNeedTable.rows().count();
+
     if (docNeedRowCount <= 0) {
-        $('#doc_need_table').DataTable().destroy();
-        swalError('Warning', 'Please add at least one document in the Document Need Table.');
-        return false;
+        isValid = false;
+        $('#' + 'doc_need_calc').css('border', '1px solid #ff0000'); // Applying red border
+    } else {
+        $('#' + 'doc_need_calc').css('border', '1px solid #cecece'); // Resetting border to default
     }
-    $('#doc_need_table').DataTable().destroy();
+
+    docNeedTable.destroy();
 
     return isValid;
 }
+
 
 
 function changeInttoBen() {
@@ -2302,9 +2367,9 @@ function clearLoanCalcForm() {
             $(this).val('');
         }
     });
-    $('input').css('border', '1px solid #cecece');
-    $('select').css('border', '1px solid #cecece');
-    $('textarea').css('border', '1px solid #cecece');
+    $('#loan_entry_loan_calculation input').css('border', '1px solid #cecece');
+    $('#loan_entry_loan_calculation select').css('border', '1px solid #cecece');
+    $('#loan_entry_loan_calculation textarea').css('border', '1px solid #cecece');
     $('.min-max-int').text('*'); $('.min-max-due').text('*'); $('.min-max-doc').text('*'); $('.min-max-proc').text('*');
     $('.int-diff').text('*'); $('.due-diff').text('*'); $('.doc-diff').text('*'); $('.proc-diff').text('*');
 
@@ -2325,6 +2390,7 @@ function getDocNeedTable(cusProfileId) {
             "action"
         ]
         appendDataToTable('#doc_need_table', response, loanCategoryColumn);
+        setdtable('#doc_need_table');
     }, 'json');
 }
 

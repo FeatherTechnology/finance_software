@@ -34,6 +34,11 @@ $(document).ready(function () {
                 isValid = false;
             }
         });
+        // Check if mobile number is empty
+        if (mobile.trim() === '') {
+            // If mobile number is empty, return without executing AJAX
+            return;
+        }
         $.post('api/customer_data_files/get_existing_mobiles.php', { mobile: mobile }, function (response) {
             if (response.exists) {
                 // Show an alert with the customer status if the mobile number already exists
