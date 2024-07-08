@@ -47,6 +47,7 @@ $(document).ready(function(){
             if (response == '1') {
                 swalSuccess('Success', 'Collected Successfully.');
                 getCollectionList();
+                getClosingBal();
             }else{
                 swalError('Error', 'Something went wrong.');
             }
@@ -63,12 +64,12 @@ $(document).ready(function(){
             $('#accounts_loanissue_table tbody').empty()
         }else{
             $('#issue_bank_name').val('').attr('disabled', true);
-            // getLoanIssueList();
+            getLoanIssueList();
         }
     });
     
     $('#issue_bank_name').change(function(){
-        // getLoanIssueList();
+        getLoanIssueList();
     });
 
     $('#expenses_add').click(function(){
@@ -119,6 +120,7 @@ $(document).ready(function(){
                     swalSuccess('Success', 'Expenses added successfully.');
                     expensesTable('#expenses_creation_table');
                     getInvoiceNo();
+                    getClosingBal();
                 }else{
                     swalError('Error', 'Failed.');
                 }
@@ -181,7 +183,7 @@ $(document).ready(function(){
 
         nameDropDown(); //To show name based on transaction category.
 
-        let catTypeOptn;
+        let catTypeOptn ='';
             catTypeOptn +="<option value=''>Select Type</option>";
         if(category == '1' || category == '2' || category == '3' || category == '4' || category == '7'){ //credit / debit
             catTypeOptn +="<option value='1'>Credit</option>";
@@ -263,6 +265,7 @@ $(document).ready(function(){
                 if(response =='1'){
                     swalSuccess('Success', 'Other Transaction added successfully.');
                     otherTransTable('#other_transaction_table');
+                    getClosingBal();
                 }else{
                     swalError('Error', 'Failed.');
                 }
@@ -280,12 +283,29 @@ $(document).ready(function(){
 });  /////Document END.
 
 $(function(){
-    // getOpeningClosingBal();
+    getOpeningBal();
+    getClosingBal();
 });
 
-// function getOpeningClosingBal(){
+function getOpeningBal(){
+    $.post('api/accounts_files/accounts/opening_balance.php',function(response){
+        if(response.length > 0){
+            $('.opening_val').text(response[0]['opening_balance']);
+            $('.op_hand_cash_val').text(response[0]['hand_cash']);
+            $('.op_bank_cash_val').text(response[0]['bank_cash']);
+        }
+    },'json');
+}
 
-// }
+function getClosingBal(){
+    $.post('api/accounts_files/accounts/closing_balance.php',function(response){
+        if(response.length > 0){
+            $('.closing_val').text(response[0]['closing_balance']);
+            $('.clse_hand_cash_val').text(response[0]['hand_cash']);
+            $('.clse_bank_cash_val').text(response[0]['bank_cash']);
+        }
+    },'json');
+}
 
 function getCollectionList(){
     let cash_type = $("input[name='coll_cash_type']:checked").val();
@@ -313,12 +333,12 @@ function getLoanIssueList(){
             'sno',
             'name',
             'linename',
-            'no_of_bills',
-            'total_net_cash',
-            'balance_in_hand'
+            'no_of_loans',
+            'issueAmnt',
+            'balance'
         ];
-        appendDataToTable('#accounts_collection_table', response, columnMapping);
-        setdtable('#accounts_collection_table');
+        appendDataToTable('#accounts_loanissue_table', response, columnMapping);
+        setdtable('#accounts_loanissue_table');
     },'json');
 }
 
@@ -430,6 +450,7 @@ function deleteExp(id) {
             expensesTable('#expenses_creation_table');
             expensesTable('#accounts_expenses_table');
             getInvoiceNo();
+            getClosingBal();
         } else {
             swalError('Alert', 'Delete Failed')
         }
@@ -460,7 +481,7 @@ function getOtherTransNameTable(){
 function nameDropDown(){
     let transCat = $('#trans_category :selected').val();
     $.post('api/accounts_files/accounts/get_other_trans_name_table.php',{transCat},function(response){
-        let nameOptn;
+        let nameOptn='';
             nameOptn +="<option value=''>Select Name</option>";
             $.each(response, function(index, val){
                 nameOptn += "<option value='"+val.id+"'>"+val.name+"</option>";
@@ -471,7 +492,7 @@ function nameDropDown(){
 
 function getUserList(){
     $.post('api/accounts_files/accounts/user_list.php',function(response){
-        let userNameOptn;
+        let userNameOptn='';
             userNameOptn +="<option value=''>Select User Name</option>";
             $.each(response, function(index, val){
                 userNameOptn += "<option value='"+val.id+"'>"+val.name+"</option>";
@@ -535,6 +556,7 @@ function deleteTrans(id) {
             swalSuccess('success', 'Other Transaction Deleted Successfully');
             otherTransTable('#other_transaction_table');
             otherTransTable('#accounts_other_trans_table');
+            getClosingBal();
         } else {
             swalError('Alert', 'Delete Failed')
         }

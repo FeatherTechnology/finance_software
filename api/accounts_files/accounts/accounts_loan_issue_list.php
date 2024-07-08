@@ -1,90 +1,50 @@
 <?php
 require "../../../ajaxconfig.php";
 
-$collection_list_arr = array();
+$loan_issue_list_arr = array();
 $cash_type = $_POST['cash_type'];
 $bank_id = $_POST['bank_id'];
 
 if ($cash_type == '1') {
     $cndtn = "coll_mode = '1' ";
+    $cndtn1 = "payment_mode = '1' ";
 } elseif ($cash_type == '2') {
     $cndtn = "coll_mode != '1' AND bank_id = '$bank_id' ";
+    $cndtn1 = "payment_mode != '1' ";
 }
 //collection_mode = 1 - cash; 2 to 5 - bank;
-$qry = $pdo->query("WITH first_query AS (
-    SELECT 
-        u.id AS userid, 
-        u.name, 
-        lnc.linename, 
-        bc.branch_name, 
-        (
-            SELECT COUNT(*) 
-            FROM collection nbc 
-            WHERE $cndtn 
-            AND nbc.insert_login_id = u.id 
-            AND nbc.coll_date > COALESCE(
-                (SELECT created_on FROM accounts_collect_entry WHERE user_id = u.id AND $cndtn ORDER BY id DESC LIMIT 1), 
-                '1970-01-01 00:00:00'
-            ) 
-            AND nbc.coll_date <= NOW()
-        ) as no_of_bills,
-        SUM(c.total_paid_track) AS total_amount, 
-        '1' AS type
-    FROM `collection` c 
-    JOIN line_name_creation lnc ON c.line = lnc.id 
-    JOIN branch_creation bc ON c.branch = bc.id 
-    JOIN users u ON FIND_IN_SET(c.line, u.line) 
-    LEFT JOIN (
-        SELECT ace.user_id, ace.collection_amnt 
-        FROM `accounts_collect_entry` ace 
-        ORDER BY id DESC 
-        LIMIT 1
-    ) AS last_collection ON c.insert_login_id = last_collection.user_id 
-    WHERE $cndtn 
-    AND c.coll_date > COALESCE(
-        (SELECT created_on FROM accounts_collect_entry WHERE user_id = u.id AND $cndtn ORDER BY id DESC LIMIT 1), 
-        '1970-01-01 00:00:00'
-    ) 
-    AND c.coll_date <= NOW() 
-    AND c.insert_login_id = u.id 
-    GROUP BY u.id
-),
-second_query AS (
-    SELECT 
-        us.id as userid, 
-        us.name, 
-        ac.line, 
-        ac.branch, 
-        SUM(ac.no_of_bills) AS no_of_bills,  
-        SUM(ac.collection_amnt) AS total_amount,
-        '2' as type
-    FROM `accounts_collect_entry` ac
-    JOIN users us ON ac.user_id = us.id
-    WHERE $cndtn 
-    AND DATE(ac.created_on) = CURDATE() 
-    AND ac.user_id NOT IN (
-        SELECT userid 
-        FROM first_query
-    )
-    GROUP BY us.id
-)
-SELECT userid, name, linename, branch_name, no_of_bills, total_amount, type 
-FROM (
-    SELECT * FROM first_query
-    UNION ALL
-    SELECT * FROM second_query
-) AS subqry 
-ORDER BY userid ASC; ");
+$qry = $pdo->query("SELECT b.name, c.linename, no_of_loans, overallIssueAmnt, issueAmnt, SUM(a.amount) AS amount, cr_amnt
+FROM other_transaction a 
+JOIN users b ON a.user_name = b.id 
+JOIN line_name_creation c ON b.line = c.id 
+LEFT JOIN (
+    SELECT insert_login_id, SUM(issue_amnt) AS overallIssueAmnt 
+    FROM loan_issue WHERE $cndtn1 GROUP BY insert_login_id
+) oli ON oli.insert_login_id = b.id 
+LEFT JOIN (
+    SELECT insert_login_id, COUNT(id) AS no_of_loans, SUM(issue_amnt) AS issueAmnt 
+    FROM loan_issue WHERE $cndtn1 AND DATE(issue_date) = CURDATE() GROUP BY insert_login_id
+) li ON li.insert_login_id = b.id 
+LEFT JOIN(
+	SELECT user_name, SUM(amount) AS cr_amnt
+    FROM other_transaction 
+    WHERE type = '1' AND trans_cat = '7' AND $cndtn
+) cr ON cr.user_name = b.id
+WHERE a.type = '2' AND a.trans_cat = '7' AND $cndtn
+GROUP BY b.name, c.linename, no_of_loans, issueAmnt; ");
 if ($qry->rowCount() > 0) {
     while ($data = $qry->fetch(PDO::FETCH_ASSOC)) {
-        $disabled = ($data['type'] == 2) ? 'disabled' : ''; // 1 - disabled; 2 - enabled;
-        $data['total_amount'] = moneyFormatIndia($data['total_amount']);
-        $data['action'] = "<a href='#' class='collect-money' value='" . $data['userid'] . "'><button class='btn btn-primary' " . $disabled . ">Collect</button></a> ";
-        $collection_list_arr[] = $data;
+        $amnt = ($data['amount']) ? $data['amount'] : 0;
+        $cramnt = ($data['cr_amnt']) ? $data['cr_amnt'] : 0;
+        $bal = $amnt - $data['overallIssueAmnt'] - $cramnt;
+        $data['no_of_loans'] = ($data['no_of_loans']) ? $data['no_of_loans'] : 0;
+        $data['issueAmnt'] = ($data['issueAmnt']) ? moneyFormatIndia($data['issueAmnt']) : 0;
+        $data['balance'] = moneyFormatIndia($bal);
+        $loan_issue_list_arr[] = $data;
     }
 }
 
-echo json_encode($collection_list_arr);
+echo json_encode($loan_issue_list_arr);
 
 //Format number in Indian Format
 function moneyFormatIndia($num1)
