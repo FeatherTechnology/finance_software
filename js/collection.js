@@ -614,9 +614,7 @@ function isFormDataValid(collData) {
         isValid = false;
     }
     // Validate total_paid_track
-    if (!validateField(collData['total_paid_track'], 'total_paid_track')) {
-        isValid = false;
-    }
+  
 
     // Validate collection_mode
     if (!validateField(collData['collection_mode'], 'collection_mode')) {

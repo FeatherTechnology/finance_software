@@ -268,38 +268,46 @@ $('#print_doc').click(function(){
 function validate() {
     let response = true;
 
-    let cus_id = $('#cust_id').val();
-    let cus_name = $('#cust_name').val();
-    let area = $('#cus_area').val();
-    let mobile = $('#cus_mobile').val();
+    let cus_id = $('#cust_id').val().trim();
+    let cus_name = $('#cust_name').val().trim();
+    let area = $('#cus_area').val().trim();
+    let mobile = $('#cus_mobile').val().trim();
 
     // Reset all field borders initially
     $('#cust_id, #cust_name, #cus_area, #cus_mobile').css('border', '1px solid #cecece');
 
-    // Validate each field using validateField function
-    if (!validateField(cus_id, 'cust_id')) {
-        response = false;
-    }
-    if (!validateField(cus_name, 'cust_name')) {
-        response = false;
-    }
-    if (!validateField(area, 'cus_area')) {
-        response = false;
-    }
-    if (!validateField(mobile, 'cus_mobile')) {
-        response = false;
-    }
-
     // Check if any one field is filled
-    if (!(cus_id || cus_name || area || mobile)) {
-        swalError('Error', 'Please fill any one field to search!');
-        response = false;
+    if (cus_id || cus_name || area || mobile) {
+        // If any field is filled, reset the other fields' borders
+        if (cus_id) {
+            $('#cust_name, #cus_area, #cus_mobile').css('border', '1px solid #cecece');
+        } else if (cus_name) {
+            $('#cust_id, #cus_area, #cus_mobile').css('border', '1px solid #cecece');
+        } else if (area) {
+            $('#cust_id, #cust_name, #cus_mobile').css('border', '1px solid #cecece');
+        } else if (mobile) {
+            $('#cust_id, #cust_name, #cus_area').css('border', '1px solid #cecece');
+        }
+    } else {
+        // If no fields are filled, show validation errors
+        if (!validateField(cus_id, 'cust_id')) {
+            response = false;
+        }
+        if (!validateField(cus_name, 'cust_name')) {
+            response = false;
+        }
+        if (!validateField(area, 'cus_area')) {
+            response = false;
+        }
+        if (!validateField(mobile, 'cus_mobile')) {
+            response = false;
+        }
+       
     }
 
     return response;
 }
 
-// Function to fetch and display customer list
 function getSearchTable(data) {
     // Assuming response is in JSON format and contains customer data
     let response = JSON.parse(data);

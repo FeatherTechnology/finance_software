@@ -40,6 +40,9 @@ $(document).ready(function () {
         event.preventDefault();
         $('#noc_summary, .back_to_loan_list').hide();
         $('#loan_list, #personal_info,.back_to_noc_list').show();
+    
+        $('#noc_member').css('border', '1px solid #cecece');
+        $('#noc_relation').css('border', '1px solid #cecece');
     });
 
     $('#noc_member').change(function () {
@@ -101,7 +104,12 @@ $(document).ready(function () {
                 goldId.push($(this).val());
             }
         });
-
+        if (chequeId.length === 0 && mortId.length === 0 && endorsementId.length === 0 && docId.length === 0 && goldId.length === 0) {
+            swalError('Warning', 'Kindly check at least one checkbox');
+            $('#noc_member').val('');
+            $('#noc_relation').val('');
+            return;
+        }
         let cheque_list_cnt = $('#noc_cheque_list_table').DataTable().rows().count();
         let mort_list_cnt = $('#noc_mortgage_list_table').DataTable().rows().count();
         let endorsemnt_list_cnt = $('#noc_endorsement_list_table').DataTable().rows().count();
@@ -395,12 +403,13 @@ function setValuesInTables() {
         }
     });
 
-    if (!checked) {
-        swalError('Warning', 'Kindly check Atleast one checkbox');
-        $('#noc_member').val('');
-        $('#noc_relation').val('');
-        return;
-    }
+    // if (!checked) {
+    //     swalError('Warning', 'Kindly check Atleast one checkbox');
+    //     $('#noc_member').val('');
+    //     $('#noc_relation').val('');
+
+    //     return;
+    // }
 }
 
 function removeValuesInTables() {

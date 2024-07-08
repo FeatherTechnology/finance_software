@@ -208,14 +208,6 @@ $(document).ready(function () {
                 isValid = false;
             }
         });
-        if (doc_upload === undefined && doc_upload_edit === '') {
-            let isUploadValid = validateField('','doc_upload');
-            let isHiddenValid = validateField('','doc_upload_edit');
-            if (!isUploadValid || !isHiddenValid) {
-                isValid = false;
-            }
-        }
-
         if (isValid) {
             let docInfo = new FormData();
             docInfo.append('doc_name', doc_name);
@@ -311,13 +303,6 @@ $(document).ready(function () {
                 isValid = false;
             }
         });
-        if (mort_upload === undefined && mort_upload_edit === '') {
-            let isUploadValid = validateField('', 'mort_upload');
-            let isHiddenValid = validateField('', 'mort_upload_edit');
-            if (!isUploadValid || !isHiddenValid) {
-                isValid = false;
-            }
-        }
         if (isValid) {
             let mortgageInfo = new FormData();
             mortgageInfo.append('property_holder_name', property_holder_name);
@@ -421,13 +406,6 @@ $(document).ready(function () {
                 isValid = false;
             }
         });
-        if (endorsement_upload === undefined && endorsement_upload_edit === '') {
-            let isUploadValid = validateField('', 'endorsement_upload');
-            let isHiddenValid = validateField('', 'endorsement_upload_edit');
-            if (!isUploadValid || !isHiddenValid) {
-                isValid = false;
-            }
-        }
         if (isValid) {
             let endorsementInfo = new FormData();
             endorsementInfo.append('owner_name', owner_name);

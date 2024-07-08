@@ -576,23 +576,32 @@ $(document).ready(function () {
             return false;
         }
        
-        var areaData = [];
+        let isValid = true;
+
+        // Validate fields based on area_confirm value
         if (area_confirm == '1') {
-            areaData = ['res_type', 'res_detail', 'res_address', 'native_address'];
-        } else if (area_confirm == '2') {
-            areaData = ['occupation', 'occ_detail', 'occ_income', 'occ_address'];
-        } 
-        var isValid = true;
-        areaData.forEach(function (entry) {
-            var fValid = validateField($('#' + entry).val(), entry);
-            if (!fValid) {
+            let validationResults = [
+                validateField(res_type, 'res_type'),
+                validateField(res_detail, 'res_detail'),
+                validateField(res_address, 'res_address'),
+                validateField(native_address, 'native_address')
+            ];
+            if (!validationResults.every(result => result)) {
                 isValid = false;
             }
-        });
+        } else if (area_confirm == '2') {
+            let validationResults = [
+                validateField(occupation, 'occupation'),
+                validateField(occ_detail, 'occ_detail'),
+                validateField(occ_income, 'occ_income'),
+                validateField(occ_address, 'occ_address')
+            ];
+            if (!validationResults.every(result => result)) {
+                isValid = false;
+            }
+        }
 
         data = ['cus_name', 'gender', 'mobile1', 'guarantor_name', 'area_confirm', 'area', 'line', 'cus_limit'];
-
-        var isValid = true;
         data.forEach(function (entry) {
             var fieldIsValid = validateField($('#' + entry).val(), entry);
             if (!fieldIsValid) {
@@ -667,7 +676,9 @@ $(document).ready(function () {
 
         }
     });
-
+    $('#area_confirm').on('change', function () {
+        resetValidate();
+    });
     $('#submit_personal_info').click(function (event) {
         event.preventDefault();
         // Validate form fields
@@ -1079,7 +1090,23 @@ function getGrelationshipName(guarantorId) {
         }
     });
 }
+function resetValidate() {
+    const fieldsToReset = [
+        'res_type',
+           'res_detail',
+            'res_address',
+           'native_address', 
+           'occupation', 
+          'occ_detail', 
+            'occ_income',
+          'occ_address'
+    ];
 
+    fieldsToReset.forEach(fieldId => {
+        $('#' + fieldId).css('border', '1px solid #cecece');
+
+    });
+}
 function getPropertyTable() {
     let cus_id = $('#cus_id').val().replace(/\s/g, '');
     let cus_profile_id = $('#customer_profile_id').val()
