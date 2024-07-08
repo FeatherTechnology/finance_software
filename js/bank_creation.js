@@ -14,11 +14,17 @@ $(document).ready(function () {
         event.preventDefault();
         //Validation
         let qr_code = $('#qr_code')[0].files[0]; let inserted_qr_code = $('#inserted_qr_code').val(); let bank_name = $('#bank_name').val(); let bank_short_name = $('#bank_short_name').val(); let account_number = $('#account_number').val(); let ifsc_code = $('#ifsc_code').val(); let branch_name = $('#branch_name').val(); let gpay = $('#gpay').val(); let under_branch = $('#under_branch').val(); let status = $('#status').val(); let bank_id = $('#bank_id').val();
+        var data = ['bank_name', 'bank_short_name', 'account_number', 'ifsc_code', 'branch_name']
 
-        if (bank_name === '' || bank_short_name === '' || account_number === '' || ifsc_code === '' || branch_name === '' || under_branch === '' || under_branch == null) {
-            swalError('Warning', 'Please Fill out Mandatory fields!');
-            return false;
-        } else {
+        var isValid = true;
+        data.forEach(function (entry) {
+            var fieldIsValid = validateField($('#' + entry).val(), entry);
+            if (!fieldIsValid) {
+                isValid = false;
+            }
+        });
+        let isMultiSelectValid = validateMultiSelectField('under_branch', underBranchChoices);
+        if (isValid && isMultiSelectValid) {
             let bankDetail = new FormData();
             bankDetail.append('bank_name', bank_name)
             bankDetail.append('bank_short_name', bank_short_name)
@@ -182,4 +188,21 @@ $('#family_info, #back_btn').click(function (event) {
     $('input, textarea').val('');
     underBranchChoices.clearInput();
     getUnderBranchDropdown();
+    $('#bank_name').css('border', '1px solid #cecece');
+    $('#bank_short_name').css('border', '1px solid #cecece');
+    $('#account_number').css('border', '1px solid #cecece');
+    $('#ifsc_code').css('border', '1px solid #cecece');
+    $('#branch_name').css('border', '1px solid #cecece');
+    $('#under_branch').closest('.choices').find('.choices__inner').css('border', '1px solid #cecece');
 });
+// function validateMultiSelectField(fieldId) {
+//     const selectedValues = underBranchChoices.getValue(true);
+//     const choicesElement = $('#' + fieldId).closest('.choices'); // Targeting the Choices.js container
+//     if (selectedValues.length === 0) {
+//         choicesElement.find('.choices__inner').css('border', '1px solid #ff0000');
+//         return false;
+//     } else {
+//         choicesElement.find('.choices__inner').css('border', '1px solid #cecece');
+//         return true;
+//     }
+// }

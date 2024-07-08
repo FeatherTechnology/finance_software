@@ -2,17 +2,25 @@ $(document).ready(function () {
     $(document).on('click', '#add_agent, #back_btn', function () {
         swapTableAndCreation();
         getAgentCode();
-        
+
     });
     $('#submit_agent_creation').click(function (event) {
         event.preventDefault();
         //Validation
-        let agent_code = $('#agent_code').val(); let agent_name = $('#agent_name').val(); let mobile1 = $('#mobile1').val(); let mobile2 = $('#mobile2').val(); let area = $('#area').val(); let occupation = $('#occupation').val();  let agent_id = $('#agent_id').val();
-        if (agent_code === '' || agent_name === '' || mobile1 === '') {
-            swalError('Warning', 'Please Fill out Mandatory fields!');
-            return false;
-        } else {
-            $.post('api/agent_creation/submit_agent_creation.php', { agent_code,agent_name,mobile1,mobile2,area,occupation,agent_id }, function (response) {
+        let agent_code = $('#agent_code').val(); let agent_name = $('#agent_name').val(); let mobile1 = $('#mobile1').val(); let mobile2 = $('#mobile2').val(); let area = $('#area').val(); let occupation = $('#occupation').val(); let agent_id = $('#agent_id').val();
+        //validateField(agent_name, '#agent_name');
+        var data = [ 'agent_code','agent_name','mobile1']
+        
+        var isValid = true;
+        data.forEach(function (entry) {
+            var fieldIsValid = validateField($('#'+entry).val(), entry);
+            if (!fieldIsValid) {
+                isValid = false;
+            }
+        });
+
+         if (isValid) {
+            $.post('api/agent_creation/submit_agent_creation.php', { agent_code, agent_name, mobile1, mobile2, area, occupation, agent_id }, function (response) {
                 if (response == '1') {
                     swalSuccess('Success', 'Agent Added Successfully!');
                 } else {
@@ -27,7 +35,7 @@ $(document).ready(function () {
 
         }
     });
-    $('#mobile1, #mobile2').change(function () {       
+    $('#mobile1, #mobile2').change(function () {
         checkMobileNo($(this).val(), $(this).attr('id'));
     });
     $(document).on('click', '.agentActionBtn', function () {
@@ -84,14 +92,14 @@ function swapTableAndCreation() {
         $('#back_btn').hide();
     }
 }
-function getAgentCode(){
+function getAgentCode() {
     $.ajax({
         url: 'api/agent_creation/getAgentCode.php',
         type: "post",
         dataType: "json",
         data: {},
         cache: false,
-        success: function(response){
+        success: function (response) {
             var agent_code = response;
             $('#agent_code').val(agent_code);
         }
@@ -107,14 +115,12 @@ function getAgentDelete(id) {
         }
     }, 'json');
 }
-$('button[type="reset"], #back_btn').click(function () {
+$('button[type="reset"], #back_btn').click(function (event) {
     event.preventDefault();
     $('input').each(function () {
-        var id = $(this).attr('id');
-        if (id !== 'agent_code') {
-            $(this).val('');
-        }
+        $(this).val('');
     });
+    $('input').css('border', '1px solid #cecece');
 });
 
 

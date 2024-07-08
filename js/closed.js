@@ -53,6 +53,8 @@ $(document).ready(function () {
                     $('#closed_remark_form input').val('');
                     $('#closed_remark_form select').val('');
                     $('#closed_remark_form textarea').val('');
+                    $('#closed_remark_form input').css('border', '1px solid #cecece');
+                    $('#closed_remark_form select').css('border', '1px solid #cecece');
                     $('#closed_remark_model').modal('hide');
                     let cus_id = $('#cus_id').val();
                     getClosedLoanList(cus_id);
@@ -60,8 +62,6 @@ $(document).ready(function () {
                     swalError('Error', 'Failed to Closed');
                 }
             }, 'json');
-        } else {
-            swalError('Warning', 'Kindly Fill Mandatory Fields');
         }
     });
 
@@ -146,21 +146,7 @@ $(function () {
 });
 
 function getClosedListTable() {
-    $.post('api/closed_files/close_list_table.php', function (response) {
-        var columnMapping = [
-            'sno',
-            'cus_id',
-            'cus_name',
-            'area',
-            'linename',
-            'branch_name',
-            'mobile1',
-            'action'
-        ];
-        appendDataToTable('#closed_list_table', response, columnMapping);
-        setdtable('#closed_list_table');
-        setDropdownScripts();
-    }, 'json');
+        serverSideTable('#closed_list_table','', 'api/closed_files/close_list_table.php');       
 }
 function moveToNext(cus_id, cus_sts) {
     $.post('api/closed_files/close_move_to_next.php', { cus_id, cus_sts }, function (response) {
@@ -177,12 +163,19 @@ function moveToNext(cus_id, cus_sts) {
     }, 'json');
 }
 function validate() {
-    let response = true;
-    let sub_status = $('#sub_status').val(); let cus_profile_id = $('#cus_profile_id').val();
-    if (sub_status == '' || cus_profile_id == '') {
-        response = false;
+    let isValid = true;
+
+    // Validate sub_status
+    if (!validateField($('#sub_status').val(), 'sub_status')) {
+        isValid = false;
     }
-    return response;
+
+    // Validate cus_profile_id
+    if (!validateField($('#cus_profile_id').val(), 'cus_profile_id')) {
+        isValid = false;
+    }
+
+    return isValid;
 }
 
 function getClosedLoanList(cus_id) {
@@ -214,6 +207,9 @@ function closeChartsModal() {
     $('#closed_remark_form input').val('');
     $('#closed_remark_form select').val('');
     $('#closed_remark_form textarea').val('');
+    $('#closed_remark_form input').css('border', '1px solid #cecece');
+    $('#closed_remark_form select').css('border', '1px solid #cecece');
+
 }
 function dueChartList(cp_id,cus_id){
     $.ajax({

@@ -14,8 +14,7 @@ if (!empty($_FILES['pic']['name'])) {
     }
     move_uploaded_file($pic_temp, $path . $picture);
 
-    //query
-    unlink($path . $pic);
+  
 } else {
     $picture = $_POST['per_pic'];
 }
@@ -63,9 +62,19 @@ $customer_profile_id =$_POST['customer_profile_id'];
 
 
 if($customer_profile_id !=''){
+    $qry = $pdo->query("SELECT pic, gu_pic FROM `customer_profile` WHERE id='$customer_profile_id'");
+    $row = $qry->fetch();
+    $currentPic = $row['pic'] ?? '';
+    $currentGuPic = $row['gu_pic'] ?? '';
     $qry = $pdo->query("UPDATE `customer_profile` SET `cus_id`='$cus_id',`cus_name`='$cus_name',`gender`='$gender',`dob`='$dob',`age`='$age',`mobile1`='$mobile1',`mobile2`='$mobile2',`pic`='$picture',`guarantor_name`='$guarantor_name',`gu_pic`='$gpicture',`cus_data`='$cus_data',`cus_status`='$cus_status',`res_type`='$res_type',`res_detail`='$res_detail',`res_address`='$res_address',`native_address`='$native_address',`occupation`='$occupation',`occ_detail`='$occ_detail',`occ_income`='$occ_income',`occ_address`='$occ_address',`area_confirm`='$area_confirm',`area`='$area',`line`='$line',`cus_limit`='$cus_limit',`about_cus`='$about_cus',`update_login_id`='$user_id',updated_on = now() WHERE `id`='$customer_profile_id'");
     $status = 0; //update
     $last_id =$customer_profile_id;
+    if ($currentPic && $currentPic != $picture) {
+        unlink($path . $currentPic);
+    }
+    if ($currentGuPic && $currentGuPic != $gpicture) {
+        unlink($paths . $currentGuPic);
+    }
 }
 
 $result = array('status'=>$status, 'last_id'=> $last_id);

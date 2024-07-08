@@ -108,10 +108,11 @@
                 </div>
             </div>
             <div class="row gutters" id="noc_summary" style="display:none">
+                <input type="hidden" id="cp_id">
                 <div class="col-12">
                     <div class="card" style="box-shadow: none;background-color: transparent;">
                         <div class="card-header">
-                            <h5 class="card-title">NOC Summary&nbsp;<button type="button" id="back_to_cus_status" style="float:right" class="btn btn-primary ">Back</button></h5>
+                            <h5 class="card-title">NOC Summary&nbsp;<button type="button" id="back_to_cus_status" style="float:right" class="btn btn-primary "><span class="icon-arrow-left"></span>&nbsp;Back</button></h5>
                         </div>
                         <div class="card-body">
                             <div class="card">
@@ -119,23 +120,21 @@
                                     <h5 class="card-title">Cheque List</h5>
                                 </div>
                                 <div class="card-body">
-                                    <div class="row">
-                                        <table class="table custom-table">
-                                            <thead>
-                                                <th>S No.</th>
-                                                <th>Holder Type</th>
-                                                <th>Holder Name</th>
-                                                <th>Relationship</th>
-                                                <th>Bank Name</th>
-                                                <th>Cheque No.</th>
-                                                <th>Date of NOC</th>
-                                                <th>Handover Person</th>
-                                                <th>Relationship</th>
-                                                <th>Checklist</th>
-                                            </thead>
-                                            <tbody></tbody>
-                                        </table>
-                                    </div>
+                                    <table class="table custom-table" id="noc_cheque_list_table">
+                                        <thead>
+                                            <th>S No.</th>
+                                            <th>Holder Type</th>
+                                            <th>Holder Name</th>
+                                            <th>Relationship</th>
+                                            <th>Bank Name</th>
+                                            <th>Cheque No.</th>
+                                            <th>Date of NOC</th>
+                                            <th>Handover Person</th>
+                                            <th>Relationship</th>
+                                            <th>Checklist</th>
+                                        </thead>
+                                        <tbody></tbody>
+                                    </table>
                                 </div>
                             </div>
                             <div class="card">
@@ -143,19 +142,22 @@
                                     <h5 class="card-title">Mortgage List</h5>
                                 </div>
                                 <div class="card-body">
-                                    <div class="row">
-                                        <table class="table custom-table">
-                                            <thead>
-                                                <th>S No.</th>
-                                                <th>Details</th>
-                                                <th>Date of NOC</th>
-                                                <th>Handover Person</th>
-                                                <th>Relationship</th>
-                                                <th>Checklist</th>
-                                            </thead>
-                                            <tbody></tbody>
-                                        </table>
-                                    </div>
+                                    <table class="table custom-table" id="noc_mortgage_list_table">
+                                        <thead>
+                                            <th>S No.</th>
+                                            <th>Property Holder Name</th>
+                                            <th>Relationship</th>
+                                            <th>Property Details</th>
+                                            <th>Mortgage Name</th>
+                                            <th>Desigantion</th>
+                                            <th>Reg Office</th>
+                                            <th>Date of NOC</th>
+                                            <th>Handover Person</th>
+                                            <th>Relationship</th>
+                                            <th>Checklist</th>
+                                        </thead>
+                                        <tbody></tbody>
+                                    </table>
                                 </div>
                             </div>
                             <div class="card">
@@ -163,19 +165,22 @@
                                     <h5 class="card-title">Endorsement List</h5>
                                 </div>
                                 <div class="card-body">
-                                    <div class="row">
-                                        <table class="table custom-table">
-                                            <thead>
-                                                <th>S No.</th>
-                                                <th>Details</th>
-                                                <th>Date of NOC</th>
-                                                <th>Handover Person</th>
-                                                <th>Relationship</th>
-                                                <th>Checklist</th>
-                                            </thead>
-                                            <tbody></tbody>
-                                        </table>
-                                    </div>
+                                    <table class="table custom-table" id="noc_endorsement_list_table">
+                                        <thead>
+                                            <th>S No.</th>
+                                            <th>Owner Name</th>
+                                            <th>Relationship</th>
+                                            <th>Vehicle Details</th>
+                                            <th>Endorsement Name</th>
+                                            <th>RC</th>
+                                            <th>KEY</th>
+                                            <th>Date of NOC</th>
+                                            <th>Handover Person</th>
+                                            <th>Relationship</th>
+                                            <th>Checklist</th>
+                                        </thead>
+                                        <tbody></tbody>
+                                    </table>
                                 </div>
                             </div>
                             <div class="card">
@@ -183,22 +188,20 @@
                                     <h5 class="card-title">Other Document List</h5>
                                 </div>
                                 <div class="card-body">
-                                    <div class="row">
-                                        <table class="table custom-table">
-                                            <thead>
-                                                <th>S No.</th>
-                                                <th>Document Name</th>
-                                                <th>Document Type</th>
-                                                <th>Document Holder</th>
-                                                <th>Document</th>
-                                                <th>Date of NOC</th>
-                                                <th>Handover Person</th>
-                                                <th>Relationship</th>
-                                                <th>Checklist</th>
-                                            </thead>
-                                            <tbody></tbody>
-                                        </table>
-                                    </div>
+                                    <table class="table custom-table" id="noc_document_list_table">
+                                        <thead>
+                                            <th>S No.</th>
+                                            <th>Document Name</th>
+                                            <th>Document Type</th>
+                                            <th>Document Holder</th>
+                                            <th>Document</th>
+                                            <th>Date of NOC</th>
+                                            <th>Handover Person</th>
+                                            <th>Relationship</th>
+                                            <th>Checklist</th>
+                                        </thead>
+                                        <tbody></tbody>
+                                    </table>
                                 </div>
                             </div>
                         </div>
@@ -262,7 +265,7 @@
                 </button>
             </div>
             <div class="modal-body">
-                <div class="container-fluid">
+                <div class="container-fluid" id="due_chart_table_div">
                     <table class="table custom-table">
                         <thead>
                             <th>Due No.</th>
@@ -304,7 +307,7 @@
                 </button>
             </div>
             <div class="modal-body">
-                <div class="container-fluid">
+                <div class="container-fluid" id="penalty_chart_table_div">
                     <div class="row">
                         <table class="table custom-table">
                             <thead>
@@ -339,7 +342,7 @@
                 </button>
             </div>
             <div class="modal-body">
-                <div class="container-fluid">
+                <div class="container-fluid" id="fine_chart_table_div">
                     <div class="row">
                         <table class="table custom-table">
                             <thead>

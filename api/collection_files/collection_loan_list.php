@@ -31,6 +31,7 @@ function moneyFormatIndia($num) {
 }
 
 $loan_list_arr = array();
+
 $qry = $pdo->query("SELECT lelc.cus_profile_id as cp_id, lelc.cus_id, lelc.loan_id, lc.loan_category, li.issue_date, lelc.loan_amount, us.collection_access
 FROM loan_entry_loan_calculation lelc
 JOIN customer_profile cp ON lelc.cus_profile_id = cp.id

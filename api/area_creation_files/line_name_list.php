@@ -1,6 +1,6 @@
 <?php 
 require "../../ajaxconfig.php";
-$branch_id = $_POST['branch_id'];
+ $branch_id = $_POST['branch_id'];
 
 $line_name_arr = array();
 $qry = $pdo->query("SELECT id,linename FROM line_name_creation WHERE branch_id ='$branch_id' ");
@@ -14,4 +14,5 @@ if($qry->rowCount()>0){
 $pdo = null; //Connection Close.
 
 echo json_encode($line_name_arr);
-?>
+
+

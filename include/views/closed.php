@@ -186,7 +186,7 @@
                 </button>
             </div>
             <div class="modal-body">
-                <div class="container-fluid">
+                <div class="container-fluid" id="due_chart_table_div">
                     <table class="table custom-table">
                         <thead>
                             <th>Due No.</th>
@@ -228,7 +228,7 @@
                 </button>
             </div>
             <div class="modal-body">
-                <div class="container-fluid">
+                <div class="container-fluid" id="penalty_chart_table_div">
                     <div class="row">
                         <table class="table custom-table">
                             <thead>
@@ -263,7 +263,7 @@
                 </button>
             </div>
             <div class="modal-body">
-                <div class="container-fluid">
+                <div class="container-fluid" id="fine_chart_table_div"> 
                     <div class="row">
                         <table class="table custom-table">
                             <thead>

@@ -230,6 +230,8 @@ $(document).ready(function(){
         $('.coll_details').hide();
         $('#back_to_loan_list').hide();
         $('#collection_mode').trigger('change');
+        $('#coll_main_container input').css('border', '1px solid #cecece');
+        $('#coll_main_container select').css('border', '1px solid #cecece');
     });
 
     $('#due_amt_track, #princ_amt_track, #int_amt_track, #penalty_track , #coll_charge_track').blur(function(){
@@ -317,7 +319,9 @@ $(document).ready(function(){
     //     var cp_id = $(this).attr('value');
     //     resetcollCharges(cp_id);  //Fine
     // }); 
-
+    $('#collection_mode').on('change', function () {
+        resetValidation();
+    });
     $('#submit_collection').click(function(event){
         event.preventDefault();
         getCollectionCode();
@@ -374,7 +378,6 @@ $(document).ready(function(){
                 $('#back_to_loan_list').trigger('click');
             },'json');
         }else{
-            swalError('Warning', 'Kindly Fill the Mandatory Fields!');
             $('#submit_collection').attr('disabled', false);
         }
     });//submit END.
@@ -407,10 +410,17 @@ $(document).ready(function(){
         let fine_date = $('#fine_date').val();
         let fine_purpose = $('#fine_purpose').val();
         let fine_Amnt = $('#fine_Amnt').val();
+        var data = [ 'fine_cp_id','cus_id','fine_date','fine_purpose','fine_Amnt']
+        
+        var isValid = true;
+        data.forEach(function (entry) {
+            var fieldIsValid = validateField($('#'+entry).val(), entry);
+            if (!fieldIsValid) {
+                isValid = false;
+            }
+        });
 
-        if(fine_cp_id =='' || cus_id =='' || fine_date =='' || fine_purpose =='' || fine_Amnt ==''){
-            swalError('Warning', 'Kindly Fill the Mandatory Fields!');
-        }else{
+        if(isValid){
             $.post('api/collection_files/submit_fine_form.php', {fine_cp_id, cus_id, fine_date, fine_purpose, fine_Amnt}, function(response){
                 if(response == '1'){
                     swalSuccess('Success', 'Fine Added Successfully.');
@@ -429,20 +439,7 @@ $(function(){
 });
 
 function getCollectionListTable(){
-    $.post('api/collection_files/collection_list.php', function (response) {
-        var columnMapping = [
-            'sno',
-            'cus_id',
-            'cus_name',
-            'area',
-            'linename',
-            'branch_name',
-            'mobile1',
-            'action'
-        ];
-        appendDataToTable('#collection_list_table', response, columnMapping);
-        setdtable('#collection_list_table');
-    }, 'json');
+        serverSideTable('#collection_list_table','', 'api/collection_files/collection_list.php');
 }
 
 function swapTableAndCreation() {
@@ -595,26 +592,56 @@ function getCollectionCode(){
         }
     });
 }
+function resetValidation() {
+    const fieldsToReset = [
+        'bank_id', 'cheque_no', 'trans_id',
+        'trans_date']
+    fieldsToReset.forEach(fieldId => {
+        $('#' + fieldId).css('border', '1px solid #cecece');
+
+    });
+}
 //validation
-function isFormDataValid(collData){
-    if(collData['total_paid_track'] =='' || collData['total_paid_track'] == null || collData['total_paid_track'] == undefined){
-        return false;
+function isFormDataValid(collData) {
+    let isValid = true;
+    if (!validateField(collData['due_amt_track'], 'due_amt_track')) {
+        isValid = false;
     }
+    if (!validateField(collData['penalty_track'], 'penalty_track')) {
+        isValid = false;
+    }
+    if (!validateField(collData['coll_charge_track'], 'coll_charge_track')) {
+        isValid = false;
+    }
+    // Validate total_paid_track
+  
 
-    if(collData['collection_mode'] =='' || collData['collection_mode'] == null || collData['collection_mode'] == undefined){
-        return false;
-        
-    }else if(collData['collection_mode'] =='2'){//cheque
-        if (collData['bank_id'] == '' || collData['bank_id'] == null || collData['bank_id'] == undefined || collData['cheque_no'] == '' || collData['cheque_no'] == null || collData['cheque_no'] == undefined || collData['trans_id'] == '' || collData['trans_id'] == null || collData['trans_id'] == undefined || collData['trans_date'] == '' || collData['trans_date'] == null || collData['trans_date'] == undefined) {
-            return false;
+    // Validate collection_mode
+    if (!validateField(collData['collection_mode'], 'collection_mode')) {
+        isValid = false;
+    } else {
+        if (collData['collection_mode'] == '2') { // cheque
+            let validations = [
+                validateField(collData['bank_id'], 'bank_id'),
+                validateField(collData['cheque_no'], 'cheque_no'),
+                validateField(collData['trans_id'], 'trans_id'),
+                validateField(collData['trans_date'], 'trans_date')
+            ];
+             if (!validations.every(result => result)) {
+            isValid = false;
         }
-    }else if(['3','4','5'].includes(collData['collection_mode'])){ //ECS / IMPS/NEFT/RTGS / UPI Transaction
-        if (collData['bank_id'] == '' || collData['bank_id'] == null || collData['bank_id'] == undefined || collData['trans_id'] == '' || collData['trans_id'] == null || collData['trans_id'] == undefined || collData['trans_date'] == '' || collData['trans_date'] == null || collData['trans_date'] == undefined) {
-            return false;
+        } else if (['3', '4', '5'].includes(collData['collection_mode'])) { // ECS / IMPS/NEFT/RTGS / UPI Transaction
+            let validations = [
+                validateField(collData['bank_id'], 'bank_id'),
+                validateField(collData['trans_id'], 'trans_id'),
+                validateField(collData['trans_date'], 'trans_date')
+            ];
+            if (!validations.every(result => result)) {
+                isValid = false;
+            }
         }
     }
-
-    return true;
+    return isValid;
 }
 
 function closeChartsModal() {
@@ -642,6 +669,8 @@ function getFineFormTable(cp_id){
 
         $('#fine_purpose').val('');
         $('#fine_Amnt').val('');
+        $('#fine_purpose').css('border', '1px solid #cecece');
+        $('#fine_Amnt').css('border', '1px solid #cecece');
     },'json');
 }
 

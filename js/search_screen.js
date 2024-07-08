@@ -32,6 +32,9 @@ $(document).ready(function () {
         event.preventDefault();
         $('#noc_summary').show();
         $('#customer_status, #custome_list, #search_form').hide();
+        let cp_id = $(this).attr('value');
+        $('#cp_id').val(cp_id)
+        callAllFunctions(cp_id);
     })
     $('#back_btn').click(function () {
         $('#customer_status').show();
@@ -102,6 +105,8 @@ $(document).ready(function () {
 
         $('#penalty_model').modal('show');
         let cp_id = $(this).attr('value');
+        $('#cus_profile_id').val(cp_id)
+        
     let cus_id = $('#cus_id').val();
     $.ajax({
         //to insert penalty by on click
@@ -262,19 +267,47 @@ $('#print_doc').click(function(){
 })
 function validate() {
     let response = true;
-    let cus_id = $('#cust_id').val();
-    let cus_name = $('#cust_name').val();
-    let area = $('#cus_area').val();
-    let mobile = $('#cus_mobile').val();
 
-    if (cus_id == '' && cus_name == '' && area == '' && mobile == '') {
-        response = false;
-        swalError('Error', 'Please fill any one field to search!');
+    let cus_id = $('#cust_id').val().trim();
+    let cus_name = $('#cust_name').val().trim();
+    let area = $('#cus_area').val().trim();
+    let mobile = $('#cus_mobile').val().trim();
+
+    // Reset all field borders initially
+    $('#cust_id, #cust_name, #cus_area, #cus_mobile').css('border', '1px solid #cecece');
+
+    // Check if any one field is filled
+    if (cus_id || cus_name || area || mobile) {
+        // If any field is filled, reset the other fields' borders
+        if (cus_id) {
+            $('#cust_name, #cus_area, #cus_mobile').css('border', '1px solid #cecece');
+        } else if (cus_name) {
+            $('#cust_id, #cus_area, #cus_mobile').css('border', '1px solid #cecece');
+        } else if (area) {
+            $('#cust_id, #cust_name, #cus_mobile').css('border', '1px solid #cecece');
+        } else if (mobile) {
+            $('#cust_id, #cust_name, #cus_area').css('border', '1px solid #cecece');
+        }
+    } else {
+        // If no fields are filled, show validation errors
+        if (!validateField(cus_id, 'cust_id')) {
+            response = false;
+        }
+        if (!validateField(cus_name, 'cust_name')) {
+            response = false;
+        }
+        if (!validateField(area, 'cus_area')) {
+            response = false;
+        }
+        if (!validateField(mobile, 'cus_mobile')) {
+            response = false;
+        }
+       
     }
 
     return response;
 }
-// Function to fetch and display customer list
+
 function getSearchTable(data) {
     // Assuming response is in JSON format and contains customer data
     let response = JSON.parse(data);
@@ -1072,3 +1105,140 @@ function loanCalculationEdit(id) {
     }, 'json');
 }
 //////////////////////////////////////////////////////////////// Loan Calculation END //////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////// NOC //////////////////////////////////////////////////////////////////////
+function callAllFunctions(cp_id) {
+    getChequeList(cp_id);
+    getMortgageList(cp_id);
+    getEndorsementList(cp_id);
+    getOtherDocumentList(cp_id);
+    $('#noc_relation').val('');
+    getFamilyMember();
+    setTimeout(() => {
+        setSubmittedDisabled();
+    }, 1000);
+}
+
+function getChequeList(cp_id) {
+    $.post('api/noc_files/noc_cheque_list.php', { cp_id }, function (response) {
+        let nocChequeColumns = [
+            'sno',
+            'holder_type',
+            'holder_name',
+            'relationship',
+            'bank_name',
+            'cheque_no',
+            'date_of_noc',
+            'noc_member',
+            'noc_relationship',
+            'action'
+        ];
+        appendDataToTable('#noc_cheque_list_table', response, nocChequeColumns);
+        setdtable('#noc_cheque_list_table');
+        
+    }, 'json');
+}
+
+function getMortgageList(cp_id) {
+    $.post('api/noc_files/noc_mortgage_list.php', { cp_id }, function (response) {
+        let nocMortgageColumns = [
+            'sno',
+            'fam_name',
+            'relationship',
+            'property_details',
+            'mortgage_name',
+            'designation',
+            'reg_office',
+            'date_of_noc',
+            'noc_member',
+            'noc_relationship',
+            'action'
+        ];
+        appendDataToTable('#noc_mortgage_list_table', response, nocMortgageColumns);
+        setdtable('#noc_mortgage_list_table');
+    }, 'json');
+}
+
+function getEndorsementList(cp_id) {
+    $.post('api/noc_files/noc_endorsement_list.php', { cp_id }, function (response) {
+        let nocEndorseColumns = [
+            'sno',
+            'fam_name',
+            'relationship',
+            'vehicle_details',
+            'endorsement_name',
+            'key_original',
+            'rc_original',
+            'date_of_noc',
+            'noc_member',
+            'noc_relationship',
+            'action'
+        ];
+        appendDataToTable('#noc_endorsement_list_table', response, nocEndorseColumns);
+        setdtable('#noc_endorsement_list_table');
+    }, 'json');
+}
+
+function getOtherDocumentList(cp_id) {
+    $.post('api/noc_files/noc_document_info_list.php', { cp_id }, function (response) {
+        let nocDocInfoColumns = [
+            'sno',
+            'doc_name',
+            'doc_type',
+            'fam_name',
+            'upload',
+            'date_of_noc',
+            'noc_member',
+            'noc_relationship',
+            'action'
+        ];
+        appendDataToTable('#noc_document_list_table', response, nocDocInfoColumns);
+        setdtable('#noc_document_list_table');
+    }, 'json');
+}
+
+
+
+function getFamilyMember() {
+    let cus_id = $('#cus_id').val();
+    let cus_name = $('#cus_name').val();
+    $.post('api/loan_entry/get_guarantor_name.php', { cus_id }, function (response) {
+        let appendOption = '';
+        appendOption += "<option value=''>Select Member Name</option>";
+        appendOption += "<option value='"+cus_name+"'>" + cus_name + "</option>";
+        $.each(response, function (index, val) {
+            appendOption += "<option value='" + val.id + "'>" + val.fam_name + "</option>";
+        });
+        $('#noc_member').empty().append(appendOption);
+    }, 'json');
+}
+
+function getRelationship(id) {
+    $.post('api/loan_entry/family_creation_data.php', { id }, function (response) {
+        let relationship = response[0].fam_relationship;
+        $('#noc_relation').val(relationship);
+    }, 'json');
+}
+
+function setSubmittedDisabled(){
+    $('.noc_cheque_chkbx, .noc_mortgage_chkbx, .noc_endorsement_chkbx, .noc_doc_info_chkbx, .noc_gold_chkbx').each(function(){
+        if ($(this).attr('data-id') == '1') {
+            $(this).closest('tr').addClass('disabled-row');
+            $(this).attr('checked', true).attr('disabled', true);
+        }
+    });
+
+    var cheque_checkDisabled = $('.noc_cheque_chkbx:disabled').length === $('.noc_cheque_chkbx').length;
+    var mort_checkDisabled = $('.noc_mortgage_chkbx:disabled').length === $('.noc_mortgage_chkbx').length;
+    var endorse_checkDisabled = $('.noc_endorsement_chkbx:disabled').length === $('.noc_endorsement_chkbx').length;
+    var doc_checkDisabled = $('.noc_doc_info_chkbx:disabled').length === $('.noc_doc_info_chkbx').length;
+    var gold_checkDisabled = $('.noc_gold_chkbx:disabled').length === $('.noc_gold_chkbx').length;
+
+    if (cheque_checkDisabled && mort_checkDisabled && endorse_checkDisabled && doc_checkDisabled && gold_checkDisabled ) {
+        $('#submit_noc').hide();
+    }else{
+        $('#submit_noc').show();
+    }
+
+}
+
+

@@ -62,19 +62,19 @@
                                         <div class="form-group">
                                             <label for="cus_id"> Customer ID</label><span class="text-danger">*</span>
                                             <input type="text" class="form-control personal_info_disble" id="cus_id" name="cus_id" data-type="adhaar-number" placeholder="Enter Customer ID" tabindex="1" maxlength="14">
-                                            <input type="hidden" id="cus_id_upd" name="cus_id_upd" >
+                                            <input type="hidden" id="cus_id_upd" name="cus_id_upd">
                                         </div>
                                     </div>
                                     <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
                                         <div class="form-group">
                                             <label for="cus_name"> Customer Name</label><span class="text-danger">*</span>
-                                            <input type="text" class="form-control personal_info_disble" id="cus_name"  name="cus_name" pattern="[a-zA-Z\s]+" placeholder="Enter Customer Name" tabindex=" 2">
+                                            <input type="text" class="form-control personal_info_disble" id="cus_name" name="cus_name" pattern="[a-zA-Z\s]+" placeholder="Enter Customer Name" tabindex=" 2">
                                         </div>
                                     </div>
                                     <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
                                         <div class="form-group">
                                             <label for="gender">Gender</label><span class="text-danger">*</span>
-                                            <select type="text" class="form-control  personal_info_disble"  id="gender"  name="gender" tabindex="3">
+                                            <select type="text" class="form-control  personal_info_disble" id="gender" name="gender" tabindex="3">
                                                 <option value="">Select Gender</option>
                                                 <option value="1">Male</option>
                                                 <option value="2">Female</option>
@@ -97,13 +97,13 @@
                                     <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
                                         <div class="form-group">
                                             <label for="mobile1"> Mobile Number 1</label><span class="text-danger">*</span>
-                                            <input type="number" class="form-control  personal_info_disble" id="mobile1" name="mobile1"  placeholder="Enter Mobile Number 1" onKeyPress="if(this.value.length==10) return false;" tabindex="6">
+                                            <input type="number" class="form-control  personal_info_disble" id="mobile1" name="mobile1" placeholder="Enter Mobile Number 1" onKeyPress="if(this.value.length==10) return false;" tabindex="6">
                                         </div>
                                     </div>
                                     <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
                                         <div class="form-group">
                                             <label for="mobile2"> Mobile Number 2</label>
-                                            <input type="number" class="form-control  personal_info_disble" id="mobile2" name="mobile2"  onKeyPress="if(this.value.length==10) return false;" placeholder="Enter Mobile Number 2" tabindex="7">
+                                            <input type="number" class="form-control  personal_info_disble" id="mobile2" name="mobile2" onKeyPress="if(this.value.length==10) return false;" placeholder="Enter Mobile Number 2" tabindex="7">
                                         </div>
                                     </div>
                                 </div>
@@ -122,7 +122,7 @@
                             </div>
                             <div class="col-md-12 ">
                                 <div class="text-right">
-                                    <button type="submit" name="submit_personal_info" id="submit_personal_info" class="btn btn-primary" value="Submit" ><span class="icon-check"></span>&nbsp;Submit</button>
+                                    <button type="submit" name="submit_personal_info" id="submit_personal_info" class="btn btn-primary" value="Submit"><span class="icon-check"></span>&nbsp;Submit</button>
                                 </div>
                             </div>
                         </div>
@@ -280,7 +280,7 @@
                                 </div>
                             </div>
                         </div>
-    
+
                         <div class="card-header">
                             <div class="card-title">Family Data</div>
                         </div>
@@ -913,12 +913,12 @@
                             <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
                                 <div class="form-group">
                                     <label for="fam_live">Live/Deceased</label><span class="text-danger">*</span>
-                                    <select type="text" class="form-control" id="fam_live" name="fam_live" tabindex="1">
-                                        <option value="0">Select Live/Deceased</option>
+                                    <select class="form-control" id="fam_live" name="fam_live" tabindex="17">
+                                        <option value="">Select Live/Deceased</option>
                                         <option value="1">Live</option>
                                         <option value="2">Deceased</option>
                                     </select>
-                                    <input type="hidden" id="add_live_id" value='0'>
+
                                 </div>
                             </div>
                             <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
@@ -1261,7 +1261,7 @@
         <div class="modal-content" style="background-color: white">
             <div class="modal-header">
                 <h5 class="modal-title" id="exampleModalLongTitle">Add Proof</h5>
-                <button type="button" class="close kyc_proof_close" data-dismiss="modal" onclick="fetchProofList()" tabindex="1" >
+                <button type="button" class="close kyc_proof_close" data-dismiss="modal" onclick="fetchProofList()" tabindex="1">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
