@@ -35,10 +35,10 @@ $(document).ready(function () {
             $('.cq_fam_member').hide();
             let cus_profile_id = $('#customer_profile_id').val();
             getNameRelationship(cus_profile_id, holderType);
-        } else if(holderType == '3') {
+        } else if (holderType == '3') {
             getFamilyMember('Select Family Member', '#cq_fam_mem');
             $('.cq_fam_member').show();
-        } else{
+        } else {
             $('.cq_fam_member').hide();
         }
     });
@@ -80,50 +80,57 @@ $(document).ready(function () {
             chequeNoArr[i] = $(this).val();//store each numbers in an array
             i++;
         });
+        var data = ['cq_holder_type', 'cq_holder_name', 'cq_relationship', 'cq_bank_name', 'cheque_count']
 
-        if (cq_holder_type === '' || cq_holder_name === '' || cq_relationship === '' || cq_bank_name === '' || cheque_count == '') {
-            swalError('Warning', 'Please Fill out Mandatory fields!');
-            return false;
-        }
-        let chequeInfo = new FormData();
-        chequeInfo.append('cq_holder_type', cq_holder_type)
-        chequeInfo.append('cq_holder_name', cq_holder_name)
-        chequeInfo.append('cq_holder_id', cq_holder_id)
-        chequeInfo.append('cq_relationship', cq_relationship)
-        chequeInfo.append('cheque_count', cheque_count)
-        chequeInfo.append('cq_bank_name', cq_bank_name)
-        chequeInfo.append('cq_upload_edit', cq_upload_edit)
-        chequeInfo.append('cheque_no', chequeNoArr)
-        chequeInfo.append('cus_id', cus_id)
-        chequeInfo.append('customer_profile_id', customer_profile_id)
-        chequeInfo.append('id', cheque_info_id)
-
-        for (var a = 0; a < cq_upload.length; a++) {
-            chequeInfo.append('cq_upload[]', cq_upload[a])
-        }
-
-        $.ajax({
-            url: 'api/loan_issue_files/submit_cheque_info.php',
-            type: 'post',
-            data: chequeInfo,
-            contentType: false,
-            processData: false,
-            cache: false,
-            dataType: 'json',
-            success: function (response) {
-                if (response == '1') {
-                    swalSuccess('Success', 'Cheque Info Updated Successfully')
-                } else if (response == '2') {
-                    swalSuccess('Success', 'Cheque Info Added Successfully')
-                } else {
-                    swalError('Alert', 'Failed')
-                }
-                getChequeCreationTable();
-                $('#clear_cheque_form').trigger('click');
-                $('#cheque_info_id').val('');
-                $('.cq_fam_member').hide();
+        var isValid = true;
+        data.forEach(function (entry) {
+            var fieldIsValid = validateField($('#' + entry).val(), entry);
+            if (!fieldIsValid) {
+                isValid = false;
             }
         });
+        if (isValid) {
+            let chequeInfo = new FormData();
+            chequeInfo.append('cq_holder_type', cq_holder_type)
+            chequeInfo.append('cq_holder_name', cq_holder_name)
+            chequeInfo.append('cq_holder_id', cq_holder_id)
+            chequeInfo.append('cq_relationship', cq_relationship)
+            chequeInfo.append('cheque_count', cheque_count)
+            chequeInfo.append('cq_bank_name', cq_bank_name)
+            chequeInfo.append('cq_upload_edit', cq_upload_edit)
+            chequeInfo.append('cheque_no', chequeNoArr)
+            chequeInfo.append('cus_id', cus_id)
+            chequeInfo.append('customer_profile_id', customer_profile_id)
+            chequeInfo.append('id', cheque_info_id)
+
+            for (var a = 0; a < cq_upload.length; a++) {
+                chequeInfo.append('cq_upload[]', cq_upload[a])
+            }
+
+            $.ajax({
+                url: 'api/loan_issue_files/submit_cheque_info.php',
+                type: 'post',
+                data: chequeInfo,
+                contentType: false,
+                processData: false,
+                cache: false,
+                dataType: 'json',
+                success: function (response) {
+                    if (response == '1') {
+                        swalSuccess('Success', 'Cheque Info Updated Successfully')
+                    } else if (response == '2') {
+                        swalSuccess('Success', 'Cheque Info Added Successfully')
+                    } else {
+                        swalError('Alert', 'Failed')
+                    }
+                    getChequeCreationTable();
+                    $('#clear_cheque_form').trigger('click');
+                    $('#cheque_info_id').val('');
+
+                    $('.cq_fam_member').hide();
+                }
+            });
+        }
     });
 
     $(document).on('click', '.chequeActionBtn', function () {
@@ -142,7 +149,7 @@ $(document).ready(function () {
                 setTimeout(() => {
                     $('#cq_fam_mem').val(response.result[0].holder_id);
                 }, 1000);
-            }else{
+            } else {
                 $('#cq_fam_mem').val('');
                 $('.cq_fam_member').hide();
             }
@@ -164,6 +171,8 @@ $(document).ready(function () {
     $('#clear_cheque_form').click(function () {
         $('#cheque_no').empty();
         $('#cheque_info_id').val('');
+        $('#cheque_info_form input').css('border', '1px solid #cecece');
+        $('#cheque_info_form select').css('border', '1px solid #cecece');
         $('.cq_fam_member').hide();
     });
     ///////////////////////////////////////////////////////////////////Cheque info END ////////////////////////////////////////////////////////////////////////////
@@ -190,43 +199,48 @@ $(document).ready(function () {
         let doc_info_id = $('#doc_info_id').val();
         let cus_id = $('#cus_id').val();
         let customer_profile_id = $('#customer_profile_id').val();
+        var data = ['doc_name', 'doc_type', 'doc_holder_name', 'doc_relationship']
 
-        if (doc_name == '' || doc_type == '' || doc_holder_name == '' || doc_relationship == '') {
-            swalError('Warning', 'Please Fill out Mandatory fields!');
-            return false;
-        }
-
-        let docInfo = new FormData();
-        docInfo.append('doc_name', doc_name);
-        docInfo.append('doc_type', doc_type);
-        docInfo.append('doc_holder_name', doc_holder_name);
-        docInfo.append('doc_relationship', doc_relationship);
-        docInfo.append('doc_upload', doc_upload);
-        docInfo.append('doc_upload_edit', doc_upload_edit);
-        docInfo.append('cus_id', cus_id);
-        docInfo.append('customer_profile_id', customer_profile_id);
-        docInfo.append('id', doc_info_id);
-
-        $.ajax({
-            url: 'api/loan_issue_files/submit_document_info.php',
-            type: 'post',
-            data: docInfo,
-            contentType: false,
-            processData: false,
-            cache: false,
-            success: function (response) {
-                if (response == '1') {
-                    swalSuccess('Success', 'Document Info Updated Successfully')
-                } else if (response == '2') {
-                    swalSuccess('Success', 'Document Info Added Successfully')
-                } else {
-                    swalError('Alert', 'Failed')
-                }
-                getDocCreationTable();
-                $('#clear_doc_form').trigger('click');
-                $('#doc_info_id').val('');
+        var isValid = true;
+        data.forEach(function (entry) {
+            var fieldIsValid = validateField($('#' + entry).val(), entry);
+            if (!fieldIsValid) {
+                isValid = false;
             }
         });
+        if (isValid) {
+            let docInfo = new FormData();
+            docInfo.append('doc_name', doc_name);
+            docInfo.append('doc_type', doc_type);
+            docInfo.append('doc_holder_name', doc_holder_name);
+            docInfo.append('doc_relationship', doc_relationship);
+            docInfo.append('doc_upload', doc_upload);
+            docInfo.append('doc_upload_edit', doc_upload_edit);
+            docInfo.append('cus_id', cus_id);
+            docInfo.append('customer_profile_id', customer_profile_id);
+            docInfo.append('id', doc_info_id);
+
+            $.ajax({
+                url: 'api/loan_issue_files/submit_document_info.php',
+                type: 'post',
+                data: docInfo,
+                contentType: false,
+                processData: false,
+                cache: false,
+                success: function (response) {
+                    if (response == '1') {
+                        swalSuccess('Success', 'Document Info Updated Successfully')
+                    } else if (response == '2') {
+                        swalSuccess('Success', 'Document Info Added Successfully')
+                    } else {
+                        swalError('Alert', 'Failed')
+                    }
+                    getDocCreationTable();
+                    $('#clear_doc_form').trigger('click');
+                    $('#doc_info_id').val('');
+                }
+            });
+        }
     });
 
     $(document).on('click', '.docActionBtn', function () {
@@ -248,6 +262,9 @@ $(document).ready(function () {
 
     $('#clear_doc_form').click(function () {
         $('#doc_info_id').val('');
+        $('#doc_upload_edit').val('');
+        $('#doc_info_form input').css('border', '1px solid #cecece');
+        $('#doc_info_form select').css('border', '1px solid #cecece');
     })
     ///////////////////////////////////////////////////////////////////Document info END ////////////////////////////////////////////////////////////////////////////
 
@@ -277,47 +294,52 @@ $(document).ready(function () {
         let customer_profile_id = $('#customer_profile_id').val();
         let mort_upload = $('#mort_upload')[0].files[0];
         let mort_upload_edit = $('#mort_upload_edit').val();
+        var data = ['property_holder_name', 'mort_relationship', 'mort_property_details', 'mortgage_name', 'mort_designation', 'mortgage_no', 'reg_office', 'mortgage_value']
 
-        if (property_holder_name == '' || mort_relationship == '' || mort_property_details == '' || mortgage_name == '' || mort_designation == '' || mortgage_no == '' || reg_office == '' || mortgage_value == '') {
-            swalError('Warning', 'Please Fill out Mandatory fields!');
-            return false;
-        }
-
-        let mortgageInfo = new FormData();
-        mortgageInfo.append('property_holder_name', property_holder_name);
-        mortgageInfo.append('mort_relationship', mort_relationship);
-        mortgageInfo.append('mort_property_details', mort_property_details);
-        mortgageInfo.append('mortgage_name', mortgage_name);
-        mortgageInfo.append('mort_designation', mort_designation);
-        mortgageInfo.append('mortgage_no', mortgage_no);
-        mortgageInfo.append('reg_office', reg_office);
-        mortgageInfo.append('mortgage_value', mortgage_value);
-        mortgageInfo.append('mort_upload', mort_upload);
-        mortgageInfo.append('mort_upload_edit', mort_upload_edit);
-        mortgageInfo.append('cus_id', cus_id);
-        mortgageInfo.append('customer_profile_id', customer_profile_id);
-        mortgageInfo.append('id', mortgage_info_id);
-
-        $.ajax({
-            url: 'api/loan_issue_files/submit_mortgage_info.php',
-            type: 'post',
-            data: mortgageInfo,
-            contentType: false,
-            processData: false,
-            cache: false,
-            success: function (response) {
-                if (response == '1') {
-                    swalSuccess('Success', 'Mortgage Info Updated Successfully')
-                } else if (response == '2') {
-                    swalSuccess('Success', 'Mortgage Info Added Successfully')
-                } else {
-                    swalError('Alert', 'Failed')
-                }
-                getMortCreationTable()
-                $('#clear_mortgage_form').trigger('click');
-                $('#mortgage_info_id').val('');
+        var isValid = true;
+        data.forEach(function (entry) {
+            var fieldIsValid = validateField($('#' + entry).val(), entry);
+            if (!fieldIsValid) {
+                isValid = false;
             }
         });
+        if (isValid) {
+            let mortgageInfo = new FormData();
+            mortgageInfo.append('property_holder_name', property_holder_name);
+            mortgageInfo.append('mort_relationship', mort_relationship);
+            mortgageInfo.append('mort_property_details', mort_property_details);
+            mortgageInfo.append('mortgage_name', mortgage_name);
+            mortgageInfo.append('mort_designation', mort_designation);
+            mortgageInfo.append('mortgage_no', mortgage_no);
+            mortgageInfo.append('reg_office', reg_office);
+            mortgageInfo.append('mortgage_value', mortgage_value);
+            mortgageInfo.append('mort_upload', mort_upload);
+            mortgageInfo.append('mort_upload_edit', mort_upload_edit);
+            mortgageInfo.append('cus_id', cus_id);
+            mortgageInfo.append('customer_profile_id', customer_profile_id);
+            mortgageInfo.append('id', mortgage_info_id);
+
+            $.ajax({
+                url: 'api/loan_issue_files/submit_mortgage_info.php',
+                type: 'post',
+                data: mortgageInfo,
+                contentType: false,
+                processData: false,
+                cache: false,
+                success: function (response) {
+                    if (response == '1') {
+                        swalSuccess('Success', 'Mortgage Info Updated Successfully')
+                    } else if (response == '2') {
+                        swalSuccess('Success', 'Mortgage Info Added Successfully')
+                    } else {
+                        swalError('Alert', 'Failed')
+                    }
+                    getMortCreationTable()
+                    $('#clear_mortgage_form').trigger('click');
+                    $('#mortgage_info_id').val('');
+                }
+            });
+        }
     });
 
     $(document).on('click', '.mortActionBtn', function () {
@@ -343,6 +365,11 @@ $(document).ready(function () {
 
     $('#clear_mortgage_form').click(function () {
         $('#mortgage_info_id').val('');
+        $('#mort_upload_edit').val('');
+        $('#mortgage_form input').css('border', '1px solid #cecece');
+        $('#mortgage_form select').css('border', '1px solid #cecece');
+        $('#mortgage_form textarea').css('border', '1px solid #cecece');
+
     })
     ///////////////////////////////////////////////////////////////////Mortgage info END ////////////////////////////////////////////////////////////////////////////
 
@@ -370,44 +397,50 @@ $(document).ready(function () {
         let cus_id = $('#cus_id').val();
         let customer_profile_id = $('#customer_profile_id').val();
 
-        if (owner_name == '' || owner_relationship == '' || vehicle_details == '' || endorsement_name == '' || key_original == '' || rc_original == '') {
-            swalError('Warning', 'Please Fill out Mandatory fields!');
-            return false;
-        }
+        var data = ['owner_name', 'owner_relationship', 'vehicle_details', 'endorsement_name', 'key_original', 'rc_original']
 
-        let endorsementInfo = new FormData();
-        endorsementInfo.append('owner_name', owner_name);
-        endorsementInfo.append('owner_relationship', owner_relationship);
-        endorsementInfo.append('vehicle_details', vehicle_details);
-        endorsementInfo.append('endorsement_name', endorsement_name);
-        endorsementInfo.append('key_original', key_original);
-        endorsementInfo.append('rc_original', rc_original);
-        endorsementInfo.append('endorsement_upload', endorsement_upload);
-        endorsementInfo.append('endorsement_upload_edit', endorsement_upload_edit);
-        endorsementInfo.append('cus_id', cus_id);
-        endorsementInfo.append('customer_profile_id', customer_profile_id);
-        endorsementInfo.append('id', endorsement_info_id);
-
-        $.ajax({
-            url: 'api/loan_issue_files/submit_endorsement_info.php',
-            type: 'post',
-            data: endorsementInfo,
-            contentType: false,
-            processData: false,
-            cache: false,
-            success: function (response) {
-                if (response == '1') {
-                    swalSuccess('Success', 'Endorsement Info Updated Successfully')
-                } else if (response == '2') {
-                    swalSuccess('Success', 'Endorsement Info Added Successfully')
-                } else {
-                    swalError('Alert', 'Failed')
-                }
-                getEndorsementCreationTable()
-                $('#clear_endorsement_form').trigger('click');
-                $('#endorsement_info_id').val('');
+        var isValid = true;
+        data.forEach(function (entry) {
+            var fieldIsValid = validateField($('#' + entry).val(), entry);
+            if (!fieldIsValid) {
+                isValid = false;
             }
         });
+        if (isValid) {
+            let endorsementInfo = new FormData();
+            endorsementInfo.append('owner_name', owner_name);
+            endorsementInfo.append('owner_relationship', owner_relationship);
+            endorsementInfo.append('vehicle_details', vehicle_details);
+            endorsementInfo.append('endorsement_name', endorsement_name);
+            endorsementInfo.append('key_original', key_original);
+            endorsementInfo.append('rc_original', rc_original);
+            endorsementInfo.append('endorsement_upload', endorsement_upload);
+            endorsementInfo.append('endorsement_upload_edit', endorsement_upload_edit);
+            endorsementInfo.append('cus_id', cus_id);
+            endorsementInfo.append('customer_profile_id', customer_profile_id);
+            endorsementInfo.append('id', endorsement_info_id);
+
+            $.ajax({
+                url: 'api/loan_issue_files/submit_endorsement_info.php',
+                type: 'post',
+                data: endorsementInfo,
+                contentType: false,
+                processData: false,
+                cache: false,
+                success: function (response) {
+                    if (response == '1') {
+                        swalSuccess('Success', 'Endorsement Info Updated Successfully')
+                    } else if (response == '2') {
+                        swalSuccess('Success', 'Endorsement Info Added Successfully')
+                    } else {
+                        swalError('Alert', 'Failed')
+                    }
+                    getEndorsementCreationTable()
+                    $('#clear_endorsement_form').trigger('click');
+                    $('#endorsement_info_id').val('');
+                }
+            });
+        }
     });
 
     $(document).on('click', '.endorseActionBtn', function () {
@@ -431,6 +464,10 @@ $(document).ready(function () {
 
     $('#clear_endorsement_form').click(function () {
         $('#endorsement_info_id').val('');
+        $('#endorsement_upload_edit').val('');
+        $('#endorsement_form input').css('border', '1px solid #cecece');
+        $('#endorsement_form select').css('border', '1px solid #cecece');
+        $('#endorsement_form textarea').css('border', '1px solid #cecece');
     });
 
     ///////////////////////////////////////////////////////////////////Endorsement info END ////////////////////////////////////////////////////////////////////////////
@@ -447,23 +484,34 @@ $(document).ready(function () {
             'value': $('#gold_value').val(),
             'id': $('#gold_info_id').val(),
         };
-        if (goldInfo.gold_type == '' || goldInfo.purity == '' || goldInfo.weight == '' || goldInfo.value == '') {
-            swalError('Alert', 'Please fill Mandatory fields');
-            return;
-        }
+        var data = ['gold_type', 'gold_purity', 'gold_weight', 'gold_value']
 
-        $.post('api/loan_issue_files/submit_gold_info.php', goldInfo, function (response) {
-            if (response == '1') {
-                swalSuccess('Success', 'Gold Info Updated Successfully')
-            } else if (response == '2') {
-                swalSuccess('Success', 'Gold Info Added Successfully')
-            } else {
-                swalError('Alert', 'Failed')
+        var isValid = true;
+        data.forEach(function (entry) {
+            var fieldIsValid = validateField($('#' + entry).val(), entry);
+            if (!fieldIsValid) {
+                isValid = false;
             }
-            getGoldCreationTable()
-            $('#clear_gold_form').trigger('click');
-            $('#gold_info_id').val('');
         });
+
+        // if (goldInfo.gold_type == '' || goldInfo.purity == '' || goldInfo.weight == '' || goldInfo.value == '') {
+        //     swalError('Alert', 'Please fill Mandatory fields');
+        //     return;
+        // }
+        if (isValid) {
+            $.post('api/loan_issue_files/submit_gold_info.php', goldInfo, function (response) {
+                if (response == '1') {
+                    swalSuccess('Success', 'Gold Info Updated Successfully')
+                } else if (response == '2') {
+                    swalSuccess('Success', 'Gold Info Added Successfully')
+                } else {
+                    swalError('Alert', 'Failed')
+                }
+                getGoldCreationTable()
+                $('#clear_gold_form').trigger('click');
+                $('#gold_info_id').val('');
+            });
+        }
     });
 
     $(document).on('click', '.goldActionBtn', function () {
@@ -484,6 +532,8 @@ $(document).ready(function () {
 
     $('#clear_gold_form').click(function () {
         $('#gold_info_id').val('');
+        $('#gold_form input').css('border', '1px solid #cecece');
+        $('#gold_form select').css('border', '1px solid #cecece');
     });
     ///////////////////////////////////////////////////////////////////Gold info END ////////////////////////////////////////////////////////////////////////////
 
@@ -530,23 +580,7 @@ $(function () {
 });
 
 function getLoanIssueTable() {
-    $.post('api/loan_issue_files/loan_issue_list.php', function (response) {
-        var columnMapping = [
-            'sno',
-            'cus_id',
-            'cus_name',
-            'area',
-            'linename',
-            'branch_name',
-            'loan_amount',
-            'mobile1',
-            'action'
-        ];
-        appendDataToTable('#loan_issue_table', response, columnMapping);
-        setdtable('#loan_issue_table');
-        //Dropdown in List Screen
-        setDropdownScripts();
-    }, 'json');
+    serverSideTable('#loan_issue_table', '', 'api/loan_issue_files/loan_issue_list.php');
 }
 
 function swapTableAndCreation() {
@@ -571,6 +605,7 @@ function getDocNeedTable(cusProfileId) {
             "document_name"
         ]
         appendDataToTable('#doc_need_table', response, docColumn);
+        setdtable('#doc_need_table');
     }, 'json');
 }
 
@@ -993,9 +1028,7 @@ $(document).ready(function () {
                     swalError('Warning', 'Loan Issue Failed.');
                 }
             });
-        } else {
-            swalError('Warning', 'Kindly Fill Mandatory Fields.')
-        }
+        } 
 
     })
 }); ///Document END.
@@ -1071,31 +1104,34 @@ function refreshIssueInfo() {
 
 // Function to check if all values in an object are not empty
 function isFormDataValid(formData) {
+    // Reset border styles for all fields
+    $('#payment_mode, #issue_amount, #transaction_id, #chequeno').css('border', '1px solid #cecece');
 
+    if (formData['payment_mode'] === '1') { // Cash
+        if (!validateField(formData['issue_amount'], 'issue_amount')) {
+            return false;
+        }
+    } else if (formData['payment_mode'] === '2') { // Bank Transfer
+        if (!validateField(formData['transaction_id'], 'transaction_id') || !validateField(formData['issue_amount'], 'issue_amount')) {
+            return false;
+        }
+    } else if (formData['payment_mode'] === '3') { // Cheque
+        if (!validateField(formData['chequeno'], 'chequeno') || !validateField(formData['issue_amount'], 'issue_amount')) {
+            return false;
+        }
+    } 
+    // Check other mandatory fields not related to payment_mode
     for (let key in formData) {
-        if (key != 'payment_mode' && key != 'issue_amount' && key != 'transaction_id' && key != 'chequeno') {
-            if (formData[key] == '' || formData[key] == null || formData[key] == undefined) {
+        if (key !== 'payment_mode' && key !== 'issue_amount' && key !== 'transaction_id' && key !== 'chequeno') {
+            if (!validateField(formData[key], key)) {
                 return false;
             }
         }
     }
 
-    if (formData['payment_mode'] == '1') { //Cash
-        if (formData['issue_amount'] == '' || formData['issue_amount'] == null || formData['issue_amount'] == undefined) {
-            return false;
-        }
-    } else if (formData['payment_mode'] == '2') { //Bank Transfer
-        if (formData['transaction_id'] == '' || formData['transaction_id'] == null || formData['transaction_id'] == undefined ||
-            formData['issue_amount'] == '' || formData['issue_amount'] == null || formData['issue_amount'] == undefined) {
-            return false;
-        }
-    } else if (formData['payment_mode'] == '3') { //Bank Transfer
-        if (formData['chequeno'] == '' || formData['chequeno'] == null || formData['chequeno'] == undefined ||
-            formData['issue_amount'] == '' || formData['issue_amount'] == null || formData['issue_amount'] == undefined) {
-            return false;
-        }
-    }
-
     return true;
 }
+
+
+
 /////////////////////////////////////////////////////////// Loan Issue END////////////////////////////////////////////////

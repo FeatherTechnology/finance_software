@@ -15,10 +15,15 @@ $(document).ready(function () {
         event.preventDefault();
         //Validation
         let company_name = $('#company_name').val(); let branch_code = $('#branch_code').val(); let branch_name = $('#branch_name').val(); let address = $('#address').val(); let state = $('#state').val(); let district = $('#district').val(); let taluk = $('#taluk').val(); let place = $('#place').val(); let pincode = $('#pincode').val(); let email_id = $('#email_id').val(); let mobile_number = $('#mobile_number').val(); let whatsapp = $('#whatsapp').val(); let landline = $('#landline').val(); let landline_code = $('#landline_code').val(); let branchid = $('#branchid').val();
-        if (company_name === '' || branch_code === '' || branch_name === '' || state === '' || district === '' || taluk === '' || pincode === '') {
-            swalError('Warning', 'Please Fill out Mandatory fields!');
-            return false;
-        } else {
+        var data = ['company_name', 'branch_code', 'branch_name','place','state', 'district', 'taluk', 'pincode']
+        var isValid = true;
+        data.forEach(function (entry) {
+            var fieldIsValid = validateField($('#' + entry).val(), entry);
+            if (!fieldIsValid) {
+                isValid = false;
+            }
+        });
+        if (isValid) {
             $.post('api/branch_creation/submit_branch_creation.php', { company_name, branch_code, branch_name, address, state, district, taluk, place, pincode, email_id, mobile_number, whatsapp, landline, landline_code, branchid }, function (response) {
                 if (response == '1') {
                     swalSuccess('Success', 'Branch Added Successfully!');
@@ -83,27 +88,33 @@ $(document).ready(function () {
 
 $(function () {
     getBranchTable()
+
+
 });
+// function getBranchTable() {
+//     $.post('api/branch_creation/branch_creation_list.php', function (response) {
+//         var columnMapping = [
+//             'sno',
+//             'branch_code',
+//             'company_name',
+//             'branch_name',
+//             'place',
+//             'state_name',
+//             'district_name',
+//             'mobile_number',
+//             'email_id',
+//             'action'
+//         ];
+//         appendDataToTable('#branch_create', response, columnMapping);
+//         setdtable('#branch_create');
+
+//     }, 'json')
+// }
+
+
 function getBranchTable() {
-    $.post('api/branch_creation/branch_creation_list.php', function (response) {
-        var columnMapping = [
-            'sno',
-            'branch_code',
-            'company_name',
-            'branch_name',
-            'place',
-            'state_name',
-            'district_name',
-            'mobile_number',
-            'email_id',
-            'action'
-        ];
-        appendDataToTable('#branch_create', response, columnMapping);
-        setdtable('#branch_create');
-
-    }, 'json')
+    serverSideTable('#branch_create', '', 'api/branch_creation/branch_creation_list.php');
 }
-
 function swapTableAndCreation() {
     if ($('.branch_table_content').is(':visible')) {
         $('.branch_table_content').hide();
@@ -125,7 +136,7 @@ function swapTableAndCreation() {
 function getStateList() {
     $.post('api/common_files/get_state_list.php', function (response) {
         let appendStateOption = '';
-        appendStateOption += "<option value='0'>Select State</option>";
+        appendStateOption += "<option value=''>Select State</option>";
         $.each(response, function (index, val) {
             appendStateOption += "<option value='" + val.id + "'>" + val.state_name + "</option>";
         });
@@ -135,7 +146,7 @@ function getStateList() {
 function getDistrictList(state_id) {
     $.post('api/common_files/get_district_list.php', { state_id }, function (response) {
         let appendDistrictOption = '';
-        appendDistrictOption += "<option value='0'>Select District</option>";
+        appendDistrictOption += "<option value=''>Select District</option>";
         $.each(response, function (index, val) {
             appendDistrictOption += "<option value='" + val.id + "'>" + val.district_name + "</option>";
         });
@@ -146,7 +157,7 @@ function getDistrictList(state_id) {
 function getTalukList(district_id) {
     $.post('api/common_files/get_taluk_list.php', { district_id }, function (response) {
         let appendTalukOption = '';
-        appendTalukOption += "<option value='0'>Select Taluk</option>";
+        appendTalukOption += "<option value=''>Select Taluk</option>";
         $.each(response, function (index, val) {
             appendTalukOption += "<option value='" + val.id + "'>" + val.taluk_name + "</option>";
         });
@@ -206,7 +217,10 @@ $('button[type="reset"], #back_btn').click(function () {
 
     $('select').each(function () {
         $(this).val($(this).find('option:first').val());
+
     });
+    $('input').css('border', '1px solid #cecece');
+    $('select').css('border', '1px solid #cecece');
 });
 
 function getBranchDelete(id) {
@@ -214,7 +228,7 @@ function getBranchDelete(id) {
         if (response == '1') {
             swalSuccess('Success', 'Branch Deleted Successfully!');
             getBranchTable();
-        } else if(response == '2'){
+        } else if (response == '2') {
             swalError('Access Denied', 'Used in User Creation');
         } else {
             swalError('Error', 'Failed to Delete Branch');

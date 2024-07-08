@@ -465,7 +465,7 @@
                 <div class="card">
                     <div class="card-header">
                         <div class="card-title">KYC Info <span class="text-danger">*</span>
-                            <button type="button" class="btn btn-primary" id="add_kyc" name="add_kyc" data-toggle="modal" data-target="#add_kyc_info_modal" onclick="getKycTable();fetchProofList()" style="padding: 5px 35px; float: right;" tabindex='31'><span class="icon-add"></span></button>
+                            <button type="button" class="btn btn-primary" id="add_kyc" name="add_kyc" data-toggle="modal" data-target="#add_kyc_info_modal" style="padding: 5px 35px; float: right;" tabindex='31'><span class="icon-add"></span></button>
                         </div>
                     </div>
                     <div class="card-body">
@@ -476,6 +476,7 @@
                                         <thead>
                                             <tr>
                                                 <th width="20">S.NO</th>
+                                                <th>Loan ID</th>
                                                 <th>Proof Of</th>
                                                 <th>Relationship</th>
                                                 <th>Proof</th>
@@ -782,7 +783,7 @@
                                 <div class="form-group">
                                     <label for="fam_live">Live/Deceased</label><span class="text-danger">*</span>
                                     <select type="text" class="form-control" id="fam_live" name="fam_live" tabindex="1">
-                                        <option value="0">Select Live/Deceased</option>
+                                        <option value="">Select Live/Deceased</option>
                                         <option value="1">Live</option>
                                         <option value="2">Deceased</option>
                                     </select>

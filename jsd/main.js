@@ -292,7 +292,7 @@ function appendDataToTable(tableSelector, response, columnMapping) {
 			if (value === 'sno') {
 				$('<td>').text(index + 1).appendTo(row); // Add serial number
 			} else if (item.hasOwnProperty(value)) {
-				
+
 				if (value === 'action' || value === 'upload' || value === 'charts' || value === 'info') {
 					// If the key is 'action' or 'upload', insert the HTML content directly
 					$('<td>').html(item[value]).appendTo(row);
@@ -306,6 +306,55 @@ function appendDataToTable(tableSelector, response, columnMapping) {
 		tableBody.append(row);
 	});
 }
+/////////////////////////////////////////////////////
+
+// Function to append data to table
+function serverSideTable(tableSelector, params, apiUrl) {
+	$(tableSelector).DataTable().destroy();
+	$(tableSelector).DataTable({
+		'order': [[0, "desc"]],
+		'processing': true,
+		'serverSide': true,
+		'serverMethod': 'post',
+		'ajax': {
+			'url': apiUrl,
+			'data': function (data) {
+				var search = $('input[type=search]').val();
+				data.search = search;
+				data.params = params;
+			}
+		},
+		dom: 'lBfrtip',
+		buttons: [
+			{
+				extend: 'excel',
+				title: "Branch List"
+			},
+			{
+				extend: 'colvis',
+				collectionLayout: 'fixed four-column',
+			}
+		],
+		"lengthMenu": [
+			[10, 25, 50, -1],
+			[10, 25, 50, "All"]
+		],
+		'drawCallback': function () {
+			setDropdownScripts()
+		}
+	});
+
+}
+
+
+
+
+
+
+////////////////////////////////////////////////////
+
+
+
 //Swal alert section *************************
 function swalSuccess(title, text) {
 	Swal.fire({
@@ -333,7 +382,7 @@ function swalInfo(title, text) {
 		confirmButtonColor: 'var(--primary-color)',
 	})
 }
-function swalConfirm(title, text, functionname, idvalue) {
+function swalConfirm(title, text, functionname, idvalue, noCallback) {
 	Swal.fire({
 		title: title,
 		text: text,
@@ -346,14 +395,18 @@ function swalConfirm(title, text, functionname, idvalue) {
 	}).then((result) => {
 		if (result.isConfirmed) {
 			functionname(idvalue);
+		} else if (noCallback) {
+			noCallback();
 		}
 	});
 }
 function checkMobileNo(mobileno, selector) {
-	let mobileNoRegex = /[6-9]{1}[0-9]{9}$/;
-	if (!(mobileNoRegex.test(mobileno))) {
-		swalError('Warning', 'Enter valid Mobile Number.')
-		$('#' + selector).val('')
+	if (mobileno != '') {
+		let mobileNoRegex = /[6-9]{1}[0-9]{9}$/;
+		if (!(mobileNoRegex.test(mobileno))) {
+			swalError('Warning', 'Enter valid Mobile Number.')
+			$('#' + selector).val('')
+		}
 	}
 }
 function checkLandlineFormat(number, selector) {
@@ -406,4 +459,29 @@ function setCurrentDate(field_id) {
 	const curMonth = curDate.getMonth() + 1;
 	const curDay = curDate.getDate();
 	$(field_id).val(`${curYear}-${curMonth < 10 ? '0' + curMonth : curMonth}-${curDay < 10 ? '0' + curDay : curDay}`);
+}
+
+function validateField(value, fieldId) {
+    let response; // Declare the variable locally
+    if (value === '' || value === null || value === undefined) {
+        response = false;
+        $('#' + fieldId).css('border', '1px solid #ff0000');
+        swalError('Warning', 'Please fill out mandatory fields!');
+    } else {
+        response = true;
+        $('#' + fieldId).css('border', '1px solid #cecece');
+    }
+    return response;
+}
+function validateMultiSelectField(fieldId, choicesInstance) {
+    const selectedValues = choicesInstance.getValue(true);
+    const choicesElement = $('#' + fieldId).closest('.choices'); // Targeting the Choices.js container
+    
+    if (selectedValues.length === 0) {
+        choicesElement.find('.choices__inner').css('border', '1px solid #ff0000');
+        return false;
+    } else {
+        choicesElement.find('.choices__inner').css('border', '1px solid #cecece');
+        return true;
+    }
 }

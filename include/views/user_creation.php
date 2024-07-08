@@ -53,7 +53,7 @@
                                     </div>
                                     <div class="col-sm-4 col-md-4 col-lg-4">
                                         <div class="form-group">
-                                            <label for="user_id">User ID</label><span class="text-danger">*</span>
+                                            <label for="user_id">User ID</label>
                                             <input type="text" class="form-control" id="user_id" name="user_id" tabindex="2" readonly>
                                         </div>
                                     </div>

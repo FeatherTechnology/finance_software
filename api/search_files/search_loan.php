@@ -11,7 +11,7 @@ $loan_list_arr = array();
 $status = [
     1 => 'Loan Entry', 2 => 'Loan Entry', 3 => 'Loan Approval',
     4 => 'Loan Issued', 5 => 'Loan Approval', 6 => 'Loan Approval',
-    7 => 'Present', 8 => 'Closed', 9 => 'Closed', 10 => 'NOC'
+    7 => 'Present', 8 => 'Closed', 9 => 'Closed', 10 => 'NOC',11=>'NOC'
 ];
 
 $whereClause = "WHERE 1"; // Initial WHERE clause
@@ -61,14 +61,18 @@ if ($qry->rowCount() > 0) {
             <button class='btn btn-outline-secondary'>
                 <i class='fa'>&#xf107;</i>
             </button>
-            <div class='dropdown-content'>
-                <a href='#' class='customer-profile' value='" . $row['cus_profile_id'] . "'>Customer Profile</a>
-                <a href='#' class='loan-calculation' value='" . $row['cus_profile_id'] . "'>Loan Calculation</a>
-                <a href='#' class='documentation' value='" . $row['cus_profile_id'] . "'>Documentation</a>
-                <a href='#' class='closed-remark' value='" . $row['cus_profile_id'] . "'>Remark View</a>
-                <a href='#' class='noc-summary' value='" . $row['cus_profile_id'] . "'>Noc Summary</a>
-            </div>
-        </div>";
+            <div class='dropdown-content'>";
+        $response['info'] .=  "<a href='#' class='customer-profile' value='" . $row['cus_profile_id'] . "'>Customer Profile</a>";
+        $response['info'] .=  "  <a href='#' class='loan-calculation' value='" . $row['cus_profile_id'] . "'>Loan Calculation</a>";
+        $response['info'] .=  " <a href='#' class='documentation' value='" . $row['cus_profile_id'] . "'>Documentation</a>";
+        if ($row['status'] >='8'){
+        $response['info'] .=  " <a href='#' class='closed-remark' value='" . $row['cus_profile_id'] . "'>Remark View</a>";
+        }
+        if ($row['status'] == '10' || $row['status'] == '11'){
+        $response['info'] .=  " <a href='#' class='noc-summary' value='" . $row['cus_profile_id'] . "'>Noc Summary</a>";
+        }
+        $response['info'] .=  "  </div> </div>";
+
 
         $response['charts'] = "<div class='dropdown'>
             <button class='btn btn-outline-secondary'>
@@ -150,4 +154,3 @@ function loanCustomerStatus($pdo, $cus_profile_id)
 
     return ''; // Default return value if no conditions match
 }
-?>
