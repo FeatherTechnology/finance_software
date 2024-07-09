@@ -185,11 +185,11 @@ $(document).ready(function(){
 
         let catTypeOptn ='';
             catTypeOptn +="<option value=''>Select Type</option>";
-        if(category == '1' || category == '2' || category == '3' || category == '4' || category == '7'){ //credit / debit
+        if(category == '1' || category == '2' || category == '3' || category == '4' ){ //credit / debit
             catTypeOptn +="<option value='1'>Credit</option>";
             catTypeOptn +="<option value='2'>Debit</option>";
 
-        } else if(category == '5'){ //debit
+        } else if(category == '5' || category == '7'){ //debit
             catTypeOptn +="<option value='2'>Debit</option>";            
         
         } else if(category == '6' || category == '8'){ //credit
@@ -284,7 +284,7 @@ $(document).ready(function(){
 
 $(function(){
     getOpeningBal();
-    getClosingBal();
+    
 });
 
 function getOpeningBal(){
@@ -294,15 +294,20 @@ function getOpeningBal(){
             $('.op_hand_cash_val').text(response[0]['hand_cash']);
             $('.op_bank_cash_val').text(response[0]['bank_cash']);
         }
-    },'json');
+    },'json').then(function(){
+        getClosingBal();
+    });
 }
 
 function getClosingBal(){
     $.post('api/accounts_files/accounts/closing_balance.php',function(response){
         if(response.length > 0){
-            $('.closing_val').text(response[0]['closing_balance']);
-            $('.clse_hand_cash_val').text(response[0]['hand_cash']);
-            $('.clse_bank_cash_val').text(response[0]['bank_cash']);
+            let close = parseInt($('.opening_val').text()) + parseInt(response[0]['closing_balance']);
+            let hand = parseInt($('.op_hand_cash_val').text()) + parseInt(response[0]['hand_cash']);
+            let bank = parseInt($('.op_bank_cash_val').text()) + parseInt(response[0]['bank_cash']);
+            $('.closing_val').text(close);
+            $('.clse_hand_cash_val').text(hand);
+            $('.clse_bank_cash_val').text(bank);
         }
     },'json');
 }

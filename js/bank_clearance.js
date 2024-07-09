@@ -9,7 +9,7 @@ $(document).ready(function () {
         $('#to_date').val('').attr('min', fromDate);
     });
 
-    $('#to_date').change(function() {
+    $('#to_date').change(function () {
         var fromDate = new Date($('#from_date').val());
         var toDate = new Date($(this).val());
 
@@ -17,32 +17,32 @@ $(document).ready(function () {
             $(this).val('');
         }
     });
-    
-    $('#view_btn').click(function(){
-        let bank_id = $('#bank_name').val();let from_date = $('#from_date').val();let to_date = $('#to_date').val();
-        if(bank_id == '' || from_date =='' || to_date ==''){
-            swalError('Warning','Kindly fill the Mandatory Fields');
+
+    $('#view_btn').click(function () {
+        let bank_id = $('#bank_name').val(); let from_date = $('#from_date').val(); let to_date = $('#to_date').val();
+        if (bank_id == '' || from_date == '' || to_date == '') {
+            swalError('Warning', 'Kindly fill the Mandatory Fields');
             return;
-        }else{
+        } else {
             $.ajax({
                 url: 'api/accounts_files/bank_clearance_files/bank_clearance_stmt.php',
-                data: {'bank_id':bank_id,'from_date':from_date,'to_date':to_date},
+                data: { 'bank_id': bank_id, 'from_date': from_date, 'to_date': to_date },
                 type: 'post',
                 cache: false,
-                success: function(response){
-                    if(response.includes('Given Date Has No Statements!')){
+                success: function (response) {
+                    if (response.includes('Given Date Has No Statements!')) {
                         swalError('Alert', 'Kindly try with other date!');
                         $('.bank_statement_table_content').hide();
                         return false;
-                    }else{
+                    } else {
                         $('.bank_statement_table_content').show();
                         $('#bank_statement_table').empty();
                         $('#bank_statement_table').html(response);
                     }
                 }
-            }).then(function(){
-                // clrcatClickEvent();
-                // getUnclearTotal();
+            }).then(function () {
+                clrcatClickEvent();
+                getUnclearTotal();
             })
         }
     })
@@ -79,24 +79,10 @@ $(document).ready(function () {
             swalError('Warning', 'Kindly Fill the Role!')
         }
     });
-
-    // $(document).on('click', '.roleActionBtn', function () {
-    //     var id = $(this).attr('value'); // Get value attribute
-    //     $.post('api/user_creation_files/get_role_data.php', { id }, function (response) {
-    //         $('#role_id').val(id);
-    //         $('#add_role').val(response[0].role);
-    //     }, 'json');
-    // });
-
-    // $(document).on('click', '.roleDeleteBtn', function () {
-    //     var id = $(this).attr('value'); // Get value attribute
-    //     swalConfirm('Delete', 'Do you want to Delete the Role?', deleteRole, id);
-    //     return;
-    // });
     /////////////////////////////////////////////////////////// Transaction Details END ///////////////////////////////////////////////////////////////////////
 
     $('#download_bank_stmt').click(function () {
-        window.location.href = 'uploads/excel_format/bank_stmt_format.xlsx';
+        window.location.href = 'uploads/excel_format/bank_statement_format.xlsx';
     });
 
 
@@ -234,7 +220,7 @@ function submitUpload() {
                 })
             } else if (data > 0) {
                 $("#file").val('');
-                swalError('Warning','File Not Uploaded!')
+                swalError('Warning', 'File Not Uploaded!')
             }
         },
         complete: function () {
@@ -245,108 +231,102 @@ function submitUpload() {
 }
 
 //remove entries and submit uploaded excel file if table has transaction dates of excel file
-function removeAndSubmitUpload(){
+function removeAndSubmitUpload() {
 
-    var file_data = $('#file').prop('files')[0];   
+    var file_data = $('#file').prop('files')[0];
     var bank_id = $('#bank_id_upload').val();
-    var area = new FormData();                  
+    var area = new FormData();
     area.append('file', file_data);
     area.append('bank_id', bank_id);
-    
+
     $.ajax({
         url: 'api/accounts_files/bank_clearance_files/removeAndSubmitUpload.php',
         type: 'POST',
         data: area,
         contentType: false,
         cache: false,
-        processData:false,
-        beforeSend: function(){
-            $('#bank_id_upload').attr("disabled",  true);
-            $('#file').attr("disabled",  true);
+        processData: false,
+        beforeSend: function () {
+            $('#bank_id_upload').attr("disabled", true);
+            $('#file').attr("disabled", true);
             $('#submit_stmt_upload').attr("disabled", true);
         },
-        success: function(data){
-            if(data == 0){
+        success: function (data) {
+            if (data == 0) {
                 $("#file").val('');
                 swalSuccess('Success', 'Statement Uploaded!');
-            }else if(data > 0){
+            } else if (data > 0) {
                 $("#file").val('');
-                swalError('Error','File Not Uploaded!')
+                swalError('Error', 'File Not Uploaded!')
             }
         },
-        complete: function(){
-            $('#bank_id_upload').attr("disabled",  false);
-            $('#file').attr("disabled",  false);
-            $('#submit_stmt_upload').attr("disabled", false);         
+        complete: function () {
+            $('#bank_id_upload').attr("disabled", false);
+            $('#file').attr("disabled", false);
+            $('#submit_stmt_upload').attr("disabled", false);
         }
     });
 }
 
-function clearUploadModal(){
+function clearUploadModal() {
     $('#bank_id_upload').val('');
     $('#file').val('');
 }
 
 //function for click event when user clicks on a cash tally modes to get the ref codes
-function clrcatClickEvent(){    
-    $('.clr_cat').change(function(){
+function clrcatClickEvent() {
+    $('.clr_cat').change(function () {
         var clr_cat = $(this).val();
         var bank_id = $(this).prev().val();
         var crdb = $(this).next().val();
         var trans_id = $(this).parent().prev().prev().prev().prev().text();
         var ref_id_box = $(this).parent().next().children();//represents ref id select box
-        
+
         $.ajax({
-            url: 'accountsFile/bankclearance/getRefCodetoClear.php',
-            data: {'clr_cat':clr_cat,'bank_id':bank_id,'crdb':crdb,'trans_id':trans_id},
+            url: 'api/accounts_files/bank_clearance_files/ref_code_to_clear.php',
+            data: { 'clr_cat': clr_cat, 'bank_id': bank_id, 'crdb': crdb, 'trans_id': trans_id },
             dataType: 'json',
             type: 'post',
             cache: false,
-            success: function(response){
-                ref_id_box.empty(); 
+            success: function (response) {
+                ref_id_box.empty();
                 ref_id_box.append("<option value=''>Select Ref ID</option>");
-                $.each(response,function(ind,val){
-                    ref_id_box.append("<option value='"+val['ref_code']+"'>"+val['ref_code']+"</option>")
+                $.each(response, function (ind, val) {
+                    ref_id_box.append("<option value='" + val['ref_code'] + "'>" + val['ref_code'] + "</option>")
                 })
-                
+
             }
         })
     })
 
-    $('.ref-id').change(function(){
-        if($(this).val() != ''){ // only true if ref id choosen
+    $('.ref-id').change(function () {
+        if ($(this).val() != '') { // only true if ref id choosen
 
             $(this).parent().next().children().hide();//hiding span uncleared text
             $(this).parent().next().children().after('<input type="button" class="btn btn-primary clear_btn" value="Clear" id="" name="">')//adding new button after span
-            
-            $(this).parent().prev().children().attr('disabled',true)//disabling clear category dropdown
-            $(this).attr('disabled',true)//disabling ref_id dropdown
+
+            $(this).parent().prev().children().attr('disabled', true)//disabling clear category dropdown
+            $(this).attr('disabled', true)//disabling ref_id dropdown
 
             $('.clear_btn').off('click');//turning off existing click event
-            $('.clear_btn').click(function(){
+            $('.clear_btn').click(function () {
                 var clear_btn = $(this)
                 var bank_stmt_id = $(this).parent().next().val();// to get bank statement table if which is stored inside hidden input
                 $.ajax({
-                    url: 'accountsFile/bankclearance/clearTransaction.php',
-                    data: {'bank_stmt_id':bank_stmt_id},
+                    url: 'api/accounts_files/bank_clearance_files/clear_transaction.php',
+                    data: { 'bank_stmt_id': bank_stmt_id },
                     type: 'post',
                     cache: false,
-                    success: function(response){
-                        if(response == 0){
+                    success: function (response) {
+                        if (response == 0) {
                             clear_btn.prev().show();
                             clear_btn.prev().text('Cleared');
                             clear_btn.prev().addClass('text-success');
                             clear_btn.prev().removeClass('text-danger');
                             clear_btn.hide();
                             getUnclearTotal();// to reset unclear total amounts
-                        }else{
-                            Swal.fire({
-                                title: 'Not Cleared',
-                                text: 'Error While Submitting',
-                                icon: 'error',
-                                showConfirmButton: true,
-                                confirmButtonColor: '#009688'
-                            })
+                        } else {
+                            swalError('Not Cleared', 'Error While Submitting');
                         }
                     }
                 })
@@ -356,12 +336,12 @@ function clrcatClickEvent(){
 
 }
 
-function getUnclearTotal(){
+function getUnclearTotal() {
     var unclear_credit = 0;
     var unclear_debit = 0;
-    $('.clr-status').each(function(){
+    $('.clr-status').each(function () {
         var clr_status = $(this).text();
-        if(clr_status == 'Unclear'){
+        if (clr_status == 'Unclear') {
             var credit = $(this).parent().prev().prev().prev().prev().prev().text(); // credit amount
             var debit = $(this).parent().prev().prev().prev().prev().text(); // debit amount
             unclear_credit += parseInt(credit) || 0;
@@ -370,6 +350,6 @@ function getUnclearTotal(){
     })
     unclear_credit = moneyFormatIndia(unclear_credit)
     unclear_debit = moneyFormatIndia(unclear_debit)
-    $('#ucl_credit').text(unclear_credit).css('font-weight','bold');
-    $('#ucl_debit').text(unclear_debit).css('font-weight','bold');
+    $('#ucl_credit').text(unclear_credit).css('font-weight', 'bold');
+    $('#ucl_debit').text(unclear_debit).css('font-weight', 'bold');
 }

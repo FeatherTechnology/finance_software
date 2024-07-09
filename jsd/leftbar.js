@@ -16,6 +16,7 @@ $(document).ready(function () {
         'noc': 'noc',
         'accounts': 'accounts',
         'bank_clearance': 'accounts',
+        'balance_sheet': 'accounts',
         'update_customer': 'update',
         'update_document': 'update',
         'customer_data': 'customer_data',
