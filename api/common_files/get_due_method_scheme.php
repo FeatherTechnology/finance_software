@@ -4,6 +4,7 @@ require "../../ajaxconfig.php";
 $scheme_arr = array();
 $schemeDueMethod = $_POST['schemeDueMethod'];
 $loanCatId = $_POST['loanCatId'];
+
 $qry = $pdo->query("SELECT s.id, s.scheme_name
 FROM `loan_category_creation` lcc 
 JOIN scheme s ON FIND_IN_SET(s.id, lcc.scheme_name)

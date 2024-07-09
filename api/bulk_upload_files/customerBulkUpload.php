@@ -1,65 +1,76 @@
 <?php
 require '../../ajaxconfig.php';
 include 'bulkUploadClass.php';
-require_once('../vendor/csvreader/php-excel-reader/excel_reader2.php');
-require_once('../vendor/csvreader/SpreadsheetReader.php');
+require_once('../../vendor/csvreader/php-excel-reader/excel_reader2.php');
+require_once('../../vendor/csvreader/SpreadsheetReader_CSV.php');
 
 
 $obj = new bulkUploadClass();
-//$userData = getUserDetails($pdo);
+$userData = $obj->getUserDetails($pdo);
+
 
 $allowedFileType = ['application/vnd.ms-excel', 'text/xls', 'text/xlsx', 'text/csv', 'text/xml', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'];
 if (in_array($_FILES["excelFile"]["type"], $allowedFileType)) {
 
     $excelfolder = $obj->uploadFiletoFolder();
 
-    $Reader = new SpreadsheetReader($excelfolder);
+    $Reader = new SpreadsheetReader_CSV($excelfolder);
     $sheetCount = count($Reader->sheets());
 
     for ($i = 0; $i < $sheetCount; $i++) {
+        
         $Reader->ChangeSheet($i);
         $rowChange = 0;
         foreach ($Reader as $Row) {
-
+            
             if ($rowChange != 0) { // omitted 0 to avoid headers
-
                 $data = $obj->fetchAllRowData($Row);
-               
-                // $data['doc_code'] = $obj->getDocumentCode($pdo);
-                // $data['loan_id'] = $obj->getLoanCode($pdo);
-                // $data['area_id'] = $obj->getAreaId($pdo, $data['area']);
-                // $data['sub_area_id'] = $obj->getSubAreaId($pdo, $data['sub_area'], $data['area_id']);
-                // $data['loan_cat_id'] = $obj->getLoanCategoryId($pdo, $data['loan_category']);
-                // $data['sub_categoryCheck'] = $obj->checkSubCategory($pdo, $data['sub_category']);
-                // $data['group_name'] = $obj->getAreaGroup($pdo, $data['sub_area_id']) == $data['area_group'] ? $data['area_group'] : 'Invalid';
-                // $data['line_name'] = $obj->getAreaLine($pdo, $data['sub_area_id']) == $data['area_line'] ? $data['area_line'] : 'Invalid';
-                // $data['agent_id'] = $obj->checkAgent($pdo, $data['agent_id']);
-                // $checkCustomerData = $obj->checkCustomerData($pdo, $data['cus_id']);
-                // $data['cus_data'] = $checkCustomerData['cus_data'];
-                // $data['cus_reg_id'] = $checkCustomerData['cus_reg_id'];
-                // $data['scheme_id'] = $obj->getSchemeId($pdo, $data['scheme_name']);
-                // $data['cus_status'] = '14';
 
-                // $err_columns = $obj->handleError($data);
-                // if (empty($err_columns)) {
+                if (isset($data['cus_profile_id'])) {
+                    $data['loan_id'] = $obj->getLoanCode($pdo, $data['cus_profile_id']);
+                }
+                $data['id'] = $obj->getLoanCategoryId($pdo, $data['loan_category']);
+                if (isset($data['linename']) && isset($branch_id)) {
+                    $data['linename'] = $obj->getAreaLine($pdo, $data['linename'], $branch_id);
+                    $data['linename'] = $data['linename'] == $data['linename'] ? $data['linename'] : 'Invalid'; // This line seems redundant, consider removing it
+                } else {
+                    $data['linename'] = 'Invalid'; // Handle default case when $data['linename'] or $branch_id are not set
+                }
 
-                //     $req_id = $obj->raiseRequest($pdo, $data, $userData);
-                //     $obj->verificationTables($pdo, $data, $userData, $req_id);
-                //     $obj->approvalTables($pdo, $req_id);
-                //     $obj->acknowledgementTables($pdo, $data, $req_id, $userData);
-                //     $obj->loanIssueTables($pdo, $data, $userData, $req_id);
 
-                // } else {
-                //     $errtxt = "Please Check the input given in Serial No: " . ($rowChange) . " on below. <br><br>";
-                //     $errtxt .= "<ul>";
-                //     foreach ($err_columns as $columns) {
-                //         $errtxt .= "<li>$columns</li>";
-                //     }
-                //     $errtxt .= "</ul><br>";
-                //     $errtxt .= "Insertion completed till Serial No: " . ($rowChange - 1);
-                //     echo $errtxt;
-                //     exit();
-                // }
+                $data['id'] = $obj->checkAgent($pdo, $data['id']);
+                 $checkCustomerData = $obj->checkCustomerData($pdo, $data['cus_id']);
+                 $data['cus_data'] = $checkCustomerData['cus_data'];
+                $data['id'] = $checkCustomerData['id'];
+                $data['id'] = $obj->getSchemeId($pdo, $data['scheme_name']);
+
+                $err_columns = $obj->handleError($data);
+                if (empty($err_columns)) {
+                    // Call LoanEntryTables function
+                    if ($obj->LoanEntryTables($pdo, $data, $userData)) {
+                        echo "Loan entry tables updated successfully.<br>";
+                    } else {
+                        echo "Failed to update loan entry tables.<br>";
+                    }
+                
+                    // Call loanIssueTables function
+                    if ($obj->loanIssueTables($pdo, $data, $userData)) {
+                        echo "Loan issue tables updated successfully.<br>";
+                    } else {
+                        echo "Failed to update loan issue tables.<br>";
+                    }
+                }
+                else {
+                    $errtxt = "Please Check the input given in Serial No: " . ($rowChange) . " on below. <br><br>";
+                    $errtxt .= "<ul>";
+                    foreach ($err_columns as $columns) {
+                        $errtxt .= "<li>$columns</li>";
+                    }
+                    $errtxt .= "</ul><br>";
+                    $errtxt .= "Insertion completed till Serial No: " . ($rowChange - 1);
+                    echo $errtxt;
+                    exit();
+                }
             }
 
             $rowChange++;
@@ -71,4 +82,3 @@ if (in_array($_FILES["excelFile"]["type"], $allowedFileType)) {
 }
 
 echo $message;
-?>
