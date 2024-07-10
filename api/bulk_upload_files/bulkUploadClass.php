@@ -1,6 +1,7 @@
 <?php
 require '../../ajaxconfig.php';
 @session_start();
+
 class bulkUploadClass
 {
     public function uploadFiletoFolder()
@@ -23,7 +24,6 @@ class bulkUploadClass
 
     public function fetchAllRowData($Row)
     {
-
         $dataArray = array(
             'cus_id' => isset($Row[1]) ? $Row[1] : "",
             'cus_name' => isset($Row[2]) ? $Row[2] : "",
@@ -93,7 +93,6 @@ class bulkUploadClass
             'relationship' => isset($Row[66]) ? $Row[66] : "",
         );
 
-
         $dataArray['cus_id'] = strlen($dataArray['cus_id']) == 12 ? $dataArray['cus_id'] : 'Invalid';
         $cus_dataArray = ['New' => 'New', 'Existing' => 'Existing'];
         $dataArray['cus_data'] = $this->arrayItemChecker($cus_dataArray, $dataArray['cus_data']);
@@ -114,8 +113,10 @@ class bulkUploadClass
         $guarantor_relationshipArray = ['Father' => 'Father', 'Mother' => 'Mother', 'Spouse' => 'Spouse', 'Sister' => 'Sister', 'Brother' => 'Brother', 'Son' => 'Son', 'Daughter' => 'Daughter'];
         $dataArray['guarantor_relationship'] = $this->arrayItemChecker($guarantor_relationshipArray, $dataArray['guarantor_relationship']);
         $dataArray['guarantor_mobile_no'] = strlen($dataArray['guarantor_mobile_no']) == 10 ? $dataArray['guarantor_mobile_no'] : 'Invalid';
+
         $liveArray = ['Live' => '1', 'Deceased' => '2'];
         $dataArray['guarantor_live'] = $this->arrayItemChecker($liveArray, $dataArray['guarantor_live']);
+
         $residential_typeArray = ['Own' => '1', 'Rental' => '2', 'Lease' => '3', 'Quarters' => '4'];
         $residential_type = $this->arrayItemChecker($residential_typeArray, $dataArray['residential_type']);
         $dataArray['residential_type'] = ($residential_type == 'Not Found') ? '' : $residential_type; //cause residential_type may not be available
@@ -134,6 +135,7 @@ class bulkUploadClass
 
         // $profit_methodArray = ['After Interest' => 'after_interest'];
         // $dataArray['profit_method'] = $this->arrayItemChecker($profit_methodArray, $dataArray['profit_method']);
+
         $due_method_schemeArray = ['Monthly' => '1', 'Weekly' => '2', 'Daily' => '3'];
         $scheme_due_method = $this->arrayItemChecker($due_method_schemeArray, $dataArray['scheme_due_method']);
         $dataArray['scheme_due_method'] = ($scheme_due_method == 'Not Found') ? '' : $scheme_due_method; //cause due_method_scheme may not be available
@@ -142,6 +144,7 @@ class bulkUploadClass
 
         $dataArray['dueStart_date'] = $this->dateFormatChecker($dataArray['dueStart_date']);
 
+        $dataArray['maturity_date'] = $this->dateFormatChecker($dataArray['maturity_date']);
 
         $referred_typeArray = ['Yes' => '0', 'No' => '1'];
         $dataArray['referred'] = $this->arrayItemChecker($referred_typeArray, $dataArray['referred']);
@@ -232,7 +235,6 @@ class bulkUploadClass
         $cus_id = strip_tags($cus_id); // Sanitize input
 
         $new_cus_check = $pdo->query("SELECT id FROM customer_profile WHERE cus_id = '$cus_id'");
-
         if ($new_cus_check) {
             if ($new_cus_check->rowCount() == 0) {
                 $response['cus_data'] = 'New';
@@ -247,7 +249,6 @@ class bulkUploadClass
             $response['cus_data'] = 'New'; // Assuming default to 'New' if query fails
             $response['id'] = '';
         }
-
         return $response;
     }
 
@@ -270,6 +271,7 @@ class bulkUploadClass
         $stmt = $pdo->query("SELECT lcc.id FROM loan_category_creation lcc LEFT JOIN loan_category lc ON lcc.loan_category = lc.id WHERE lc.loan_category  = '$loan_category'");
         //  $stmt->execute(['loan_category' => $loan_category]);
 
+
         if ($stmt->rowCount() > 0) {
             $row = $stmt->fetch(PDO::FETCH_ASSOC);
             $loan_cat_id = $row["id"];
@@ -279,6 +281,7 @@ class bulkUploadClass
 
         return $loan_cat_id;
     }
+
     function getAreaLine($pdo, $areaId)
     {
         $defaultLinename = 'Invalid'; 
@@ -408,7 +411,6 @@ class bulkUploadClass
 
         $pdo->query($insert_li_query);
     }
-
 
     function handleError($data)
     {
@@ -579,8 +581,40 @@ class bulkUploadClass
             $errcolumns[] = 'Loan Amount Calculation';
         }
 
+        if (!preg_match('/^\d+(\.\d{1,2})?$/', $data['principal_amnt'])) {
+            $errcolumns[] = 'Principal Amount Calculation';
+        }
+
+        if (!preg_match('/^\d+(\.\d{1,2})?$/', $data['interest_amnt'])) {
+            $errcolumns[] = 'Interest Amount Calculation';
+        }
+
+        if (!preg_match('/^\d+(\.\d{1,2})?$/', $data['total_amnt'])) {
+            $errcolumns[] = 'Total Amount Calculation';
+        }
+
+        if (!preg_match('/^\d+(\.\d{1,2})?$/', $data['due_amnt'])) {
+            $errcolumns[] = 'Due Amount Calculation';
+        }
+
+        if (!preg_match('/^\d+(\.\d{1,2})?$/', $data['document_charge_calculate'])) {
+            $errcolumns[] = 'Document Charge Calculation';
+        }
+
+        if (!preg_match('/^\d+(\.\d{1,2})?$/', $data['processing_fees_calculate'])) {
+            $errcolumns[] = 'Processing Fee Calculation';
+        }
+
+        if (!preg_match('/^\d+(\.\d{1,2})?$/', $data['net_cash'])) {
+            $errcolumns[] = 'Net Cash Calculation';
+        }
+
         if ($data['dueStart_date'] == 'Invalid Date') {
             $errcolumns[] = 'Due Start From';
+        }
+
+        if ($data['maturity_date'] == 'Invalid Date') {
+            $errcolumns[] = 'Maturity Date';
         }
 
         if ($data['issue_date'] == 'Invalid Date') {
