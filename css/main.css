@@ -9345,3 +9345,15 @@ table.dataTable th {
   /* this will set all datatable's cell to not wrap the contents globally */
   white-space: nowrap;
 }
+/* Collection radio button */
+.coll-radio-container {
+  position: relative;
+  height: 80px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.radio-style{
+	font-size:15px;
+	font-weight:normal;
+}

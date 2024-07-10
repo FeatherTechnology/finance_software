@@ -963,7 +963,7 @@ function calculateOthers($loan_arr, $response, $date, $pdo)
             if ($loan_arr['scheme_name'] == '' || $loan_arr['scheme_name'] == null) {
                 $result = $pdo->query("SELECT  overdue_penalty as overdue FROM `loan_category_creation` WHERE `id` = '" . $loan_arr['loan_category'] . "'");
             } else {
-                $result = $pdo->query("SELECT overdue_penalty_percent as overdue FROM `scheme` WHERE `id` = '" . $loan_arr['loan_category'] . "' ");
+                $result = $pdo->query("SELECT overdue_penalty_percent as overdue FROM `scheme` WHERE `id` = '" . $loan_arr['scheme_name'] . "' ");
             }
             $row = $result->fetch();
             $penalty_per = $row['overdue']; //get penalty percentage to insert
@@ -1023,7 +1023,7 @@ function calculateOthers($loan_arr, $response, $date, $pdo)
             if ($loan_arr['scheme_name'] == '' || $loan_arr['scheme_name'] == null) {
                 $result = $pdo->query("SELECT  overdue_penalty as overdue FROM `loan_category_creation` WHERE `id` = '" . $loan_arr['loan_category'] . "'");
             } else {
-                $result = $pdo->query("SELECT overdue_penalty_percent as overdue FROM `scheme` WHERE `id` = '" . $loan_arr['loan_category'] . "' ");
+                $result = $pdo->query("SELECT overdue_penalty_percent as overdue FROM `scheme` WHERE `id` = '" . $loan_arr['scheme_name'] . "' ");
             }
             $row = $result->fetch();
             $penalty_per = number_format($row['overdue'] * $countForPenalty); //Count represents how many months are exceeded//Number format if percentage exeeded decimals then pernalty may increase
@@ -1135,7 +1135,7 @@ function calculateOthers($loan_arr, $response, $date, $pdo)
             if ($loan_arr['scheme_name'] == '' || $loan_arr['scheme_name'] == null) {
                 $result = $pdo->query("SELECT  overdue_penalty as overdue FROM `loan_category_creation` WHERE `id` = '" . $loan_arr['loan_category'] . "' ");
             } else {
-                $result = $pdo->query("SELECT overdue_penalty_percent as overdue FROM `scheme` WHERE `id` = '" . $loan_arr['loan_category'] . "' ");
+                $result = $pdo->query("SELECT overdue_penalty_percent as overdue FROM `scheme` WHERE `id` = '" . $loan_arr['scheme_name'] . "' ");
             }
             $row = $result->fetch();
             $penalty_per = $row['overdue']; //get penalty percentage to insert
@@ -1183,7 +1183,7 @@ function calculateOthers($loan_arr, $response, $date, $pdo)
             if ($loan_arr['scheme_name'] == '' || $loan_arr['scheme_name'] == null) {
                 $result = $pdo->query("SELECT  overdue_penalty as overdue FROM `loan_category_creation` WHERE `id` = '" . $loan_arr['loan_category'] . "' ");
             } else {
-                $result = $pdo->query("SELECT overdue_penalty_percent as overdue FROM `scheme` WHERE `id` = '" . $loan_arr['loan_category'] . "' ");
+                $result = $pdo->query("SELECT overdue_penalty_percent as overdue FROM `scheme` WHERE `id` = '" . $loan_arr['scheme_name'] . "' ");
             }
             $row = $result->fetch();
             $penalty_per = number_format($row['overdue'] * $countForPenalty); //Count represents how many months are exceeded//Number format if percentage exeeded decimals then pernalty may increase
@@ -1256,7 +1256,7 @@ function calculateOthers($loan_arr, $response, $date, $pdo)
             if ($loan_arr['scheme_name'] == '' || $loan_arr['scheme_name'] == null) {
                 $result = $pdo->query("SELECT  overdue_penalty as overdue FROM `loan_category_creation` WHERE `id` = '" . $loan_arr['loan_category'] . "' ");
             } else {
-                $result = $pdo->query("SELECT overdue_penalty_percent as overdue FROM `scheme` WHERE `id` = '" . $loan_arr['loan_category'] . "' ");
+                $result = $pdo->query("SELECT overdue_penalty_percent as overdue FROM `scheme` WHERE `id` = '" . $loan_arr['scheme_name'] . "' ");
             }
             $row = $result->fetch();
             $penalty_per = $row['overdue']; //get penalty percentage to insert
@@ -1289,7 +1289,7 @@ function calculateOthers($loan_arr, $response, $date, $pdo)
             if ($loan_arr['scheme_name'] == '' || $loan_arr['scheme_name'] == null) {
                 $result = $pdo->query("SELECT  overdue_penalty as overdue FROM `loan_category_creation` WHERE `id` = '" . $loan_arr['loan_category'] . "' ");
             } else {
-                $result = $pdo->query("SELECT overdue_penalty_percent as overdue FROM `scheme` WHERE `id` = '" . $loan_arr['loan_category'] . "' ");
+                $result = $pdo->query("SELECT overdue_penalty_percent as overdue FROM `scheme` WHERE `id` = '" . $loan_arr['scheme_name'] . "' ");
             }
             $row = $result->fetch();
             $penalty_per = number_format($row['overdue'] * $countForPenalty); //Count represents how many months are exceeded//Number format if percentage exeeded decimals then pernalty may increase

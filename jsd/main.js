@@ -485,3 +485,31 @@ function validateMultiSelectField(fieldId, choicesInstance) {
         return true;
     }
 }
+
+function moneyFormatIndia(num) {
+	var isNegative = false;
+	if (num < 0) {
+		isNegative = true;
+		num = Math.abs(num);
+	}
+
+	var explrestunits = "";
+	if (num.toString().length > 3) {
+		var lastthree = num.toString().substr(num.toString().length - 3);
+		var restunits = num.toString().substr(0, num.toString().length - 3);
+		restunits = (restunits.length % 2 == 1) ? "0" + restunits : restunits;
+		var expunit = restunits.match(/.{1,2}/g);
+		for (var i = 0; i < expunit.length; i++) {
+			if (i == 0) {
+				explrestunits += parseInt(expunit[i]) + ",";
+			} else {
+				explrestunits += expunit[i] + ",";
+			}
+		}
+		var thecash = explrestunits + lastthree;
+	} else {
+		var thecash = num;
+	}
+
+	return isNegative ? "-" + thecash : thecash;
+}

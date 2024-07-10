@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jun 29, 2024 at 03:58 PM
+-- Generation Time: Jul 09, 2024 at 03:25 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -20,6 +20,25 @@ SET time_zone = "+00:00";
 --
 -- Database: `finance`
 --
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `accounts_collect_entry`
+--
+
+CREATE TABLE `accounts_collect_entry` (
+  `id` int(11) NOT NULL,
+  `user_id` int(11) NOT NULL,
+  `line` varchar(50) NOT NULL,
+  `branch` varchar(50) NOT NULL,
+  `coll_mode` int(11) NOT NULL,
+  `bank_id` varchar(50) DEFAULT NULL,
+  `no_of_bills` int(11) NOT NULL,
+  `collection_amnt` varchar(150) NOT NULL,
+  `insert_login_id` int(11) NOT NULL,
+  `created_on` datetime DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -75,6 +94,28 @@ CREATE TABLE `area_name_creation` (
   `created_on` datetime NOT NULL DEFAULT current_timestamp(),
   `updated_on` date DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `bank_clearance`
+--
+
+CREATE TABLE `bank_clearance` (
+  `id` int(11) NOT NULL COMMENT 'Primary Key',
+  `bank_id` varchar(255) DEFAULT NULL,
+  `trans_date` date DEFAULT NULL,
+  `narration` varchar(255) NOT NULL,
+  `trans_id` varchar(255) DEFAULT NULL,
+  `credit` varchar(255) DEFAULT NULL,
+  `debit` varchar(255) DEFAULT NULL,
+  `balance` varchar(255) DEFAULT NULL,
+  `clr_status` varchar(10) NOT NULL DEFAULT '0' COMMENT '0 - unclear,1-cleared',
+  `insert_login_id` varchar(255) DEFAULT NULL,
+  `update_login_id` varchar(255) DEFAULT NULL,
+  `created_date` datetime DEFAULT NULL,
+  `updated_date` datetime DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 
 -- --------------------------------------------------------
 
@@ -148,6 +189,19 @@ CREATE TABLE `branch_creation` (
   `created_date` datetime NOT NULL DEFAULT current_timestamp(),
   `updated_date` date DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `cash_tally_modes`
+--
+
+CREATE TABLE `cash_tally_modes` (
+  `id` int(11) NOT NULL COMMENT 'Primary Key',
+  `modes` varchar(255) DEFAULT NULL,
+  `bankcredit` varchar(10) NOT NULL DEFAULT '1',
+  `bankdebit` varchar(10) NOT NULL DEFAULT '1'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 
 -- --------------------------------------------------------
 
@@ -251,6 +305,7 @@ CREATE TABLE `collection` (
   `penalty_waiver` varchar(255) NOT NULL DEFAULT '0',
   `coll_charge_waiver` varchar(255) NOT NULL DEFAULT '0',
   `total_waiver` varchar(255) NOT NULL DEFAULT '0',
+  `collect_sts` int(11) NOT NULL DEFAULT 0,
   `insert_login_id` varchar(255) DEFAULT NULL,
   `update_login_id` varchar(255) DEFAULT NULL,
   `delete_login_id` varchar(255) DEFAULT NULL,
@@ -364,7 +419,7 @@ CREATE TABLE `customer_profile` (
   `remark` varchar(255) DEFAULT NULL,
   `insert_login_id` int(11) NOT NULL,
   `update_login_id` int(11) NOT NULL,
-  `created_on` date DEFAULT NULL,
+  `created_on` datetime DEFAULT NULL,
   `updated_on` date DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
@@ -525,6 +580,49 @@ CREATE TABLE `endorsement_info` (
   `update_login_id` int(11) NOT NULL,
   `created_on` date DEFAULT NULL,
   `updated_on` date DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `existing_customer`
+--
+
+CREATE TABLE `existing_customer` (
+  `id` int(11) NOT NULL,
+  `cus_id` varchar(100) NOT NULL,
+  `cus_name` varchar(100) NOT NULL,
+  `area` varchar(100) NOT NULL,
+  `mobile1` varchar(100) NOT NULL,
+  `linename` varchar(100) NOT NULL,
+  `branch_name` varchar(100) NOT NULL,
+  `c_sts` varchar(100) NOT NULL,
+  `c_substs` varchar(100) NOT NULL,
+  `insert_login_id` int(11) NOT NULL,
+  `created_on` datetime DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `expenses`
+--
+
+CREATE TABLE `expenses` (
+  `id` int(11) NOT NULL,
+  `coll_mode` int(11) NOT NULL,
+  `bank_id` int(11) DEFAULT NULL,
+  `invoice_id` varchar(100) NOT NULL,
+  `branch` int(11) NOT NULL,
+  `expenses_category` varchar(50) NOT NULL,
+  `agent_id` varchar(50) DEFAULT NULL,
+  `total_issued` varchar(50) DEFAULT NULL,
+  `total_amount` varchar(100) DEFAULT NULL,
+  `description` varchar(255) NOT NULL,
+  `amount` varchar(150) NOT NULL,
+  `trans_id` varchar(150) NOT NULL,
+  `insert_login_id` int(11) NOT NULL,
+  `created_on` datetime DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -721,8 +819,8 @@ CREATE TABLE `loan_issue` (
   `relationship` varchar(50) NOT NULL,
   `insert_login_id` int(11) NOT NULL,
   `update_login_id` int(11) DEFAULT NULL,
-  `created_on` date DEFAULT NULL,
-  `updated_on` date DEFAULT NULL
+  `created_on` datetime DEFAULT NULL,
+  `updated_on` datetime DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -755,7 +853,8 @@ INSERT INTO `menu_list` (`id`, `menu`, `link`, `icon`) VALUES
 (10, 'Update', 'update', 'globe'),
 (11, 'Customer Data', 'customer_data', 'globe'),
 (12, 'Search', 'search', 'globe'),
-(13, 'Reports', 'reports', 'globe');
+(13, 'Reports', 'reports', 'globe'),
+(14, 'Bulk Upload', 'bulk_upload', 'globe');
 
 -- --------------------------------------------------------
 
@@ -821,6 +920,42 @@ CREATE TABLE `noc_ref` (
   `noc_member` varchar(150) NOT NULL,
   `noc_relationship` varchar(150) NOT NULL,
   `created_on` date DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `other_transaction`
+--
+
+CREATE TABLE `other_transaction` (
+  `id` int(11) NOT NULL,
+  `coll_mode` int(11) NOT NULL,
+  `bank_id` int(11) DEFAULT NULL,
+  `trans_cat` int(11) NOT NULL,
+  `name` int(11) NOT NULL,
+  `type` int(11) NOT NULL,
+  `ref_id` varchar(100) DEFAULT NULL,
+  `trans_id` varchar(100) NOT NULL,
+  `user_name` int(11) DEFAULT NULL,
+  `amount` varchar(150) NOT NULL,
+  `remark` varchar(255) NOT NULL,
+  `insert_login_id` int(11) NOT NULL,
+  `created_on` datetime DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `other_trans_name`
+--
+
+CREATE TABLE `other_trans_name` (
+  `id` int(11) NOT NULL,
+  `trans_cat` int(11) NOT NULL,
+  `name` varchar(150) NOT NULL,
+  `insert_login_id` int(11) NOT NULL,
+  `created_on` date NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -968,11 +1103,13 @@ INSERT INTO `sub_menu_list` (`id`, `main_menu`, `sub_menu`, `link`, `icon`) VALU
 (12, 7, 'Closed', 'closed', 'upload-to-cloud'),
 (13, 8, 'NOC', 'noc', 'upload-to-cloud'),
 (14, 9, 'Accounts', 'accounts', 'upload-to-cloud'),
-(15, 10, 'Customer', 'update_customer', 'upload-to-cloud'),
+(15, 10, 'Update Customer', 'update_customer', 'upload-to-cloud'),
 (16, 11, 'Customer Data', 'customer_data', 'upload-to-cloud'),
 (17, 12, 'Search', 'search_screen', 'upload-to-cloud'),
 (18, 13, 'Reports', 'reports', 'upload-to-cloud'),
-(19, 10, 'Document', 'update_document', 'cloud');
+(21, 9, 'Bank Clearance', 'bank_clearance', 'upload-to-cloud'),
+(22, 14, 'Bulk Upload', 'bulk_upload', 'upload-to-cloud'),
+(23, 9, 'Balance Sheet', 'balance_sheet', 'upload-to-cloud');
 
 -- --------------------------------------------------------
 
@@ -1348,12 +1485,19 @@ CREATE TABLE `users` (
 --
 
 INSERT INTO `users` (`id`, `name`, `user_code`, `role`, `designation`, `address`, `place`, `email`, `mobile`, `user_name`, `password`, `branch`, `loan_category`, `line`, `collection_access`, `screens`, `insert_login_id`, `update_login_id`, `created_on`, `updated_on`) VALUES
-(1, 'Super Admin', 'US-001', 7, 7, '', '', '', '', 'admin', '123', '1', '9', '1', 1, '1,2,3,4,5,6,7,8,9,10,11,12,13,15,16,17', '1', '1', '2024-06-13', '2024-06-29'),
-(2, 'Testing User', 'US-002', 9, 9, '', '', '', '', 'testing', '123', '33,34', '10,9', '5,7', 1, '1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17', '1', '2', '2024-06-27', '2024-06-28');
+(1, 'Super Admin', 'US-001', 7, 7, '', '', '', '', 'admin', '123', '1', '9', '1', 1, '1,2,3,4,5,6,7,8,9,10,11,12,13,14,21,15,16,17,22', '1', '1', '2024-06-13', '2024-07-04'),
+(2, 'Testing User', 'US-002', 9, 9, '', '', '', '', 'testing', '123', '33,34', '9,10', '5,7', 1, '1,2,3,4,5,6,7,8,9,10,11,12,13,14,21,23,15,16,17', '1', '2', '2024-06-27', '2024-07-09'),
+(3, 'Testing User 1', 'US-002', 9, 9, '', '', '', '', 'checker', '123', '33,34', '9,10', '5,7', 1, '1,2,3,4,5,6,7,8,9,10,11,12,13,14,21,15,16,17', '1', '2', '2024-06-27', '2024-07-03');
 
 --
 -- Indexes for dumped tables
 --
+
+--
+-- Indexes for table `accounts_collect_entry`
+--
+ALTER TABLE `accounts_collect_entry`
+  ADD PRIMARY KEY (`id`);
 
 --
 -- Indexes for table `agent_creation`
@@ -1377,6 +1521,12 @@ ALTER TABLE `area_name_creation`
   ADD KEY `branchid` (`branch_id`);
 
 --
+-- Indexes for table `bank_clearance`
+--
+ALTER TABLE `bank_clearance`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- Indexes for table `bank_creation`
 --
 ALTER TABLE `bank_creation`
@@ -1396,6 +1546,12 @@ ALTER TABLE `branch_creation`
   ADD KEY `state_id` (`state`),
   ADD KEY `district_id` (`district`),
   ADD KEY `taluk_id` (`taluk`);
+
+--
+-- Indexes for table `cash_tally_modes`
+--
+ALTER TABLE `cash_tally_modes`
+  ADD PRIMARY KEY (`id`);
 
 --
 -- Indexes for table `cheque_info`
@@ -1489,6 +1645,18 @@ ALTER TABLE `endorsement_info`
   ADD PRIMARY KEY (`id`);
 
 --
+-- Indexes for table `existing_customer`
+--
+ALTER TABLE `existing_customer`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `expenses`
+--
+ALTER TABLE `expenses`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- Indexes for table `family_info`
 --
 ALTER TABLE `family_info`
@@ -1566,6 +1734,18 @@ ALTER TABLE `noc_ref`
   ADD PRIMARY KEY (`id`);
 
 --
+-- Indexes for table `other_transaction`
+--
+ALTER TABLE `other_transaction`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `other_trans_name`
+--
+ALTER TABLE `other_trans_name`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- Indexes for table `proof_info`
 --
 ALTER TABLE `proof_info`
@@ -1624,6 +1804,12 @@ ALTER TABLE `users`
 --
 
 --
+-- AUTO_INCREMENT for table `accounts_collect_entry`
+--
+ALTER TABLE `accounts_collect_entry`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
 -- AUTO_INCREMENT for table `agent_creation`
 --
 ALTER TABLE `agent_creation`
@@ -1642,6 +1828,12 @@ ALTER TABLE `area_name_creation`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
+-- AUTO_INCREMENT for table `bank_clearance`
+--
+ALTER TABLE `bank_clearance`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'Primary Key';
+
+--
 -- AUTO_INCREMENT for table `bank_creation`
 --
 ALTER TABLE `bank_creation`
@@ -1658,6 +1850,12 @@ ALTER TABLE `bank_info`
 --
 ALTER TABLE `branch_creation`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `cash_tally_modes`
+--
+ALTER TABLE `cash_tally_modes`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'Primary Key';
 
 --
 -- AUTO_INCREMENT for table `cheque_info`
@@ -1744,6 +1942,18 @@ ALTER TABLE `endorsement_info`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
+-- AUTO_INCREMENT for table `existing_customer`
+--
+ALTER TABLE `existing_customer`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `expenses`
+--
+ALTER TABLE `expenses`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
 -- AUTO_INCREMENT for table `family_info`
 --
 ALTER TABLE `family_info`
@@ -1795,7 +2005,7 @@ ALTER TABLE `loan_issue`
 -- AUTO_INCREMENT for table `menu_list`
 --
 ALTER TABLE `menu_list`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
 
 --
 -- AUTO_INCREMENT for table `mortgage_info`
@@ -1813,6 +2023,18 @@ ALTER TABLE `noc`
 -- AUTO_INCREMENT for table `noc_ref`
 --
 ALTER TABLE `noc_ref`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `other_transaction`
+--
+ALTER TABLE `other_transaction`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `other_trans_name`
+--
+ALTER TABLE `other_trans_name`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
@@ -1849,7 +2071,7 @@ ALTER TABLE `states`
 -- AUTO_INCREMENT for table `sub_menu_list`
 --
 ALTER TABLE `sub_menu_list`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=21;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=24;
 
 --
 -- AUTO_INCREMENT for table `taluks`
@@ -1861,7 +2083,7 @@ ALTER TABLE `taluks`
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- Constraints for dumped tables

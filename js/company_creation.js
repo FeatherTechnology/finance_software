@@ -72,6 +72,18 @@ $(document).ready(function () {
     })
     ///////////////////////////////////// EDIT Screen END  /////////////////////////////////////
 
+    $('#mobile, #whatsapp').change(function () {       
+        checkMobileNo($(this).val(), $(this).attr('id'));
+    });
+
+    $('#landline').change(function () {       
+        checkLandlineFormat($(this).val(), $(this).attr('id'));
+    });
+    
+    $('#mailid').on('change', function () {
+        validateEmail($(this).val(), $(this).attr('id'));
+    });
+
 });//Document END.
 
 //OnLoad/////

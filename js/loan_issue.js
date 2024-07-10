@@ -1119,7 +1119,11 @@ function isFormDataValid(formData) {
         if (!validateField(formData['chequeno'], 'chequeno') || !validateField(formData['issue_amount'], 'issue_amount')) {
             return false;
         }
-    } 
+    } else if (formData['payment_mode'] == '') { //if Empty
+        if (!validateField(formData['payment_mode'], 'payment_mode') ) {
+            return false;
+        }
+    }
     // Check other mandatory fields not related to payment_mode
     for (let key in formData) {
         if (key !== 'payment_mode' && key !== 'issue_amount' && key !== 'transaction_id' && key !== 'chequeno') {
