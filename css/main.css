@@ -9357,3 +9357,46 @@ table.dataTable th {
 	font-size:15px;
 	font-weight:normal;
 }
+
+/* Dashboard */
+.branch-div{
+  padding: 10px;
+  display: flex;
+  justify-content: flex-end;
+}
+.branch-dropdown{
+  padding: 12px 20px;
+  background-color: #ccc;
+  border: none;
+  border-radius: 5px;
+  margin: 0 5px;
+  cursor: pointer;
+  font-size: 16px;
+  color: #333;
+  outline: none;
+  transition: background-color 0.3s, color 0.3s;
+}
+.branch-dropdown>option{
+  padding: 2px;
+}
+.count-head{
+  font-size:18px;
+  font-weight: bold;
+  text-align: center;
+}
+.cnt-value-p{
+  font-size: 4em;
+  font-weight: 700;
+  font-family: sans-serif;
+  text-align: center;
+}
+.card-row{
+  display: flex;
+  justify-content: center;
+}
+.dashboard-count-header{
+  text-align: center;
+  font-weight: bold !important;
+  font-family: sans-serif !important;
+  font-size: 22px !important;
+}
