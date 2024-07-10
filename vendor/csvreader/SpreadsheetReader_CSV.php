@@ -46,7 +46,9 @@
 			// For safety's sake
 			@ini_set('auto_detect_line_endings', true);
 
-			$this -> Options = array_merge($this -> Options, $Options);
+			// $this -> Options = array_merge($this -> Options, $Options);
+			$this->Options = array_merge($this -> Options, is_array($Options) ? $Options : array());
+
 			$this -> Handle = fopen($Filepath, 'r');
 
 			// Checking the file for byte-order mark to determine encoding

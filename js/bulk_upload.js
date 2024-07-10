@@ -29,11 +29,14 @@ function uploadExcelToDB() {
             if (response.includes('Bulk Upload Completed')) {
                 swalSuccess('Success', 'Uploaded Successfully');
             } else if (response.includes('Insertion completed till Serial No')) {
-                swalError('Alert', 'Insertion was not completely successful. Please check the data.');
+                Swal.fire({
+                    html: response,
+                    icon: 'error',
+                    showConfirmButton: true,
+                    confirmButtonColor: 'var(--primary-color)',
+                });
             } else if (response.includes('File is not in Excel Format')) {
                 swalError('Alert', 'The uploaded file is not in the correct format.');
-            } else {
-                swalError('Alert', 'An unknown error occurred.');
             }
         },
         complete: function () {
