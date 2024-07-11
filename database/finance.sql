@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jul 10, 2024 at 03:17 PM
+-- Generation Time: Jul 11, 2024 at 03:23 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -1487,7 +1487,7 @@ CREATE TABLE `users` (
 --
 
 INSERT INTO `users` (`id`, `name`, `user_code`, `role`, `designation`, `address`, `place`, `email`, `mobile`, `user_name`, `password`, `branch`, `loan_category`, `line`, `collection_access`, `screens`, `insert_login_id`, `update_login_id`, `created_on`, `updated_on`) VALUES
-(1, 'Super Admin', 'US-001', 7, 7, '', '', '', '', 'admin', '123', '1', '9', '1', 1, '1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22', '1', '2', '2024-06-13', '2024-07-10'),
+(1, 'Super Admin', 'US-001', 7, 7, '', '', '', '', 'admin', '123', '1', '9,13,10', '1', 1, '1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22', '1', '1', '2024-06-13', '2024-07-11'),
 (2, 'Testing User', 'US-002', 9, 9, '', '', '', '', 'testing', '123', '33,34', '9,10', '5,7', 1, '1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22', '1', '2', '2024-06-27', '2024-07-10'),
 (3, 'Testing User 1', 'US-002', 9, 9, '', '', '', '', 'checker', '123', '33,34', '9,10', '5,7', 1, '1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22', '1', '2', '2024-06-27', '2024-07-10');
 

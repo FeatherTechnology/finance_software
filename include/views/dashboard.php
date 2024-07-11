@@ -299,6 +299,66 @@
                         </div>
                     </div>
                 </div>
+
+                <!-- <br/>
+                <div class="row">
+                    <div class="radio-container chrt-div-cntnr">
+                        <div class="selector">
+                            <div class="selector-item">
+                                <input type="radio" id="total_coll" name="coll" class="selector-item_radio" value='1' checked>
+                                <label for="total_coll" class="selector-item_label">Total</label>
+                            </div>
+                            <div class="selector-item">
+                                <input type="radio" id="today_coll" name="coll" class="selector-item_radio" value='2'>
+                                <label for="today_coll" class="selector-item_label">Today</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <br/><br/>
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="card">
+                            <div class="card-body">
+                                <div id="collection_paid"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-4">
+                        <div class="card">
+                            <div class="card-body">
+                                <div id="collection_pending"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-4">
+                        <div class="card">
+                            <div class="card-body">
+                                <div id="collection_od"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div> -->
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="card">
+                            <div class="card-body">
+                                <div id="coll_points"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <div class="card">
+                            <div class="card-body">
+                                <div id="coll_amount"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
             </div>
         </div>
         <!----------------------------- CARD END Collection ------------------------------>

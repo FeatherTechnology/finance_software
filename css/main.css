@@ -9400,3 +9400,6 @@ table.dataTable th {
   font-family: sans-serif !important;
   font-size: 22px !important;
 }
+.chrt-div-cntnr{
+  width: 100% !important;
+}
