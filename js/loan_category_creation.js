@@ -522,8 +522,8 @@ function clearLoanCategoryCreationForm() {
 }
 
 function checkMinMaxValue(minSelector, maxSelector) {
-    let min = parseInt($(minSelector).val());
-    let max = parseInt($(maxSelector).val());
+    let min = parseFloat($(minSelector).val());
+    let max = parseFloat($(maxSelector).val());
     // Only proceed if both values are numbers
     if (!isNaN(min) && !isNaN(max)) {
         if (min > max) {

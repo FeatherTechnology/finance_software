@@ -170,6 +170,11 @@ border-style: none;
   opacity: 0.5;
   pointer-events: none; /* Prevent interaction */
 }
+.lbl-style-cls{
+  font-weight: bold;
+  font-size:14px;
+	font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+}
 
 /*Media Query START*/
 @media (max-width: 1024px) {
