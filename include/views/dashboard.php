@@ -300,7 +300,7 @@
                     </div>
                 </div>
 
-                <!-- <br/>
+                <br/>
                 <div class="row">
                     <div class="radio-container chrt-div-cntnr">
                         <div class="selector">
@@ -340,25 +340,7 @@
                             </div>
                         </div>
                     </div>
-                </div> -->
-                <div class="row">
-                    <div class="col-md-6">
-                        <div class="card">
-                            <div class="card-body">
-                                <div id="coll_points"></div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="col-md-6">
-                        <div class="card">
-                            <div class="card-body">
-                                <div id="coll_amount"></div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                
+                </div>                
             </div>
         </div>
         <!----------------------------- CARD END Collection ------------------------------>

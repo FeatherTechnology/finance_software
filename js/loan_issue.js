@@ -990,7 +990,7 @@ $(document).ready(function () {
     });
 
     $('#issue_person').change(function () {
-        let id = $(this).val();
+        let id = $('#issue_person :selected').attr('data-val');
         if (id != '' && id != 'Customer') {
             getRelationship(id, '#issue_relationship');
         } else if (id == 'Customer') {
@@ -1081,10 +1081,10 @@ function getIssuePerson(cus_name) {
     let cus_id = $('#cus_id').val();
     $.post('api/loan_entry/get_guarantor_name.php', { cus_id }, function (response) {
         let appendOption = '';
-        appendOption += "<option value=''>Select Issue Person</option>";
-        appendOption += "<option value='Customer'>" + cus_name + "</option>";
+        appendOption += "<option value='' data-val=''>Select Issue Person</option>";
+        appendOption += "<option value='"+cus_name+"' data-val='Customer'>" + cus_name + "</option>";
         $.each(response, function (index, val) {
-            appendOption += "<option value='" + val.id + "'>" + val.fam_name + "</option>";
+            appendOption += "<option value='" +val.fam_name +"' data-val='"+ val.id + "'>" + val.fam_name + "</option>";
         });
         $('#issue_person').empty().append(appendOption);
     }, 'json');
