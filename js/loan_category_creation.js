@@ -130,7 +130,7 @@ $(document).ready(function () {
             }
         });
 
-        if (isFormDataValid(schemeFormData)) {
+        // if (isFormDataValid(schemeFormData)) {
             if (isValid) {
                 $.post('api/loan_category_creation/submit_scheme.php', schemeFormData, function (response) {
                     if (response == '0') {
@@ -146,7 +146,7 @@ $(document).ready(function () {
                     getSchemeTable();
                 }, 'json');
             }
-        }
+        // }
     });
 
 
@@ -218,7 +218,7 @@ $(document).ready(function () {
             id: $('#loan_cat_creation_id').val()
         }
 
-        var data = ['loan_category', 'loan_limit', 'due_method', 'due_type', 'interest_rate_min', 'interest_rate_max', 'due_period_min', 'due_period_max', 'doc_charge_min', 'doc_charge_max', 'processing_fee_min', 'processing_fee_max', 'overdue_penalty', 'loan_cat_creation_id']
+        var data = ['loan_category', 'loan_limit', 'due_method', 'due_type', 'interest_rate_min', 'interest_rate_max', 'due_period_min', 'due_period_max', 'doc_charge_min', 'doc_charge_max', 'processing_fee_min', 'processing_fee_max', 'overdue_penalty']
 
         var isValid = true;
         data.forEach(function (entry) {
@@ -227,7 +227,7 @@ $(document).ready(function () {
                 isValid = false;
             }
         });
-        if (isFormDataValid(formData)) {
+        // if (isFormDataValid(formData)) {
             /////////////////////////// submit page AJAX /////////////////////////////////////
             // Concatenate scheme_name if it's an array
             if (Array.isArray(formData.scheme_name)) {
@@ -251,7 +251,7 @@ $(document).ready(function () {
                 });
             }
             /////////////////////////// submit page AJAX END/////////////////////////////////////
-        }
+        // }
     });
 
     ///////////////////////////////////// EDIT Screen START   /////////////////////////////////////
@@ -506,17 +506,9 @@ function clearLoanCategoryCreationForm() {
     $('select').each(function () {
         $(this).val($(this).find('option:first').val());
     });
-    $('#due_method').css('border', '1px solid #cecece');
-    $('#profit_method').css('border', '1px solid #cecece');
-    $('#doc_charge_type').css('border', '1px solid #cecece');
-    $('#processing_fee_type').css('border', '1px solid #cecece');
-    $('#doc_charge_type_percent').css('border', '1px solid #cecece');
-    $('#doc_charge_type_rupee').css('border', '1px solid #cecece');
-    $('#processing_fee_type_percent').css('border', '1px solid #cecece');
-    $('#processing_fee_type_rupee').css('border', '1px solid #cecece');
-    $('#loan_category').css('border', '1px solid #cecece');
-    $('#due_type').css('border', '1px solid #cecece');
+  $('#loan_limit, #interest_rate_min, #interest_rate_max, #due_period_min, #due_period_max, #doc_charge_min, #doc_charge_max, #processing_fee_min, #processing_fee_max, #overdue_penalty').css('border', '1px solid #cecece');
     // Reset all select fields to their first option
+    $('#loan_category_creation select').css('border', '1px solid #cecece');
     scheme_choices.clearInput();
     getSchemeDropdown();
 }
@@ -535,13 +527,13 @@ function checkMinMaxValue(minSelector, maxSelector) {
 }
 
 // Function to check if all values in an object are not empty
-function isFormDataValid(formData) {
-    for (let key in formData) {
-        if (key != 'id') {
-            if (formData[key] == '' || formData[key] == null || formData[key] == undefined) {
-                return false;
-            }
-        }
-    }
-    return true;
-}
+// function isFormDataValid(formData) {
+//     for (let key in formData) {
+//         if (key != 'id') {
+//             if (formData[key] == '' || formData[key] == null || formData[key] == undefined) {
+//                 return false;
+//             }
+//         }
+//     }
+//     return true;
+// }

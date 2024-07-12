@@ -36,8 +36,10 @@ if (in_array($_FILES["excelFile"]["type"], $allowedFileType)) {
                 $agent_id = $obj->checkAgent($pdo, $data['agent_name']);
                 $data['agent_id'] = $agent_id;
                  
-                $gur_id = $obj->guarantorName($pdo, $data['guarantor_name']);
-                $data['gur_id'] = $gur_id;
+                // $gur_id = $obj->guarantorName($pdo, $data['guarantor_name']);
+                // $data['gur_id'] = $gur_id;
+                // print_r($data['gur_id']);
+
                 $area_id = $obj->getAreaId($pdo, $data['area']);
                 $data['area_id'] = $area_id;
 
@@ -46,8 +48,6 @@ if (in_array($_FILES["excelFile"]["type"], $allowedFileType)) {
                 
                 // $areaLine = $obj->getAreaLine($pdo, $data['arline']);
                 // $data['line_id'] = $areaLine['line_id'];
-                 print_r($data['line_id']);
-
                 // $checkCustomerData = $obj->checkCustomerData($pdo, $data['cus_id']);
                 // $data['cus_data'] = $checkCustomerData['cus_data'];
                 // $data['id'] = $checkCustomerData['id'];
@@ -65,7 +65,8 @@ if (in_array($_FILES["excelFile"]["type"], $allowedFileType)) {
                 if (empty($err_columns)) {
                     // Call LoanEntryTables function
                     $obj->FamilyTable($pdo, $data);
-                    
+                    $gur_id = $obj->guarantorName($pdo, $data['guarantor_name']);
+                    $data['gur_id'] = $gur_id;   
                     $obj->LoanEntryTables($pdo, $data);
                     // Call loanIssueTables function
                    // $obj->loanIssueTables($pdo, $data);

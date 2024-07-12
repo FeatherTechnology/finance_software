@@ -249,22 +249,16 @@ class bulkUploadClass
         }
         return $response;
     }
-  function guarantorName($pdo, $guarantor_name) {
-    $stmt = $pdo->prepare("SELECT id FROM family_info WHERE fam_name = :guarantor_name");
-    $stmt->execute([':guarantor_name' => $guarantor_name]);
-    
-    // Debug: Check the number of rows returned
-    if ($stmt->rowCount() > 0) {
-        $row = $stmt->fetch(PDO::FETCH_ASSOC);
-        $gur_id = $row["id"];
-    } else {
-        // Debug: Print a message if no rows are found
-        error_log("Guarantor name '$guarantor_name' not found in the family_info table.");
-        $gur_id = 'Not Found';
+    function guarantorName($pdo, $guarantor_name)
+    { 
+        $stmt = $pdo->query("SELECT fi.id AS fam_id FROM family_info fi JOIN customer_profile cp ON fi.cus_id = cp.cus_id WHERE fi.fam_name = '$guarantor_name'");
+        if ($stmt->rowCount() > 0) {
+            $row = $stmt->fetch(PDO::FETCH_ASSOC);
+            $gur_id = $row["fam_id"];
+        } 
+        return $gur_id;
     }
 
-    return $gur_id;
-}
     function getAreaId($pdo, $areaname)
     {
         $stmt = $pdo->query("SELECT anc.id, anc.areaname  FROM area_creation ac JOIN area_name_creation anc ON FIND_IN_SET(anc.id, ac.area_id)
@@ -300,10 +294,10 @@ class bulkUploadClass
             FROM `area_creation` ac 
             LEFT JOIN line_name_creation lnc ON ac.line_id = lnc.id
             WHERE FIND_IN_SET(:areaId, ac.area_id)";
-        
+
         $stmt = $pdo->prepare($query);
         $stmt->execute([':areaId' => $areaId]);
-    
+
         if ($stmt) {
             if ($stmt->rowCount() > 0) {
                 $result = $stmt->fetch(PDO::FETCH_ASSOC);
@@ -314,13 +308,13 @@ class bulkUploadClass
         } else {
             $lineId = $defaultLineId;
         }
-    
+
         return $lineId;
     }
-    
+
     // Usage
-   
-    
+
+
 
     function checkAgent($pdo, $agent_name)
     {
@@ -354,28 +348,29 @@ class bulkUploadClass
     function FamilyTable($pdo, $data)
     {
         $user_id = $_SESSION['user_id'];
+        $check_query = "SELECT id FROM family_info WHERE cus_id = '" . $data['cus_id'] . "' AND fam_aadhar = '" . $data['guarantor_aadhar_no'] . "'";
+        $result = $pdo->query($check_query);
+        if ($result->rowCount() == 0) {
+            $insert_query = "INSERT INTO family_info (cus_id, fam_name, fam_relationship, fam_age, fam_live, fam_occupation,fam_aadhar, fam_mobile, insert_login_id, created_on, updated_on) 
+                VALUES (
+                    '" . $data['cus_id'] . "',
+                    '" . $data['guarantor_name'] . "',
+                    '" . $data['guarantor_relationship'] . "',
+                    '" . $data['guarantor_age'] . "',
+                    '" . $data['guarantor_live'] . "',
+                    '" . $data['guarantor_occupation'] . "',
+                    '" . $data['guarantor_aadhar_no'] . "',
+                    '" . $data['guarantor_mobile_no'] . "',
+                    '" . $user_id . "',
+                    '" . strip_tags($data['loan_date']) . "',
+                    '" . strip_tags($data['loan_date']) . "'
+                )
+            ";
 
-        // Insert into family_info table
-        $insert_fam = $pdo->query("
-    INSERT INTO `family_info` (
-        `cus_id`, `fam_name`, `fam_relationship`, `fam_age`,`fam_live`, `fam_occupation`, 
-        `fam_aadhar`, `fam_mobile`, `insert_login_id`, `created_on`,`updated_on`
-    ) 
-    VALUES (
-        '" . $data['cus_id'] . "',
-        '" . $data['guarantor_name'] . "',
-        '" . $data['guarantor_relationship'] . "',
-        '" . $data['guarantor_age'] . "',
-          '" . $data['guarantor_live'] . "',
-        '" . $data['guarantor_occupation'] . "',
-        '" . $data['guarantor_aadhar_no'] . "',
-        '" . $data['guarantor_mobile_no'] . "',
-        '" . $user_id . "',
-        '" . strip_tags($data['loan_date']) . "',
-         '" . strip_tags($data['loan_date']) . "'
-    )
-");
+            $pdo->query($insert_query);
+        } 
     }
+
     function LoanEntryTables($pdo, $data)
     {
         // Print or log $data to see what values are being passed

@@ -410,18 +410,22 @@ function checkMobileNo(mobileno, selector) {
 	}
 }
 function checkLandlineFormat(number, selector) {
-	let regex = /^\d{8,12}$/; // Landline number format (8 to 12 digits)
-	if (!regex.test(number)) {
-		swalError('Warning', 'Enter a valid landline number.');
-		$('#' + selector).val('');
+	if (number != '') {
+		let regex = /^\d{8,12}$/; // Landline number format (8 to 12 digits)
+		if (!regex.test(number)) {
+			swalError('Warning', 'Enter a valid landline number.');
+			$('#' + selector).val('');
+		}
 	}
 }
 function validateEmail(emailInput, selector) {
 	// Regular expression for email validation
-	let emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-	if (!emailPattern.test(emailInput)) {
-		swalError('Warning', 'Kindly enter valid Email address');
-		$('#' + selector).val('');
+	if (emailInput != '') {
+		let emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+		if (!emailPattern.test(emailInput)) {
+			swalError('Warning', 'Kindly enter valid Email address');
+			$('#' + selector).val('');
+		}
 	}
 }
 
@@ -444,7 +448,6 @@ function checkInputFileSize(input, allowdsize, img) {
 	if (input.files.length > 0) {
 		const fileSize = input.files[0].size; // Get the size of the selected file
 		const maxSize = allowdsize * 1024; // Maximum size in bytes (200 KB)
-		console.log(fileSize)
 		if (fileSize > maxSize) {
 			alert("Maximum File Size " + allowdsize + " KB. Please select a smaller file.");
 			input.value = ''; // Clear the selected file
@@ -462,28 +465,29 @@ function setCurrentDate(field_id) {
 }
 
 function validateField(value, fieldId) {
-    let response; // Declare the variable locally
-    if (value === '' || value === null || value === undefined) {
-        response = false;
-        $('#' + fieldId).css('border', '1px solid #ff0000');
-        swalError('Warning', 'Please fill out mandatory fields!');
-    } else {
-        response = true;
-        $('#' + fieldId).css('border', '1px solid #cecece');
-    }
-    return response;
+	let response; // Declare the variable locally
+	if (value === '' || value === null || value === undefined) {
+		response = false;
+		$('#' + fieldId).css('border', '1px solid #ff0000');
+		swalError('Warning', 'Please fill out mandatory fields!');
+	} else {
+		response = true;
+		$('#' + fieldId).css('border', '1px solid #cecece');
+	}
+	return response;
 }
 function validateMultiSelectField(fieldId, choicesInstance) {
-    const selectedValues = choicesInstance.getValue(true);
-    const choicesElement = $('#' + fieldId).closest('.choices'); // Targeting the Choices.js container
-    
-    if (selectedValues.length === 0) {
-        choicesElement.find('.choices__inner').css('border', '1px solid #ff0000');
-        return false;
-    } else {
-        choicesElement.find('.choices__inner').css('border', '1px solid #cecece');
-        return true;
-    }
+	const selectedValues = choicesInstance.getValue(true);
+	const choicesElement = $('#' + fieldId).closest('.choices'); // Targeting the Choices.js container
+
+	if (selectedValues.length === 0) {
+		choicesElement.find('.choices__inner').css('border', '1px solid #ff0000');
+		swalError('Warning', 'Please fill out mandatory fields!');
+		return false;
+	} else {
+		choicesElement.find('.choices__inner').css('border', '1px solid #cecece');
+		return true;
+	}
 }
 
 function moneyFormatIndia(num) {

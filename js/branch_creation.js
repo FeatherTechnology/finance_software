@@ -30,7 +30,7 @@ $(document).ready(function () {
                 } else {
                     swalSuccess('Success', 'Branch Updated Successfully!')
                 }
-
+                $('#branchid').val('');
                 $('#branch_creation').trigger('reset');
                 getBranchTable();
                 swapTableAndCreation();//to change to div to table content.
@@ -42,25 +42,21 @@ $(document).ready(function () {
 
     $(document).on('click', '.branchActionBtn', function () {
         var id = $(this).attr('value'); // Get value attribute
-        $.post('api/branch_creation/get_branch_creation_data.php', { id: id }, function (response) {
+        $.post('api/branch_creation/get_branch_creation_data.php', {id}, function (response) {
             swapTableAndCreation();
             $('#branchid').val(id);
             $('#company_name').val(response[0].company_name);
             $('#branch_name').val(response[0].branch_name);
             $('#address').val(response[0].address);
-
             getDistrictList(response[0].state);
             getTalukList(response[0].district);
-
             $('#place').val(response[0].place);
             $('#pincode').val(response[0].pincode);
-
             $('#email_id').val(response[0].email_id);
             $('#mobile_number').val(response[0].mobile_number);
             $('#whatsapp').val(response[0].whatsapp);
             $('#landline_code').val(response[0].landline_code);
             $('#landline').val(response[0].landline);
-
             setTimeout(() => {
                 $('#state').val(response[0].state);
                 $('#district').val(response[0].district);
@@ -81,6 +77,9 @@ $(document).ready(function () {
     });
     $('#landline').change(function () {
         checkLandlineFormat($(this).val(), $(this).attr('id'));
+    });
+    $('#email_id').on('change', function () {
+        validateEmail($(this).val(), $(this).attr('id'));
     });
 
 }) //Document END///

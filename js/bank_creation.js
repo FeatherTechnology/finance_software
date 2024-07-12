@@ -54,7 +54,8 @@ $(document).ready(function () {
                     } else {
                         swalError('Error', 'Error in table');
                     }
-
+                    $('#bank_id').val('');
+                    $('#branch_name2').val('');
                     $('#bank_creation').trigger('reset');
                     getBankTable();
                     swapTableAndCreation();//to change to div to table content.
@@ -76,7 +77,6 @@ $(document).ready(function () {
                 $('#inserted_qr_code').val(response[0].qr_code);
                 $('#gpay').val(response[0].gpay);
                 $('#branch_name2').val(response[0].under_branch);
-
             }
             getUnderBranchDropdown();
         }, 'json');

@@ -26,7 +26,7 @@ $(document).ready(function () {
                 } else {
                     swalSuccess('Success', 'Agent Updated Successfully!')
                 }
-
+                $('#agent_id').val('');
                 $('#agent_creation').trigger('reset');
                 getAgentTable();
                 swapTableAndCreation();//to change to div to table content.
