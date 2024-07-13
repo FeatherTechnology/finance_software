@@ -307,6 +307,9 @@ $(document).ready(function () {
             return false;
         }
         var data = ['kycloan_id', 'proof_of', 'kyc_relationship', 'proof', 'proof_detail']
+        if (proof_of == '2') {
+            data.push('fam_mem');
+        }
         var isValid = true;
         data.forEach(function (entry) {
             var fieldIsValid = validateField($('#' + entry).val(), entry);
@@ -562,6 +565,14 @@ $(document).ready(function () {
             if (!isUploadValid || !isHiddenValid) {
                 isValid = false;
             }
+            else {
+                $('#gu_pic').css('border', '1px solid #cecece');
+                $('#gur_pic').css('border', '1px solid #cecece');
+            }
+        }
+        else {
+            $('#gu_pic').css('border', '1px solid #cecece');
+            $('#gur_pic').css('border', '1px solid #cecece');
         }
 
         if (isValid) {
@@ -1286,9 +1297,12 @@ function editCustmerProfile(id) {
         var img = $('#imgshow');
         img.attr('src', path + response[0].pic);
         let paths = "uploads/loan_entry/gu_pic/";
-        $('#gur_pic').val(response[0].gu_pic);
-        var img = $('#gur_imgshow');
-        img.attr('src', paths + response[0].gu_pic);
+        if (response[0].gu_pic) {
+            $('#gur_pic').val(response[0].gu_pic);
+            $('#gur_imgshow').attr('src', paths + response[0].gu_pic);
+        } else {
+            $('#gur_imgshow').attr('src', 'img/avatar.png');
+        }
         $('.personal_info_disble').attr("disabled", true);
         $('#submit_personal_info').attr('disabled', true);
     }, 'json');
@@ -1505,7 +1519,16 @@ $(document).ready(function () {
             if (!isUploadValid || !isHiddenValid) {
                 isValid = false;
             }
+            else {
+                $('#doc_upload').css('border', '1px solid #cecece');
+                $('#doc_upload_edit').css('border', '1px solid #cecece');
+            }
         }
+        else {
+            $('#doc_upload').css('border', '1px solid #cecece');
+            $('#doc_upload_edit').css('border', '1px solid #cecece');
+        }
+
         if (isValid) {
             let docInfo = new FormData();
             docInfo.append('doc_name', doc_name);
@@ -1608,7 +1631,16 @@ $(document).ready(function () {
             if (!isUploadValid || !isHiddenValid) {
                 isValid = false;
             }
+            else {
+                $('#mort_upload').css('border', '1px solid #cecece');
+                $('#mort_upload').css('border', '1px solid #cecece');
+            }
         }
+        else {
+            $('#mort_upload').css('border', '1px solid #cecece');
+            $('#mort_upload_edit').css('border', '1px solid #cecece');
+        }
+
         if (isValid) {
             let mortgageInfo = new FormData();
             mortgageInfo.append('property_holder_name', property_holder_name);
@@ -1716,7 +1748,16 @@ $(document).ready(function () {
             if (!isUploadValid || !isHiddenValid) {
                 isValid = false;
             }
+            else {
+                $('#endorsement_upload').css('border', '1px solid #cecece');
+                $('#endorsement_upload_edit').css('border', '1px solid #cecece');
+            }
         }
+        else {
+            $('#endorsement_upload').css('border', '1px solid #cecece');
+            $('#endorsement_upload_edit').css('border', '1px solid #cecece');
+        }
+
         if (isValid) {
             let endorsementInfo = new FormData();
             endorsementInfo.append('owner_name', owner_name);

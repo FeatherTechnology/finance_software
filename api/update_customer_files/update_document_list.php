@@ -4,7 +4,7 @@ $status = [2=>'Loan Entry',3 => 'Move',4 => 'Approved', 5 => 'Cancel', 6 => 'Rev
 $sub_status = [''=>'',1 => 'Consider', 2 => 'Reject'];
 $update_doc_list_arr = array();
 $cus_id = $_POST['cus_id'];
-$qry = $pdo->query("SELECT lelc.id, lelc.loan_id, lc.loan_category, lelc.loan_date,lelc.loan_amount,cs.closed_date,cs.status as c_sts,cs.sub_status as substatus FROM loan_entry_loan_calculation lelc 
+$qry = $pdo->query("SELECT lelc.cus_id, lelc.id, lelc.loan_id, lc.loan_category, lelc.loan_date,lelc.loan_amount,cs.closed_date,cs.status as c_sts,cs.sub_status as substatus FROM loan_entry_loan_calculation lelc 
 LEFT JOIN loan_category_creation lcc ON lelc.loan_category = lcc.id 
 LEFT JOIN loan_category lc ON lcc.loan_category = lc.id 
 LEFT JOIN customer_status cs ON lelc.id = cs.loan_calculation_id 
@@ -21,7 +21,7 @@ if ($qry->rowCount() > 0) {
             <button class='btn btn-outline-secondary'><i class='fa'>&#xf107;</i></button>
             <div class='dropdown-content'>";
 
-            $updateDocInfo['action'] .= "<a href='#' class='doc-update' value='" . $updateDocInfo['id'] . "' title='update details'>Update</a>";
+            $updateDocInfo['action'] .= "<a href='#' class='doc-update' value='" . $updateDocInfo['id'] . "' data-id='".$updateDocInfo['cus_id']."' title='update details'>Update</a>";
             $updateDocInfo['action'] .= "<a href='#' class='doc-print' value='" . $updateDocInfo['id'] . "' title='print'>Print</a>";
             
         

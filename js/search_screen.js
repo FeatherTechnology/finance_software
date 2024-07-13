@@ -884,16 +884,7 @@ $(document).ready(function () {
         }
     });
 
-    $('#agent_id_calc').change(function () {
-        let id = $(this).val();
-        $.post('api/agent_creation/agent_creation_data.php', { id }, function (response) {
-            if (response.length > 0) {
-                $('#agent_name_calc').val(response[0].agent_name);
-            } else {
-                $('#agent_name_calc').val('');
-            }
-        }, 'json');
-    });
+
 
 
 }); //Document END.
