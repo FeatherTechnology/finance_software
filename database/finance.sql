@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jul 11, 2024 at 03:23 PM
+-- Generation Time: Jul 13, 2024 at 08:27 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -1110,8 +1110,11 @@ INSERT INTO `sub_menu_list` (`id`, `main_menu`, `sub_menu`, `link`, `icon`) VALU
 (18, 11, 'Update Customer', 'update_customer', 'upload-to-cloud'),
 (19, 12, 'Customer Data', 'customer_data', 'upload-to-cloud'),
 (20, 13, 'Search', 'search_screen', 'upload-to-cloud'),
-(21, 14, 'Reports', 'reports', 'upload-to-cloud'),
-(22, 15, 'Bulk Upload', 'bulk_upload', 'upload-to-cloud');
+(21, 14, 'Loan Issue Report', 'loan_issue_report', 'upload-to-cloud'),
+(22, 14, 'Collection Report', 'collection_report', 'upload-to-cloud'),
+(23, 14, 'Balance Report', 'balance_report', 'upload-to-cloud'),
+(24, 14, 'Closed Report', 'closed_report', 'upload-to-cloud'),
+(25, 15, 'Bulk Upload Report', 'bulk_upload', 'upload-to-cloud');
 
 -- --------------------------------------------------------
 
@@ -1487,9 +1490,9 @@ CREATE TABLE `users` (
 --
 
 INSERT INTO `users` (`id`, `name`, `user_code`, `role`, `designation`, `address`, `place`, `email`, `mobile`, `user_name`, `password`, `branch`, `loan_category`, `line`, `collection_access`, `screens`, `insert_login_id`, `update_login_id`, `created_on`, `updated_on`) VALUES
-(1, 'Super Admin', 'US-001', 7, 7, '', '', '', '', 'admin', '123', '1', '9,13,10', '1', 1, '1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22', '1', '1', '2024-06-13', '2024-07-11'),
-(2, 'Testing User', 'US-002', 9, 9, '', '', '', '', 'testing', '123', '33,34', '9,10', '5,7', 1, '1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22', '1', '2', '2024-06-27', '2024-07-10'),
-(3, 'Testing User 1', 'US-002', 9, 9, '', '', '', '', 'checker', '123', '33,34', '9,10', '5,7', 1, '1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22', '1', '2', '2024-06-27', '2024-07-10');
+(1, 'Super Admin', 'US-001', 1, 1, '', '', '', '', 'admin', '123', '1,2', '1,2', '1,2', 1, '1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25', '1', '1', '2024-06-13', '2024-07-13'),
+(2, 'Testing User', 'US-002', 1, 1, '', '', '', '', 'testing', '123', '2', '1', '2', 1, '1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25', '1', '1', '2024-06-27', '2024-07-12'),
+(5, 'Testing User3', 'US-003', 1, 1, 'Bussy Street', 'Puducherry', 'dheep@outlook.com', '9878978978', 'Tester', '12345', '1', '1', '1', 1, '1,3,4,5,9,12,13,14,16,18,19,21,25', '1', '1', '2024-07-12', '2024-07-12');
 
 --
 -- Indexes for dumped tables
@@ -2073,7 +2076,7 @@ ALTER TABLE `states`
 -- AUTO_INCREMENT for table `sub_menu_list`
 --
 ALTER TABLE `sub_menu_list`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=23;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=28;
 
 --
 -- AUTO_INCREMENT for table `taluks`
@@ -2085,7 +2088,7 @@ ALTER TABLE `taluks`
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
 -- Constraints for dumped tables

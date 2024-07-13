@@ -5,7 +5,7 @@
             <input type="date" id='to_date' name='to_date' class="toggle-button" value=''>
             <input type="button" id='closed_report_btn' name='closed_report_btn' class="toggle-button" style="background-color: #7CA5B8;color:white" value='Search'>
         </div> <br />
-        <!-- Loan Issue report Start -->
+        <!-- Closed report Start -->
         <div class="card">
             <div class="card-body">
                 <div class="col-12">
@@ -40,6 +40,6 @@
                 </div>
             </div>
         </div>
-        <!--Loan Issue report End-->
+        <!--Closed report End-->
     </div>
 </div>
