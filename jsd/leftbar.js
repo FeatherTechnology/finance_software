@@ -1,6 +1,7 @@
 $(document).ready(function () {
     // Define the mapping of current_page values to current_module values
     const moduleMapping = {
+        'dashboard':'dashboard',
         'company_creation': 'master',
         'branch_creation': 'master',
         'loan_category_creation': 'master',
@@ -21,7 +22,10 @@ $(document).ready(function () {
         'update_document': 'update',
         'customer_data': 'customer_data',
         'search_screen': 'search',
-        'reports': 'reports',
+        'loan_issue_report': 'reports',
+        'collection_report': 'reports',
+        'balance_report': 'reports',
+        'closed_report': 'reports',
     };
 
     const current_page = localStorage.getItem('currentPage');

@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jul 09, 2024 at 03:25 PM
+-- Generation Time: Jul 13, 2024 at 08:27 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -841,20 +841,21 @@ CREATE TABLE `menu_list` (
 --
 
 INSERT INTO `menu_list` (`id`, `menu`, `link`, `icon`) VALUES
-(1, 'Master', 'master', 'globe'),
-(2, 'Administration', 'admin', 'cog'),
-(3, 'Loan Entry', 'loan_entry', 'cog'),
-(4, 'Approval', 'approval', 'globe'),
-(5, 'Loan Issue', 'loan_issue', 'globe'),
-(6, 'Collection', 'collection', 'globe'),
-(7, 'Closed', 'closed', 'globe'),
-(8, 'NOC', 'noc', 'globe'),
-(9, 'Accounts', 'accounts', 'globe'),
-(10, 'Update', 'update', 'globe'),
-(11, 'Customer Data', 'customer_data', 'globe'),
-(12, 'Search', 'search', 'globe'),
-(13, 'Reports', 'reports', 'globe'),
-(14, 'Bulk Upload', 'bulk_upload', 'globe');
+(1, 'Dashboard', 'dashboard', 'globe'),
+(2, 'Master', 'master', 'globe'),
+(3, 'Administration', 'admin', 'cog'),
+(4, 'Loan Entry', 'loan_entry', 'cog'),
+(5, 'Approval', 'approval', 'globe'),
+(6, 'Loan Issue', 'loan_issue', 'globe'),
+(7, 'Collection', 'collection', 'globe'),
+(8, 'Closed', 'closed', 'globe'),
+(9, 'NOC', 'noc', 'globe'),
+(10, 'Accounts', 'accounts', 'globe'),
+(11, 'Update', 'update', 'globe'),
+(12, 'Customer Data', 'customer_data', 'globe'),
+(13, 'Search', 'search', 'globe'),
+(14, 'Reports', 'reports', 'globe'),
+(15, 'Bulk Upload', 'bulk_upload', 'globe');
 
 -- --------------------------------------------------------
 
@@ -1089,27 +1090,31 @@ CREATE TABLE `sub_menu_list` (
 --
 
 INSERT INTO `sub_menu_list` (`id`, `main_menu`, `sub_menu`, `link`, `icon`) VALUES
-(1, 1, 'Company Creation', 'company_creation', 'upload-to-cloud'),
-(2, 1, 'Branch Creation', 'branch_creation', 'upload-to-cloud'),
-(3, 1, 'Loan Category Creation', 'loan_category_creation', 'upload-to-cloud'),
-(4, 1, 'Area Creation', 'area_creation', 'upload-to-cloud'),
-(5, 2, 'Bank Creation', 'bank_creation', 'upload-to-cloud'),
-(6, 2, 'Agent Creation', 'agent_creation', 'upload-to-cloud'),
-(7, 2, 'User Creation', 'user_creation', 'upload-to-cloud'),
-(8, 3, 'Loan Entry', 'loan_entry', 'upload-to-cloud'),
-(9, 4, 'Approval', 'approval', 'upload-to-cloud'),
-(10, 5, 'Loan Issue', 'loan_issue', 'upload-to-cloud'),
-(11, 6, 'Collection', 'collection', 'upload-to-cloud'),
-(12, 7, 'Closed', 'closed', 'upload-to-cloud'),
-(13, 8, 'NOC', 'noc', 'upload-to-cloud'),
-(14, 9, 'Accounts', 'accounts', 'upload-to-cloud'),
-(15, 10, 'Update Customer', 'update_customer', 'upload-to-cloud'),
-(16, 11, 'Customer Data', 'customer_data', 'upload-to-cloud'),
-(17, 12, 'Search', 'search_screen', 'upload-to-cloud'),
-(18, 13, 'Reports', 'reports', 'upload-to-cloud'),
-(21, 9, 'Bank Clearance', 'bank_clearance', 'upload-to-cloud'),
-(22, 14, 'Bulk Upload', 'bulk_upload', 'upload-to-cloud'),
-(23, 9, 'Balance Sheet', 'balance_sheet', 'upload-to-cloud');
+(1, 1, 'Dashboard', 'dashboard', 'upload-to-cloud'),
+(2, 2, 'Company Creation', 'company_creation', 'upload-to-cloud'),
+(3, 2, 'Branch Creation', 'branch_creation', 'upload-to-cloud'),
+(4, 2, 'Loan Category Creation', 'loan_category_creation', 'upload-to-cloud'),
+(5, 2, 'Area Creation', 'area_creation', 'upload-to-cloud'),
+(6, 3, 'Bank Creation', 'bank_creation', 'upload-to-cloud'),
+(7, 3, 'Agent Creation', 'agent_creation', 'upload-to-cloud'),
+(8, 3, 'User Creation', 'user_creation', 'upload-to-cloud'),
+(9, 4, 'Loan Entry', 'loan_entry', 'upload-to-cloud'),
+(10, 5, 'Approval', 'approval', 'upload-to-cloud'),
+(11, 6, 'Loan Issue', 'loan_issue', 'upload-to-cloud'),
+(12, 7, 'Collection', 'collection', 'upload-to-cloud'),
+(13, 8, 'Closed', 'closed', 'upload-to-cloud'),
+(14, 9, 'NOC', 'noc', 'upload-to-cloud'),
+(15, 10, 'Accounts', 'accounts', 'upload-to-cloud'),
+(16, 10, 'Bank Clearance', 'bank_clearance', 'upload-to-cloud'),
+(17, 10, 'Balance Sheet', 'balance_sheet', 'upload-to-cloud'),
+(18, 11, 'Update Customer', 'update_customer', 'upload-to-cloud'),
+(19, 12, 'Customer Data', 'customer_data', 'upload-to-cloud'),
+(20, 13, 'Search', 'search_screen', 'upload-to-cloud'),
+(21, 14, 'Loan Issue Report', 'loan_issue_report', 'upload-to-cloud'),
+(22, 14, 'Collection Report', 'collection_report', 'upload-to-cloud'),
+(23, 14, 'Balance Report', 'balance_report', 'upload-to-cloud'),
+(24, 14, 'Closed Report', 'closed_report', 'upload-to-cloud'),
+(25, 15, 'Bulk Upload Report', 'bulk_upload', 'upload-to-cloud');
 
 -- --------------------------------------------------------
 
@@ -1485,9 +1490,9 @@ CREATE TABLE `users` (
 --
 
 INSERT INTO `users` (`id`, `name`, `user_code`, `role`, `designation`, `address`, `place`, `email`, `mobile`, `user_name`, `password`, `branch`, `loan_category`, `line`, `collection_access`, `screens`, `insert_login_id`, `update_login_id`, `created_on`, `updated_on`) VALUES
-(1, 'Super Admin', 'US-001', 7, 7, '', '', '', '', 'admin', '123', '1', '9', '1', 1, '1,2,3,4,5,6,7,8,9,10,11,12,13,14,21,15,16,17,22', '1', '1', '2024-06-13', '2024-07-04'),
-(2, 'Testing User', 'US-002', 9, 9, '', '', '', '', 'testing', '123', '33,34', '9,10', '5,7', 1, '1,2,3,4,5,6,7,8,9,10,11,12,13,14,21,23,15,16,17', '1', '2', '2024-06-27', '2024-07-09'),
-(3, 'Testing User 1', 'US-002', 9, 9, '', '', '', '', 'checker', '123', '33,34', '9,10', '5,7', 1, '1,2,3,4,5,6,7,8,9,10,11,12,13,14,21,15,16,17', '1', '2', '2024-06-27', '2024-07-03');
+(1, 'Super Admin', 'US-001', 1, 1, '', '', '', '', 'admin', '123', '1,2', '1,2', '1,2', 1, '1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25', '1', '1', '2024-06-13', '2024-07-13'),
+(2, 'Testing User', 'US-002', 1, 1, '', '', '', '', 'testing', '123', '2', '1', '2', 1, '1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25', '1', '1', '2024-06-27', '2024-07-12'),
+(5, 'Testing User3', 'US-003', 1, 1, 'Bussy Street', 'Puducherry', 'dheep@outlook.com', '9878978978', 'Tester', '12345', '1', '1', '1', 1, '1,3,4,5,9,12,13,14,16,18,19,21,25', '1', '1', '2024-07-12', '2024-07-12');
 
 --
 -- Indexes for dumped tables
@@ -2005,7 +2010,7 @@ ALTER TABLE `loan_issue`
 -- AUTO_INCREMENT for table `menu_list`
 --
 ALTER TABLE `menu_list`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
 
 --
 -- AUTO_INCREMENT for table `mortgage_info`
@@ -2071,7 +2076,7 @@ ALTER TABLE `states`
 -- AUTO_INCREMENT for table `sub_menu_list`
 --
 ALTER TABLE `sub_menu_list`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=24;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=28;
 
 --
 -- AUTO_INCREMENT for table `taluks`
@@ -2083,7 +2088,7 @@ ALTER TABLE `taluks`
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
 -- Constraints for dumped tables
