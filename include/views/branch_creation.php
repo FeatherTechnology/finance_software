@@ -138,7 +138,7 @@
                                 <div class="form-group">
                                     <label for="landline">Landline Number</label>
                                     <div class="input-group" style="gap:12px">
-                                        <input type="number" class="form-control" id="landline_code" name="landline_code" tabindex="13" placeholder="Enter Code" style="max-width: 95px;">
+                                        <input type="number" class="form-control" id="landline_code" name="landline_code" onKeyPress="if(this.value.length==5) return false;" tabindex="13" placeholder="Enter Code" style="max-width: 95px;">
                                         <input type="number" class="form-control" id="landline" name="landline" onKeyPress="if(this.value.length==8) return false;" placeholder="Enter Landline Number" tabindex="13">
                                     </div>
                                 </div>

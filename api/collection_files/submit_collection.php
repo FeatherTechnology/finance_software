@@ -46,7 +46,7 @@ if ($qry) {
     $result = '2';
 }
 
-if ($penalty_track != '' or $penalty_waiver != '') {
+if (($penalty_track != '' AND $penalty_track >0) or ($penalty_waiver != '' AND $penalty_waiver >0)) {
     $qry1 = $pdo->query("INSERT INTO `penalty_charges`(`cus_profile_id`, `paid_date`, `paid_amnt`, `waiver_amnt`, `created_date`) VALUES ('$cp_id','$collection_date','$penalty_track','$penalty_waiver', current_timestamp) ");
 }
 
@@ -75,5 +75,24 @@ if ($check == 0 && $penalty_check == 0 && $coll_charge_check == 0) {
         $result = '3';
     }
 }
+
+// $qry = $pdo->query("SELECT cus_name, mobile1 FROM `customer_profile` WHERE `id` = '$cp_id' ");
+// $row = $qry->fetch_assoc();
+// $customer_name = $row['cus_name'];
+// $cus_mobile1 = $row['mobile1'];
+
+// $message = "";
+// $templateid	= ''; //FROM DLT PORTAL.
+// // Account details
+// $apiKey = '';
+// // Message details
+// $sender = '';
+// // Prepare data for POST request
+// $data = 'access_token='.$apiKey.'&to='.$cus_mobile1.'&message='.$message.'&service=T&sender='.$sender.'&template_id='.$templateid;
+// // Send the GET request with cURL
+// $url = 'https://sms.messagewall.in/api/v2/sms/send?'.$data; 
+// $response = file_get_contents($url);  
+// // Process your response here
+// return $response; 
 
 echo json_encode($result);

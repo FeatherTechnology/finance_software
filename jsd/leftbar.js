@@ -26,6 +26,7 @@ $(document).ready(function () {
         'collection_report': 'reports',
         'balance_report': 'reports',
         'closed_report': 'reports',
+        'bulk_upload': 'bulk_upload'
     };
 
     const current_page = localStorage.getItem('currentPage');

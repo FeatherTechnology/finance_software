@@ -37,6 +37,10 @@ $agent_name_calc = $_POST['agent_name_calc'];
 $id = $_POST['id'];
 $cus_status=$_POST['cus_status'];
 
+if($profit_type_calc =='1'){
+    $due_method_calc ='';
+}
+
 $status = 0;
 if ($id == '') {
     $qry = $pdo->query("INSERT INTO `loan_entry_loan_calculation`(`cus_profile_id`, `cus_id`, `loan_id`, `loan_category`, `category_info`, `loan_amount`, `profit_type`, `due_method`, `due_type`, `profit_method`, `scheme_due_method`, `scheme_day`, `scheme_name`, `interest_rate`, `due_period`, `doc_charge`, `processing_fees`, `loan_amnt`, `principal_amnt`, `interest_amnt`, `total_amnt`, `due_amnt`, `doc_charge_calculate`, `processing_fees_calculate`, `net_cash`, `loan_date`, `due_startdate`, `maturity_date`, `referred`, `agent_id`, `agent_name`, `insert_login_id`, `created_on`) 

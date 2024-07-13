@@ -46,7 +46,7 @@ JOIN customer_status cs ON cp.id = cs.cus_profile_id
 JOIN users u ON FIND_IN_SET(cp.line, u.line)
 LEFT JOIN role r ON u.role = r.id
 JOIN users us ON FIND_IN_SET(lelc.loan_category, us.loan_category)
-WHERE u.id ='$user_id' AND us.id ='$user_id' AND c.coll_date BETWEEN '$from_date' AND '$to_date' ";
+WHERE u.id ='$user_id' AND us.id ='$user_id' AND DATE(c.coll_date) BETWEEN '$from_date' AND '$to_date' ";
 
 if (isset($_POST['search'])) {
     if ($_POST['search'] != "") {

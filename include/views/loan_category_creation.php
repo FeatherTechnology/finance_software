@@ -9,7 +9,7 @@
             <div class="card-body">
                 <div class="row">
                     <div class="col-12">
-                        <table id="loancategory_creation_table" class="custom-table">
+                        <table id="loancategory_creation_table" class="table custom-table">
                             <thead>
                                 <tr>
                                     <th>S.No.</th>

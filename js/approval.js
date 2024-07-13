@@ -71,10 +71,10 @@ $(document).ready(function () {
         let id = $(this).attr('value');
         $('#customer_profile_id').val(id);
         let loanCalcId = $(this).attr('data-id');
+        $('#loan_calculation_id').val(loanCalcId);
         swapTableAndCreation();
         editCustmerProfile(id)
-        loanCalculationEdit(loanCalcId);
-        $('#loan_calculation_id').val(loanCalcId);
+        // loanCalculationEdit(loanCalcId);
     });
 
     $('input[name=loan_entry_type]').click(function () {
@@ -1775,6 +1775,8 @@ function callLoanCaculationFunctions() {
     getAutoGenLoanId(loan_calc_id);
     let cus_profile_id = $('#customer_profile_id').val();
     getDocNeedTable(cus_profile_id);
+    let loanCalcId = $('#loan_calculation_id').val();
+    loanCalculationEdit(loanCalcId);
 }
 
 function getAutoGenLoanId(id) {
