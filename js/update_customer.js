@@ -1298,9 +1298,9 @@ function editCustmerProfile(id) {
 $(document).ready(function () {
     $(document).on('click', '.doc-update', function () {
         let id = $(this).attr('value'); //Customer Profile id From List page.
-        // $('#customer_profile_id').val(id);
-        // let cusID = $(this).attr('data-id'); //Cus id From List Page.
-        // $('#cus_id_upd').val(cusID);
+        $('#customer_profile_id').val(id);
+        let cusID = $(this).attr('data-id'); //Cus id From List Page.
+        $('#cus_id_upd').val(cusID);
         //swapTableAndCreation();
         //  getDocNeedTable(id);
         $('#cheque_info_card').show();

@@ -610,11 +610,19 @@ $(document).ready(function () {
         });
   
         if (gu_pic === undefined && gur_pic === '') {
-            let isUploadValid = validateField('','gu_pic');
-            let isHiddenValid = validateField('','gur_pic');
+            let isUploadValid = validateField('', 'gu_pic');
+            let isHiddenValid = validateField('', 'gur_pic');
             if (!isUploadValid || !isHiddenValid) {
                 isValid = false;
             }
+            else {
+                $('#gu_pic').css('border', '1px solid #cecece');
+                $('#gur_pic').css('border', '1px solid #cecece');
+            }
+        }
+        else {
+            $('#gu_pic').css('border', '1px solid #cecece');
+            $('#gur_pic').css('border', '1px solid #cecece');
         }
 
         if (isValid) {
@@ -1470,9 +1478,12 @@ function editCustmerProfile(id) {
         var img = $('#imgshow');
         img.attr('src', path + response[0].pic);
         let paths = "uploads/loan_entry/gu_pic/";
+        if (response[0].gu_pic) {
         $('#gur_pic').val(response[0].gu_pic);
-        var img = $('#gur_imgshow');
-        img.attr('src', paths + response[0].gu_pic);
+            $('#gur_imgshow').attr('src', paths + response[0].gu_pic);
+        } else {
+            $('#gur_imgshow').attr('src', 'img/avatar.png');
+        }
         $('.personal_info_disble').attr("disabled", true);
         $('#submit_personal_info').attr('disabled', true);
     }, 'json');
@@ -1698,7 +1709,7 @@ $(document).ready(function () {
             $('#refresh_cal').trigger('click'); //For calculate once again if user missed to refresh calculation
             let formData = {
                 'customer_profile_id': customerProfileId,
-                'cus_id': $('#cus_id').val(),
+                'cus_id': $('#cus_id').val().trim().replace(/\s/g, ''),
                 'loan_id_calc': $('#loan_id_calc').val(),
                 'loan_category_calc': $('#loan_category_calc').val(),
                 'category_info_calc': $('#category_info_calc').val(),
@@ -1728,7 +1739,8 @@ $(document).ready(function () {
                 'referred_calc': $('#referred_calc').val(),
                 'agent_id_calc': $('#agent_id_calc').val(),
                 'agent_name_calc': $('#agent_name_calc').val(),
-                'id': $('#loan_calculation_id').val()
+                'id': $('#loan_calculation_id').val(),
+                'cus_status':'3'
             }
 
 
@@ -2258,7 +2270,7 @@ function isFormDataValid(formData) {
         'due_amnt_calc', 'doc_charge_calculate',
         'id', 'category_info_calc', 'due_method_calc', 'due_type_calc', 'profit_method_calc',
         'scheme_due_method_calc', 'scheme_day_calc', 'scheme_name_calc', 'agent_id_calc', 'due_period_calc', 'interest_rate_calc', 'processing_fees_calc', 'doc_charge_calc',
-        'agent_name_calc', 'customer_profile_id'
+        'agent_name_calc', 'customer_profile_id','cus_status'
     ];
 
     // Validate all fields except the excluded ones
@@ -2385,7 +2397,6 @@ function loanCalculationEdit(id) {
         $('#due_type_calc').val(response[0].due_type);
         $('#profit_method_calc').val(response[0].profit_method);
         $('#scheme_due_method_calc').val(response[0].scheme_due_method);
-        $('#scheme_day_calc').val(response[0].scheme_day);
         $('#scheme_name_edit').val(response[0].scheme_name);
         $('#int_rate_upd').val(response[0].interest_rate);
         $('#due_period_upd').val(response[0].due_period);
@@ -2420,6 +2431,7 @@ function loanCalculationEdit(id) {
 
 
         setTimeout(() => {
+            $('#scheme_day_calc').val(response[0].scheme_day);
             $('#agent_id_calc').val(response[0].agent_id);
             $('#agent_name_calc').val(response[0].agent_name);
             $('#refresh_cal').trigger('click');

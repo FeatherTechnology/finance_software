@@ -668,7 +668,7 @@ $(document).ready(function () {
         let mobile2 = $('#mobile2').val();
         let customer_profile_id = $('#customer_profile_id').val();
 
-        var data = ['cus_id', 'cus_name', 'gender', 'mobile1', 'pic']
+        var data = ['cus_id', 'cus_name', 'gender', 'mobile1']
         var isValid = true;
         data.forEach(function (entry) {
             var fieldIsValid = validateField($('#' + entry).val(), entry);
@@ -676,11 +676,22 @@ $(document).ready(function () {
                 isValid = false;
             }
         });
-        // if (cus_id === '' || cus_name === '' || gender === '' || mobile1 === '' || (pic === undefined && per_pic == '')) {
-        //     swalError('Warning', 'Please Fill out Mandatory fields!');
-        //     return false;
-        // }
-
+        if (pic === undefined && per_pic === '') {
+            let isUploadValid = validateField('', 'pic');
+            let isHiddenValid = validateField('', 'per_pic');
+            if (!isUploadValid || !isHiddenValid) {
+                isValid = false;
+            }
+            else {
+                $('#pic').css('border', '1px solid #cecece');
+                $('#per_pic').css('border', '1px solid #cecece');
+            }
+        }
+        else {
+            $('#pic').css('border', '1px solid #cecece');
+            $('#per_pic').css('border', '1px solid #cecece');
+        }
+      
         if (isValid) {
             let personalDetail = new FormData();
             personalDetail.append('cus_id', cus_id);
@@ -1777,7 +1788,8 @@ $(document).ready(function () {
                 'referred_calc': $('#referred_calc').val(),
                 'agent_id_calc': $('#agent_id_calc').val(),
                 'agent_name_calc': $('#agent_name_calc').val(),
-                'id': $('#loan_calculation_id').val()
+                'id': $('#loan_calculation_id').val(),
+                'cus_status':'2'
             }
             if (isFormDataValid(formData)) {
                 $.post('api/loan_entry/loan_calculation/submit_loan_calculation.php', formData, function (response) {
@@ -2305,7 +2317,7 @@ function isFormDataValid(formData) {
         'due_amnt_calc', 'doc_charge_calculate',
         'id', 'category_info_calc', 'due_method_calc', 'due_type_calc', 'profit_method_calc',
         'scheme_due_method_calc', 'scheme_day_calc', 'scheme_name_calc', 'agent_id_calc', 'due_period_calc', 'interest_rate_calc', 'processing_fees_calc', 'doc_charge_calc',
-        'agent_name_calc', 'customer_profile_id'
+        'agent_name_calc', 'customer_profile_id','cus_status'
     ];
 
     // Validate all fields except the excluded ones
