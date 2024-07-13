@@ -147,8 +147,7 @@ $(document).ready(function () {
             submenus: selectedSubmenuIds,
             id: $('#user_creation_id').val()
         }
-        console.log($('#branch_name').val())
-        var data = ['name', 'user_id', 'designation', 'role', 'user_name', 'password', 'confirm_password', 'collection_access']
+        var data = ['name', 'user_id', 'designation', 'role', 'user_name', 'password', 'confirm_password', 'collection_access',]
 
         var isValid = true;
         data.forEach(function (entry) {
@@ -161,8 +160,9 @@ $(document).ready(function () {
         let isLineNameValid = validateMultiSelectField('line_name', line_name);
         let isLoanCategoryValid = validateMultiSelectField('loan_category', loan_category);
 
-        if (isFormDataValid(userFormData)) {
-            if (isValid && isBranchNameValid && isLineNameValid && isLoanCategoryValid) {
+        // if (isFormDataValid(userFormData)) {
+        if (isValid && isBranchNameValid && isLineNameValid && isLoanCategoryValid) {
+            if (selectedSubmenuIds.length > 0) {
                 $.post('api/user_creation_files/submit_user_creation.php', userFormData, function (response) {
                     if (response.status == '') {
                         swalError('Error', 'Creation Failed.');
@@ -183,7 +183,11 @@ $(document).ready(function () {
                     }
                 }, 'json');
             }
+            else{
+                swalError('Warning', 'Please fill out mandatory fields!');
+            }
         }
+        // }
     });
 
     $(document).on('click', '.userActionBtn', function () {
@@ -611,16 +615,16 @@ function getLoanCategoryName(loan_cat_edit_it) {
 }
 
 // Function to check if all values in an object are not empty
-function isFormDataValid(formData) {
-    for (let key in formData) {
-        if (key != 'id' && key != 'address' && key != 'place' && key != 'email' && key != 'mobile_no') {
-            if (formData[key] == '' || formData[key] == null || formData[key] == undefined) {
-                return false;
-            }
-        }
-    }
-    return true;
-}
+// function isFormDataValid(formData) {
+//     for (let key in formData) {
+//         if (key != 'id' && key != 'address' && key != 'place' && key != 'email' && key != 'mobile_no') {
+//             if (formData[key] == '' || formData[key] == null || formData[key] == undefined) {
+//                 return false;
+//             }
+//         }
+//     }
+//     return true;
+// }
 
 function deleteUser(id) {
     $.post('api/user_creation_files/delete_user.php', { id }, function (response) {

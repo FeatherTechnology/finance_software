@@ -1028,7 +1028,7 @@ $(document).ready(function () {
                     swalError('Warning', 'Loan Issue Failed.');
                 }
             });
-        } 
+        }
 
     })
 }); ///Document END.
@@ -1107,20 +1107,23 @@ function isFormDataValid(formData) {
     // Reset border styles for all fields
     $('#payment_mode, #issue_amount, #transaction_id, #chequeno').css('border', '1px solid #cecece');
 
+    if (!validateField(formData['issue_person'], 'issue_person')) {
+        isValid = false;
+    }
     if (formData['payment_mode'] === '1') { // Cash
         if (!validateField(formData['issue_amount'], 'issue_amount')) {
             return false;
         }
     } else if (formData['payment_mode'] === '2') { // Bank Transfer
         if (!validateField(formData['transaction_id'], 'transaction_id') || !validateField(formData['issue_amount'], 'issue_amount')) {
-            return false;
+            return false;    
         }
     } else if (formData['payment_mode'] === '3') { // Cheque
         if (!validateField(formData['chequeno'], 'chequeno') || !validateField(formData['issue_amount'], 'issue_amount')) {
             return false;
         }
     } else if (formData['payment_mode'] == '') { //if Empty
-        if (!validateField(formData['payment_mode'], 'payment_mode') ) {
+        if (!validateField(formData['payment_mode'], 'payment_mode')) {
             return false;
         }
     }

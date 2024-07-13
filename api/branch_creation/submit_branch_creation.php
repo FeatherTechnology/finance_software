@@ -20,7 +20,7 @@ $user_id = $_SESSION['user_id'];
 $branchid = $_POST['branchid'];
 
 
-if($branchid !='0'){
+if($branchid !='0' && $branchid !=''){
     $qry = $pdo->query("UPDATE `branch_creation` SET `company_name`='$company_name',`branch_code`='$branch_code',`branch_name`='$branch_name',`address`='$address',`state`='$state',`district`='$district',`taluk`='$taluk',`place`='$place',`pincode`='$pincode',`email_id`='$email_id',`mobile_number`='$mobile_number',`whatsapp`='$whatsapp',`landline_code`='$landline_code',`landline`='$landline',`update_login_id`='$user_id',updated_date = now() WHERE `id`='$branchid'");
     $result = 0; //update
 

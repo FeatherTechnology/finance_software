@@ -46,7 +46,6 @@ if (count($conditions) > 0) {
 }
 
 $sql .= " ORDER BY cp.id DESC";
-
 $stmt = $pdo->prepare($sql);
 
 

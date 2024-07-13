@@ -235,6 +235,13 @@ function swapTableAndCreation() {
         $('#line_name2').val('');
         $('#area_creation').trigger('reset');
         $('#area_creation_id').val('0');
+        $('#line_modal_btn')
+            .removeAttr('data-toggle')
+            .removeAttr('data-target');
+
+        $('#area_modal_btn')
+            .removeAttr('data-toggle')
+            .removeAttr('data-target');
         getLineNameDropdown();
         getAreaNameDropdown();
         getAreaCreationTable();

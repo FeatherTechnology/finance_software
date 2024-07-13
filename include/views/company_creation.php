@@ -66,7 +66,7 @@
                                         <div class="form-group">
                                             <label for="district">District</label><span class="text-danger">*</span>
                                             <select class="form-control" id="district" name="district" tabindex="4">
-                                                <option value="Select District">Select District</option>
+                                                <option value="">Select District</option>
                                             </select>
                                         </div>
                                     </div>
@@ -74,7 +74,7 @@
                                         <div class="form-group">
                                             <label for="taluk">Taluk</label><span class="text-danger">*</span>
                                             <select class="form-control" id="taluk" name="taluk" tabindex="5">
-                                                <option value="Select Taluk">Select Taluk</option>
+                                                <option value="">Select Taluk</option>
                                             </select>
                                         </div>
                                     </div>

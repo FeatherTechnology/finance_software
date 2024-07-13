@@ -1124,7 +1124,7 @@
                     </form>
                 </div>
                 <div class="row">
-                    <div class="col-12">
+                    <div class="col-12 overflow-x-cls">
                         <table id="bank_creation_table" class="custom-table">
                             <thead>
                                 <tr>

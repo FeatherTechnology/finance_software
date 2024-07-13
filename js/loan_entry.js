@@ -545,7 +545,6 @@ $(document).ready(function () {
             return false;
         }
         let isValid = true;
-
         // Validate fields based on area_confirm value
         if (area_confirm == '1') {
             let validationResults = [
@@ -568,11 +567,9 @@ $(document).ready(function () {
                 isValid = false;
             }
         }
-    
-    
         data = ['cus_name', 'gender', 'mobile1', 'guarantor_name', 'area_confirm', 'area', 'line', 'cus_limit'];
 
-      //  var isValid = true;
+        //  var isValid = true;
         data.forEach(function (entry) {
             var fieldIsValid = validateField($('#' + entry).val(), entry);
             if (!fieldIsValid) {
@@ -585,11 +582,15 @@ $(document).ready(function () {
             if (!isUploadValid || !isHiddenValid) {
                 isValid = false;
             }
+            else {
+                $('#gu_pic').css('border', '1px solid #cecece');
+                $('#gur_pic').css('border', '1px solid #cecece');
+            }
         }
-        // if (cus_name === '' || gender === '' || mobile1 === '' || (pic === undefined && per_pic == '') || guarantor_name === '' || (gu_pic === undefined && gur_pic == '') || area_confirm === '' || area === '' || line === '' || cus_limit === '' || famInfoRowCount === 0 || kycInfoRowCount === 0) {
-        //     swalError('Warning', 'Please Fill out Mandatory fields!');
-        //     return false;
-        // }
+        else {
+            $('#gu_pic').css('border', '1px solid #cecece');
+            $('#gur_pic').css('border', '1px solid #cecece');
+        }
 
         if (isValid) {
             if (famInfoRowCount === 0 || kycInfoRowCount === 0) {
@@ -667,7 +668,7 @@ $(document).ready(function () {
         let mobile2 = $('#mobile2').val();
         let customer_profile_id = $('#customer_profile_id').val();
 
-        var data = ['cus_id', 'cus_name', 'gender', 'mobile1', 'pic']
+        var data = ['cus_id', 'cus_name', 'gender', 'mobile1']
         var isValid = true;
         data.forEach(function (entry) {
             var fieldIsValid = validateField($('#' + entry).val(), entry);
@@ -675,11 +676,22 @@ $(document).ready(function () {
                 isValid = false;
             }
         });
-        // if (cus_id === '' || cus_name === '' || gender === '' || mobile1 === '' || (pic === undefined && per_pic == '')) {
-        //     swalError('Warning', 'Please Fill out Mandatory fields!');
-        //     return false;
-        // }
-
+        if (pic === undefined && per_pic === '') {
+            let isUploadValid = validateField('', 'pic');
+            let isHiddenValid = validateField('', 'per_pic');
+            if (!isUploadValid || !isHiddenValid) {
+                isValid = false;
+            }
+            else {
+                $('#pic').css('border', '1px solid #cecece');
+                $('#per_pic').css('border', '1px solid #cecece');
+            }
+        }
+        else {
+            $('#pic').css('border', '1px solid #cecece');
+            $('#per_pic').css('border', '1px solid #cecece');
+        }
+      
         if (isValid) {
             let personalDetail = new FormData();
             personalDetail.append('cus_id', cus_id);
@@ -1403,12 +1415,16 @@ function editCustmerProfile(id) {
         var img = $('#imgshow');
         img.attr('src', path + response[0].pic);
         let paths = "uploads/loan_entry/gu_pic/";
-        $('#gur_pic').val(response[0].gu_pic);
-        var img = $('#gur_imgshow');
-        img.attr('src', paths + response[0].gu_pic);
+        if (response[0].gu_pic) {
+            $('#gur_pic').val(response[0].gu_pic);
+            $('#gur_imgshow').attr('src', paths + response[0].gu_pic);
+        } else {
+            $('#gur_imgshow').attr('src', 'img/avatar.png');
+        }
         $('.personal_info_disble').attr("disabled", true);
         $('#submit_personal_info').attr('disabled', true);
     }, 'json');
+
 }
 
 function existingCustmerProfile(cus_id) {
@@ -1498,19 +1514,20 @@ function existingCustmerProfile(cus_id) {
             $('#gur_pic').val(response[0].gu_pic);
             var img = $('#gur_imgshow');
             img.attr('src', paths + response[0].gu_pic);
+
         }
     }, 'json');
 }
 function resetValidate() {
     const fieldsToReset = [
         'res_type',
-           'res_detail',
-            'res_address',
-           'native_address', 
-           'occupation', 
-          'occ_detail', 
-            'occ_income',
-          'occ_address'
+        'res_detail',
+        'res_address',
+        'native_address',
+        'occupation',
+        'occ_detail',
+        'occ_income',
+        'occ_address'
     ];
 
     fieldsToReset.forEach(fieldId => {
@@ -1771,7 +1788,8 @@ $(document).ready(function () {
                 'referred_calc': $('#referred_calc').val(),
                 'agent_id_calc': $('#agent_id_calc').val(),
                 'agent_name_calc': $('#agent_name_calc').val(),
-                'id': $('#loan_calculation_id').val()
+                'id': $('#loan_calculation_id').val(),
+                'cus_status':'2'
             }
             if (isFormDataValid(formData)) {
                 $.post('api/loan_entry/loan_calculation/submit_loan_calculation.php', formData, function (response) {
@@ -2299,7 +2317,7 @@ function isFormDataValid(formData) {
         'due_amnt_calc', 'doc_charge_calculate',
         'id', 'category_info_calc', 'due_method_calc', 'due_type_calc', 'profit_method_calc',
         'scheme_due_method_calc', 'scheme_day_calc', 'scheme_name_calc', 'agent_id_calc', 'due_period_calc', 'interest_rate_calc', 'processing_fees_calc', 'doc_charge_calc',
-        'agent_name_calc', 'customer_profile_id'
+        'agent_name_calc', 'customer_profile_id','cus_status'
     ];
 
     // Validate all fields except the excluded ones
@@ -2426,7 +2444,6 @@ function loanCalculationEdit(id) {
         $('#due_type_calc').val(response[0].due_type);
         $('#profit_method_calc').val(response[0].profit_method);
         $('#scheme_due_method_calc').val(response[0].scheme_due_method);
-        $('#scheme_day_calc').val(response[0].scheme_day);
         $('#scheme_name_edit').val(response[0].scheme_name);
         $('#int_rate_upd').val(response[0].interest_rate);
         $('#due_period_upd').val(response[0].due_period);
@@ -2459,8 +2476,9 @@ function loanCalculationEdit(id) {
             schemeCalAjax(response[0].scheme_name)
         }
 
-
+        
         setTimeout(() => {
+            $('#scheme_day_calc').val(response[0].scheme_day);
             $('#agent_id_calc').val(response[0].agent_id);
             $('#agent_name_calc').val(response[0].agent_name);
             $('#refresh_cal').trigger('click');

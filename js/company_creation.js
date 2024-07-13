@@ -160,6 +160,6 @@ function getTalukList(district_id) {
 }
 $('button[type="reset"],  .backBtn').click(function () {
     event.preventDefault();
-    $('input').css('border', '1px solid #cecece');
-    $('select').css('border', '1px solid #cecece');
+    $('#company_creation input').css('border', '1px solid #cecece');
+    $('#company_creation select').css('border', '1px solid #cecece');
 });

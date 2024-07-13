@@ -915,6 +915,7 @@ function getLoanCategoryName() {
         $.each(response, function (index, val) {
             let selected = '';
             let loan_category_calc2 = $('#loan_category_calc2').val();
+            console.log(loan_category_calc2);
             if (val.id == loan_category_calc2) {
                 selected = 'selected';
             }
