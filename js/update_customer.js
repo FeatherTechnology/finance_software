@@ -35,7 +35,7 @@ $(document).ready(function () {
 
         } else if (updateType == 'loan_doc') {
             $('#cus_update_customer_profile').hide(); $('#update_documentation').show();
-            getLoanListTable()
+            //OnLoadFunctions(cus_id)
 
         }
     })
@@ -76,6 +76,11 @@ $(document).ready(function () {
         }
     });
 
+    $(document).on('click', '#documentation', function (event) {
+        event.preventDefault();
+        let cus_id = $('#cus_id_upd').val(); 
+        OnLoadFunctions(cus_id)
+    })
     $('#cus_name').on('blur', function () {
         let customerID = $('#cus_id_upd').val().trim().replace(/\s/g, '');
         let customerName = $('#cus_name').val().trim();
@@ -882,13 +887,13 @@ function getFamilyDelete(id) {
 function resetValidate() {
     const fieldsToReset = [
         'res_type',
-           'res_detail',
-            'res_address',
-           'native_address', 
-           'occupation', 
-          'occ_detail', 
-            'occ_income',
-          'occ_address'
+        'res_detail',
+        'res_address',
+        'native_address',
+        'occupation',
+        'occ_detail',
+        'occ_income',
+        'occ_address'
     ];
 
     fieldsToReset.forEach(fieldId => {
@@ -1293,9 +1298,14 @@ function editCustmerProfile(id) {
             $('#data_checking_table_div').hide();
         }
         let path = "uploads/loan_entry/cus_pic/";
-        $('#per_pic').val(response[0].pic);
-        var img = $('#imgshow');
-        img.attr('src', path + response[0].pic);
+        if (response[0].pic) {
+            $('#per_pic').val(response[0].pic);
+            var img = $('#imgshow');
+            img.attr('src', path + response[0].pic);
+        }
+        else {
+            $('#imgshow').attr('src', 'img/avatar.png');
+        }
         let paths = "uploads/loan_entry/gu_pic/";
         if (response[0].gu_pic) {
             $('#gur_pic').val(response[0].gu_pic);
@@ -1926,9 +1936,9 @@ $(document).ready(function () {
 $(function () {
 });
 
-function getLoanListTable() {
-    let cus_id = $('#cus_id_upd').val();
-    $.post('api/update_customer_files/update_document_list.php', { cus_id }, function (response) {
+function getLoanListTable(cus_id,pending_sts,od_sts,due_nil_sts,balAmnt) {
+   // let cus_id = $('#cus_id_upd').val();
+    $.post('api/update_customer_files/update_document_list.php', { cus_id,pending_sts,od_sts,due_nil_sts,balAmnt }, function (response) {
         var columnMapping = [
             'sno',
             'loan_id',
@@ -1937,7 +1947,7 @@ function getLoanListTable() {
             'loan_amount',
             'closed_date',
             'c_sts',
-            'substatus',
+            'sub_status',
             'action'
         ];
         appendDataToTable('#loan_list_table', response, columnMapping);
@@ -1947,7 +1957,44 @@ function getLoanListTable() {
     }, 'json');
 }
 
-
+function OnLoadFunctions(cus_id){
+    //To get loan sub Status
+    var pending_arr = [];
+    var od_arr = [];
+    var due_nil_arr = [];
+    var balAmnt = [];
+    $.ajax({
+        url: 'api/collection_files/resetCustomerStatus.php',
+        data: {'cus_id':cus_id},
+        dataType:'json',
+        type:'post',
+        cache: false,
+        success: function(response){
+            if(response.follow_cus_sts != null){
+                for(var i=0;i< response['pending_customer'].length;i++){
+                    pending_arr[i] = response['pending_customer'][i]
+                    od_arr[i] = response['od_customer'][i]
+                    due_nil_arr[i] = response['due_nil_customer'][i]
+                    balAmnt[i] = response['balAmnt'][i]
+                }
+                var pending_sts = pending_arr.join(',');
+                $('#pending_sts').val(pending_sts);
+                var od_sts = od_arr.join(',');
+                $('#od_sts').val(od_sts);
+                var due_nil_sts = due_nil_arr.join(',');
+                $('#due_nil_sts').val(due_nil_sts);
+                balAmnt = balAmnt.join(',');
+            }
+        }
+    }).then(function(){
+            showOverlay();//loader start
+            var pending_sts = $('#pending_sts').val()
+            var od_sts = $('#od_sts').val()
+            var due_nil_sts = $('#due_nil_sts').val()
+            getLoanListTable(cus_id,pending_sts,od_sts,due_nil_sts,balAmnt)    
+            hideOverlay();//loader stop
+        }); 
+}//Auto Load function END
 
 function getFamilyMember(optn, selector) {
     let cus_id = $('#cus_id_upd').val();

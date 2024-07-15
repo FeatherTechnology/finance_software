@@ -65,7 +65,7 @@ if (in_array($_FILES["excelFile"]["type"], $allowedFileType)) {
                 if (empty($err_columns)) {
                     // Call LoanEntryTables function
                     $obj->FamilyTable($pdo, $data);
-                    $gur_id = $obj->guarantorName($pdo, $data['guarantor_name']);
+                    $gur_id = $obj->guarantorName($pdo, $data['cus_id']);
                     $data['gur_id'] = $gur_id;   
                     $obj->LoanEntryTables($pdo, $data);
                     // Call loanIssueTables function

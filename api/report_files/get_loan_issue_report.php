@@ -49,7 +49,7 @@ if (isset($_POST['search'])) {
         $query .=     " AND (lelc.loan_id LIKE '%" . $search . "%'
         OR cp.cus_id LIKE '%" . $search . "%'
         OR cp.cus_name LIKE '%" . $search . "%'
-        OR gaurantor LIKE '%" . $search . "%'
+        OR fi.fam_name LIKE '%" . $search . "%'
         OR anc.areaname LIKE '%" . $search . "%'
         OR lnc.linename LIKE '%" . $search . "%'
         OR bc.branch_name LIKE '%" . $search . "%'
@@ -62,7 +62,7 @@ if (isset($_POST['search'])) {
         OR lelc.interest_amnt LIKE '%" . $search . "%' 
         OR lelc.doc_charge_calculate LIKE '%" . $search . "%' 
         OR lelc.processing_fees_calculate LIKE '%" . $search . "%' 
-        OR tot_amnt LIKE '%" . $search . "%' 
+        OR li.loan_amnt LIKE '%" . $search . "%' 
         OR li.net_cash LIKE '%" . $search . "%' 
         OR li.issue_person LIKE '%" . $search . "%' 
         OR li.relationship LIKE '%" . $search . "%' )";

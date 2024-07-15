@@ -13,23 +13,27 @@ $(document).ready(function () {
                 $('#branch_name').val(response[0].branch_name);
                 $('#line').val(response[0].linename);
                 $('#mobile1').val(response[0].mobile1);
-
                 let path = "uploads/loan_entry/cus_pic/";
-                $('#per_pic').val(response[0].pic);
-                var img = $('#imgshow');
-                img.attr('src', path + response[0].pic);
+                if (response[0].pic) {
+                    $('#per_pic').val(response[0].pic);
+                    var img = $('#imgshow');
+                    img.attr('src', path + response[0].pic);
+                }
+                else {
+                    $('#imgshow').attr('src', 'img/avatar.png');
+                }
             }
         }, 'json');
 
         getClosedLoanList(cus_id);
 
     })
-    
-        $(document).on('click', '.closed-move', function () {
-            let cus_id = $(this).attr('value');
-            let cus_sts = 10;
-            moveToNext(cus_id, cus_sts);
-        });
+
+    $(document).on('click', '.closed-move', function () {
+        let cus_id = $(this).attr('value');
+        let cus_sts = 10;
+        moveToNext(cus_id, cus_sts);
+    });
 
     $('#back_to_closed_list').click(function (event) {
         event.preventDefault();
@@ -37,10 +41,10 @@ $(document).ready(function () {
         $('#closed_list').show();
         getClosedListTable();
     })
-    $('#closed_remark_model').on('hidden.bs.modal', function() {
+    $('#closed_remark_model').on('hidden.bs.modal', function () {
         $('#closed_remark_form')[0].reset();
     });
-    
+
     $('#submit_closed_remark').click(function (event) {
         event.preventDefault();
         if (validate()) {
@@ -70,9 +74,9 @@ $(document).ready(function () {
         $('#due_chart_model').modal('show');
         var cp_id = $(this).attr('value');
         var cus_id = $('#cus_id').val();
-        dueChartList(cp_id,cus_id); // To show Due Chart List.
-        setTimeout(()=>{
-            $('.print_due_coll').click(function(){
+        dueChartList(cp_id, cus_id); // To show Due Chart List.
+        setTimeout(() => {
+            $('.print_due_coll').click(function () {
                 var id = $(this).attr('value');
                 Swal.fire({
                     title: 'Print',
@@ -89,49 +93,49 @@ $(document).ready(function () {
                 }).then((result) => {
                     if (result.isConfirmed) {
                         $.ajax({
-                            url:'api/collection_files/print_collection.php',
-                            data:{'coll_id':id},
-                            type:'post',
-                            cache:false,
-                            success:function(html){
+                            url: 'api/collection_files/print_collection.php',
+                            data: { 'coll_id': id },
+                            type: 'post',
+                            cache: false,
+                            success: function (html) {
                                 $('#printcollection').html(html)
                                 // Get the content of the div element
                                 //var content = $("#printcollection").html();
-                            
+
                             }
                         })
                     }
                 })
             })
-        },1000)
+        }, 1000)
     });
 
     $(document).on('click', '.penalty-chart', function () {
-       
+
         $('#penalty_model').modal('show');
         let cp_id = $(this).attr('value');
-    let cus_id = $('#cus_id').val();
-    $.ajax({
-        //to insert penalty by on click
-        url: 'api/collection_files/collection_loan_details.php',
-        data: {'cp_id':cp_id},
-        dataType:'json',
-        type:'post',
-        cache: false,
-        success: function(response){
-            penaltyChartList(cp_id,cus_id); //To show Penalty List.
-        }
-    })
+        let cus_id = $('#cus_id').val();
+        $.ajax({
+            //to insert penalty by on click
+            url: 'api/collection_files/collection_loan_details.php',
+            data: { 'cp_id': cp_id },
+            dataType: 'json',
+            type: 'post',
+            cache: false,
+            success: function (response) {
+                penaltyChartList(cp_id, cus_id); //To show Penalty List.
+            }
+        })
     });
 
     $(document).on('click', '.fine-chart', function () {
         var cp_id = $(this).attr('value');
-        fineChartList(cp_id) 
+        fineChartList(cp_id)
         $('#fine_model').modal('show');
     });
 
     $(document).on('click', '.closed-view', function () {
-       
+
         let id = $(this).attr('value');
         $('#cus_profile_id').val(id)
         $('#closed_remark_model').modal('show');
@@ -146,7 +150,7 @@ $(function () {
 });
 
 function getClosedListTable() {
-        serverSideTable('#closed_list_table','', 'api/closed_files/close_list_table.php');       
+    serverSideTable('#closed_list_table', '', 'api/closed_files/close_list_table.php');
 }
 function moveToNext(cus_id, cus_sts) {
     $.post('api/closed_files/close_move_to_next.php', { cus_id, cus_sts }, function (response) {
@@ -211,45 +215,45 @@ function closeChartsModal() {
     $('#closed_remark_form select').css('border', '1px solid #cecece');
 
 }
-function dueChartList(cp_id,cus_id){
+function dueChartList(cp_id, cus_id) {
     $.ajax({
         url: 'api/collection_files/get_due_chart_list.php',
-        data: {'cp_id':cp_id,'cus_id':cus_id},
-        type:'post',
+        data: { 'cp_id': cp_id, 'cus_id': cus_id },
+        type: 'post',
         cache: false,
-        success: function(response){
+        success: function (response) {
             $('#due_chart_table_div').empty();
             $('#due_chart_table_div').html(response);
         }
-    }).then(function(){
-    
-        $.post('api/collection_files/get_due_method_name.php',{cp_id},function(response){
-            $('#dueChartTitle').text('Due Chart ( '+ response['due_method'] + ' - '+ response['loan_type'] +' ');
-        },'json');
+    }).then(function () {
+
+        $.post('api/collection_files/get_due_method_name.php', { cp_id }, function (response) {
+            $('#dueChartTitle').text('Due Chart ( ' + response['due_method'] + ' - ' + response['loan_type'] + ' ');
+        }, 'json');
     })
-    
-    }
-    function penaltyChartList(cp_id,cus_id){
-        $.ajax({
-            url: 'api/collection_files/get_penalty_chart_list.php',
-            data: {'cp_id':cp_id,'cus_id':cus_id},
-            type:'post',
-            cache: false,
-            success: function(response){
-                $('#penalty_chart_table_div').empty()
-                $('#penalty_chart_table_div').html(response)
-            }
-        });//Ajax End.
+
+}
+function penaltyChartList(cp_id, cus_id) {
+    $.ajax({
+        url: 'api/collection_files/get_penalty_chart_list.php',
+        data: { 'cp_id': cp_id, 'cus_id': cus_id },
+        type: 'post',
+        cache: false,
+        success: function (response) {
+            $('#penalty_chart_table_div').empty()
+            $('#penalty_chart_table_div').html(response)
         }
-        function fineChartList(cp_id){
-            $.ajax({
-                url: 'api/collection_files/get_fine_chart_list.php',
-                data: {'cp_id':cp_id},
-                type:'post',
-                cache: false,
-                success: function(response){
-                    $('#fine_chart_table_div').empty()
-                    $('#fine_chart_table_div').html(response)
-                }
-            });//Ajax End.
-            } 
+    });//Ajax End.
+}
+function fineChartList(cp_id) {
+    $.ajax({
+        url: 'api/collection_files/get_fine_chart_list.php',
+        data: { 'cp_id': cp_id },
+        type: 'post',
+        cache: false,
+        success: function (response) {
+            $('#fine_chart_table_div').empty()
+            $('#fine_chart_table_div').html(response)
+        }
+    });//Ajax End.
+} 

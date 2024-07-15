@@ -251,9 +251,9 @@ class bulkUploadClass
         }
         return $response;
     }
-    function guarantorName($pdo, $guarantor_name)
+    function guarantorName($pdo,$cus_id)
     {
-        $stmt = $pdo->query("SELECT id, fam_name FROM  family_info WHERE fam_name = '$guarantor_name'");
+        $stmt = $pdo->query("SELECT id, fam_name FROM  family_info WHERE cus_id = '$cus_id'");
         if ($stmt->rowCount() > 0) {
             $row = $stmt->fetch(PDO::FETCH_ASSOC);
             $gur_id = $row["id"];

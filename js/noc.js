@@ -186,10 +186,15 @@ function getPersonalInfo(cus_id) {
         $('#cus_branch').val(response[0].branch_name);
         $('#cus_line').val(response[0].linename);
         $('#cus_mobile').val(response[0].mobile1);
-
         let path = "uploads/loan_entry/cus_pic/";
-        var img = $('#cus_image');
-        img.attr('src', path + response[0].pic);
+        if (response[0].pic) {
+            $('#per_pic').val(response[0].pic);
+            var img = $('#cus_image');
+            img.attr('src', path + response[0].pic);
+        }
+        else {
+            $('#imgshow').attr('src', 'img/avatar.png');
+        }
     }, 'json');
 }
 

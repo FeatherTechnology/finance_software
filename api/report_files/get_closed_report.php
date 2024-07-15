@@ -50,8 +50,7 @@ if (isset($_POST['search'])) {
             lc.loan_category LIKE '%" . $_POST['search'] . "%' OR
             lelc.maturity_date LIKE '%" . $_POST['search'] . "%' OR
             cs.closed_date LIKE '%" . $_POST['search'] . "%' OR
-            bc.branch_name LIKE '%" . $_POST['search'] . "%' OR
-            cs.created_date LIKE '%" . $_POST['search'] . "%' ) ";
+            bc.branch_name LIKE '%" . $_POST['search'] . "%' ) ";
     }
 }
 if (isset($_POST['order'])) {
