@@ -649,13 +649,21 @@ function editCustmerProfile(id) {
             $('#data_checking_table_div').hide();
         }
         let path = "uploads/loan_entry/cus_pic/";
-        $('#per_pic').val(response[0].pic);
-        var img = $('#imgshow');
-        img.attr('src', path + response[0].pic);
+        if (response[0].pic) {
+            $('#per_pic').val(response[0].pic);
+            var img = $('#imgshow');
+            img.attr('src', path + response[0].pic);
+        }
+        else {
+            $('#imgshow').attr('src', 'img/avatar.png');
+        }
         let paths = "uploads/loan_entry/gu_pic/";
-        $('#gur_pic').val(response[0].gu_pic);
-        var img = $('#gur_imgshow');
-        img.attr('src', paths + response[0].gu_pic);
+        if (response[0].gu_pic) {
+            $('#gur_pic').val(response[0].gu_pic);
+            $('#gur_imgshow').attr('src', paths + response[0].gu_pic);
+        } else {
+            $('#gur_imgshow').attr('src', 'img/avatar.png');
+        }
         $('.personal_info_disble').attr("disabled", true);
         $('#submit_personal_info').attr('disabled', true);
     }, 'json');
@@ -884,16 +892,7 @@ $(document).ready(function () {
         }
     });
 
-    $('#agent_id_calc').change(function () {
-        let id = $(this).val();
-        $.post('api/agent_creation/agent_creation_data.php', { id }, function (response) {
-            if (response.length > 0) {
-                $('#agent_name_calc').val(response[0].agent_name);
-            } else {
-                $('#agent_name_calc').val('');
-            }
-        }, 'json');
-    });
+
 
 
 }); //Document END.

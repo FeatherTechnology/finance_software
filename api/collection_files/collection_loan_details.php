@@ -305,7 +305,7 @@ function calculateOthers($loan_arr, $response, $pdo)
             $response['till_date_int'] = getTillDateInterest($loan_arr, $response, $pdo, 'forstartmonth', '');
         }
     } else
-    if ($loan_arr['due_method_scheme'] == '2') {
+    if ($loan_arr['scheme_due_method'] == '2') {
 
         //If Due method is Weekly, Calculate penalty by checking the month has ended or not
         $current_date = date('Y-m-d');
@@ -410,7 +410,7 @@ function calculateOthers($loan_arr, $response, $pdo)
             //If still current month is not ended, then payable will be due amt
             $response['payable'] = $response['due_amt'] - $response['total_paid'] - $response['pre_closure'];
         }
-    } elseif ($loan_arr['due_method_scheme'] == '3') {
+    } elseif ($loan_arr['scheme_due_method'] == '3') {
         //If Due method is Daily, Calculate penalty by checking the month has ended or not
         $current_date = date('Y-m-d');
 

@@ -424,20 +424,20 @@
                                     </select>
                                 </div>
                             </div>
-                            <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12 transaction" style="display:none">  
+                            <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12 transaction" style="display:none">
                                 <div class="form-group">
                                     <label for="transaction_id">Transaction ID</label><span class="text-danger">*</span>
                                     <input type="number" class="form-control" id="transaction_id" name="transaction_id" tabindex="20">
                                 </div>
-                            </div>            
+                            </div>
 
-                            <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12 checque" style="display:none"> 
+                            <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12 checque" style="display:none">
                                 <div class="form-group">
                                     <label for="chequeno">Cheque number</label><span class="text-danger">*</span>
                                     <input type="number" class="form-control" id="chequeno" name="chequeno" tabindex="21">
                                 </div>
                             </div>
-                            <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12 cash_issue" style="display:none"> 
+                            <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12 cash_issue" style="display:none">
                                 <div class="form-group">
                                     <label for="issue_amount">Issue Amount</label><span class="text-danger">*</span>
                                     <input type="number" class="form-control" id="issue_amount" name="issue_amount" tabindex="22">
@@ -548,7 +548,7 @@
                         </div>
 
                         <div class="row" id="cheque_no"></div>
-                                
+
                         <div class="row">
                             <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
                                 <div class="form-group">
@@ -651,7 +651,7 @@
                 </div>
 
                 <div class="row">
-                    <div class="col-12">
+                    <div class="col-12 overflow-x-cls">
                         <table id="doc_creation_table" class="table custom-table">
                             <thead>
                                 <tr>

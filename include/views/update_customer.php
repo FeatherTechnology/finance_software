@@ -526,7 +526,10 @@
     <form id="update_documentation" name="update_documentation" style="display: none;">
         <input type="hidden" id="loan_calculation_id">
         <input type="hidden" id="cus_id_doc" name="cus_id_doc">
-
+        <input type="hidden" name="pending_sts" id="pending_sts" value="" />
+        <input type="hidden" name="od_sts" id="od_sts" value="" />
+        <input type="hidden" name="due_nil_sts" id="due_nil_sts" value="" />
+        <input type="hidden" name="bal_amt" id="bal_amt" value="bal_amt" />
         <div class="row gutters">
             <div class="col-12">
                 <!--- -------------------------------------- Loan Info ------------------------------- -->
@@ -993,7 +996,7 @@
                     </form>
                 </div>
                 <div class="row">
-                    <div class="col-12">
+                    <div class="col-12 overflow-x-cls">
                         <table id="bank_creation_table" class="custom-table">
                             <thead>
                                 <tr>
@@ -1360,7 +1363,7 @@
                 </div>
 
                 <div class="row">
-                    <div class="col-12">
+                    <div class="col-12 overflow-x-cls">
                         <table id="doc_creation_table" class="table custom-table">
                             <thead>
                                 <tr>

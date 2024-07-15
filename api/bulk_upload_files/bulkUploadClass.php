@@ -141,6 +141,8 @@ class bulkUploadClass
         $due_method_scheme = $this->arrayItemChecker($due_method_schemeArray, $dataArray['due_method_scheme']);
         $dataArray['due_method_scheme'] = ($due_method_scheme == 'Not Found') ? '' : $due_method_scheme; //cause due_method_scheme may not be available
 
+        $schemeday_typeArray = ['Monday' => '1','Tuesday' => '2','Wednesday'=>'3','Thursday'=>'4','Friday'=>'5','Saturday'=>'6','Sunday'=>'7'];
+        $dataArray['scheme_day'] = $this->arrayItemChecker($schemeday_typeArray, $dataArray['scheme_day']);
         $dataArray['loan_date'] = $this->dateFormatChecker($dataArray['loan_date']);
 
         $dataArray['dueStart_date'] = $this->dateFormatChecker($dataArray['dueStart_date']);
@@ -249,13 +251,13 @@ class bulkUploadClass
         }
         return $response;
     }
-    function guarantorName($pdo, $guarantor_name)
-    { 
-        $stmt = $pdo->query("SELECT fi.id AS fam_id FROM family_info fi JOIN customer_profile cp ON fi.cus_id = cp.cus_id WHERE fi.fam_name = '$guarantor_name'");
+    function guarantorName($pdo,$cus_id)
+    {
+        $stmt = $pdo->query("SELECT id, fam_name FROM  family_info WHERE cus_id = '$cus_id'");
         if ($stmt->rowCount() > 0) {
             $row = $stmt->fetch(PDO::FETCH_ASSOC);
-            $gur_id = $row["fam_id"];
-        } 
+            $gur_id = $row["id"];
+        }
         return $gur_id;
     }
 
@@ -312,10 +314,6 @@ class bulkUploadClass
         return $lineId;
     }
 
-    // Usage
-
-
-
     function checkAgent($pdo, $agent_name)
     {
         if ($agent_name != '') { // because it's not mandatory
@@ -368,7 +366,7 @@ class bulkUploadClass
             ";
 
             $pdo->query($insert_query);
-        } 
+        }
     }
 
     function LoanEntryTables($pdo, $data)
@@ -421,17 +419,23 @@ class bulkUploadClass
         ]);
 
         // Insert into loan_entry_loan_calculation table
+        $due_method = strip_tags($data['due_method']);
+        if ($data['profit_type'] == 1) {
+            $due_method = '';
+        }
+
         $insert_vlc = "INSERT INTO loan_entry_loan_calculation (
-        cus_profile_id, cus_id, loan_id, loan_category, loan_amount, profit_type, due_method, due_type, profit_method, scheme_due_method, scheme_day, scheme_name, interest_rate, due_period, doc_charge, processing_fees,
-        loan_amnt, principal_amnt, interest_amnt, total_amnt, due_amnt, doc_charge_calculate, processing_fees_calculate, net_cash, loan_date, due_startdate, maturity_date, referred, agent_id, agent_name, insert_login_id, created_on, updated_on
-    ) VALUES (
-        '" . strip_tags($cus_profile_id) . "', '" . strip_tags($data['cus_id']) . "','" . strip_tags($data['loan_id']) .  "', '" . strip_tags($data['loan_category_id']) . "','" . strip_tags($data['loan_amount']) . "', '" . strip_tags($data['profit_type']) . "','" . strip_tags($data['due_method']) . "','" . strip_tags($data['due_type']) . "',
-        '" . strip_tags($data['profit_method']) . "','" . strip_tags($data['due_method_scheme']) . "','" . strip_tags($data['scheme_day']) . "','" . strip_tags($data['scheme_id']) . "', 
-        '" . strip_tags($data['interest_rate']) . "','" . strip_tags($data['due_period']) . "','" . strip_tags($data['doc_charge']) . "','" . strip_tags($data['processing_fees']) . "','" . strip_tags($data['loan_amount']) . "','" . strip_tags($data['principal_amnt']) . "',
-        '" . strip_tags($data['interest_amnt'])  . "', '" . strip_tags($data['total_amnt']) . "', '" .  strip_tags($data['due_amnt'])  . "', '" .  strip_tags($data['doc_charge_calculate'])  . "', '" .  strip_tags($data['processing_fees_calculate'])  . "',
-        '" . strip_tags($data['net_cash']) . "','" . strip_tags($data['loan_date']) . "','" . strip_tags($data['dueStart_date'])  . "','" . strip_tags($data['maturity_date']) . "',
-        '" . strip_tags($data['referred']) . "','" . strip_tags($data['agent_id']) . "','" . strip_tags($data['agent_name']) . "','" . $user_id . "','" .  strip_tags($data['loan_date'])  . "','" . strip_tags($data['loan_date'])  . "'
-    )";
+            cus_profile_id, cus_id, loan_id, loan_category, loan_amount, profit_type, due_method, due_type, profit_method, scheme_due_method, scheme_day, scheme_name, interest_rate, due_period, doc_charge, processing_fees,
+            loan_amnt, principal_amnt, interest_amnt, total_amnt, due_amnt, doc_charge_calculate, processing_fees_calculate, net_cash, loan_date, due_startdate, maturity_date, referred, agent_id, agent_name, insert_login_id, created_on, updated_on
+        ) VALUES (
+            '" . strip_tags($cus_profile_id) . "', '" . strip_tags($data['cus_id']) . "','" . strip_tags($data['loan_id']) . "', '" . strip_tags($data['loan_category_id']) . "','" . strip_tags($data['loan_amount']) . "', '" . strip_tags($data['profit_type']) . "', '" . $due_method . "', '" . strip_tags($data['due_type']) . "',
+            '" . strip_tags($data['profit_method']) . "','" . strip_tags($data['due_method_scheme']) . "','" . strip_tags($data['scheme_day']) . "','" . strip_tags($data['scheme_id']) . "',
+            '" . strip_tags($data['interest_rate']) . "','" . strip_tags($data['due_period']) . "','" . strip_tags($data['doc_charge']) . "','" . strip_tags($data['processing_fees']) . "','" . strip_tags($data['loan_amount']) . "','" . strip_tags($data['principal_amnt']) . "',
+            '" . strip_tags($data['interest_amnt']) . "', '" . strip_tags($data['total_amnt']) . "', '" . strip_tags($data['due_amnt']) . "', '" . strip_tags($data['doc_charge_calculate']) . "', '" . strip_tags($data['processing_fees_calculate']) . "',
+            '" . strip_tags($data['net_cash']) . "','" . strip_tags($data['loan_date']) . "','" . strip_tags($data['dueStart_date']) . "','" . strip_tags($data['maturity_date']) . "',
+            '" . strip_tags($data['referred']) . "','" . strip_tags($data['agent_id']) . "','" . strip_tags($data['agent_name']) . "','" . $user_id . "','" . strip_tags($data['loan_date']) . "','" . strip_tags($data['loan_date']) . "'
+        )";
+
         $pdo->query($insert_vlc);
 
         // Get the last inserted Id
@@ -477,7 +481,9 @@ class bulkUploadClass
         if ($data['cus_data'] == 'Not Found') {
             $errcolumns[] = 'Customer Data';
         }
-
+        if ($data['cus_name'] == '') {
+            $errcolumns[] = 'Customer Name';
+        }
         if ($data['cus_status'] == 'Existing' && (!preg_match('/^[A-Za-z]+$/', $data['cus_status']) || $data['cus_status'] == '')) {
             $errcolumns[] = 'Customer Existence Type';
         }
@@ -649,7 +655,9 @@ class bulkUploadClass
         if ($data['payment_mode'] == 'Not Found') {
             $errcolumns[] = 'Payment Mode';
         }
-
+        if ($data['area_id'] == 'Not Found') {
+            $errcolumns[] = 'Area ID';
+        }
         return $errcolumns;
     }
 }
