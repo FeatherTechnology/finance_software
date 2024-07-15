@@ -38,10 +38,10 @@ $(document).ready(function () {
         let id = $(this).attr('value');
         $('#customer_profile_id').val(id);
         let loanCalcId = $(this).attr('data-id');
+        $('#loan_calculation_id').val(loanCalcId);
         swapTableAndCreation();
         editCustmerProfile(id)
-        loanCalculationEdit(loanCalcId);
-        $('#loan_calculation_id').val(loanCalcId);
+        // loanCalculationEdit(loanCalcId);
     });
 
     $('input[name=loan_entry_type]').click(function () {
@@ -1824,6 +1824,8 @@ function callLoanCaculationFunctions() {
     getAutoGenLoanId(loan_calc_id);
     let cus_profile_id = $('#customer_profile_id').val();
     getDocNeedTable(cus_profile_id);
+    let loanCalcId = $('#loan_calculation_id').val();
+    loanCalculationEdit(loanCalcId);
 }
 
 function getAutoGenLoanId(id) {
@@ -2434,55 +2436,57 @@ function getDocNeedTable(cusProfileId) {
 
 function loanCalculationEdit(id) {
     $.post('api/loan_entry/loan_calculation/loan_calculation_data.php', { id }, function (response) {
-        $('#loan_id_calc').val(response[0].loan_id);
-        $('#loan_category_calc').val(response[0].loan_category);
-        $('#loan_category_calc2').val(response[0].loan_category);
-        $('#category_info_calc').val(response[0].category_info);
-        $('#loan_amount_calc').val(response[0].loan_amount);
-        $('#profit_type_calc').val(response[0].profit_type);
-        $('#due_method_calc').val(response[0].due_method);
-        $('#due_type_calc').val(response[0].due_type);
-        $('#profit_method_calc').val(response[0].profit_method);
-        $('#scheme_due_method_calc').val(response[0].scheme_due_method);
-        $('#scheme_name_edit').val(response[0].scheme_name);
-        $('#int_rate_upd').val(response[0].interest_rate);
-        $('#due_period_upd').val(response[0].due_period);
-        $('#doc_charge_upd').val(response[0].doc_charge);
-        $('#proc_fees_upd').val(response[0].processing_fees);
-        $('#loan_amnt_calc').val(response[0].loan_amnt);
-        $('#principal_amnt_calc').val(response[0].principal_amnt);
-        $('#interest_amnt_calc').val(response[0].interest_amnt);
-        $('#total_amnt_calc').val(response[0].total_amnt);
-        $('#due_amnt_calc').val(response[0].due_amnt);
-        $('#doc_charge_calculate').val(response[0].doc_charge_calculate);
-        $('#processing_fees_calculate').val(response[0].processing_fees_calculate);
-        $('#net_cash_calc').val(response[0].net_cash);
-        $('#loan_date_calc').val(response[0].loan_date);
-        $('#due_startdate_calc').val(response[0].due_startdate);
-        $('#maturity_date_calc').val(response[0].maturity_date);
-        $('#referred_calc').val(response[0].referred);
-        $('#referred_calc').trigger('change');
-
-        $('#profit_type_calc_scheme').show();
-        if (response[0].profit_type == '0') {//Loan Calculation
-            $('.calc').show();
-            $('.scheme').hide();
-            $('.scheme_day').hide();
-            getLoanCatDetails(response[0].loan_category);
-        } else if (response[0].profit_type == '1') { //Scheme
-            dueMethodScheme(response[0].scheme_due_method, response[0].loan_category)
-            $('.calc').hide();
-            $('.scheme').show();
-            schemeCalAjax(response[0].scheme_name)
+        if(response.length>0){
+            $('#loan_id_calc').val(response[0].loan_id);
+            $('#loan_category_calc').val(response[0].loan_category);
+            $('#loan_category_calc2').val(response[0].loan_category);
+            $('#category_info_calc').val(response[0].category_info);
+            $('#loan_amount_calc').val(response[0].loan_amount);
+            $('#profit_type_calc').val(response[0].profit_type);
+            $('#due_method_calc').val(response[0].due_method);
+            $('#due_type_calc').val(response[0].due_type);
+            $('#profit_method_calc').val(response[0].profit_method);
+            $('#scheme_due_method_calc').val(response[0].scheme_due_method);
+            $('#scheme_name_edit').val(response[0].scheme_name);
+            $('#int_rate_upd').val(response[0].interest_rate);
+            $('#due_period_upd').val(response[0].due_period);
+            $('#doc_charge_upd').val(response[0].doc_charge);
+            $('#proc_fees_upd').val(response[0].processing_fees);
+            $('#loan_amnt_calc').val(response[0].loan_amnt);
+            $('#principal_amnt_calc').val(response[0].principal_amnt);
+            $('#interest_amnt_calc').val(response[0].interest_amnt);
+            $('#total_amnt_calc').val(response[0].total_amnt);
+            $('#due_amnt_calc').val(response[0].due_amnt);
+            $('#doc_charge_calculate').val(response[0].doc_charge_calculate);
+            $('#processing_fees_calculate').val(response[0].processing_fees_calculate);
+            $('#net_cash_calc').val(response[0].net_cash);
+            $('#loan_date_calc').val(response[0].loan_date);
+            $('#due_startdate_calc').val(response[0].due_startdate);
+            $('#maturity_date_calc').val(response[0].maturity_date);
+            $('#referred_calc').val(response[0].referred);
+            $('#referred_calc').trigger('change');
+    
+            $('#profit_type_calc_scheme').show();
+            if (response[0].profit_type == '0') {//Loan Calculation
+                $('.calc').show();
+                $('.scheme').hide();
+                $('.scheme_day').hide();
+                getLoanCatDetails(response[0].loan_category);
+            } else if (response[0].profit_type == '1') { //Scheme
+                dueMethodScheme(response[0].scheme_due_method, response[0].loan_category)
+                $('.calc').hide();
+                $('.scheme').show();
+                schemeCalAjax(response[0].scheme_name)
+            }
+    
+            
+            setTimeout(() => {
+                $('#scheme_day_calc').val(response[0].scheme_day);
+                $('#agent_id_calc').val(response[0].agent_id);
+                $('#agent_name_calc').val(response[0].agent_name);
+                $('#refresh_cal').trigger('click');
+            }, 1000);
         }
-
-        
-        setTimeout(() => {
-            $('#scheme_day_calc').val(response[0].scheme_day);
-            $('#agent_id_calc').val(response[0].agent_id);
-            $('#agent_name_calc').val(response[0].agent_name);
-            $('#refresh_cal').trigger('click');
-        }, 1000);
     }, 'json');
 }
 //////////////////////////////////////////////////////////////// Loan Calculation END //////////////////////////////////////////////////////////////////////

@@ -229,6 +229,8 @@ function getBranchDelete(id) {
             getBranchTable();
         } else if (response == '2') {
             swalError('Access Denied', 'Used in User Creation');
+        } else if (response == '3') {
+            swalError('Access Denied', 'Used in Area Creation');
         } else {
             swalError('Error', 'Failed to Delete Branch');
         }

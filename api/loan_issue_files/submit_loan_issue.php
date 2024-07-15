@@ -23,6 +23,25 @@ $qry2 = $pdo->query("UPDATE `loan_entry_loan_calculation` SET `due_startdate`='$
 
 $qry3 = $pdo->query("UPDATE `customer_status` SET `status`='7',`update_login_id`='$user_id',`updated_on`=now() WHERE `cus_profile_id`='$cus_profile_id' "); //Loan Issued.
 
+// $qry = $pdo->query("SELECT cus_name, mobile1 FROM `customer_profile` WHERE `id` = '$cus_profile_id' ");
+// $row = $qry->fetch_assoc();
+// $customer_name = $row['cus_name'];
+// $cus_mobile1 = $row['mobile1'];
+
+// $message = "";
+// $templateid	= ''; //FROM DLT PORTAL.
+// // Account details
+// $apiKey = '';
+// // Message details
+// $sender = '';
+// // Prepare data for POST request
+// $data = 'access_token='.$apiKey.'&to='.$cus_mobile1.'&message='.$message.'&service=T&sender='.$sender.'&template_id='.$templateid;
+// // Send the GET request with cURL
+// $url = 'https://sms.messagewall.in/api/v2/sms/send?'.$data; 
+// $response = file_get_contents($url);  
+// // Process your response here
+// return $response; 
+
 if ($qry && $qry2 && $qry3) {
     $result = 1;
 } else {

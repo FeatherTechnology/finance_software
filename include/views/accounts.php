@@ -49,7 +49,7 @@ function moneyFormatIndia($num1) {
                             <div class="col-sm-1 col-md-1 col-lg-1"><label class="lbl-style-cls">:</label></div>
                             <div class="col-sm-2 col-md-2 col-lg-2">
                                 <div class="form-group">
-                                    <label for="opening_val" class="lbl-style-cls opening_val"><?php echo moneyFormatIndia(100000); ?></label>
+                                    <label for="opening_val" class="lbl-style-cls opening_val"><?php echo moneyFormatIndia(0); ?></label>
 
                                 </div>
                             </div>
@@ -61,7 +61,7 @@ function moneyFormatIndia($num1) {
                             <div class="col-sm-1 col-md-1 col-lg-1"><label class="lbl-style-cls">:</label></div>
                             <div class="col-sm-2 col-md-2 col-lg-2">
                                 <div class="form-group">
-                                    <label for="closing_val" class="lbl-style-cls closing_val"><?php echo moneyFormatIndia(50000); ?></label>
+                                    <label for="closing_val" class="lbl-style-cls closing_val"><?php echo moneyFormatIndia(0); ?></label>
                                 </div>
                             </div>
                         </div>
@@ -76,7 +76,7 @@ function moneyFormatIndia($num1) {
                             <div class="col-sm-1 col-md-1 col-lg-1"><label class="lbl-style-cls">:</label></div>
                             <div class="col-sm-2 col-md-2 col-lg-2">
                                 <div class="form-group">
-                                    <label for="opening_hand_cash_val" class="lbl-style-cls op_hand_cash_val"><?php echo moneyFormatIndia(50000); ?></label>
+                                    <label for="opening_hand_cash_val" class="lbl-style-cls op_hand_cash_val"><?php echo moneyFormatIndia(0); ?></label>
                                 </div>
                             </div>
                             <div class="col-sm-1 col-md-1 col-lg-1">
@@ -87,7 +87,7 @@ function moneyFormatIndia($num1) {
                             <div class="col-sm-1 col-md-1 col-lg-1"><label class="lbl-style-cls">:</label></div>
                             <div class="col-sm-2 col-md-2 col-lg-2">
                                 <div class="form-group">
-                                    <label for="closing_hand_cash_val" class="lbl-style-cls clse_hand_cash_val"><?php echo moneyFormatIndia(30000); ?></label>
+                                    <label for="closing_hand_cash_val" class="lbl-style-cls clse_hand_cash_val"><?php echo moneyFormatIndia(0); ?></label>
                                 </div>
                             </div>
                         </div>
@@ -102,7 +102,7 @@ function moneyFormatIndia($num1) {
                             <div class="col-sm-1 col-md-1 col-lg-1"><label class="lbl-style-cls">:</label></div>
                             <div class="col-sm-2 col-md-2 col-lg-2">
                                 <div class="form-group">
-                                    <label for="opening_bank_cash_val" class="lbl-style-cls op_bank_cash_val"><?php echo moneyFormatIndia(50000); ?></label>
+                                    <label for="opening_bank_cash_val" class="lbl-style-cls op_bank_cash_val"><?php echo moneyFormatIndia(0); ?></label>
                                 </div>
                             </div>
                             <div class="col-sm-1 col-md-1 col-lg-1">
@@ -113,7 +113,7 @@ function moneyFormatIndia($num1) {
                             <div class="col-sm-1 col-md-1 col-lg-1"><label class="lbl-style-cls">:</label></div>
                             <div class="col-sm-2 col-md-2 col-lg-2">
                                 <div class="form-group">
-                                    <label for="closing_bank_cash_val" class="lbl-style-cls clse_bank_cash_val"><?php echo moneyFormatIndia(20000); ?></label>
+                                    <label for="closing_bank_cash_val" class="lbl-style-cls clse_bank_cash_val"><?php echo moneyFormatIndia(0); ?></label>
                                 </div>
                             </div>
                         </div>

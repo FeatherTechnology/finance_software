@@ -76,7 +76,7 @@ $(document).ready(function () {
             }, 'json');
 
         } else {
-            swalError('Warning', 'Kindly Fill the Role!')
+            swalError('Warning', 'Kindly Fill the Mandatory Fields!')
         }
     });
     /////////////////////////////////////////////////////////// Transaction Details END ///////////////////////////////////////////////////////////////////////
@@ -160,6 +160,7 @@ function swapTableAndCreation() {
         $('#bank_clearance_add_content').hide();
         $('.back_to_bcList_btn').hide();
         $('#reset_btn').trigger('click');
+        $('.clr-trans-detail').val('');
     }
 }
 

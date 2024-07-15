@@ -21,7 +21,7 @@
         </div>
         <div class="card-body">
             <div class="col-12">
-                <table id="new_list_table" class="custom-table">
+                <table id="new_list_table" class="table custom-table">
                     <thead>
                         <tr>
                             <th>S.NO</th>
@@ -46,7 +46,7 @@
         </div>
         <div class="card-body">
             <div class="col-12">
-                <table id="existing_list_table" class="custom-table">
+                <table id="existing_list_table" class="table custom-table">
                     <thead>
                         <tr>
                             <th width="20" >S.NO</th>

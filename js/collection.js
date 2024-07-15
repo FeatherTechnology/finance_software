@@ -471,7 +471,11 @@ function getPersonalInfo(cusId){
     
             let path = "uploads/loan_entry/cus_pic/";
             var img = $('#cus_image');
-            img.attr('src', path + response[0].pic);
+            if(response[0].pic !=''){
+                img.attr('src', path + response[0].pic);
+            }else{
+                img.attr('src', 'img/avatar.png');
+            }
         }
     },'json');
 }

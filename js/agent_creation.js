@@ -110,6 +110,8 @@ function getAgentDelete(id) {
         if (response == '1') {
             swalSuccess('Success', 'Agent Deleted Successfully!');
             getAgentTable();
+        } else if (response == '2') {
+            swalError('Access Denied', 'Used in Loan Calculation');
         } else {
             swalError('Error', 'Failed to Delete Agent: ' + response);
         }

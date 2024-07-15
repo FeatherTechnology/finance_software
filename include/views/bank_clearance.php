@@ -17,7 +17,7 @@
                             <div class="col-sm-3 col-md-3 col-lg-3">
                                 <div class="form-group">
                                     <label for="bank_name">Bank Name</label><span class="text-danger">*</span>
-                                    <select class="form-control" id="bank_name" name="bank_name" tabindex="1">
+                                    <select class="form-control clr-trans-detail" id="bank_name" name="bank_name" tabindex="1">
                                         <option value="">Select Bank</option>
                                     </select>
                                 </div>
@@ -25,13 +25,13 @@
                             <div class="col-sm-3 col-md-3 col-lg-3">
                                 <div class="form-group">
                                     <label for="from_date">From Date</label><span class="text-danger">*</span>
-                                    <input type="date" class="form-control" id="from_date" name="from_date" tabindex="2">
+                                    <input type="date" class="form-control clr-trans-detail" id="from_date" name="from_date" tabindex="2">
                                 </div>
                             </div>
                             <div class="col-sm-3 col-md-3 col-lg-3">
                                 <div class="form-group">
                                     <label for="to_date">To Date</label><span class="text-danger">*</span>
-                                    <input type="date" class="form-control" id="to_date" name="to_date" tabindex="3">
+                                    <input type="date" class="form-control clr-trans-detail" id="to_date" name="to_date" tabindex="3">
                                 </div>
                             </div>
                             <div class="col-sm-3 col-md-3 col-lg-3">

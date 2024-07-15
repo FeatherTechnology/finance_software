@@ -682,9 +682,9 @@ function moneyFormatIndia($num)
             LEFT JOIN role r ON u.role = r.id
             WHERE c.`cus_profile_id` = '$cp_id' AND (c.due_amt_track != '' or c.pre_close_waiver!='')
             AND (
-                (c.coll_date > '$maturity_month' AND c.coll_date <= '$currentMonth') OR
-                (c.trans_date > '$maturity_month' AND c.coll_date <= '$currentMonth')
-            )");
+                    (DATE(c.coll_date) > DATE('$maturity_month') AND DATE(c.coll_date) <= DATE('$currentMonth') AND DATE(c.coll_date) != '0000-00-00' ) OR
+                    (DATE(c.trans_date) > DATE('$maturity_month') AND DATE(c.trans_date) <= DATE('$currentMonth') AND DATE(c.trans_date) != '0000-00-00' ) 
+                ) ");
         } else
         if ($loanFrom['scheme_due_method'] == '2') {
             //Query For Weekly.
@@ -695,9 +695,9 @@ function moneyFormatIndia($num)
             LEFT JOIN role r ON u.role = r.id
             WHERE c.`cus_profile_id` = '$cp_id' AND (c.due_amt_track != '' or c.pre_close_waiver!='')
             AND (
-                (c.coll_date > '$maturity_month' AND c.coll_date <= '$currentMonth'  ) OR
-                (c.trans_date > '$maturity_month' AND c.coll_date <= '$currentMonth' )
-            ) ");
+                (DATE(c.coll_date) > DATE('$maturity_month') AND DATE(c.coll_date) <= DATE('$currentMonth') AND DATE(c.coll_date) != '0000-00-00' ) OR
+                (DATE(c.trans_date) > DATE('$maturity_month') AND DATE(c.trans_date) <= DATE('$currentMonth') AND DATE(c.trans_date) != '0000-00-00' )
+                ) ");
         } else
         if ($loanFrom['scheme_due_method'] == '3') {
             //Query For Day.
@@ -708,9 +708,9 @@ function moneyFormatIndia($num)
             LEFT JOIN role r ON u.role = r.id
             WHERE c.`cus_profile_id` = '$cp_id' AND (c.due_amt_track != '' or c.pre_close_waiver!='')
             AND (
-                (c.coll_date >  '$maturity_month' AND c.coll_date <= '$currentMonth') OR
-                (c.trans_date > '$maturity_month' AND c.coll_date <= '$currentMonth')
-            ) ");
+                    (DATE(c.coll_date) > DATE('$maturity_month') AND DATE(c.coll_date) <= DATE('$currentMonth') AND DATE(c.coll_date) != '0000-00-00' ) OR
+                    (DATE(c.trans_date) > DATE('$maturity_month') AND DATE(c.trans_date) <= DATE('$currentMonth') AND DATE(c.trans_date) != '0000-00-00' )
+                ) ");
         }
 
         if ($run->rowCount() > 0) {
@@ -1154,21 +1154,11 @@ function calculateOthers($loan_arr, $response, $date, $pdo)
         //this collection query for taking the paid amount until the looping date ($current_date) , to calculate dynamically for due chart
         $qry = $pdo->query("SELECT sum(due_amt_track) as due_amt_track, sum(pre_close_waiver) as pre_close_waiver from `collection` 
             where cus_profile_id = '$cp_id' 
-            AND
-            (
-                (
-                    YEAR(trans_date) = YEAR($current_date) AND WEEK(trans_date) <= WEEK($current_date)
-                ) OR (
-                    YEAR(trans_date) < YEAR($current_date)
-                )
-            )
-            OR
-            (
-                (
-                    YEAR(coll_date) = YEAR($current_date) AND WEEK(coll_date) <= WEEK($current_date)
-                ) OR (
-                    YEAR(coll_date) < YEAR($current_date)
-                )
+            AND (
+                (YEAR(trans_date) = YEAR('$current_date') AND WEEK(trans_date) <= WEEK('$current_date'))
+                OR (YEAR(trans_date) < YEAR('$current_date'))
+                OR (YEAR(coll_date) = YEAR('$current_date') AND WEEK(coll_date) <= WEEK('$current_date'))
+                OR (YEAR(coll_date) < YEAR('$current_date'))
             ) ");
         if ($qry->rowCount() > 0) {
             $rowss = $qry->fetch();
@@ -1223,7 +1213,7 @@ function calculateOthers($loan_arr, $response, $date, $pdo)
             //If still current month is not ended, then payable will be due amt
             $response['payable'] = $response['due_amt'] - $tot_paid_tilldate - $preclose_tilldate;
         }
-    } elseif ($loan_arr['due_method_scheme'] == '3') {
+    } elseif ($loan_arr['scheme_due_method'] == '3') {
         //If Due method is Daily, Calculate penalty by checking the month has ended or not
         $current_date = date('Y-m-d', strtotime($date));
 
