@@ -15,18 +15,18 @@ function getOpeningBal(){
             $('#balance_sheet_table tbody tr:first td:nth-child(2)').text(response[0]['opening_balance']);
         }
     },'json').then(function(){
-        getClosingBal();
+        // getClosingBal();
     });
 }
 
-function getClosingBal(){
-    $.post('api/accounts_files/accounts/closing_balance.php',function(response){
-        if(response.length > 0){
-            let close = parseInt($('#balance_sheet_table tbody tr:first td:nth-child(2)').text()) + parseInt(response[0]['closing_balance']);
-            $('#balance_sheet_table tbody tr:nth-child(18) td:nth-child(3)').text(close);
-        }
-    },'json');
-}
+// function getClosingBal(){
+//     $.post('api/accounts_files/accounts/closing_balance.php',function(response){
+//         if(response.length > 0){
+//             let close = parseInt($('#balance_sheet_table tbody tr:first td:nth-child(2)').text()) + parseInt(response[0]['closing_balance']);
+//             $('#balance_sheet_table tbody tr:nth-child(18) td:nth-child(3)').text(close);
+//         }
+//     },'json');
+// }
 
 function getBalSheetDetails(){
     $.post('api/accounts_files/balance_sheet_files/balance_sheet_details.php',function(response){
@@ -62,16 +62,19 @@ function getBalSheetDetails(){
 function getBalSheetTotal() {
     var credit_total = 0;
     var debit_total = 0;
-    $('#balance_sheet_table tbody tr').each(function () {
+    $('#balance_sheet_table tbody tr').not('tr:nth-child(18)').each(function () {
         var credit = $(this).find('td:nth-child(2)').text(); // credit amount
         var debit = $(this).find('td:nth-child(3)').text(); // debit amount
         credit_total += parseInt(credit) || 0;
         debit_total += parseInt(debit) || 0;
     });
     
+    let close = credit_total - debit_total;
+    debit_total = debit_total + close;
     credit_total = moneyFormatIndia(credit_total);
     debit_total = moneyFormatIndia(debit_total);
 
+    $('#balance_sheet_table tbody tr:nth-child(18) td:nth-child(3)').text(close);
     $('#balance_sheet_table tbody tr:nth-child(20) td:nth-child(2)').text(credit_total).css('font-weight','bold');
     $('#balance_sheet_table tbody tr:nth-child(20) td:nth-child(3)').text(debit_total).css('font-weight','bold');
 }

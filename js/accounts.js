@@ -514,6 +514,12 @@ function otherTransFormValid(data){
             }
         }
     }
+    
+    if(data['coll_mode'] =='2'){
+        if(data['bank_id'] =='' || data['bank_id'] ==null || data['bank_id'] == undefined){
+            return false;
+        }
+    }
 
     if(data['trans_category'] =='7'){
         if(data['other_user_name'] =='' || data['other_user_name'] ==null || data['other_user_name'] == undefined){

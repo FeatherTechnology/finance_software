@@ -1213,7 +1213,7 @@ function calculateOthers($loan_arr, $response, $date, $pdo)
             //If still current month is not ended, then payable will be due amt
             $response['payable'] = $response['due_amt'] - $tot_paid_tilldate - $preclose_tilldate;
         }
-    } elseif ($loan_arr['due_method_scheme'] == '3') {
+    } elseif ($loan_arr['scheme_due_method'] == '3') {
         //If Due method is Daily, Calculate penalty by checking the month has ended or not
         $current_date = date('Y-m-d', strtotime($date));
 
