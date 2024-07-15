@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jul 13, 2024 at 04:01 PM
+-- Generation Time: Jul 15, 2024 at 01:28 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -202,6 +202,21 @@ CREATE TABLE `cash_tally_modes` (
   `bankcredit` varchar(10) NOT NULL DEFAULT '1',
   `bankdebit` varchar(10) NOT NULL DEFAULT '1'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+
+--
+-- Dumping data for table `cash_tally_modes`
+--
+
+INSERT INTO `cash_tally_modes` (`id`, `modes`, `bankcredit`, `bankdebit`) VALUES
+(1, 'Collection', '0', '1'),
+(2, 'Bank Withdrawal', '1', '1'),
+(3, 'Other Income', '0', '1'),
+(4, 'Exchange', '0', '0'),
+(5, 'Bank Deposit', '1', '1'),
+(6, 'Investment', '0', '0'),
+(7, 'Deposit', '0', '0'),
+(8, 'EL', '0', '0'),
+(9, 'Expenses', '1', '0');
 
 -- --------------------------------------------------------
 
@@ -1860,7 +1875,7 @@ ALTER TABLE `branch_creation`
 -- AUTO_INCREMENT for table `cash_tally_modes`
 --
 ALTER TABLE `cash_tally_modes`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'Primary Key';
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'Primary Key', AUTO_INCREMENT=10;
 
 --
 -- AUTO_INCREMENT for table `cheque_info`
