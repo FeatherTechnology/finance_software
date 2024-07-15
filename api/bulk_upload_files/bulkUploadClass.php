@@ -141,6 +141,8 @@ class bulkUploadClass
         $due_method_scheme = $this->arrayItemChecker($due_method_schemeArray, $dataArray['due_method_scheme']);
         $dataArray['due_method_scheme'] = ($due_method_scheme == 'Not Found') ? '' : $due_method_scheme; //cause due_method_scheme may not be available
 
+        $schemeday_typeArray = ['Monday' => '1','Tuesday' => '2','Wednesday'=>'3','Thursday'=>'4','Friday'=>'5','Saturday'=>'6','Sunday'=>'7'];
+        $dataArray['scheme_day'] = $this->arrayItemChecker($schemeday_typeArray, $dataArray['scheme_day']);
         $dataArray['loan_date'] = $this->dateFormatChecker($dataArray['loan_date']);
 
         $dataArray['dueStart_date'] = $this->dateFormatChecker($dataArray['dueStart_date']);
@@ -421,7 +423,7 @@ class bulkUploadClass
         if ($data['profit_type'] == 1) {
             $due_method = '';
         }
-        
+
         $insert_vlc = "INSERT INTO loan_entry_loan_calculation (
             cus_profile_id, cus_id, loan_id, loan_category, loan_amount, profit_type, due_method, due_type, profit_method, scheme_due_method, scheme_day, scheme_name, interest_rate, due_period, doc_charge, processing_fees,
             loan_amnt, principal_amnt, interest_amnt, total_amnt, due_amnt, doc_charge_calculate, processing_fees_calculate, net_cash, loan_date, due_startdate, maturity_date, referred, agent_id, agent_name, insert_login_id, created_on, updated_on
@@ -433,7 +435,7 @@ class bulkUploadClass
             '" . strip_tags($data['net_cash']) . "','" . strip_tags($data['loan_date']) . "','" . strip_tags($data['dueStart_date']) . "','" . strip_tags($data['maturity_date']) . "',
             '" . strip_tags($data['referred']) . "','" . strip_tags($data['agent_id']) . "','" . strip_tags($data['agent_name']) . "','" . $user_id . "','" . strip_tags($data['loan_date']) . "','" . strip_tags($data['loan_date']) . "'
         )";
-        
+
         $pdo->query($insert_vlc);
 
         // Get the last inserted Id
@@ -479,7 +481,9 @@ class bulkUploadClass
         if ($data['cus_data'] == 'Not Found') {
             $errcolumns[] = 'Customer Data';
         }
-
+        if ($data['cus_name'] == '') {
+            $errcolumns[] = 'Customer Name';
+        }
         if ($data['cus_status'] == 'Existing' && (!preg_match('/^[A-Za-z]+$/', $data['cus_status']) || $data['cus_status'] == '')) {
             $errcolumns[] = 'Customer Existence Type';
         }
@@ -651,7 +655,9 @@ class bulkUploadClass
         if ($data['payment_mode'] == 'Not Found') {
             $errcolumns[] = 'Payment Mode';
         }
-
+        if ($data['area_id'] == 'Not Found') {
+            $errcolumns[] = 'Area ID';
+        }
         return $errcolumns;
     }
 }
