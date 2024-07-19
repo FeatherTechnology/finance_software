@@ -36,7 +36,7 @@ if (!empty($cus_id)) {
 //     $whereClause .= " AND lelc.cus_profile_id = '$cus_profile_id'";
 // }
 
-$qry = $pdo->query("SELECT lelc.cus_profile_id, lelc.cus_id, lelc.loan_date, lelc.loan_id, lc.loan_category, lelc.loan_amount, cs.status, cs.sub_status
+$qry = $pdo->query("SELECT lelc.id, lelc.cus_profile_id, lelc.cus_id, lelc.loan_date, lelc.loan_id, lc.loan_category, lelc.loan_amount, cs.status, cs.sub_status
     FROM loan_entry_loan_calculation lelc
     JOIN loan_category_creation lcc ON lelc.loan_category = lcc.id
     JOIN loan_category lc ON lcc.loan_category = lc.id
@@ -63,7 +63,7 @@ if ($qry->rowCount() > 0) {
             </button>
             <div class='dropdown-content'>";
         $response['info'] .=  "<a href='#' class='customer-profile' value='" . $row['cus_profile_id'] . "'>Customer Profile</a>";
-        $response['info'] .=  "  <a href='#' class='loan-calculation' value='" . $row['cus_profile_id'] . "'>Loan Calculation</a>";
+        $response['info'] .=  "  <a href='#' class='loan-calculation' value='" . $row['id'] . "'>Loan Calculation</a>";
         $response['info'] .=  " <a href='#' class='documentation' value='" . $row['cus_profile_id'] . "'>Documentation</a>";
         if ($row['status'] >='8'){
         $response['info'] .=  " <a href='#' class='closed-remark' value='" . $row['cus_profile_id'] . "'>Remark View</a>";
