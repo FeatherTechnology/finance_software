@@ -521,6 +521,7 @@ function moneyFormatIndia($num1) {
                                         <option value="6">Bank Withdrawal</option>
                                         <option value="7">Loan Advance</option>
                                         <option value="8">Other Income</option>
+                                        <option value="9">Bank Unbilled</option>
                                     </select>
                                 </div>
                             </div>

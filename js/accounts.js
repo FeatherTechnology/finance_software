@@ -35,24 +35,17 @@ $(document).ready(function(){
     
     $(document).on('click', '.collect-money', function(event){
         event.preventDefault();
-        let id = $(this).attr('value');
-        let line = $(this).closest('tr').find('td:nth-child(3)').text();
-        let branch = $(this).closest('tr').find('td:nth-child(4)').text();
-        let no_of_bills = $(this).closest('tr').find('td:nth-child(5)').text();
-        let collected_amnt = $(this).closest('tr').find('td:nth-child(6)').text();
-        let cash_type = $("input[name='coll_cash_type']:checked").val();
-        let bank_id = $('#coll_bank_name :selected').val();
-        
-        $.post('api/accounts_files/accounts/submit_collect.php', {id, line, branch, no_of_bills, collected_amnt, cash_type, bank_id}, function(response){
-            if (response == '1') {
-                swalSuccess('Success', 'Collected Successfully.');
-                getCollectionList();
-                getClosingBal();
-            }else{
-                swalError('Error', 'Something went wrong.');
-            }
-
-        },'json');
+        let collectTableRowVal = {
+            'username' : $(this).closest('tr').find('td:nth-child(2)').text(),
+            'id' : $(this).attr('value'),
+            'line' : $(this).closest('tr').find('td:nth-child(3)').text(),
+            'branch' : $(this).closest('tr').find('td:nth-child(4)').text(),
+            'no_of_bills' : $(this).closest('tr').find('td:nth-child(5)').text(),
+            'collected_amnt' : $(this).closest('tr').find('td:nth-child(6)').text(),
+            'cash_type' : $("input[name='coll_cash_type']:checked").val(),
+            'bank_id' : $('#coll_bank_name :selected').val()
+        };
+        swalConfirm('Collect', `Do you want to collect Money from ${collectTableRowVal.username}?`, submitCollect, collectTableRowVal);
     });
     
     $("input[name='issue_cash_type']").click(function(){
@@ -185,7 +178,7 @@ $(document).ready(function(){
 
         let catTypeOptn ='';
             catTypeOptn +="<option value=''>Select Type</option>";
-        if(category == '1' || category == '2' || category == '3' || category == '4' ){ //credit / debit
+        if(category == '1' || category == '2' || category == '3' || category == '4' || category == '9' ){ //credit / debit
             catTypeOptn +="<option value='1'>Credit</option>";
             catTypeOptn +="<option value='2'>Debit</option>";
 
@@ -330,6 +323,18 @@ function getCollectionList(){
     },'json');
 }
 
+function submitCollect(values){
+    $.post('api/accounts_files/accounts/submit_collect.php', values, function(response){
+        if (response == '1') {
+            swalSuccess('Success', `Successfully collected ₹${moneyFormatIndia(values.collected_amnt)} for ${values.no_of_bills} bills from ${values.username}.`);
+            getCollectionList();
+            getClosingBal();
+        }else{
+            swalError('Error', 'Something went wrong.');
+        }
+    },'json');
+}
+
 function getLoanIssueList(){
     let cash_type = $("input[name='issue_cash_type']:checked").val();
     let bank_id = $('#issue_bank_name :selected').val();
@@ -392,7 +397,7 @@ function getAgentName() {
 
 function expensesFormValid(expensesData){
     for(key in expensesData){
-        if(key !='agent_name' && key !='expenses_total_issued' && key !='expenses_total_amnt' && key !='bank_id'){
+        if(key !='agent_name' && key !='expenses_total_issued' && key !='expenses_total_amnt' && key !='bank_id' && key !='expenses_trans_id'){
             if(expensesData[key] =='' || expensesData[key] ==null || expensesData[key] ==undefined){
                 return false;
             }
@@ -400,7 +405,7 @@ function expensesFormValid(expensesData){
     }
 
     if(expensesData['coll_mode'] =='2'){
-        if(expensesData['bank_id'] =='' || expensesData['bank_id'] ==null || expensesData['bank_id'] == undefined){
+        if(expensesData['bank_id'] =='' || expensesData['bank_id'] ==null || expensesData['bank_id'] == undefined || expensesData['expenses_trans_id'] =='' || expensesData['expenses_trans_id'] ==null || expensesData['expenses_trans_id'] == undefined ){
             return false;
         }
     }
@@ -508,7 +513,7 @@ function getUserList(){
 
 function otherTransFormValid(data){
     for(key in data){
-        if(key !='other_user_name' && key !='expenses_total_amnt' && key !='bank_id'){
+        if(key !='other_user_name' && key !='expenses_total_amnt' && key !='bank_id' && key !='other_trans_id'){
             if(data[key] =='' || data[key] ==null || data[key] ==undefined){
                 return false;
             }
@@ -516,7 +521,7 @@ function otherTransFormValid(data){
     }
     
     if(data['coll_mode'] =='2'){
-        if(data['bank_id'] =='' || data['bank_id'] ==null || data['bank_id'] == undefined){
+        if(data['bank_id'] =='' || data['bank_id'] ==null || data['bank_id'] == undefined || data['other_trans_id'] =='' || data['other_trans_id'] ==null || data['other_trans_id'] == undefined){
             return false;
         }
     }
