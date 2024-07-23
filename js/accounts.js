@@ -273,6 +273,41 @@ $(document).ready(function(){
         swalConfirm('Delete', 'Are you sure you want to delete this Other Transaction?', deleteTrans, id);
     });
 
+
+    //Balance sheet
+    
+    $('#IDE_type').change(function () {
+        $('#blncSheetDiv').empty();
+        $('.IDE_nameDiv').hide();
+        $('#IDE_view_type').val(''); $('#IDE_name_list').val('');
+    });
+
+    $('#IDE_view_type').change(function () {
+        $('#blncSheetDiv').empty()
+
+        var view_type = $(this).val();//overall/Individual
+        var type = $('#IDE_type').val(); //investment/Deposit/EL
+
+        if (view_type == 1 && type != '') {
+            $('#IDE_name_list').val(''); //reset name value when using overall
+            $('.IDE_nameDiv').hide() // hide name list div
+            getIDEBalanceSheet();
+        } else if (view_type == 2 && type != '') {
+            balNameDropDown();
+            $('.IDE_nameDiv').show()
+        } else {
+            $('.IDE_nameDiv').hide()
+        }
+    });
+
+    $('#IDE_name_list').change(function () {
+        var name_id = $(this).val();
+        if (name_id != '') {
+            getIDEBalanceSheet();
+        }
+    });
+
+
 });  /////Document END.
 
 $(function(){
@@ -583,4 +618,39 @@ function getRefId(trans_cat){
     $.post('api/accounts_files/accounts/get_ref_id.php', {trans_cat}, function (response){
         $('#other_ref_id').val(response)
     },'json');
+}
+
+function balNameDropDown(){
+    let transCat = $('#IDE_type :selected').val();
+    $.post('api/accounts_files/accounts/get_other_trans_name_table.php',{transCat},function(response){
+        let nameOptn='';
+            nameOptn +="<option value=''>Select Name</option>";
+            $.each(response, function(index, val){
+                nameOptn += "<option value='"+val.id+"'>"+val.name+"</option>";
+            });
+        $('#IDE_name_list').empty().append(nameOptn);
+    },'json');
+}
+
+function getIDEBalanceSheet() {
+    var type = $('#IDE_type').val(); //investment/Deposit/EL
+    var view_type = $('#IDE_view_type').val();//overall/Individual
+    var IDE_name_id = $('#IDE_name_list').val();//show by name wise
+
+    $.ajax({
+        url: 'api/accounts_files/accounts/dep_bal_sheet.php',
+        data: { 'IDEview_type': view_type, 'IDEtype': type, 'IDE_name_id': IDE_name_id },
+        type: 'post',
+        cache: false,
+        success: function (response) {
+            $('#blncSheetDiv').empty()
+            $('#blncSheetDiv').html(response)
+        }
+    })
+}
+
+function resetBlncSheet() {
+    $('#IDE_type').val('');
+    $('#IDE_view_type').val('');
+    $('#IDE_name_list').val('');
 }

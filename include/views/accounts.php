@@ -283,7 +283,10 @@ function moneyFormatIndia($num1) {
         <div class="card" id="other_transaction_card" style="display: none;">
             <div class="card-header">
                 <h3 class="card-title">Other Transaction</h3>
-                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#add_other_transaction_modal" id="other_trans_add" style="padding: 5px 35px; float: right;" tabindex='30'><span class="icon-add"></span></button>
+                <div class="text-right">
+                    <button type="button" name="blnc_sheet_btn" id="blnc_sheet_btn" class="btn btn-primary" data-toggle='modal' data-target='.blncModal' >Balance Sheet</button>
+                    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#add_other_transaction_modal" id="other_trans_add" style="padding: 5px 35px;" tabindex='30'><span class="icon-add"></span></button>
+                </div>
             </div>
             <div class="card-body">
                 <div class="row">
@@ -677,3 +680,71 @@ function moneyFormatIndia($num1) {
     </div>
 </div>
 <!-- --------------------------------------------------------- Other Transaction Name Modal END ------------------------------------------------------------ -->
+
+
+<!-- /////////////////////////////////////////////////////////////////// Balance Sheet Modal START ////////////////////////////////////////////////////////////////////// -->
+<div class="modal fade blncModal" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+    
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content" style="background-color: white">
+            <div class="modal-header">
+                <h5 class="modal-title" id="myLargeModalLabel"> Balance Sheet</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close" onclick="resetBlncSheet()">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+			
+			<div class="modal-body">
+				<div class="row">
+					<div class="col-md-12">
+						<div class="row">
+							<div class="col-xl-3 col-lg-3 col-md-3 col-sm-3 col-12">
+								<div class="form-group">
+									<label for='IDE_type'>Balance Sheet type</label>
+									<select class="form-control" id='IDE_type' name='IDE_type' >
+										<option value=''>Select Sheet type</option>
+										<option value='1'>Deposit</option>
+										<option value='2'>EL</option>
+										<option value='3'>Exchange</option>
+									</select>
+								</div>
+							</div>
+							<div class="col-xl-3 col-lg-3 col-md-3 col-sm-3 col-12" >
+								<div class="form-group">
+									<label for='IDE_view_type'>View</label>
+									<select class="form-control" id='IDE_view_type' name='IDE_view_type' >
+										<option value=''>Select Sheet type</option>
+										<option value='1'>Overall</option>
+										<option value='2'>Individual</option>
+									</select>
+								</div>
+							</div>
+							<div class="col-xl-3 col-lg-3 col-md-3 col-sm-3 col-12 IDE_nameDiv" style="display:none">
+								<div class="form-group">
+									<label for='IDE_name_list'>Name</label>
+									<select class="form-control" id='IDE_name_list' name='IDE_name_list' >
+										<option value=''>Select Name</option>
+									</select>
+								</div>
+							</div>
+							<!-- <div class="col-xl-3 col-lg-3 col-md-3 col-sm-3 col-12 IDE_nameDiv" style="display:none">
+								<div class="form-group">
+									<label for='IDE_name_area'>Area</label>
+									<input type='text' class="form-control" id='IDE_name_area' name='IDE_name_area' readonly placeholder='Please Select Name'>
+								</div>
+							</div> -->
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="modal-body">
+				<div id="blncSheetDiv">
+				</div>
+			</div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" id='' data-dismiss="modal" onclick="resetBlncSheet()">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- /////////////////////////////////////////////////////////////////// Balance Sheet Modal END ////////////////////////////////////////////////////////////////////// -->
