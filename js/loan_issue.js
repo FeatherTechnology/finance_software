@@ -987,8 +987,19 @@ $(document).ready(function () {
             $('.checque').hide();
             $('.cash_issue').hide();
         }
-    });
 
+        $.post('api/loan_issue_files/get_balance_amount.php', { 'cus_id': $('#cus_id').val(), 'payment_mode': type }, function (response) {
+            let balance = parseFloat(response.balance);
+            let issueAmount = parseFloat($('#issue_amount').val());
+            let alertMessage = response.alert_message;
+
+            if (issueAmount > balance) {
+                let formattedMessage = `${alertMessage} ,\n\n Available Balance: ${balance}`;
+                swalError('Warning', formattedMessage);
+            }
+        }, 'json');
+
+    });
     $('#issue_person').change(function () {
         let id = $('#issue_person :selected').attr('data-val');
         if (id != '' && id != 'Customer') {
@@ -1031,6 +1042,8 @@ $(document).ready(function () {
         }
 
     })
+
+
 }); ///Document END.
 
 $(function () {
@@ -1082,9 +1095,9 @@ function getIssuePerson(cus_name) {
     $.post('api/loan_entry/get_guarantor_name.php', { cus_id }, function (response) {
         let appendOption = '';
         appendOption += "<option value='' data-val=''>Select Issue Person</option>";
-        appendOption += "<option value='"+cus_name+"' data-val='Customer'>" + cus_name + "</option>";
+        appendOption += "<option value='" + cus_name + "' data-val='Customer'>" + cus_name + "</option>";
         $.each(response, function (index, val) {
-            appendOption += "<option value='" +val.fam_name +"' data-val='"+ val.id + "'>" + val.fam_name + "</option>";
+            appendOption += "<option value='" + val.fam_name + "' data-val='" + val.id + "'>" + val.fam_name + "</option>";
         });
         $('#issue_person').empty().append(appendOption);
     }, 'json');
@@ -1116,7 +1129,7 @@ function isFormDataValid(formData) {
         }
     } else if (formData['payment_mode'] === '2') { // Bank Transfer
         if (!validateField(formData['transaction_id'], 'transaction_id') || !validateField(formData['issue_amount'], 'issue_amount')) {
-            return false;    
+            return false;
         }
     } else if (formData['payment_mode'] === '3') { // Cheque
         if (!validateField(formData['chequeno'], 'chequeno') || !validateField(formData['issue_amount'], 'issue_amount')) {
