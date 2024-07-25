@@ -74,7 +74,7 @@ $(document).ready(function () {
         $('#loan_calculation_id').val(loanCalcId);
         swapTableAndCreation();
         editCustmerProfile(id)
-        // loanCalculationEdit(loanCalcId);
+       //  loanCalculationEdit(loanCalcId);
     });
 
     $('input[name=loan_entry_type]').click(function () {
@@ -2428,7 +2428,9 @@ function loanCalculationEdit(id) {
             dueMethodScheme(response[0].scheme_due_method, response[0].loan_category)
             $('.calc').hide();
             $('.scheme').show();
-            schemeCalAjax(response[0].scheme_name)
+            setTimeout(()=>{
+                schemeCalAjax(response[0].scheme_name) 
+            },500);
         }
 
 

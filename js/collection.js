@@ -615,17 +615,26 @@ function resetValidation() {
 //validation
 function isFormDataValid(collData) {
     let isValid = true;
-    if (!validateField(collData['due_amt_track'], 'due_amt_track')) {
-        isValid = false;
+
+    // Check if all three fields are empty
+    const allThreeFieldsEmpty = !collData['due_amt_track'] && !collData['penalty_track'] && !collData['coll_charge_track'];
+
+    if (allThreeFieldsEmpty) {
+        if (!validateField(collData['due_amt_track'], 'due_amt_track')) {
+            isValid = false;
+        }
+        if (!validateField(collData['penalty_track'], 'penalty_track')) {
+            isValid = false;
+        }
+        if (!validateField(collData['coll_charge_track'], 'coll_charge_track')) {
+            isValid = false;
+        }
+    } else {
+        // Reset border color for the fields if any one of them is filled
+        $('#due_amt_track').css('border', '1px solid #cecece');
+        $('#penalty_track').css('border', '1px solid #cecece');
+        $('#coll_charge_track').css('border', '1px solid #cecece');
     }
-    if (!validateField(collData['penalty_track'], 'penalty_track')) {
-        isValid = false;
-    }
-    if (!validateField(collData['coll_charge_track'], 'coll_charge_track')) {
-        isValid = false;
-    }
-    // Validate total_paid_track
-  
 
     // Validate collection_mode
     if (!validateField(collData['collection_mode'], 'collection_mode')) {
@@ -638,9 +647,9 @@ function isFormDataValid(collData) {
                 validateField(collData['trans_id'], 'trans_id'),
                 validateField(collData['trans_date'], 'trans_date')
             ];
-             if (!validations.every(result => result)) {
-            isValid = false;
-        }
+            if (!validations.every(result => result)) {
+                isValid = false;
+            }
         } else if (['3', '4', '5'].includes(collData['collection_mode'])) { // ECS / IMPS/NEFT/RTGS / UPI Transaction
             let validations = [
                 validateField(collData['bank_id'], 'bank_id'),
@@ -652,9 +661,9 @@ function isFormDataValid(collData) {
             }
         }
     }
+
     return isValid;
 }
-
 function closeChartsModal() {
     $('#due_chart_model').modal('hide');
     $('#penalty_model').modal('hide');

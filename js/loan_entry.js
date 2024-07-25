@@ -43,6 +43,7 @@ $(document).ready(function () {
         swapTableAndCreation();
         editCustmerProfile(id)
         // loanCalculationEdit(loanCalcId);
+     
     });
 
     $('input[name=loan_entry_type]').click(function () {
@@ -1557,7 +1558,7 @@ $(document).ready(function () {
     $('#loan_category_calc').change(function () {
         if ($(this).val() != '') {
             $('#loan_amount_calc').val('')
-            getLoanCatDetails($(this).val());
+            getLoanCatDetails($(this).val(), 1);
             $('#profit_type_calc').val('').trigger('change');
             $('#loan_category_calc2').val($(this).val())
         }
@@ -1579,7 +1580,7 @@ $(document).ready(function () {
             $('.calc').show();
             $('.scheme').hide();
             $('.scheme_day').hide();
-            getLoanCatDetails(id);
+            getLoanCatDetails(id, 1);
             $('#scheme_due_method_calc').val('')
         } else if (profitType == '1') { //Scheme
             $('#scheme_due_method_calc').val('').trigger('change');
@@ -1880,7 +1881,7 @@ function getAgentID() {
     }, 'json');
 }
 
-function getLoanCatDetails(id) {
+function getLoanCatDetails(id, edittype) {
     $.post('api/loan_entry/loan_calculation/getLoanCatDetails.php', { id }, function (response) {
         $('#due_method_calc').val(response[0].due_method);
 
@@ -1906,24 +1907,27 @@ function getLoanCatDetails(id) {
         var proc_fee_upd = ($('#proc_fees_upd').val()) ? $('#proc_fees_upd').val() : '';
         //To set min and maximum 
         $('.min-max-int').text('* (' + response[0].interest_rate_min + '% - ' + response[0].interest_rate_max + '%) ');
-        $('#interest_rate_calc').attr('onChange', `if( parseFloat($(this).val()) > '` + response[0].interest_rate_max + `' ){ alert("Enter Lesser Value"); $(this).val(""); }else
-                            if( parseFloat($(this).val()) < '`+ response[0].interest_rate_min + `' && parseFloat($(this).val()) != '' ){ alert("Enter Higher Value"); $(this).val(""); } `); //To check value between range
+        $('#interest_rate_calc').attr('onChange', `if( parseFloat($(this).val()) > '` + response[0].interest_rate_max + `' ){ alert("Enter Lesser Value"); $(this).val(""); }else if( parseFloat($(this).val()) < '`+ response[0].interest_rate_min + `' && parseFloat($(this).val()) != '' ){ alert("Enter Higher Value"); $(this).val(""); } `); //To check value between range
         $('#interest_rate_calc').val(int_rate_upd);
         $('.min-max-due').text('* (' + response[0].due_period_min + ' - ' + response[0].due_period_max + ') ');
-        $('#due_period_calc').attr('onChange', `if( parseInt($(this).val()) > '` + response[0].due_period_max + `' ){ alert("Enter Lesser Value"); $(this).val(""); }else
-                            if( parseInt($(this).val()) < '`+ response[0].due_period_min + `' && parseInt($(this).val()) != '' ){ alert("Enter Higher Value"); $(this).val(""); } `); //To check value between range
+        $('#due_period_calc').attr('onChange', `if( parseInt($(this).val()) > '` + response[0].due_period_max + `' ){ alert("Enter Lesser Value"); $(this).val(""); }else if( parseInt($(this).val()) < '`+ response[0].due_period_min + `' && parseInt($(this).val()) != '' ){ alert("Enter Higher Value"); $(this).val(""); } `); //To check value between range
         $('#due_period_calc').val(due_period_upd);
 
         $('.min-max-doc').text('* (' + response[0].doc_charge_min + '% - ' + response[0].doc_charge_max + '%) ');
-        $('#doc_charge_calc').attr('onChange', `if( parseFloat($(this).val()) > '` + response[0].doc_charge_max + `' ){ alert("Enter Lesser Value"); $(this).val(""); }else
-                            if( parseFloat($(this).val()) < '`+ response[0].doc_charge_min + `' && parseFloat($(this).val()) != '' ){ alert("Enter Higher Value"); $(this).val(""); } `); //To check value between range
+        $('#doc_charge_calc').attr('onChange', `if( parseFloat($(this).val()) > '` + response[0].doc_charge_max + `' ){ alert("Enter Lesser Value"); $(this).val(""); }else if( parseFloat($(this).val()) < '`+ response[0].doc_charge_min + `' && parseFloat($(this).val()) != '' ){ alert("Enter Higher Value"); $(this).val(""); } `); //To check value between range
         $('#doc_charge_calc').val(doc_charge_upd);
 
         $('.min-max-proc').text('* (' + response[0].processing_fee_min + '% - ' + response[0].processing_fee_max + '%) ');
-        $('#processing_fees_calc').attr('onChange', `if( parseFloat($(this).val()) > '` + response[0].processing_fee_max + `' ){ alert("Enter Lesser Value"); $(this).val(""); }else
-                            if( parseFloat($(this).val()) < '`+ response[0].processing_fee_min + `' && parseInt($(this).val()) != '' ){ alert("Enter Higher Value"); $(this).val(""); } `); //To check value between range
+        $('#processing_fees_calc').attr('onChange', `if( parseFloat($(this).val()) > '` + response[0].processing_fee_max + `' ){ alert("Enter Lesser Value"); $(this).val(""); }else if( parseFloat($(this).val()) < '`+ response[0].processing_fee_min + `' && parseInt($(this).val()) != '' ){ alert("Enter Higher Value"); $(this).val(""); } `); //To check value between range
         $('#processing_fees_calc').val(proc_fee_upd);
 
+        if(edittype ==1){
+        $('#interest_rate_calc').val('');
+        $('#due_period_calc').val('');
+        $('#doc_charge_calc').val('');
+        $('#processing_fees_calc').val('');
+
+        }
     }, 'json');
 }
 
@@ -2485,12 +2489,15 @@ function loanCalculationEdit(id) {
                 $('.calc').show();
                 $('.scheme').hide();
                 $('.scheme_day').hide();
-                getLoanCatDetails(response[0].loan_category);
+                getLoanCatDetails(response[0].loan_category, 2);
             } else if (response[0].profit_type == '1') { //Scheme
                 dueMethodScheme(response[0].scheme_due_method, response[0].loan_category)
                 $('.calc').hide();
                 $('.scheme').show();
-                schemeCalAjax(response[0].scheme_name)
+                setTimeout(()=>{
+                    schemeCalAjax(response[0].scheme_name) 
+                },500);
+               
             }
     
             
@@ -2499,7 +2506,7 @@ function loanCalculationEdit(id) {
                 $('#agent_id_calc').val(response[0].agent_id);
                 $('#agent_name_calc').val(response[0].agent_name);
                 $('#refresh_cal').trigger('click');
-            }, 1000);
+            }, 2000);
         }
     }, 'json');
 }
