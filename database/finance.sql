@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jul 15, 2024 at 01:28 PM
+-- Generation Time: Jul 25, 2024 at 07:21 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -856,21 +856,21 @@ CREATE TABLE `menu_list` (
 --
 
 INSERT INTO `menu_list` (`id`, `menu`, `link`, `icon`) VALUES
-(1, 'Dashboard', 'dashboard', 'globe'),
-(2, 'Master', 'master', 'globe'),
-(3, 'Administration', 'admin', 'cog'),
-(4, 'Loan Entry', 'loan_entry', 'cog'),
-(5, 'Approval', 'approval', 'globe'),
-(6, 'Loan Issue', 'loan_issue', 'globe'),
-(7, 'Collection', 'collection', 'globe'),
-(8, 'Closed', 'closed', 'globe'),
-(9, 'NOC', 'noc', 'globe'),
-(10, 'Accounts', 'accounts', 'globe'),
-(11, 'Update', 'update', 'globe'),
-(12, 'Customer Data', 'customer_data', 'globe'),
-(13, 'Search', 'search', 'globe'),
-(14, 'Reports', 'reports', 'globe'),
-(15, 'Bulk Upload', 'bulk_upload', 'globe');
+(1, 'Dashboard', 'dashboard', 'developer_board'),
+(2, 'Master', 'master', 'camera1'),
+(3, 'Administration', 'admin', 'layers'),
+(4, 'Loan Entry', 'loan_entry', 'archive'),
+(5, 'Approval', 'approval', 'user-check'),
+(6, 'Loan Issue', 'loan_issue', 'wallet'),
+(7, 'Collection', 'collection', 'credit'),
+(8, 'Closed', 'closed', 'uninstall'),
+(9, 'NOC', 'noc', 'export'),
+(10, 'Accounts', 'accounts', 'domain'),
+(11, 'Update', 'update', 'share1'),
+(12, 'Customer Data', 'customer_data', 'folder_shared'),
+(13, 'Search', 'search', 'magnifying-glass'),
+(14, 'Reports', 'reports', 'assignment_turned_in'),
+(15, 'Bulk Upload', 'bulk_upload', 'cloud_upload');
 
 -- --------------------------------------------------------
 
@@ -1105,31 +1105,31 @@ CREATE TABLE `sub_menu_list` (
 --
 
 INSERT INTO `sub_menu_list` (`id`, `main_menu`, `sub_menu`, `link`, `icon`) VALUES
-(1, 1, 'Dashboard', 'dashboard', 'upload-to-cloud'),
-(2, 2, 'Company Creation', 'company_creation', 'upload-to-cloud'),
-(3, 2, 'Branch Creation', 'branch_creation', 'upload-to-cloud'),
-(4, 2, 'Loan Category Creation', 'loan_category_creation', 'upload-to-cloud'),
-(5, 2, 'Area Creation', 'area_creation', 'upload-to-cloud'),
-(6, 3, 'Bank Creation', 'bank_creation', 'upload-to-cloud'),
-(7, 3, 'Agent Creation', 'agent_creation', 'upload-to-cloud'),
-(8, 3, 'User Creation', 'user_creation', 'upload-to-cloud'),
-(9, 4, 'Loan Entry', 'loan_entry', 'upload-to-cloud'),
-(10, 5, 'Approval', 'approval', 'upload-to-cloud'),
-(11, 6, 'Loan Issue', 'loan_issue', 'upload-to-cloud'),
-(12, 7, 'Collection', 'collection', 'upload-to-cloud'),
-(13, 8, 'Closed', 'closed', 'upload-to-cloud'),
-(14, 9, 'NOC', 'noc', 'upload-to-cloud'),
-(15, 10, 'Accounts', 'accounts', 'upload-to-cloud'),
-(16, 10, 'Bank Clearance', 'bank_clearance', 'upload-to-cloud'),
-(17, 10, 'Balance Sheet', 'balance_sheet', 'upload-to-cloud'),
-(18, 11, 'Update Customer', 'update_customer', 'upload-to-cloud'),
-(19, 12, 'Customer Data', 'customer_data', 'upload-to-cloud'),
-(20, 13, 'Search', 'search_screen', 'upload-to-cloud'),
-(21, 14, 'Loan Issue Report', 'loan_issue_report', 'upload-to-cloud'),
-(22, 14, 'Collection Report', 'collection_report', 'upload-to-cloud'),
-(23, 14, 'Balance Report', 'balance_report', 'upload-to-cloud'),
-(24, 14, 'Closed Report', 'closed_report', 'upload-to-cloud'),
-(25, 15, 'Bulk Upload Report', 'bulk_upload', 'upload-to-cloud');
+(1, 1, 'Dashboard', 'dashboard', 'view_comfy'),
+(2, 2, 'Company Creation', 'company_creation', 'domain'),
+(3, 2, 'Branch Creation', 'branch_creation', 'add-to-list'),
+(4, 2, 'Loan Category Creation', 'loan_category_creation', 'recent_actors'),
+(5, 2, 'Area Creation', 'area_creation', 'location'),
+(6, 3, 'Bank Creation', 'bank_creation', 'store_mall_directory'),
+(7, 3, 'Agent Creation', 'agent_creation', 'person_add'),
+(8, 3, 'User Creation', 'user_creation', 'group_add'),
+(9, 4, 'Loan Entry', 'loan_entry', 'local_library'),
+(10, 5, 'Approval', 'approval', 'offline_pin'),
+(11, 6, 'Loan Issue', 'loan_issue', 'credit-card'),
+(12, 7, 'Collection', 'collection', 'devices_other'),
+(13, 8, 'Closed', 'closed', 'circle-with-cross'),
+(14, 9, 'NOC', 'noc', 'book'),
+(15, 10, 'Accounts', 'accounts', 'rate_review'),
+(16, 10, 'Bank Clearance', 'bank_clearance', 'assignment'),
+(17, 10, 'Balance Sheet', 'balance_sheet', 'colours'),
+(18, 11, 'Update Customer', 'update_customer', 'cloud_upload'),
+(19, 12, 'Customer Data', 'customer_data', 'person_pin'),
+(20, 13, 'Search', 'search_screen', 'search'),
+(21, 14, 'Loan Issue Report', 'loan_issue_report', 'area-graph'),
+(22, 14, 'Collection Report', 'collection_report', 'event_note'),
+(23, 14, 'Balance Report', 'balance_report', 'event_available'),
+(24, 14, 'Closed Report', 'closed_report', 'erase'),
+(25, 15, 'Bulk Upload Report', 'bulk_upload', 'cloud_done');
 
 -- --------------------------------------------------------
 

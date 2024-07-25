@@ -1,35 +1,105 @@
 $(document).ready(function(){
 
+    $('#from_date').change(function () {
+        let from_date = $('#from_date').val();
+        let to_date = $('#to_date').val();
+        if (from_date > to_date) {
+            $('#to_date').val('');
+        }
+        $('#to_date').attr('min', from_date);
+    });
+    
+    const toggleButtons = $(".toggle-button");
+    toggleButtons.removeClass('active'); //initially make all buttons unchecked
+    toggleButtons.on("click", function () {
+        // Reset active class for all buttons
+        toggleButtons.removeClass("active");
+        // Add active class to the clicked button
+        $(this).addClass("active");
+
+        let chosenOpt = $(this).val();
+        if (chosenOpt == 'Today') {
+            clearAllContents();
+            getOpeningBal('today', '', '', '')
+            getBalSheetDetails('today', '', '', '');
+            getNetBenefitDetails('today', '', '', '');
+        }
+    });
+
+    $('#submitDaywise').click(function () {
+        let from_date = $('#from_date').val(); let to_date = $('#to_date').val();
+        if (from_date != '' && to_date != '') {
+            clearAllContents();
+            getOpeningBal('day', from_date, to_date, '')
+            getBalSheetDetails('day', from_date, to_date, '');
+            getNetBenefitDetails('day', from_date, to_date, '');
+
+            $('.close').trigger('click');//it will close modal
+        } else {
+            swalError('Please Fill Dates!', 'error');
+            event.preventDefault();
+        }
+    })
+
+    $('#submitMonthwise').click(function () {
+        let for_month = $('#for_month').val()
+        if (for_month != '') {
+            clearAllContents();
+            getOpeningBal('month', '', '', for_month)
+            getBalSheetDetails('month', '', '', for_month);
+            getNetBenefitDetails('month', '', '', for_month);
+
+            $('.close').trigger('click');//it will close modal
+        } else {
+            swalError('Please Choose Month!', 'error');
+            event.preventDefault();
+        }
+    });
+
 }); ////// Document END.
 
 $(function(){
-    getOpeningBal();
-    // getClosingBal();
-    getBalSheetDetails();
-    getNetBenefitDetails();
+    getUserNames();
 });
 
-function getOpeningBal(){
-    $.post('api/accounts_files/accounts/opening_balance.php',function(response){
+function getUserNames() {
+    //get user name only who has access of cash tally
+    $.post('api/accounts_files/accounts/user_list.php', function (response) {
+        $('#by_user').empty()
+        $('#by_user').append("<option value=''>Select User</option>")
+        $.each(response, function (index, val) {
+            $('#by_user').append("<option value='" + val['id'] + "'>" + val['name'] + "</option> ");
+        })
+    }, 'json')
+}
+
+function getOpeningBal(type, from_date, to_date, month){
+    var user_id = $('#by_user').val();
+    if (type == 'today'){ 
+        var args = { 'type': 'today', 'user_id': user_id }; 
+    } else if (type == 'day'){ 
+        var args = { 'type': 'day', 'from_date': from_date, 'to_date': to_date, 'user_id': user_id }; 
+    } else if (type == 'month'){ 
+        var args = { 'type': 'month', 'month': month, 'user_id': user_id }; 
+    }
+    $.post('api/accounts_files/balance_sheet_files/bs_opening_bal.php', args, function(response){
         if(response.length > 0){
             $('#balance_sheet_table tbody tr:first td:nth-child(2)').text(response[0]['opening_balance']);
         }
-    },'json').then(function(){
-        // getClosingBal();
-    });
+    },'json');
 }
 
-// function getClosingBal(){
-//     $.post('api/accounts_files/accounts/closing_balance.php',function(response){
-//         if(response.length > 0){
-//             let close = parseInt($('#balance_sheet_table tbody tr:first td:nth-child(2)').text()) + parseInt(response[0]['closing_balance']);
-//             $('#balance_sheet_table tbody tr:nth-child(18) td:nth-child(3)').text(close);
-//         }
-//     },'json');
-// }
+function getBalSheetDetails(type, from_date, to_date, month){
+    var user_id = $('#by_user').val();
+    if (type == 'today'){ 
+        var args = { 'type': 'today', 'user_id': user_id }; 
+    } else if (type == 'day'){ 
+        var args = { 'type': 'day', 'from_date': from_date, 'to_date': to_date, 'user_id': user_id }; 
+    } else if (type == 'month'){ 
+        var args = { 'type': 'month', 'month': month, 'user_id': user_id }; 
+    }
 
-function getBalSheetDetails(){
-    $.post('api/accounts_files/balance_sheet_files/balance_sheet_details.php',function(response){
+    $.post('api/accounts_files/balance_sheet_files/balance_sheet_details.php', args, function(response){
         $('#balance_sheet_table tbody tr:nth-child(3) td:nth-child(2)').text(response[0]['due']);
         $('#balance_sheet_table tbody tr:nth-child(4) td:nth-child(2)').text(response[0]['princ']);
         $('#balance_sheet_table tbody tr:nth-child(5) td:nth-child(2)').text(response[0]['intrst']);
@@ -79,8 +149,16 @@ function getBalSheetTotal() {
     $('#balance_sheet_table tbody tr:nth-child(20) td:nth-child(3)').text(debit_total).css('font-weight','bold');
 }
 
-function getNetBenefitDetails(){
-    $.post('api/accounts_files/balance_sheet_files/net_benefit_details.php',function(response){
+function getNetBenefitDetails(type, from_date, to_date, month){
+    var user_id = $('#by_user').val();
+    if (type == 'today'){ 
+        var args = { 'type': 'today', 'user_id': user_id }; 
+    } else if (type == 'day'){ 
+        var args = { 'type': 'day', 'from_date': from_date, 'to_date': to_date, 'user_id': user_id }; 
+    } else if (type == 'month'){ 
+        var args = { 'type': 'month', 'month': month, 'user_id': user_id }; 
+    }
+    $.post('api/accounts_files/balance_sheet_files/net_benefit_details.php', args, function(response){
         $('#net_benefit_table tbody tr:nth-child(2) td:nth-child(2)').text(response[0]['benefit']);
         $('#net_benefit_table tbody tr:nth-child(3) td:nth-child(2)').text(response[0]['intrst']);
         $('#net_benefit_table tbody tr:nth-child(4) td:nth-child(2)').text(response[0]['doc_charges']);
@@ -118,3 +196,14 @@ function getNetBenefitTotal() {
     $('#net_benefit_table tbody tr:nth-child(13) td:nth-child(2)').text(benefit_total).css('font-weight','bold');
 }
 
+// to clear all contents
+function clearAllContents() {
+    $('#balance_sheet_table').find('tbody tr').each(function () {
+        $(this).find('td:nth-child(2)').text('')
+        $(this).find('td:nth-child(3)').text('')
+    });
+    $('#net_benefit_table').find('tbody tr').each(function () {
+        $(this).find('td:nth-child(2)').text('')
+        $(this).find('td:nth-child(3)').text('')
+    });
+}

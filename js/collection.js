@@ -46,8 +46,15 @@ $(document).ready(function(){
         $('#back_to_coll_list').hide();
         $('.coll_details').show();
         $('#back_to_loan_list').show();
-        setCurrentDate('#collection_date'); //To set collection date.
+        // setCurrentDate('#collection_date'); //To set collection date.
         
+        {
+            // Get today's date
+            var today = new Date().toISOString().split('T')[0];
+            //Set loan date
+            $('#collection_date').val(today);
+        }
+
         //To get the loan category ID to store when collection form submitted
         $.ajax({
             url:'api/collection_files/collection_details.php',

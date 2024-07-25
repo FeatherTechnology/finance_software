@@ -89,7 +89,7 @@ foreach ($result as $row) {
     $sub_array[] = isset($row['linename']) ? $row['linename'] : '';
     $sub_array[] = isset($row['branch_name']) ? $row['branch_name'] : '';
     $sub_array[] = isset($row['mobile1']) ? $row['mobile1'] : '';
-    $action = "<a href='#' class='collection-details' value='" . $row['cus_id'] . "'><button class='btn btn-primary'>Collect</button></a>";
+    $action = "<a href='#' class='collection-details' value='" . $row['cus_id'] . "'><button class='btn btn-primary'>View</button></a>";
     $sub_array[] = $action;
     $data[] = $sub_array;
 }

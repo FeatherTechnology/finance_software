@@ -9145,7 +9145,7 @@ i {
 }
 
 .toggle-button.active:not(#by_user) {
-  background-color: #009688;
+  background-color: var(--primary-color);
   color: white;
 }
 
@@ -9402,4 +9402,7 @@ table.dataTable th {
 }
 .chrt-div-cntnr{
   width: 100% !important;
+}
+.dwnmrgn{
+  margin-bottom: 20px !important;
 }

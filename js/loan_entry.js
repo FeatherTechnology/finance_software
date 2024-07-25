@@ -11,21 +11,22 @@ $(document).ready(function () {
     });
 
     $('#add_loan').click(function () {
-        let cus_data = $('#cus_data').val();
         getFamilyInfoTable()
         getPropertyInfoTable();
         getBankInfoTable()
         getKycInfoTable()
         getAreaName()
         $('.personal_info_disble').attr("disabled", false);
+        let cus_data = $('#cus_data').val();
         if (cus_data == 'Existing') {
-            $('#cus_status').show();
-            $('#data_checking_div').show();
+            $('.cus_status_div').show();
+            // $('#data_checking_div').show();
         } else {
-            $('#cus_status').hide();
-            $('#data_checking_div').hide();
-            $('#data_checking_table_div').hide();
+            $('.cus_status_div').hide();
+            // $('#data_checking_div').hide();
         }
+        dataCheckList('','','');
+        $('#data_checking_table_div').hide();
     });
 
     $('#back_btn').click(function () {
@@ -725,8 +726,8 @@ $(document).ready(function () {
                     $('#per_pic').val(response.pic);
                     $('#cus_data').val(response.cus_data);
                     if (response.cus_data == 'Existing') {
-                        $('#cus_status').show();
-                        $('#data_checking_div').show();
+                        $('.cus_status_div').show();
+                        // $('#data_checking_div').show();
                     }
                     $('#cus_status').val(response.cus_status);
                     $('.personal_info_disble').attr("disabled", true);
@@ -925,7 +926,9 @@ function fetchCustomerData(name, cusid, mobile, cus_profile_id) {
 
 function addCustomerMobile(mobile) {
     $('#mobile_check .custom-option').remove();
-    $('#mobile_check').append('<option class="custom-option" value="' + mobile + '">' + mobile + '</option>');
+    if(mobile !=''){
+        $('#mobile_check').append('<option class="custom-option" value="' + mobile + '">' + mobile + '</option>');
+    }
 }
 
 function removeCustomerMobile() {
@@ -934,7 +937,9 @@ function removeCustomerMobile() {
 
 function updateCustomerID(id) {
     $('#aadhar_check .custom-option').remove();
-    $('#aadhar_check').append('<option class="custom-option" value="' + id + '">' + id + '</option>');
+    if(id !=''){
+        $('#aadhar_check').append('<option class="custom-option" value="' + id + '">' + id + '</option>');
+    }
 }
 
 function removeCustomerID() {
@@ -943,7 +948,9 @@ function removeCustomerID() {
 
 function updateCustomerName(name) {
     $('#name_check .custom-option').remove();
-    $('#name_check').append('<option class="custom-option" value="' + name + '">' + name + '</option>');
+    if(name !=''){
+        $('#name_check').append('<option class="custom-option" value="' + name + '">' + name + '</option>');
+    }
 }
 
 function removeCustomerName() {
@@ -1340,7 +1347,7 @@ function dataCheckList(cus_id, cus_name, cus_mble_no) {
         //Name
         $('#name_check').empty();
         $('#name_check').append("<option value=''>Select Name</option>");
-        $('#name_check').append('<option value="' + cus_name + '">' + cus_name + '</option>');
+        (cus_name != '') ? $('#name_check').append('<option value="' + cus_name + '">' + cus_name + '</option>') : '';
         $.each(response, function (index, val) {
             $('#name_check').append("<option value='" + val.fam_name + "'>" + val.fam_name + "</option>");
         });
@@ -1348,7 +1355,7 @@ function dataCheckList(cus_id, cus_name, cus_mble_no) {
         //Adhar no
         $('#aadhar_check').empty();
         $('#aadhar_check').append("<option value=''>Select Aadhar Number</option>");
-        $('#aadhar_check').append('<option value="' + cus_id + '">' + cus_id + '</option>');
+        (cus_id !='') ? $('#aadhar_check').append('<option value="' + cus_id + '">' + cus_id + '</option>') : '';
         $.each(response, function (index, val) {
             $('#aadhar_check').append("<option value='" + val.fam_aadhar + "'>" + val.fam_aadhar + "</option>");
         });
@@ -1356,12 +1363,18 @@ function dataCheckList(cus_id, cus_name, cus_mble_no) {
         //Mobile no 
         $('#mobile_check').empty();
         $('#mobile_check').append("<option value=''>Select Mobile Number</option>");
-        $('#mobile_check').append('<option value="' + cus_mble_no + '">' + cus_mble_no + '</option>');
+        (cus_mble_no !='') ? $('#mobile_check').append('<option value="' + cus_mble_no + '">' + cus_mble_no + '</option>') : '';
         $.each(response, function (index, val) {
             $('#mobile_check').append("<option value='" + val.fam_mobile + "'>" + val.fam_mobile + "</option>");
         });
 
     }, 'json');
+}
+
+function checkAdditionalRenewal(cus_id){
+    $.post('api/loan_entry/check_additional_renewal.php', {cus_id},function(response){
+        $('#cus_status').val(response);
+    },'json');
 }
 
 function editCustmerProfile(id) {
@@ -1403,11 +1416,12 @@ function editCustmerProfile(id) {
         }, 1000);
 
         if (response[0].cus_data == 'Existing') {
-            $('#cus_status').show();
-            $('#data_checking_div').show();
+            $('.cus_status_div').show();
+            checkAdditionalRenewal(response[0].cus_id);
+            // $('#data_checking_div').show();
         } else {
-            $('#cus_status').hide();
-            $('#data_checking_div').hide();
+            $('.cus_status_div').hide();
+            // $('#data_checking_div').hide();
             $('#data_checking_table_div').hide();
         }
         let path = "uploads/loan_entry/cus_pic/";
@@ -1455,8 +1469,8 @@ function existingCustmerProfile(cus_id) {
             $('#cus_limit').val('');
             $('#about_cus').val('');
 
-            $('#cus_status').hide();
-            $('#data_checking_div').hide();
+            $('.cus_status_div').hide();
+            // $('#data_checking_div').hide();
             $('#data_checking_table_div').hide();
 
             getFamilyInfoTable()
@@ -1504,8 +1518,8 @@ function existingCustmerProfile(cus_id) {
             }, 1000);
 
 
-            $('#cus_status').show();
-            $('#data_checking_div').show();
+            $('.cus_status_div').show();
+            // $('#data_checking_div').show();
             let path = "uploads/loan_entry/cus_pic/";
             $('#per_pic').val(response[0].pic);
             var img = $('#imgshow');

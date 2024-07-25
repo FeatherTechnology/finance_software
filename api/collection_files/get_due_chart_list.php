@@ -682,8 +682,8 @@ function moneyFormatIndia($num)
             LEFT JOIN role r ON u.role = r.id
             WHERE c.`cus_profile_id` = '$cp_id' AND (c.due_amt_track != '' or c.pre_close_waiver!='')
             AND (
-                    (DATE(c.coll_date) > DATE('$maturity_month') AND DATE(c.coll_date) <= DATE('$currentMonth') AND DATE(c.coll_date) != '0000-00-00' ) OR
-                    (DATE(c.trans_date) > DATE('$maturity_month') AND DATE(c.trans_date) <= DATE('$currentMonth') AND DATE(c.trans_date) != '0000-00-00' ) 
+                    (MONTH(c.coll_date) > MONTH('$maturity_month') AND MONTH(c.coll_date) <= MONTH('$currentMonth') AND MONTH(c.coll_date) != '0000-00-00' ) OR
+                    (MONTH(c.trans_date) > MONTH('$maturity_month') AND MONTH(c.trans_date) <= MONTH('$currentMonth') AND MONTH(c.trans_date) != '0000-00-00' ) 
                 ) ");
         } else
         if ($loanFrom['scheme_due_method'] == '2') {

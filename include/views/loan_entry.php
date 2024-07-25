@@ -214,16 +214,16 @@
                                 </div>
                             </div>
 
-                            <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12" style="display:none;">
+                            <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12 cus_status_div" style="display:none;">
                                 <div class="form-group">
                                     <label for="cus_status"> Customer Status</label>
-                                    <input type="text" class="form-control" id="cus_status" name="cus_status" disabled placeholder="Additional/Renewal" tabindex="14">
+                                    <input type="text" class="form-control" id="cus_status" name="cus_status" disabled tabindex="14">
                                 </div>
                             </div>
                         </div>
                     </div>
 
-                    <div id="data_checking_div" style="display: none;">
+                    <div id="data_checking_div" >
                         <div class="card-header">
                             <div class="card-title">Data Checking</div>
                         </div>
