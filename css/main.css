@@ -9360,7 +9360,7 @@ table.dataTable th {
 
 /* Dashboard */
 .branch-div{
-  padding: 10px;
+  /* padding: 10px; */
   display: flex;
   justify-content: flex-end;
 }

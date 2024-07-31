@@ -1,8 +1,9 @@
 <!--Agent Creation List Start-->
 <div class="text-right">
     <button type="button" class="btn btn-primary " id="add_agent"><span class="fa fa-plus"></span>&nbsp; Add Agent Creation</button>
-    <br><br>
+    <button type="button" class="btn btn-primary" id="back_btn" style="display: none;"><span class="icon-arrow-left"></span>&nbsp; Back </button>
 </div>
+<br>
 <div class="card agent_table_content">
     <div class="card-body">
         <div class="col-12">
@@ -29,10 +30,6 @@
 <!--Agent creation List End-->
 <!--Agent Creation Start-->
 <div id="agent_creation_content" style="display:none;">
-    <div class="text-right">
-        <button type="button" class="btn btn-primary" id="back_btn"><span class="icon-arrow-left"></span>&nbsp; Back </button>
-        <br><br>
-    </div>
     <form id="agent_creation" name="agent_creation" action="" method="post" enctype="multipart/form-data">
         <input type="hidden" id="agent_id">
         <div class="row gutters">

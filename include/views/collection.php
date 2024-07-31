@@ -26,7 +26,7 @@
                 </div>
             </div>
         </div>
-        <div class="col-12 mt-3 text-right" style="margin-bottom:20px">
+        <div class="col-12 text-right" style="margin-bottom:10px">
             <button class="btn btn-primary" id="back_to_coll_list" style="display: none;"><span class="icon-arrow-left"></span> Back</button>
             <button class="btn btn-primary" id="back_to_loan_list" style="display: none;"><span class="icon-cancel"></span> cancel</button>
         </div>

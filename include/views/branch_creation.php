@@ -1,8 +1,8 @@
 <!-- Branch Creation List Start -->
 <div class="text-right addbranchBtn">
     <button type="button" class="btn btn-primary addbranchBtn" id="add_branch"><span class="fa fa-plus"></span>&nbsp; Add Branch Creation</button>
-    <br><br>
 </div>
+<br>
 
 <div class="card branch_table_content">
     <div class="card-body">
@@ -35,8 +35,8 @@
 <div id="branch_creation_content" style="display:none;">
     <div class="text-right backBtn">
         <button type="button" class="btn btn-primary backBtn" id="back_btn"><span class="icon-arrow-left"></span>&nbsp; Back </button>
-        <br><br>
     </div>
+    <br>
     <form id="branch_creation" name="branch_creation" action="" method="post" enctype="multipart/form-data">
         <input type="hidden" id="branchid" value="0">
         <div class="row gutters">

@@ -80,7 +80,7 @@
             </div>
         </header>
 
-        <br><br>
+        <br>
         <div class="page-header">
             <div style="background-color:var(--primary-color); width:100%; padding:12px; color: #ffff; font-size: 20px; border-radius:5px;">
                 Finance<span id="pageHeaderName"></span>
