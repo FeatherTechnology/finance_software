@@ -74,10 +74,13 @@ $(document).ready(function(){
     
     $("input[name='expenses_cash_type']").click(function(){
         let expCashType = $(this).val();
+        $('#expenses_trans_id').val('');
 
         if (expCashType == '2') {
             $('#expenses_bank_name').val('').attr('disabled', false);
+            $('.exp_trans_div').show();
         }else{
+            $('.exp_trans_div').hide();
             $('#expenses_bank_name').val('').attr('disabled', true);
         }
     });
@@ -152,10 +155,14 @@ $(document).ready(function(){
     
     $("input[name='othertransaction_cash_type']").click(function(){
         let otherCashType = $(this).val();
+        $('#other_trans_id').val('');
+
         if (otherCashType == '2') {
             $('#othertransaction_bank_name').val('').attr('disabled', false);
+            $('.other_trans_div').show();
             getBankName('#othertransaction_bank_name');
         }else{
+            $('.other_trans_div').hide();
             $('#othertransaction_bank_name').val('').attr('disabled', true);
         }
     });
@@ -193,8 +200,10 @@ $(document).ready(function(){
 
         if(category =='7'){
             $('#other_user_name').attr('disabled', false);
+            $('.other_user_name_div').show();
             getUserList();
         }else{
+            $('.other_user_name_div').hide();
             $('#other_user_name').val('').attr('disabled', true);
         }
         

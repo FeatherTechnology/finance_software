@@ -988,7 +988,7 @@ $(document).ready(function () {
             $('.cash_issue').hide();
         }
 
-        $.post('api/loan_issue_files/get_balance_amount.php', { 'cus_id': $('#cus_id').val(), 'payment_mode': type }, function (response) {
+        $.post('api/loan_issue_files/get_balance_amount.php',{ 'cus_id': $('#cus_id').val(), 'payment_mode': type },function(response){
             let balance = parseFloat(response.balance);
             let issueAmount = parseFloat($('#issue_amount').val());
             let alertMessage = response.alert_message;
@@ -996,6 +996,9 @@ $(document).ready(function () {
             if (issueAmount > balance) {
                 let formattedMessage = `${alertMessage} ,\n\n Available Balance: ${balance}`;
                 swalError('Warning', formattedMessage);
+                $('#submit_loan_issue').attr('disabled', true);
+            }else{
+                $('#submit_loan_issue').attr('disabled', false);
             }
         }, 'json');
 
