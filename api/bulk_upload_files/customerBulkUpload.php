@@ -23,7 +23,7 @@ if (in_array($_FILES["excelFile"]["type"], $allowedFileType)) {
         $Reader->ChangeSheet($i);
         $rowChange = 0;
         foreach ($Reader as $Row) {
-            if ($rowChange != 0) { // omitted 0 to avoid headers
+            if ($rowChange != 0 AND $rowChange != 1 ) { // omitted 0,1 to avoid headers
 
                 $data = $obj->fetchAllRowData($Row);
                 $data['loan_id'] = isset($data['loan_id']) ? $data['loan_id'] : '';

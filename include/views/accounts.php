@@ -426,10 +426,10 @@ function moneyFormatIndia($num1) {
                                     <input type="number" class="form-control" name="expenses_amnt" id="expenses_amnt" tabindex="12">
                                 </div>
                             </div>
-                            <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                            <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12 exp_trans_div" style="display: none;">
                                 <div class="form-group">
                                     <label for="expenses_trans_id">Transaction ID</label><span class="text-danger">*</span>
-                                    <input type="text" class="form-control" name="expenses_trans_id" id="expenses_trans_id" tabindex="13">
+                                    <input type="number" class="form-control" name="expenses_trans_id" id="expenses_trans_id" tabindex="13">
                                 </div>
                             </div>
                             <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
@@ -552,16 +552,16 @@ function moneyFormatIndia($num1) {
                             <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
                                 <div class="form-group">
                                     <label for="other_ref_id">Reference ID</label><span class="text-danger">*</span>
-                                    <input class="form-control" name="other_ref_id" id="other_ref_id" tabindex="9" readonly>
+                                    <input type="text" class="form-control" name="other_ref_id" id="other_ref_id" tabindex="9" readonly>
                                 </div>
                             </div>
-                            <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                            <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12 other_trans_div" style="display: none;">
                                 <div class="form-group">
                                     <label for="other_trans_id">Transaction ID</label><span class="text-danger">*</span>
-                                    <input class="form-control" name="other_trans_id" id="other_trans_id" tabindex="10" >
+                                    <input type="number" class="form-control" name="other_trans_id" id="other_trans_id" tabindex="10" >
                                 </div>
                             </div>
-                            <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                            <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12 other_user_name_div" style="display: none;">
                                 <div class="form-group">
                                     <label for="other_user_name">User Name</label><span class="text-danger">*</span>
                                     <select class="form-control" name="other_user_name" id="other_user_name" tabindex="11" disabled>

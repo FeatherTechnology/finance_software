@@ -1,7 +1,7 @@
 <!-- Area Name Dropdown: If Area name Disabled it show in Area "List" but in "Dropdown" -->
 <div class="row gutters">
     <div class="col-12">
-        <div class="col-12 mt-3 text-right">
+        <div class="col-12 text-right">
             <button class="btn btn-primary add_area_btn"><span class="icon-add"></span> Add Area Creation</button>
             <button class="btn btn-primary back_to_area_btn" style="display: none;"><span class="icon-arrow-left"></span> Back</button>
         </div></br>

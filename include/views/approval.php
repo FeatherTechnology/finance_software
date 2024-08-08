@@ -68,8 +68,8 @@
 <div id="loan_entry_content" style="display:none;">
     <div class="text-right">
         <button type="button" class="btn btn-primary" id="back_btn"><span class="icon-arrow-left"></span>&nbsp; Back </button>
-        <br><br>
     </div>
+    <br>
     <div class="radio-container">
         <div class="selector">
             <div class="selector-item">

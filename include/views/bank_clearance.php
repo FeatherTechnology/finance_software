@@ -1,6 +1,6 @@
 <div class="row gutters">
     <div class="col-12">
-        <div class="col-12 mt-3 text-right">
+        <div class="col-12 text-right">
             <button class="btn btn-primary add_bc_btn"><span class="icon-add"></span>Add Bank Clearance</button>
             <button class="btn btn-primary back_to_bcList_btn" style="display: none;"><span class="icon-arrow-left"></span>Back</button>
         </div></br>

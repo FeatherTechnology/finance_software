@@ -1,8 +1,9 @@
 <!-- Loan Entry List Start -->
 <div class="text-right">
     <button type="button" class="btn btn-primary " id="add_loan"><span class="fa fa-plus"></span>&nbsp; Add Loan Entry</button>
-    <br><br>
+    <button type="button" class="btn btn-primary" id="back_btn" style="display: none;"><span class="icon-arrow-left"></span>&nbsp; Back </button>
 </div>
+<br>
 <div class="card loan_table_content">
     <div class="card-body">
         <div class="col-12">
@@ -29,10 +30,6 @@
 </div>
 <!--Loan Entry List End-->
 <div id="loan_entry_content" style="display:none;">
-    <div class="text-right">
-        <button type="button" class="btn btn-primary" id="back_btn"><span class="icon-arrow-left"></span>&nbsp; Back </button>
-        <br><br>
-    </div>
     <div class="radio-container">
         <div class="selector">
             <div class="selector-item">

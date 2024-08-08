@@ -28,7 +28,7 @@
             </div>
         </div>
         <!----------------------------- CARD END NOC TABLE------------------------------>
-        <div class="col-12 mt-3 text-right back_to_noc_list" style="margin-bottom:20px">
+        <div class="col-12 text-right back_to_noc_list" style="margin-bottom:10px">
             <button class="btn btn-primary back_to_noc_list" id="back_to_noc_list" style="display: none;"><span class="icon-arrow-left"></span> Back</button>
         </div>
         <div id="noc_main_container" style="display:none">
@@ -126,7 +126,7 @@
                     </div>
                 </div>
             </div>
-            <div class="col-12 mt-3 text-right back_to_loan_list" style="margin-bottom:20px">
+            <div class="col-12 text-right back_to_loan_list" style="margin-bottom:10px">
                 <button class="btn btn-primary back_to_loan_list" id="back_to_loan_list" style="display: none;"><span class="icon-arrow-left"></span> Back</button>
             </div>
             <div class="row gutters" id="noc_summary" style="display:none">
