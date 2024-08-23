@@ -23,6 +23,7 @@ $dob = $_POST['dob'];
 $age = $_POST['age'];
 $mobile1 = $_POST['mobile1'];
 $mobile2 = $_POST['mobile2'];
+$whatsapp_no = $_POST['whatsapp_no'];
 $user_id = $_SESSION['user_id'];
 $customer_profile_id = $_POST['customer_profile_id'];
 
@@ -35,11 +36,11 @@ if ($qry->rowCount() > 0) {
     $cus_status = '';
 }
 if ($customer_profile_id != '') {
-    $qry = $pdo->query("UPDATE `customer_profile` SET `cus_id`='$cus_id',`cus_name`='$cus_name',`gender`='$gender',`dob`='$dob',`age`='$age',`mobile1`='$mobile1',`mobile2`='$mobile2',`pic`='$picture',`cus_data`='$cus_data',`cus_status` = '$cus_status',`update_login_id`='$user_id',updated_on = now() WHERE `id`='$customer_profile_id'");
+    $qry = $pdo->query("UPDATE `customer_profile` SET `cus_id`='$cus_id',`cus_name`='$cus_name',`gender`='$gender',`dob`='$dob',`age`='$age',`mobile1`='$mobile1',`mobile2`='$mobile2',`whatsapp_no`='$whatsapp_no',`pic`='$picture',`cus_data`='$cus_data',`cus_status` = '$cus_status',`update_login_id`='$user_id',updated_on = now() WHERE `id`='$customer_profile_id'");
     $status = 0; //update
     $last_id = $customer_profile_id;
 } else {
-    $qry = $pdo->query("INSERT INTO `customer_profile`(`cus_id`, `cus_name`, `gender`, `dob`, `age`, `mobile1`, `mobile2`, `pic`, `cus_data`, `cus_status`, `insert_login_id`, `created_on` ) VALUES ('$cus_id','$cus_name','$gender','$dob','$age','$mobile1','$mobile2','$picture','$cus_data','$cus_status','$user_id',CURRENT_TIMESTAMP())");
+    $qry = $pdo->query("INSERT INTO `customer_profile`(`cus_id`, `cus_name`, `gender`, `dob`, `age`, `mobile1`, `mobile2`, `whatsapp_no`, `pic`, `cus_data`, `cus_status`, `insert_login_id`, `created_on` ) VALUES ('$cus_id','$cus_name','$gender','$dob','$age','$mobile1','$mobile2','$whatsapp_no','$picture','$cus_data','$cus_status','$user_id',CURRENT_TIMESTAMP())");
     $status = 1; //Insert
     $last_id = $pdo->lastInsertId();
     $qry = $pdo->query("INSERT INTO `customer_status`( `cus_id`, `cus_profile_id`, `status`, `insert_login_id`, `created_on`) VALUES ('$cus_id', '$last_id', '1', '$user_id',CURRENT_TIMESTAMP() )");

@@ -988,21 +988,22 @@ $(document).ready(function () {
             $('.cash_issue').hide();
         }
 
-        $.post('api/loan_issue_files/get_balance_amount.php',{ 'cus_id': $('#cus_id').val(), 'payment_mode': type },function(response){
-            let balance = parseFloat(response.balance);
-            let issueAmount = parseFloat($('#issue_amount').val());
-            let alertMessage = response.alert_message;
+        // $.post('api/loan_issue_files/get_balance_amount.php',{ 'cus_id': $('#cus_id').val(), 'payment_mode': type },function(response){
+        //     let balance = parseFloat(response.balance);
+        //     let issueAmount = parseFloat($('#issue_amount').val());
+        //     let alertMessage = response.alert_message;
 
-            if (issueAmount > balance) {
-                let formattedMessage = `${alertMessage} ,\n\n Available Balance: ${balance}`;
-                swalError('Warning', formattedMessage);
-                $('#submit_loan_issue').attr('disabled', true);
-            }else{
-                $('#submit_loan_issue').attr('disabled', false);
-            }
-        }, 'json');
+        //     if (issueAmount > balance) {
+        //         let formattedMessage = `${alertMessage} ,\n\n Available Balance: ${balance}`;
+        //         swalError('Warning', formattedMessage);
+        //         $('#submit_loan_issue').attr('disabled', true);
+        //     }else{
+        //         $('#submit_loan_issue').attr('disabled', false);
+        //     }
+        // }, 'json');
 
     });
+
     $('#issue_person').change(function () {
         let id = $('#issue_person :selected').attr('data-val');
         if (id != '' && id != 'Customer') {
