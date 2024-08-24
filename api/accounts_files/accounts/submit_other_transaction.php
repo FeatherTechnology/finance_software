@@ -10,11 +10,11 @@ $other_trans_name = $_POST['other_trans_name'];
 $cat_type = $_POST['cat_type'];
 $other_ref_id = $_POST['other_ref_id'];
 $other_trans_id = $_POST['other_trans_id'];
-$other_user_name = $_POST['other_user_name'];
+// $other_user_name = $_POST['other_user_name'];
 $other_amnt = $_POST['other_amnt'];
 $other_remark = $_POST['other_remark'];
 
-$qry = $pdo->query("INSERT INTO `other_transaction`( `coll_mode`, `bank_id`, `trans_cat`, `name`, `type`, `ref_id`, `trans_id`, `user_name`, `amount`, `remark`, `insert_login_id`, `created_on`) VALUES ('$coll_mode','$bank_id','$trans_category','$other_trans_name','$cat_type','$other_ref_id','$other_trans_id','$other_user_name','$other_amnt','$other_remark','$user_id', now() )");
+$qry = $pdo->query("INSERT INTO `other_transaction`( `coll_mode`, `bank_id`, `trans_cat`, `name`, `type`, `ref_id`, `trans_id`, `amount`, `remark`, `insert_login_id`, `created_on`) VALUES ('$coll_mode','$bank_id','$trans_category','$other_trans_name','$cat_type','$other_ref_id','$other_trans_id','$other_amnt','$other_remark','$user_id', now() )");
 if ($qry) {
     $result = 1;
 } else {

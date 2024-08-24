@@ -189,7 +189,7 @@ $(document).ready(function(){
             catTypeOptn +="<option value='1'>Credit</option>";
             catTypeOptn +="<option value='2'>Debit</option>";
 
-        } else if(category == '5' || category == '7'){ //debit
+        } else if(category == '5'){ //debit || category == '7'
             catTypeOptn +="<option value='2'>Debit</option>";            
         
         } else if(category == '6' || category == '8'){ //credit
@@ -198,14 +198,14 @@ $(document).ready(function(){
 
         $('#cat_type').empty().append(catTypeOptn); //To show Type based on transaction category.
 
-        if(category =='7'){
-            $('#other_user_name').attr('disabled', false);
-            $('.other_user_name_div').show();
-            getUserList();
-        }else{
-            $('.other_user_name_div').hide();
-            $('#other_user_name').val('').attr('disabled', true);
-        }
+        // if(category =='7'){
+        //     $('#other_user_name').attr('disabled', false);
+        //     $('.other_user_name_div').show();
+        //     getUserList();
+        // }else{
+        //     $('.other_user_name_div').hide();
+        //     $('#other_user_name').val('').attr('disabled', true);
+        // }
         
         getRefId(category);
     });
@@ -258,7 +258,7 @@ $(document).ready(function(){
             'cat_type' : $('#cat_type :selected').val(),
             'other_ref_id' : $('#other_ref_id').val(),
             'other_trans_id' : $('#other_trans_id').val(),
-            'other_user_name' : $('#other_user_name :selected').val(),
+            // 'other_user_name' : $('#other_user_name :selected').val(),
             'other_amnt' : $('#other_amnt').val(),
             'other_remark' : $('#other_remark').val()
         }
@@ -388,8 +388,8 @@ function getLoanIssueList(){
             'name',
             'linename',
             'no_of_loans',
-            'issueAmnt',
-            'balance'
+            'issueAmnt'
+            // 'balance'
         ];
         appendDataToTable('#accounts_loanissue_table', response, columnMapping);
         setdtable('#accounts_loanissue_table');
@@ -544,20 +544,20 @@ function nameDropDown(){
     },'json');
 }
 
-function getUserList(){
-    $.post('api/accounts_files/accounts/user_list.php',function(response){
-        let userNameOptn='';
-            userNameOptn +="<option value=''>Select User Name</option>";
-            $.each(response, function(index, val){
-                userNameOptn += "<option value='"+val.id+"'>"+val.name+"</option>";
-            });
-        $('#other_user_name').empty().append(userNameOptn);
-    },'json');
-}
+// function getUserList(){
+//     $.post('api/accounts_files/accounts/user_list.php',function(response){
+//         let userNameOptn='';
+//             userNameOptn +="<option value=''>Select User Name</option>";
+//             $.each(response, function(index, val){
+//                 userNameOptn += "<option value='"+val.id+"'>"+val.name+"</option>";
+//             });
+//         $('#other_user_name').empty().append(userNameOptn);
+//     },'json');
+// }
 
 function otherTransFormValid(data){
     for(key in data){
-        if(key !='other_user_name' && key !='expenses_total_amnt' && key !='bank_id' && key !='other_trans_id'){
+        if(key !='expenses_total_amnt' && key !='bank_id' && key !='other_trans_id'){
             if(data[key] =='' || data[key] ==null || data[key] ==undefined){
                 return false;
             }
@@ -570,11 +570,11 @@ function otherTransFormValid(data){
         }
     }
 
-    if(data['trans_category'] =='7'){
-        if(data['other_user_name'] =='' || data['other_user_name'] ==null || data['other_user_name'] == undefined){
-            return false;
-        }
-    }
+    // if(data['trans_category'] =='7'){
+    //     if(data['other_user_name'] =='' || data['other_user_name'] ==null || data['other_user_name'] == undefined){
+    //         return false;
+    //     }
+    // }
 
     return true;
 }

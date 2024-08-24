@@ -13,23 +13,21 @@ if ($cash_type == '1') {
     $cndtn1 = "payment_mode != '1' ";
 }
 //collection_mode = 1 - cash; 2 to 5 - bank;
-$qry = $pdo->query("SELECT b.name, c.linename, no_of_loans, overallIssueAmnt, issueAmnt, SUM(a.amount) AS amount, cr_amnt 
+$qry = $pdo->query("SELECT b.name, c.linename, no_of_loans, issueAmnt
 FROM other_transaction a 
 JOIN users b ON a.user_name = b.id 
 JOIN line_name_creation c ON b.line = c.id 
-LEFT JOIN ( SELECT insert_login_id, SUM(issue_amnt) AS overallIssueAmnt FROM loan_issue WHERE $cndtn1 AND DATE(created_on) >= (SELECT DATE(created_on) FROM other_transaction WHERE type = '2' AND trans_cat = '7' AND $cndtn ORDER BY id ASC LIMIT 1 ) GROUP BY insert_login_id ) oli ON oli.insert_login_id = b.id
-LEFT JOIN ( SELECT insert_login_id, COUNT(id) AS no_of_loans, SUM(issue_amnt) AS issueAmnt FROM loan_issue WHERE $cndtn1 AND DATE(issue_date) = CURDATE() GROUP BY insert_login_id ) li ON li.insert_login_id = b.id 
-LEFT JOIN( SELECT user_name, SUM(amount) AS cr_amnt FROM other_transaction WHERE type = '1' AND trans_cat = '7' AND $cndtn ) cr ON cr.user_name = b.id 
+LEFT JOIN ( SELECT insert_login_id, COUNT(id) AS no_of_loans, SUM(issue_amnt) AS issueAmnt FROM loan_issue WHERE $cndtn1 AND DATE(issue_date) = CURDATE() GROUP BY insert_login_id ) li ON li.insert_login_id = b.id
 WHERE a.type = '2' AND a.trans_cat = '7' AND $cndtn
 GROUP BY b.name, c.linename, no_of_loans, issueAmnt; ");
 if ($qry->rowCount() > 0) {
     while ($data = $qry->fetch(PDO::FETCH_ASSOC)) {
-        $amnt = ($data['amount']) ? $data['amount'] : 0;
-        $cramnt = ($data['cr_amnt']) ? $data['cr_amnt'] : 0;
-        $bal = $amnt - $data['overallIssueAmnt'] - $cramnt;
+        // $amnt = ($data['amount']) ? $data['amount'] : 0;
+        // $cramnt = ($data['cr_amnt']) ? $data['cr_amnt'] : 0;
+        // $bal = $amnt - $data['overallIssueAmnt'] - $cramnt;
         $data['no_of_loans'] = ($data['no_of_loans']) ? $data['no_of_loans'] : 0;
         $data['issueAmnt'] = ($data['issueAmnt']) ? moneyFormatIndia($data['issueAmnt']) : 0;
-        $data['balance'] = moneyFormatIndia($bal);
+        // $data['balance'] = moneyFormatIndia($bal);
         $loan_issue_list_arr[] = $data;
     }
 }
@@ -127,3 +125,14 @@ function moneyFormatIndia($num1)
 //     c.linename, 
 //     li.no_of_loans, 
 //     li.issueAmnt;
+
+
+// "SELECT b.name, c.linename, no_of_loans, overallIssueAmnt, issueAmnt, SUM(a.amount) AS amount, cr_amnt 
+// FROM other_transaction a 
+// JOIN users b ON a.user_name = b.id 
+// JOIN line_name_creation c ON b.line = c.id 
+// LEFT JOIN ( SELECT insert_login_id, SUM(issue_amnt) AS overallIssueAmnt FROM loan_issue WHERE $cndtn1 AND DATE(created_on) >= (SELECT DATE(created_on) FROM other_transaction WHERE type = '2' AND trans_cat = '7' AND $cndtn ORDER BY id ASC LIMIT 1 ) GROUP BY insert_login_id ) oli ON oli.insert_login_id = b.id
+// LEFT JOIN ( SELECT insert_login_id, COUNT(id) AS no_of_loans, SUM(issue_amnt) AS issueAmnt FROM loan_issue WHERE $cndtn1 AND DATE(issue_date) = CURDATE() GROUP BY insert_login_id ) li ON li.insert_login_id = b.id 
+// LEFT JOIN( SELECT user_name, SUM(amount) AS cr_amnt FROM other_transaction WHERE type = '1' AND trans_cat = '7' AND $cndtn ) cr ON cr.user_name = b.id 
+// WHERE a.type = '2' AND a.trans_cat = '7' AND $cndtn
+// GROUP BY b.name, c.linename, no_of_loans, issueAmnt; "

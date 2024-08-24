@@ -7,9 +7,16 @@ $(document).ready(function () {
         if (customerDataType == 'new_list') {
             $('.new_table_content').show();
             $('.existing_table_content').hide();
+            $('.repromotion_table_content').hide();
         } else if (customerDataType == 'existing_list') {
             $('.new_table_content').hide();
             $('.existing_table_content').show();
+            $('.repromotion_table_content').hide();
+        }else if(customerDataType == 'repromotion_list'){
+            $('.new_table_content').hide();
+            $('.existing_table_content').hide();
+            $('.repromotion_table_content').show();
+            getRePromotionTable();
         }
     });
     $('#submit_new').click(function (event) {
@@ -91,24 +98,22 @@ $(document).ready(function () {
                 });
             }
         }, 'json');
-
     });
-
-
 
     $('#mobile').change(function () {
         checkMobileNo($(this).val(), $(this).attr('id'));
     });
+
     $(document).on('click', '.newPromoDeleteBtn', function () {
         var id = $(this).attr('value');
         swalConfirm('Delete', 'Do you want to Delete the Customer Details?', getNewPromoDelete, id);
         return;
     });
+
     // Reset form fields when modal is hidden
     $('#add_new_list_modal').on('hidden.bs.modal', function () {
         $('#new_form').trigger('reset'); // Reset the form with id 'new_form'
         $('#new_form input').css('border', '1px solid #cecece');
-
     });
 
     // Reset form fields when modal backdrop is clicked
@@ -118,11 +123,20 @@ $(document).ready(function () {
             $('#new_form input').css('border', '1px solid #cecece');
         }
     });
+
     $(document).on('change', '.existingNeedBtn', function () {
         var cus_id = $(this).attr('value');
         var checkbox = $(this); // Reference to the checkbox element
-
         swalConfirm('Are You Sure', '', getExistingData, cus_id, function () {
+            checkbox.prop('checked', false); // Uncheck the checkbox if the user presses "No"
+        });
+        return;
+    });
+
+    $(document).on('change', '.repromotionBtn', function () {
+        var cus_id = $(this).attr('value');
+        var checkbox = $(this); // Reference to the checkbox element
+        swalConfirm('Are You Sure', '', InsertRepromotionData, cus_id, function () {
             checkbox.prop('checked', false); // Uncheck the checkbox if the user presses "No"
         });
         return;
@@ -132,9 +146,8 @@ $(document).ready(function () {
 
 
 $(function () {
-    getNewPromotionTable()
-    let cus_id = $("#cus_id").val();
-    getExistingPromotionTable(cus_id)
+    getNewPromotionTable();
+    getExistingPromotionTable();
 
 });
 function getNewPromotionTable() {
@@ -164,15 +177,15 @@ function getNewPromoDelete(id) {
         }
     }, 'json');
 }
-function getExistingPromotionTable(cus_id) {
+function getExistingPromotionTable() {
 
-    $.post('api/customer_data_files/get_existing_promotion.php', { cus_id }, function (response) {
+    $.post('api/customer_data_files/get_existing_promotion.php', { }, function (response) {
         var columnMapping = [
             'id',
             'cus_id',
             'cus_name',
-            'area',
             'mobile1',
+            'area',
             'linename',
             'branch_name',
             'c_sts',
@@ -185,7 +198,23 @@ function getExistingPromotionTable(cus_id) {
     }, 'json')
 }
 
-
+function getRePromotionTable() {
+    $.post('api/customer_data_files/get_repromotion_list.php', { }, function (response) {
+        var columnMapping = [
+            'id',
+            'cus_id',
+            'cus_name',
+            'mobile1',
+            'area',
+            'linename',
+            'branch_name',
+            'c_sts',
+            'action'
+        ];
+        appendDataToTable('#repromotion_list_table', response, columnMapping);
+        setdtable('#repromotion_list_table');
+    }, 'json')
+}
 
 function getExistingData(cus_id) {
     $.post('api/customer_data_files/get_existing_data.php', { cus_id }, function (response) {
@@ -195,6 +224,18 @@ function getExistingData(cus_id) {
             $('.existingNeedBtn[value="' + cus_id + '"]').replaceWith('<span>Needed</span>');
         } else {
             swalError("Error", "Failed to Add Existing Data", "error");
+        }
+    });
+}
+
+function InsertRepromotionData(cus_id) {
+    $.post('api/customer_data_files/submit_repromotion.php', { cus_id }, function (response) {
+        if (response == '1') {
+            swalSuccess("Success", "Repromotion Data Added Successfully!", "success");
+            // Replace the checkbox with "Needed" text
+            $('.repromotionBtn[value="' + cus_id + '"]').replaceWith('<span>Needed</span>');
+        } else {
+            swalError("Error", "Failed to Add Repromotion Data", "error");
         }
     });
 }

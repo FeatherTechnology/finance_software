@@ -230,7 +230,7 @@ function moneyFormatIndia($num1) {
                                         <th>Line</th>
                                         <th>No of Loans</th>
                                         <th>Total Net Cash</th>
-                                        <th>Balance in Hand</th>
+                                        <!-- <th>Balance in Hand</th> -->
                                     </tr>
                                 </thead>
                                 <tbody></tbody>
@@ -522,7 +522,7 @@ function moneyFormatIndia($num1) {
                                         <option value="4">Exchange</option>
                                         <option value="5">Bank Deposit</option>
                                         <option value="6">Bank Withdrawal</option>
-                                        <option value="7">Loan Advance</option>
+                                        <!-- <option value="7">Loan Advance</option> -->
                                         <option value="8">Other Income</option>
                                         <option value="9">Bank Unbilled</option>
                                     </select>
@@ -561,14 +561,14 @@ function moneyFormatIndia($num1) {
                                     <input type="number" class="form-control" name="other_trans_id" id="other_trans_id" tabindex="10" >
                                 </div>
                             </div>
-                            <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12 other_user_name_div" style="display: none;">
+                            <!-- <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12 other_user_name_div" style="display: none;">
                                 <div class="form-group">
                                     <label for="other_user_name">User Name</label><span class="text-danger">*</span>
                                     <select class="form-control" name="other_user_name" id="other_user_name" tabindex="11" disabled>
                                         <option value="">Select User Name</option>
                                     </select>
                                 </div>
-                            </div>
+                            </div> -->
                             <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
                                 <div class="form-group">
                                     <label for="other_amnt">Amount</label><span class="text-danger">*</span>
