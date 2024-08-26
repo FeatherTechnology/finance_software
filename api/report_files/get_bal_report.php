@@ -3,7 +3,6 @@ include '../../ajaxconfig.php';
 @session_start();
 $user_id = $_SESSION['user_id'];
 
-$from_date = $_POST['from_date'];
 $to_date = $_POST['to_date'];
 
 $status = [2 => 'aa', 3 => 'Move', 4 => 'Approved', 5 => 'Cancel', 6 => 'Revoke', 7 => 'Current', 8 => 'In Closed', 9 => 'Closed', 10 => 'NOC', 11 => 'NOC Completed', 12 => 'NOC Removed'];
@@ -38,7 +37,7 @@ LEFT JOIN agent_creation ac ON lelc.agent_id = ac.id
             cus_profile_id
     ) c ON li.cus_profile_id = c.cus_profile_id
 JOIN customer_status cs ON li.cus_profile_id = cs.cus_profile_id
-WHERE cs.status >=7 AND cs.status <=8 AND li.issue_date BETWEEN '$from_date' AND '$to_date' ";
+WHERE cs.status >=7 AND cs.status <=8 AND date(li.issue_date) <= date('$to_date') ";
 
 if (isset($_POST['search']) && $_POST['search'] != "") {
     $search = $_POST['search'];

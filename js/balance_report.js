@@ -1,14 +1,5 @@
 $(document).ready(function () {
 
-    $('#from_date').change(function () {
-        let from_date = $('#from_date').val();
-        let to_date = $('#to_date').val();
-        if (from_date > to_date) {
-            $('#to_date').val('');
-        }
-        $('#to_date').attr('min', from_date);
-    });
-
     //Closed Report Table
     $('#bal_report_btn').click(function () {
         $('#bal_report_table').DataTable().destroy();
@@ -24,7 +15,6 @@ $(document).ready(function () {
                 'data': function (data) {
                     var search = $('input[type=search]').val();
                     data.search = search;
-                    data.from_date = $('#from_date').val();
                     data.to_date = $('#to_date').val();
                 }
             },
