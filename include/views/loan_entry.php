@@ -103,6 +103,12 @@
                                             <input type="number" class="form-control  personal_info_disble" id="mobile2" name="mobile2" onKeyPress="if(this.value.length==10) return false;" placeholder="Enter Mobile Number 2" tabindex="7">
                                         </div>
                                     </div>
+                                    <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
+                                        <div class="form-group">
+                                            <label for="whatsapp_no"> WhatsApp Number </label>
+                                            <input type="number" class="form-control  personal_info_disble" id="whatsapp_no" name="whatsapp_no" onKeyPress="if(this.value.length==10) return false;" placeholder="Enter WhatsApp Number" tabindex="7">
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                             <div class="col-4">

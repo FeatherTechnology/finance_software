@@ -478,7 +478,7 @@ $(document).ready(function () {
         return;
     });
 
-    $('#mobile1,#mobile2,#fam_mobile').change(function () {
+    $('#mobile1, #mobile2, #whatsapp_no, #fam_mobile').change(function () {
         checkMobileNo($(this).val(), $(this).attr('id'));
     });
 
@@ -525,6 +525,7 @@ $(document).ready(function () {
         let age = $('#age').val();
         let mobile1 = $('#mobile1').val();
         let mobile2 = $('#mobile2').val();
+        let whatsapp_no = $('#whatsapp_no').val();
         let guarantor_name = $('#guarantor_name').val();
         let cus_data = $('#cus_data').val();
         let cus_status = $('#cus_status').val();
@@ -608,6 +609,7 @@ $(document).ready(function () {
             entryDetail.append('age', age);
             entryDetail.append('mobile1', mobile1);
             entryDetail.append('mobile2', mobile2);
+            entryDetail.append('whatsapp_no', whatsapp_no);
             entryDetail.append('pic', pic);
             entryDetail.append('per_pic', per_pic);
             entryDetail.append('guarantor_name', guarantor_name);
@@ -668,6 +670,7 @@ $(document).ready(function () {
         let age = $('#age').val();
         let mobile1 = $('#mobile1').val();
         let mobile2 = $('#mobile2').val();
+        let whatsapp_no = $('#whatsapp_no').val();
         let customer_profile_id = $('#customer_profile_id').val();
 
         var data = ['cus_id', 'cus_name', 'gender', 'mobile1']
@@ -703,6 +706,7 @@ $(document).ready(function () {
             personalDetail.append('age', age);
             personalDetail.append('mobile1', mobile1);
             personalDetail.append('mobile2', mobile2);
+            personalDetail.append('whatsapp_no', whatsapp_no);
             personalDetail.append('pic', pic);
             personalDetail.append('per_pic', per_pic);
             personalDetail.append('customer_profile_id', customer_profile_id)
@@ -865,7 +869,7 @@ function clearCusProfileForm(type) {
         }
         $('#loan_entry_customer_profile input').css('border', '1px solid #cecece');
         $('#loan_entry_customer_profile select').css('border', '1px solid #cecece');
-        if (id !== cusid && id != 'cus_id' && id != 'cus_name' && id != 'dob' && id != 'mobile1' && id != 'mobile2' && id != 'pic' && id != 'age' && id != 'per_pic') {
+        if (id !== cusid && id != 'cus_id' && id != 'cus_name' && id != 'dob' && id != 'mobile1' && id != 'mobile2' && id != 'whatsapp_no' && id != 'pic' && id != 'age' && id != 'per_pic') {
             $(this).val('');
         }
 
@@ -1388,6 +1392,7 @@ function editCustmerProfile(id) {
         $('#dob').val(response[0].dob);
         $('#age').val(response[0].age);
         $('#mobile2').val(response[0].mobile2);
+        $('#whatsapp_no').val(response[0].whatsapp_no);
         $('#mobile1').val(response[0].mobile1);
         $('#guarantor_name_edit').val(response[0].guarantor_name);
         $('#cus_data').val(response[0].cus_data);
@@ -1452,6 +1457,7 @@ function existingCustmerProfile(cus_id) {
             $('#dob').val('');
             $('#age').val('');
             $('#mobile2').val('');
+            $('#whatsapp_no').val('');
             $('#mobile1').val('');
             $('#guarantor_name_edit').val('');
             $('#relationship').val('');
@@ -1493,6 +1499,7 @@ function existingCustmerProfile(cus_id) {
             $('#dob').val(response[0].dob);
             $('#age').val(response[0].age);
             $('#mobile2').val(response[0].mobile2);
+            $('#whatsapp_no').val(response[0].whatsapp_no);
             $('#mobile1').val(response[0].mobile1);
             $('#guarantor_name_edit').val(response[0].guarantor_name);
             $('#cus_data').val('Existing');

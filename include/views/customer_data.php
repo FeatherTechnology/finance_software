@@ -9,6 +9,10 @@
                 <input type="radio" id="existing_list" name="customer_data" class="selector-item_radio" value="existing_list">
                 <label for="existing_list" class="selector-item_label">Existing</label>
             </div>
+            <div class="selector-item">
+                <input type="radio" id="repromotion_list" name="customer_data" class="selector-item_radio" value="repromotion_list">
+                <label for="repromotion_list" class="selector-item_label">Repromotion</label>
+            </div>
         </div>
     </div>
     <br>
@@ -52,8 +56,8 @@
                             <th width="20" >S.NO</th>
                             <th>Customer ID</th>
                             <th>Customer Name</th>
-                            <th>Area</th>
                             <th>Mobile</th>
+                            <th>Area</th>
                             <th>Line</th>
                             <th>Branch</th>
                             <th>Status</th>
@@ -67,6 +71,33 @@
         </div>
     </div>
     <!--Existing List End-->
+    <!--Repromotion List Start-->
+    <div class="card repromotion_table_content" style="display: none;">
+        <div class="card-header">
+            <div class="card-title">Repromotion List </div>
+        </div>
+        <div class="card-body">
+            <div class="col-12">
+                <table id="repromotion_list_table" class="table custom-table">
+                    <thead>
+                        <tr>
+                            <th width="20" >S.NO</th>
+                            <th>Customer ID</th>
+                            <th>Customer Name</th>
+                            <th>Mobile</th>
+                            <th>Area</th>
+                            <th>Line</th>
+                            <th>Branch</th>
+                            <th>Status</th>
+                            <th>Need</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <!--Repromotion List End-->
 </div><!-- Cusstomer Data Content END - New Promtion & existing -->
 <!--New Promotion Modal Start-->
 <div class="modal fade" id="add_new_list_modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
