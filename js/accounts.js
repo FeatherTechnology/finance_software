@@ -590,7 +590,7 @@ function otherTransTable(tableId){
             'type',
             'ref_id',
             'trans_id',
-            'username',
+            // 'username',
             'amount',
             'remark',
             'action'

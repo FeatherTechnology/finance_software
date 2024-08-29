@@ -302,7 +302,7 @@ function moneyFormatIndia($num1) {
                                     <th>Type</th>
                                     <th>Reference ID</th>
                                     <th>Transaction ID</th>
-                                    <th>User Name</th>
+                                    <!-- <th>User Name</th> -->
                                     <th>Amount</th>
                                     <th>Remark</th>
                                     <th>Action</th>
@@ -604,7 +604,7 @@ function moneyFormatIndia($num1) {
                                     <th>Type</th>
                                     <th>Reference ID</th>
                                     <th>Transaction ID</th>
-                                    <th>User Name</th>
+                                    <!-- <th>User Name</th> -->
                                     <th>Amount</th>
                                     <th>Remark</th>
                                     <th>Action</th>
