@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jul 30, 2024 at 07:15 AM
+-- Generation Time: Aug 29, 2024 at 06:27 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -361,9 +361,9 @@ CREATE TABLE `company_creation` (
   `id` int(11) NOT NULL,
   `company_name` varchar(255) DEFAULT NULL,
   `address` varchar(255) DEFAULT NULL,
-  `state` int(100) DEFAULT NULL,
-  `district` int(100) DEFAULT NULL,
-  `taluk` int(100) DEFAULT NULL,
+  `state` int(11) DEFAULT NULL,
+  `district` int(11) DEFAULT NULL,
+  `taluk` int(11) DEFAULT NULL,
   `place` varchar(255) DEFAULT NULL,
   `pincode` varchar(255) DEFAULT NULL,
   `website` varchar(255) DEFAULT NULL,
@@ -427,7 +427,7 @@ CREATE TABLE `customer_profile` (
   `occ_income` varchar(100) NOT NULL,
   `occ_address` varchar(100) NOT NULL,
   `area_confirm` varchar(100) NOT NULL,
-  `area` int(100) NOT NULL,
+  `area` int(11) NOT NULL,
   `line` varchar(100) NOT NULL,
   `cus_limit` varchar(100) NOT NULL,
   `about_cus` varchar(100) NOT NULL,
@@ -543,7 +543,7 @@ CREATE TABLE `document_info` (
   `cus_id` varchar(100) NOT NULL,
   `cus_profile_id` int(11) NOT NULL,
   `doc_name` varchar(150) NOT NULL,
-  `doc_type` int(50) NOT NULL,
+  `doc_type` int(11) NOT NULL,
   `holder_name` int(11) NOT NULL,
   `relationship` varchar(50) NOT NULL,
   `upload` varchar(100) NOT NULL,
@@ -780,7 +780,7 @@ CREATE TABLE `loan_entry_loan_calculation` (
   `loan_id` varchar(50) NOT NULL,
   `loan_category` varchar(50) NOT NULL,
   `category_info` varchar(255) NOT NULL,
-  `loan_amount` int(150) NOT NULL,
+  `loan_amount` int(11) NOT NULL,
   `profit_type` int(11) NOT NULL,
   `due_method` varchar(50) DEFAULT NULL,
   `due_type` varchar(50) DEFAULT NULL,
@@ -788,18 +788,18 @@ CREATE TABLE `loan_entry_loan_calculation` (
   `scheme_due_method` varchar(50) DEFAULT NULL,
   `scheme_day` varchar(50) DEFAULT NULL,
   `scheme_name` varchar(100) DEFAULT NULL,
-  `interest_rate` int(150) NOT NULL,
-  `due_period` int(100) NOT NULL,
-  `doc_charge` int(100) NOT NULL,
-  `processing_fees` int(100) NOT NULL,
-  `loan_amnt` int(150) NOT NULL,
-  `principal_amnt` int(150) NOT NULL,
-  `interest_amnt` int(150) NOT NULL,
-  `total_amnt` int(150) NOT NULL,
-  `due_amnt` int(150) NOT NULL,
-  `doc_charge_calculate` int(150) NOT NULL,
-  `processing_fees_calculate` int(150) NOT NULL,
-  `net_cash` int(150) NOT NULL,
+  `interest_rate` int(11) NOT NULL,
+  `due_period` int(11) NOT NULL,
+  `doc_charge` int(11) NOT NULL,
+  `processing_fees` int(11) NOT NULL,
+  `loan_amnt` int(11) NOT NULL,
+  `principal_amnt` int(11) NOT NULL,
+  `interest_amnt` int(11) NOT NULL,
+  `total_amnt` int(11) NOT NULL,
+  `due_amnt` int(11) NOT NULL,
+  `doc_charge_calculate` int(11) NOT NULL,
+  `processing_fees_calculate` int(11) NOT NULL,
+  `net_cash` int(11) NOT NULL,
   `loan_date` date NOT NULL,
   `due_startdate` date NOT NULL,
   `maturity_date` date NOT NULL,
@@ -823,10 +823,10 @@ CREATE TABLE `loan_issue` (
   `id` int(11) NOT NULL,
   `cus_id` varchar(255) NOT NULL,
   `cus_profile_id` int(11) NOT NULL,
-  `loan_amnt` int(50) NOT NULL,
-  `net_cash` int(50) NOT NULL,
+  `loan_amnt` int(11) NOT NULL,
+  `net_cash` int(11) NOT NULL,
   `payment_mode` int(11) NOT NULL,
-  `issue_amnt` int(50) NOT NULL,
+  `issue_amnt` int(11) NOT NULL,
   `transaction_id` varchar(50) DEFAULT NULL,
   `cheque_no` varchar(50) DEFAULT NULL,
   `issue_date` date NOT NULL,
@@ -1028,6 +1028,25 @@ CREATE TABLE `property_info` (
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `repromotion_customer`
+--
+
+CREATE TABLE `repromotion_customer` (
+  `id` int(11) NOT NULL,
+  `cus_id` varchar(100) DEFAULT NULL,
+  `cus_name` varchar(100) DEFAULT NULL,
+  `mobile1` varchar(11) DEFAULT NULL,
+  `area` varchar(50) DEFAULT NULL,
+  `linename` varchar(50) DEFAULT NULL,
+  `branch_name` varchar(50) DEFAULT NULL,
+  `c_sts` int(11) DEFAULT NULL,
+  `insert_login_id` int(11) DEFAULT NULL,
+  `created_on` date DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `role`
 --
 
@@ -1129,7 +1148,8 @@ INSERT INTO `sub_menu_list` (`id`, `main_menu`, `sub_menu`, `link`, `icon`) VALU
 (22, 14, 'Collection Report', 'collection_report', 'event_note'),
 (23, 14, 'Balance Report', 'balance_report', 'event_available'),
 (24, 14, 'Closed Report', 'closed_report', 'erase'),
-(25, 15, 'Bulk Upload Report', 'bulk_upload', 'cloud_done');
+(25, 15, 'Bulk Upload Report', 'bulk_upload', 'cloud_done'),
+(26, 14, 'Ledger View Report', 'ledger_view_report', 'terrain');
 
 -- --------------------------------------------------------
 
@@ -1139,7 +1159,7 @@ INSERT INTO `sub_menu_list` (`id`, `main_menu`, `sub_menu`, `link`, `icon`) VALU
 
 CREATE TABLE `taluks` (
   `id` int(11) NOT NULL,
-  `state_id` int(50) NOT NULL,
+  `state_id` int(11) NOT NULL,
   `district_id` int(11) NOT NULL,
   `taluk_name` varchar(50) NOT NULL,
   `status` int(11) NOT NULL DEFAULT 1
@@ -1481,8 +1501,8 @@ CREATE TABLE `users` (
   `id` int(11) NOT NULL,
   `name` varchar(100) NOT NULL,
   `user_code` varchar(100) NOT NULL,
-  `role` int(255) NOT NULL,
-  `designation` int(255) NOT NULL,
+  `role` int(11) NOT NULL,
+  `designation` int(11) NOT NULL,
   `address` varchar(100) NOT NULL,
   `place` varchar(100) NOT NULL,
   `email` varchar(100) NOT NULL,
@@ -1505,9 +1525,11 @@ CREATE TABLE `users` (
 --
 
 INSERT INTO `users` (`id`, `name`, `user_code`, `role`, `designation`, `address`, `place`, `email`, `mobile`, `user_name`, `password`, `branch`, `loan_category`, `line`, `collection_access`, `screens`, `insert_login_id`, `update_login_id`, `created_on`, `updated_on`) VALUES
-(1, 'Super Admin', 'US-001', 1, 1, '', '', '', '', 'admin', '123', '1,2', '1,2', '1,2', 1, '1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25', '1', '1', '2024-06-13', '2024-07-13'),
-(2, 'Testing User', 'US-002', 1, 1, '', '', '', '', 'testing', '123', '2', '1', '2', 1, '1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25', '1', '1', '2024-06-27', '2024-07-12'),
-(5, 'Testing User3', 'US-003', 1, 1, 'Bussy Street', 'Puducherry', 'dheep@outlook.com', '9878978978', 'Tester', '12345', '1', '1', '1', 1, '1,3,4,5,9,12,13,14,16,18,19,21,25', '1', '1', '2024-07-12', '2024-07-12');
+(1, 'Super Admin', 'US-001', 1, 1, '', '', '', '', 'admin', '123', '1,2,4,5', '1,2', '1,2,6,8', 1, '1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,26,25', '1', '1', '2024-06-13', '2024-08-26'),
+(2, 'Raj', 'US-002', 2, 1, 'No 25', 'Vandavasi', '', '9842138111', 'Manager', '123', '1', '1', '1,2', 1, '1,10,11,12,15,16,17,21,22,23,24', '1', '', '2024-07-16', '0000-00-00'),
+(3, 'Prem', 'US-003', 2, 2, '25', 'Vandavasi', '', '', 'Prem', '123', '1', '1', '1', 1, '1,9,11,12', '1', '', '2024-07-16', '0000-00-00'),
+(4, 'SK', 'US-004', 2, 2, 'vsi', 'chetpet', '', '6549871230', 'sk', '123', '1,5', '1', '1,8', 2, '9,12', '1', '1', '2024-07-17', '2024-07-20'),
+(5, 'sham', 'US-005', 2, 2, '', '', '', '', 'staff', '123', '1,2,4,5', '2,1', '1,2,8,6', 1, '1,9,10,11,12,13,14,15,18,19,20,21,22,23,24,25', '1', '', '2024-07-18', '0000-00-00');
 
 --
 -- Indexes for dumped tables
@@ -1777,6 +1799,12 @@ ALTER TABLE `proof_info`
 ALTER TABLE `property_info`
   ADD PRIMARY KEY (`id`),
   ADD KEY `property_holder` (`property_holder`);
+
+--
+-- Indexes for table `repromotion_customer`
+--
+ALTER TABLE `repromotion_customer`
+  ADD PRIMARY KEY (`id`);
 
 --
 -- Indexes for table `role`
@@ -2070,6 +2098,12 @@ ALTER TABLE `property_info`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
+-- AUTO_INCREMENT for table `repromotion_customer`
+--
+ALTER TABLE `repromotion_customer`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
 -- AUTO_INCREMENT for table `role`
 --
 ALTER TABLE `role`
@@ -2091,7 +2125,7 @@ ALTER TABLE `states`
 -- AUTO_INCREMENT for table `sub_menu_list`
 --
 ALTER TABLE `sub_menu_list`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=28;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=27;
 
 --
 -- AUTO_INCREMENT for table `taluks`
@@ -2103,7 +2137,7 @@ ALTER TABLE `taluks`
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- Constraints for dumped tables
@@ -2113,14 +2147,14 @@ ALTER TABLE `users`
 -- Constraints for table `area_creation`
 --
 ALTER TABLE `area_creation`
-  ADD CONSTRAINT `Line id` FOREIGN KEY (`line_id`) REFERENCES `line_name_creation` (`id`) ON UPDATE NO ACTION,
-  ADD CONSTRAINT `branch` FOREIGN KEY (`branch_id`) REFERENCES `branch_creation` (`id`) ON UPDATE NO ACTION;
+  ADD CONSTRAINT `Line id` FOREIGN KEY (`line_id`) REFERENCES `line_name_creation` (`id`),
+  ADD CONSTRAINT `branch` FOREIGN KEY (`branch_id`) REFERENCES `branch_creation` (`id`);
 
 --
 -- Constraints for table `area_name_creation`
 --
 ALTER TABLE `area_name_creation`
-  ADD CONSTRAINT `branchid` FOREIGN KEY (`branch_id`) REFERENCES `branch_creation` (`id`) ON UPDATE NO ACTION;
+  ADD CONSTRAINT `branchid` FOREIGN KEY (`branch_id`) REFERENCES `branch_creation` (`id`);
 
 --
 -- Constraints for table `branch_creation`
@@ -2134,13 +2168,13 @@ ALTER TABLE `branch_creation`
 -- Constraints for table `collection`
 --
 ALTER TABLE `collection`
-  ADD CONSTRAINT `Profileid` FOREIGN KEY (`cus_profile_id`) REFERENCES `customer_profile` (`id`) ON UPDATE NO ACTION;
+  ADD CONSTRAINT `Profileid` FOREIGN KEY (`cus_profile_id`) REFERENCES `customer_profile` (`id`);
 
 --
 -- Constraints for table `collection_charges`
 --
 ALTER TABLE `collection_charges`
-  ADD CONSTRAINT `cusprofileid` FOREIGN KEY (`cus_profile_id`) REFERENCES `customer_profile` (`id`) ON UPDATE NO ACTION;
+  ADD CONSTRAINT `cusprofileid` FOREIGN KEY (`cus_profile_id`) REFERENCES `customer_profile` (`id`);
 
 --
 -- Constraints for table `company_creation`
@@ -2154,7 +2188,7 @@ ALTER TABLE `company_creation`
 -- Constraints for table `customer_status`
 --
 ALTER TABLE `customer_status`
-  ADD CONSTRAINT `customerProfileId` FOREIGN KEY (`cus_profile_id`) REFERENCES `customer_profile` (`id`) ON UPDATE NO ACTION;
+  ADD CONSTRAINT `customerProfileId` FOREIGN KEY (`cus_profile_id`) REFERENCES `customer_profile` (`id`);
 
 --
 -- Constraints for table `districts`
@@ -2166,32 +2200,32 @@ ALTER TABLE `districts`
 -- Constraints for table `kyc_info`
 --
 ALTER TABLE `kyc_info`
-  ADD CONSTRAINT `fam-mem` FOREIGN KEY (`fam_mem`) REFERENCES `family_info` (`id`) ON UPDATE NO ACTION,
-  ADD CONSTRAINT `kyc_info_ibfk_1` FOREIGN KEY (`proof`) REFERENCES `proof_info` (`id`) ON UPDATE NO ACTION;
+  ADD CONSTRAINT `fam-mem` FOREIGN KEY (`fam_mem`) REFERENCES `family_info` (`id`),
+  ADD CONSTRAINT `kyc_info_ibfk_1` FOREIGN KEY (`proof`) REFERENCES `proof_info` (`id`);
 
 --
 -- Constraints for table `line_name_creation`
 --
 ALTER TABLE `line_name_creation`
-  ADD CONSTRAINT `branch id` FOREIGN KEY (`branch_id`) REFERENCES `branch_creation` (`id`) ON UPDATE NO ACTION;
+  ADD CONSTRAINT `branch id` FOREIGN KEY (`branch_id`) REFERENCES `branch_creation` (`id`);
 
 --
 -- Constraints for table `loan_category_creation`
 --
 ALTER TABLE `loan_category_creation`
-  ADD CONSTRAINT `Loan Category` FOREIGN KEY (`loan_category`) REFERENCES `loan_category` (`id`) ON UPDATE NO ACTION;
+  ADD CONSTRAINT `Loan Category` FOREIGN KEY (`loan_category`) REFERENCES `loan_category` (`id`);
 
 --
 -- Constraints for table `loan_entry_loan_calculation`
 --
 ALTER TABLE `loan_entry_loan_calculation`
-  ADD CONSTRAINT `customer profile id` FOREIGN KEY (`cus_profile_id`) REFERENCES `customer_profile` (`id`) ON UPDATE NO ACTION;
+  ADD CONSTRAINT `customer profile id` FOREIGN KEY (`cus_profile_id`) REFERENCES `customer_profile` (`id`);
 
 --
 -- Constraints for table `property_info`
 --
 ALTER TABLE `property_info`
-  ADD CONSTRAINT `property_holder` FOREIGN KEY (`property_holder`) REFERENCES `family_info` (`id`) ON UPDATE NO ACTION;
+  ADD CONSTRAINT `property_holder` FOREIGN KEY (`property_holder`) REFERENCES `family_info` (`id`);
 
 --
 -- Constraints for table `sub_menu_list`
@@ -2205,13 +2239,6 @@ ALTER TABLE `sub_menu_list`
 ALTER TABLE `taluks`
   ADD CONSTRAINT `District id` FOREIGN KEY (`district_id`) REFERENCES `districts` (`id`),
   ADD CONSTRAINT `States id` FOREIGN KEY (`state_id`) REFERENCES `states` (`id`);
-
---
--- Constraints for table `users`
---
-ALTER TABLE `users`
-  ADD CONSTRAINT `Designation id` FOREIGN KEY (`designation`) REFERENCES `designation` (`id`) ON UPDATE NO ACTION,
-  ADD CONSTRAINT `Role id` FOREIGN KEY (`role`) REFERENCES `role` (`id`) ON UPDATE NO ACTION;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
