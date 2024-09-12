@@ -58,14 +58,26 @@
                                     <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
                                         <div class="form-group">
                                             <label for="cus_id"> Customer ID</label><span class="text-danger">*</span>
-                                            <input type="text" class="form-control personal_info_disble" id="cus_id" name="cus_id" data-type="adhaar-number" placeholder="Enter Customer ID" tabindex="1" maxlength="14">
+                                            <input type="text" class="form-control personal_info_disble" id="cus_id" name="cus_id" placeholder="Enter Customer ID" tabindex="1" maxlength="14">
                                             <input type="hidden" id="cus_id_upd" name="cus_id_upd">
+                                        </div>
+                                    </div>
+                                    <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
+                                        <div class="form-group">
+                                            <label for="cus_data"> Customer Data</label>
+                                            <input type="text" class="form-control" id="cus_data" name="cus_data" disabled tabindex="13">
                                         </div>
                                     </div>
                                     <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
                                         <div class="form-group">
                                             <label for="cus_name"> Customer Name</label><span class="text-danger">*</span>
                                             <input type="text" class="form-control personal_info_disble" id="cus_name" name="cus_name" pattern="[a-zA-Z\s]+" placeholder="Enter Customer Name" tabindex=" 2">
+                                        </div>
+                                    </div>
+                                    <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12 cus_status_div" style="display:none;">
+                                        <div class="form-group">
+                                            <label for="cus_status"> Customer Status</label>
+                                            <input type="text" class="form-control" id="cus_status" name="cus_status" disabled tabindex="14">
                                         </div>
                                     </div>
                                     <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
@@ -105,8 +117,29 @@
                                     </div>
                                     <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
                                         <div class="form-group">
+                                            <label>Choose Mobile Number for WhatsApp:</label><br>
+                                            <label>
+                                                <input type="radio" name="mobile_whatsapp" value="mobile1" id="mobile1_radio">
+                                                Mobile Number 1
+                                            </label><br>
+                                            <label>
+                                                <input type="radio" name="mobile_whatsapp" value="mobile2" id="mobile2_radio">
+                                                Mobile Number 2
+                                            </label>
+                                            <input type="hidden" id="selected_mobile_radio">
+                                        </div>
+                                    </div>
+                                    <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
+                                        <div class="form-group">
                                             <label for="whatsapp_no"> WhatsApp Number </label>
                                             <input type="number" class="form-control  personal_info_disble" id="whatsapp_no" name="whatsapp_no" onKeyPress="if(this.value.length==10) return false;" placeholder="Enter WhatsApp Number" tabindex="7">
+                                        </div>
+                                    </div>
+                                    <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
+                                        <div class="form-group">
+                                            <label for="aadhar_num">Aadhar No</label>
+                                            <input type="text" class="form-control" name="aadhar_num" id="aadhar_num" tabindex="1" maxlength="14" data-type="adhaar-number" placeholder="Enter Aadhar Number">
+                                            <input type="hidden" id="addaadhar_id" value='0'>
                                         </div>
                                     </div>
                                 </div>
@@ -125,7 +158,7 @@
                             </div>
                             <div class="col-md-12 ">
                                 <div class="text-right">
-                                    <button type="submit" name="submit_personal_info" id="submit_personal_info" class="btn btn-primary" value="Submit"><span class="icon-check"></span>&nbsp;Submit</button>
+                                    <button type="submit" name="submit_personal_info" id="submit_personal_info" class="btn btn-primary" value="Submit"><span class="icon-check"></span>&nbsp;Proceed</button>
                                 </div>
                             </div>
                         </div>
@@ -205,28 +238,7 @@
                 </div>
 
                 <div class="card">
-                    <div class="card-header">
-                        <div class="card-title">Data Analyis</div>
-                    </div>
-                    <div class="card-body">
-                        <div class="row">
-                            <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
-                                <div class="form-group">
-                                    <label for="cus_data"> Customer Data</label>
-                                    <input type="text" class="form-control" id="cus_data" name="cus_data" disabled placeholder="New/Existing" tabindex="13">
-                                </div>
-                            </div>
-
-                            <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12 cus_status_div" style="display:none;">
-                                <div class="form-group">
-                                    <label for="cus_status"> Customer Status</label>
-                                    <input type="text" class="form-control" id="cus_status" name="cus_status" disabled tabindex="14">
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div id="data_checking_div" >
+                    <div id="data_checking_div">
                         <div class="card-header">
                             <div class="card-title">Data Checking</div>
                         </div>
@@ -514,8 +526,8 @@
                         <div class="row">
                             <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
                                 <div class="form-group">
-                                    <label for="cus_limit"> Customer Limit</label><span class="text-danger">*</span>
-                                    <input type="number" class="form-control" id="cus_limit" name="cus_limit" placeholder="Enter Limit" tabindex="32">
+                                    <label for="cus_limit"> Customer Limit</label>
+                                    <input type="number" class="form-control" id="cus_limit" name="cus_limit" placeholder="Enter Limit" disabled tabindex="32">
                                 </div>
                             </div>
                             <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">

@@ -199,61 +199,86 @@ $(document).ready(function () {
 
     $('#submit_loan_category_creation').click(function (event) {
         event.preventDefault();
-        //Validation
-        let formData = {
-            loan_category: $('#loan_category').val(),
-            loan_limit: $('#loan_limit').val(),
-            due_method: $('#due_method').val(),
-            due_type: $('#due_type').val(),
-            interest_rate_min: $('#interest_rate_min').val(),
-            interest_rate_max: $('#interest_rate_max').val(),
-            due_period_min: $('#due_period_min').val(),
-            due_period_max: $('#due_period_max').val(),
-            doc_charge_min: $('#doc_charge_min').val(),
-            doc_charge_max: $('#doc_charge_max').val(),
-            processing_fee_min: $('#processing_fee_min').val(),
-            processing_fee_max: $('#processing_fee_max').val(),
-            overdue_penalty: $('#overdue_penalty').val(),
-            scheme_name: $('#scheme_name').val(),
-            id: $('#loan_cat_creation_id').val()
+    
+        let isValid = true;
+    
+        // Validate Loan Calculation Card
+        let isLoanCalculationValid = validateLoanCalculationCard();
+    
+        // Validate Loan Scheme Card
+        let isLoanSchemeValid = validateLoanSchemeCard();
+    
+        // Validate main form fields
+        if (!validateField($('#loan_category').val(), 'loan_category')) {
+            isValid = false;
         }
-
-        var data = ['loan_category', 'loan_limit', 'due_method', 'due_type', 'interest_rate_min', 'interest_rate_max', 'due_period_min', 'due_period_max', 'doc_charge_min', 'doc_charge_max', 'processing_fee_min', 'processing_fee_max', 'overdue_penalty']
-
-        var isValid = true;
-        data.forEach(function (entry) {
-            var fieldIsValid = validateField($('#' + entry).val(), entry);
-            if (!fieldIsValid) {
-                isValid = false;
-            }
-        });
-        // if (isFormDataValid(formData)) {
-            /////////////////////////// submit page AJAX /////////////////////////////////////
-            // Concatenate scheme_name if it's an array
+        if (!validateField($('#loan_limit').val(), 'loan_limit')) {
+            isValid = false;
+        }
+    
+        // Proceed with form submission if either Loan Calculation or Loan Scheme card is fully valid
+        if (isValid && (isLoanCalculationValid || isLoanSchemeValid)) {
+            let formData = {
+                loan_category: $('#loan_category').val(),
+                loan_limit: $('#loan_limit').val(),
+                due_method: $('#due_method').val(),
+                due_type: $('#due_type').val(),
+                interest_rate_min: $('#interest_rate_min').val(),
+                interest_rate_max: $('#interest_rate_max').val(),
+                due_period_min: $('#due_period_min').val(),
+                due_period_max: $('#due_period_max').val(),
+                doc_charge_min: $('#doc_charge_min').val(),
+                doc_charge_max: $('#doc_charge_max').val(),
+                processing_fee_min: $('#processing_fee_min').val(),
+                processing_fee_max: $('#processing_fee_max').val(),
+                overdue_penalty: $('#overdue_penalty').val(),
+                scheme_name: $('#scheme_name').val(),
+                id: $('#loan_cat_creation_id').val()
+            };
+    
             if (Array.isArray(formData.scheme_name)) {
                 formData.scheme_name = formData.scheme_name.join(",");
             }
-            if (isValid) {
-                $.post('api/loan_category_creation/submit_loan_category_creation.php', formData, function (response) {
-                    if (response == '2') {
-                        swalSuccess('Success', 'Loan Category Added Successfully!');
-                    } else if (response == '1') {
-                        swalSuccess('Success', 'Loan Category Updated Successfully!')
-                    } else {
-                        swalError('Error', 'Error Occurs!')
-
-                    }
-
-                    clearLoanCategoryCreationForm();
-                    getLoanCategoryCreationTable();
-                    swapTableAndCreation();//to change to div to table content.
-
-                });
-            }
-            /////////////////////////// submit page AJAX END/////////////////////////////////////
-        // }
+    
+            // Submit form via AJAX
+            $.post('api/loan_category_creation/submit_loan_category_creation.php', formData, function (response) {
+                if (response === '2') {
+                    swalSuccess('Success', 'Loan Category Added Successfully!');
+                } else if (response === '1') {
+                    swalSuccess('Success', 'Loan Category Updated Successfully!');
+                } else {
+                    swalError('Error', 'Error Occurred!');
+                }
+                clearLoanCategoryCreationForm();
+                getLoanCategoryCreationTable();
+                swapTableAndCreation(); // Change to table content
+            });
+        }
     });
-
+    function validateLoanCalculationCard() {
+        let valid = true;
+        valid &= validateField($('#due_type').val(), 'due_type');
+        valid &= validateField($('#interest_rate_min').val(), 'interest_rate_min');
+        valid &= validateField($('#interest_rate_max').val(), 'interest_rate_max');
+        valid &= validateField($('#due_period_min').val(), 'due_period_min');
+        valid &= validateField($('#due_period_max').val(), 'due_period_max');
+        valid &= validateField($('#doc_charge_min').val(), 'doc_charge_min');
+        valid &= validateField($('#doc_charge_max').val(), 'doc_charge_max');
+        valid &= validateField($('#processing_fee_min').val(), 'processing_fee_min');
+        valid &= validateField($('#processing_fee_max').val(), 'processing_fee_max');
+        valid &= validateField($('#overdue_penalty').val(), 'overdue_penalty');
+        return valid;
+    }
+    
+    function validateLoanSchemeCard() {
+        let valid = true;
+        valid &= validateField($('#scheme_name').val(), 'scheme_name');
+        $('#scheme_name').closest('.choices').find('.choices__inner').css('border', '1px solid #ff0000');
+        // Add additional validation for Loan Scheme fields if required
+        return valid;
+    }
+    
+    
     ///////////////////////////////////// EDIT Screen START   /////////////////////////////////////
     $(document).on('click', '.loanCatCreationActionBtn', function () {
         var id = $(this).attr('value'); // Get value attribute
@@ -489,6 +514,7 @@ function clearSchemeForm() {
     $('#processing_fee_type').val('percent');
     $('#add_scheme_details input').css('border', '1px solid #cecece');
     $('#add_scheme_details select').css('border', '1px solid #cecece');
+    $('#scheme_name').closest('.choices').find('.choices__inner').css('border', '1px solid #cecece');
 }
 
 function clearLoanCategory() {

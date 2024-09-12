@@ -30,11 +30,24 @@ $(document).ready(function () {
     });
 
     $('#back_btn').click(function () {
+        let cus_profile_id = $('#customer_profile_id').val();
+        let cus_id = $('#cus_id').val().replace(/\s/g, '');
         getLoanEntryTable();
-        clearLoanCalcForm();//To clear Loan Calculation.
-        clearCusProfileForm('1');//To Clear Customer Profile
+        clearLoanCalcForm(); // To clear Loan Calculation
+        clearCusProfileForm('1'); // To Clear Customer Profile
+        // First, fetch the status for the given cus_profile_id
+        $.post('api/loan_entry/cus_sts_check.php', {'cus_id': cus_id,'cus_profile_id': cus_profile_id }, function (response) {
+            if (response.status == 0) {
+                // If status is 0, proceed with deletion
+                $.post('api/loan_entry/cus_sts_delete.php', { 'cus_id': cus_id, 'cus_profile_id': cus_profile_id }, function (deleteResponse) {
+                    if (deleteResponse.success) {
+                        swalSuccess('Success', 'Customer profile and associated records deleted successfully.');
+                    } 
+                }, 'json');
+            } 
+        }, 'json');
     });
-
+    
     $(document).on('click', '.edit-loan-entry', function () {
         let id = $(this).attr('value');
         $('#customer_profile_id').val(id);
@@ -499,7 +512,18 @@ $(document).ready(function () {
         }
         $('#age').val(age);
     });
+    $('input[name="mobile_whatsapp"]').on('change', function () {
+        let selectedValue = $(this).val();
+        let mobileNumber;
 
+        if (selectedValue === 'mobile1') {
+            mobileNumber = $('#mobile1').val();
+        } else if (selectedValue === 'mobile2') {
+            mobileNumber = $('#mobile2').val();
+        }
+
+        $('#whatsapp_no').val(mobileNumber);
+    });
     $('#guarantor_name').change(function () {
         var guarantorId = $(this).val();
         if (guarantorId) {
@@ -526,6 +550,7 @@ $(document).ready(function () {
         let mobile1 = $('#mobile1').val();
         let mobile2 = $('#mobile2').val();
         let whatsapp_no = $('#whatsapp_no').val();
+        let aadhar_num=$('#aadhar_num').val().replace(/\s/g, '');
         let guarantor_name = $('#guarantor_name').val();
         let cus_data = $('#cus_data').val();
         let cus_status = $('#cus_status').val();
@@ -570,7 +595,7 @@ $(document).ready(function () {
                 isValid = false;
             }
         }
-        data = ['cus_name', 'gender', 'mobile1', 'guarantor_name', 'area_confirm', 'area', 'line', 'cus_limit'];
+        data = ['cus_name', 'gender', 'mobile1', 'guarantor_name', 'area_confirm', 'area', 'line'];
 
         //  var isValid = true;
         data.forEach(function (entry) {
@@ -610,6 +635,7 @@ $(document).ready(function () {
             entryDetail.append('mobile1', mobile1);
             entryDetail.append('mobile2', mobile2);
             entryDetail.append('whatsapp_no', whatsapp_no);
+            entryDetail.append('aadhar_num', aadhar_num); 
             entryDetail.append('pic', pic);
             entryDetail.append('per_pic', per_pic);
             entryDetail.append('guarantor_name', guarantor_name);
@@ -671,6 +697,7 @@ $(document).ready(function () {
         let mobile1 = $('#mobile1').val();
         let mobile2 = $('#mobile2').val();
         let whatsapp_no = $('#whatsapp_no').val();
+        let aadhar_num=$('#aadhar_num').val().replace(/\s/g, '');
         let customer_profile_id = $('#customer_profile_id').val();
 
         var data = ['cus_id', 'cus_name', 'gender', 'mobile1']
@@ -707,6 +734,7 @@ $(document).ready(function () {
             personalDetail.append('mobile1', mobile1);
             personalDetail.append('mobile2', mobile2);
             personalDetail.append('whatsapp_no', whatsapp_no);
+            personalDetail.append('aadhar_num', aadhar_num);
             personalDetail.append('pic', pic);
             personalDetail.append('per_pic', per_pic);
             personalDetail.append('customer_profile_id', customer_profile_id)
@@ -720,9 +748,9 @@ $(document).ready(function () {
                 dataType: 'json',
                 success: function (response) {
                     // Handle success response
-                    if (response.status == 0) {
+                    if (response.result == 0) {
                         swalSuccess('Success', 'Personal Info Updated Successfully!');
-                    } else if (response.status == 1) {
+                    } else if (response.result == 1) {
                         swalSuccess('Success', 'Personal Info Added Successfully!');
                     } else {
 
@@ -869,11 +897,13 @@ function clearCusProfileForm(type) {
         }
         $('#loan_entry_customer_profile input').css('border', '1px solid #cecece');
         $('#loan_entry_customer_profile select').css('border', '1px solid #cecece');
+        $('#loan_entry_customer_profile').find('input[type="radio"]').prop('checked', false);
         if (id !== cusid && id != 'cus_id' && id != 'cus_name' && id != 'dob' && id != 'mobile1' && id != 'mobile2' && id != 'whatsapp_no' && id != 'pic' && id != 'age' && id != 'per_pic') {
             $(this).val('');
         }
 
     });
+    $('#loan_entry_customer_profile').find('input[type="radio"]').prop('checked', false);
 
     // Clear all textarea fields within the specific form
     $('#loan_entry_customer_profile').find('textarea').val('');
@@ -1409,6 +1439,13 @@ function editCustmerProfile(id) {
         $('#line').val(response[0].line);
         $('#cus_limit').val(response[0].cus_limit);
         $('#about_cus').val(response[0].about_cus);
+        if (response[0].whatsapp_no === response[0].mobile1) {
+            $('#mobile1_radio').prop('checked', true);
+            $('#selected_mobile_radio').val('mobile1');
+        } else if (response[0].whatsapp_no === response[0].mobile2) {
+            $('#mobile2_radio').prop('checked', true);
+            $('#selected_mobile_radio').val('mobile2');
+        }
         dataCheckList(response[0].cus_id, response[0].cus_name, response[0].mobile1)
         getGuarantorName()
         getAreaName()
@@ -1475,7 +1512,7 @@ function existingCustmerProfile(cus_id) {
             $('#line').val('');
             $('#cus_limit').val('');
             $('#about_cus').val('');
-
+            $('#loan_entry_customer_profile').find('input[type="radio"]').prop('checked', false);
             $('.cus_status_div').hide();
             // $('#data_checking_div').hide();
             $('#data_checking_table_div').hide();
@@ -1516,6 +1553,13 @@ function existingCustmerProfile(cus_id) {
             $('#line').val(response[0].line);
             $('#cus_limit').val(response[0].cus_limit);
             $('#about_cus').val(response[0].about_cus);
+            if (response[0].whatsapp_no === response[0].mobile1) {
+                $('#mobile1_radio').prop('checked', true);
+                $('#selected_mobile_radio').val('mobile1');
+            } else if (response[0].whatsapp_no === response[0].mobile2) {
+                $('#mobile2_radio').prop('checked', true);
+                $('#selected_mobile_radio').val('mobile2');
+            }
             dataCheckList(response[0].cus_id, response[0].cus_name, response[0].mobile1)
             getGuarantorName()
             getAreaName()

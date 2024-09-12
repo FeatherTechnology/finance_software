@@ -14,11 +14,11 @@ if ($qry->rowCount() > 0) {
             $scheme_info['due_method'] = 'Daily';
             
         }
-
-        $scheme_info['doc_charge_min'] = ($scheme_info['doc_charge_type'] == 'percent') ? '% '.$scheme_info['doc_charge_min'] : '₹ '.$scheme_info['doc_charge_min'];
-        $scheme_info['doc_charge_max'] = ($scheme_info['doc_charge_type'] == 'percent') ? '% '.$scheme_info['doc_charge_max'] : '₹ '.$scheme_info['doc_charge_max'];
-        $scheme_info['processing_fee_min'] = ($scheme_info['processing_fee_type'] == 'percent') ? '% '.$scheme_info['processing_fee_min'] : '₹ '.$scheme_info['processing_fee_min'];
-        $scheme_info['processing_fee_max'] = ($scheme_info['processing_fee_type'] == 'percent') ? '% '.$scheme_info['processing_fee_max'] : '₹ '.$scheme_info['processing_fee_max'];
+        $scheme_info['doc_charge_min'] = ($scheme_info['doc_charge_type'] == 'percent') ? $scheme_info['doc_charge_min'].'%' : '₹ '.$scheme_info['doc_charge_min'];
+        $scheme_info['doc_charge_max'] = ($scheme_info['doc_charge_type'] == 'percent') ? $scheme_info['doc_charge_max'].'%' : '₹ '.$scheme_info['doc_charge_max'];
+        $scheme_info['processing_fee_min'] = ($scheme_info['processing_fee_type'] == 'percent') ? $scheme_info['processing_fee_min'].'%' : '₹ '.$scheme_info['processing_fee_min'];
+        $scheme_info['processing_fee_max'] = ($scheme_info['processing_fee_type'] == 'percent') ? $scheme_info['processing_fee_max'].'%' : '₹ '.$scheme_info['processing_fee_max'];
+        
         $scheme_info['action'] = "<span class='icon-border_color schemeActionBtn' value='" . $scheme_info['id'] . "'></span>  <span class='icon-trash-2 schemeDeleteBtn' value='" . $scheme_info['id'] . "'></span>";
         $scheme_arr[] = $scheme_info;
     }
