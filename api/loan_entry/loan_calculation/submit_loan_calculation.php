@@ -57,7 +57,7 @@ if ($id == '') {
     }
 }
 
-$qry = $pdo->query("UPDATE `customer_status` SET `loan_calculation_id`='$last_id', `status`='$cus_status', `update_login_id`='$user_id', `updated_on`=now() WHERE `cus_profile_id`='$customer_profile_id' ");
+$qry = $pdo->query("UPDATE `customer_status` SET `loan_calculation_id`='$last_id', `status`='$cus_status', `update_login_id`='$user_id', `updated_on`=now() WHERE `cus_profile_id`='$customer_profile_id'  AND status=1 ");
 
 $result = array('status'=>$status, 'last_id'=> $last_id);
 echo json_encode($result);

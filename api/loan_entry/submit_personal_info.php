@@ -28,14 +28,36 @@ $aadhar_num = $_POST['aadhar_num'];
 $user_id = $_SESSION['user_id'];
 $customer_profile_id = $_POST['customer_profile_id'];
 
-$qry = $pdo->query("SELECT * FROM `customer_profile` WHERE cus_id = '$cus_id' AND id != '$customer_profile_id' ");
+// Query to get customer profile along with customer status
+$qry = $pdo->query("SELECT cp.*, cs.status 
+                    FROM customer_profile cp
+                    INNER JOIN customer_status cs ON cp.cus_id = cs.cus_id
+                    WHERE cp.cus_id = '$cus_id' 
+                    AND cp.id != '$customer_profile_id'");
+
 if ($qry->rowCount() > 0) {
-    $cus_data = 'Existing';
-    $cus_status = 'Additional/Renewal';
+    $result = $qry->fetch();
+    $status = $result['status'];  // Customer status from the customer_status table
+
+    // If status is between 1 and 6, cus_status should be empty
+    if ($status >= 1 && $status <= 6) {
+        $cus_status = '';
+    } 
+    // If status is 7 or 8, cus_status should be 'Additional'
+    else if ($status == 7 || $status == 8) {
+        $cus_status = 'Additional';
+    } 
+    // If status is 9 or above, cus_status should be 'Renewal'
+    else if ($status >= 9) {
+        $cus_status = 'Renewal';
+    }
+
+    $cus_data = 'Existing';  // Since we found a matching record, it's considered 'Existing'
 } else {
-    $cus_data = 'New';
-    $cus_status = '';
+    $cus_data = 'New';        // No matching record found, it's considered 'New'
+    $cus_status = '';         // cus_status should be empty for new customers
 }
+
 if ($customer_profile_id != '') {
     $qry = $pdo->query("UPDATE `customer_profile` SET `cus_id`='$cus_id',`cus_name`='$cus_name',`gender`='$gender',`dob`='$dob',`age`='$age',`mobile1`='$mobile1',`mobile2`='$mobile2',`whatsapp_no`='$whatsapp_no',`aadhar_num`='$aadhar_num',`pic`='$picture',`cus_data`='$cus_data',`cus_status` = '$cus_status',`update_login_id`='$user_id',updated_on = now() WHERE `id`='$customer_profile_id'");
     $result = 0; //update

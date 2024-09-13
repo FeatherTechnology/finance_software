@@ -98,14 +98,26 @@
                                     <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
                                         <div class="form-group">
                                             <label for="cus_id"> Customer ID</label><span class="text-danger">*</span>
-                                            <input type="text" class="form-control personal_info_disble" id="cus_id" name="cus_id" data-type="adhaar-number" placeholder="Enter Customer ID" tabindex="1" maxlength="14">
+                                            <input type="text" class="form-control personal_info_disble" id="cus_id" name="cus_id" placeholder="Enter Customer ID" tabindex="1" maxlength="14">
                                             <input type="hidden" id="cus_id_upd" name="cus_id_upd">
+                                        </div>
+                                    </div>
+                                    <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
+                                        <div class="form-group">
+                                            <label for="cus_data"> Customer Data</label>
+                                            <input type="text" class="form-control" id="cus_data" name="cus_data" disabled tabindex="13">
                                         </div>
                                     </div>
                                     <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
                                         <div class="form-group">
                                             <label for="cus_name"> Customer Name</label><span class="text-danger">*</span>
                                             <input type="text" class="form-control personal_info_disble" id="cus_name" name="cus_name" pattern="[a-zA-Z\s]+" placeholder="Enter Customer Name" tabindex=" 2">
+                                        </div>
+                                    </div>
+                                    <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12 cus_status_div" style="display:none;">
+                                        <div class="form-group">
+                                            <label for="cus_status"> Customer Status</label>
+                                            <input type="text" class="form-control" id="cus_status" name="cus_status" disabled tabindex="14">
                                         </div>
                                     </div>
                                     <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
@@ -143,6 +155,33 @@
                                             <input type="number" class="form-control  personal_info_disble" id="mobile2" name="mobile2" onKeyPress="if(this.value.length==10) return false;" placeholder="Enter Mobile Number 2" tabindex="7">
                                         </div>
                                     </div>
+                                    <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
+                                        <div class="form-group">
+                                            <label>Choose Mobile Number for WhatsApp:</label><br>
+                                            <label>
+                                                <input type="radio" name="mobile_whatsapp" value="mobile1" id="mobile1_radio">
+                                                Mobile Number 1
+                                            </label><br>
+                                            <label>
+                                                <input type="radio" name="mobile_whatsapp" value="mobile2" id="mobile2_radio">
+                                                Mobile Number 2
+                                            </label>
+                                            <input type="hidden" id="selected_mobile_radio">
+                                        </div>
+                                    </div>
+                                    <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
+                                        <div class="form-group">
+                                            <label for="whatsapp_no"> WhatsApp Number </label>
+                                            <input type="number" class="form-control  personal_info_disble" id="whatsapp_no" name="whatsapp_no" onKeyPress="if(this.value.length==10) return false;" placeholder="Enter WhatsApp Number" tabindex="7">
+                                        </div>
+                                    </div>
+                                    <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
+                                        <div class="form-group">
+                                            <label for="aadhar_num">Aadhar No</label>
+                                            <input type="text" class="form-control personal_info_disble" name="aadhar_num" id="aadhar_num" tabindex="1" maxlength="14" data-type="adhaar-number" placeholder="Enter Aadhar Number">
+                                            <input type="hidden" id="addaadhar_id" value='0'>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                             <div class="col-4">
@@ -159,7 +198,7 @@
                             </div>
                             <div class="col-md-12 ">
                                 <div class="text-right">
-                                    <button type="submit" name="submit_personal_info" id="submit_personal_info" class="btn btn-primary" value="Submit"><span class="icon-check"></span>&nbsp;Submit</button>
+                                    <button type="submit" name="submit_personal_info" id="submit_personal_info" class="btn btn-primary" value="Submit"><span class="icon-check"></span>&nbsp;Proceed</button>
                                 </div>
                             </div>
                         </div>
@@ -226,7 +265,7 @@
                                 <div class="row">
                                     <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
                                         <div class="form-group">
-                                            <label for="pic"> Photo</label><span class="text-danger">*</span><br>
+                                            <label for="pic"> Photo</label><br>
                                             <img id='gur_imgshow' class="img_show" src='img\avatar.png' />
                                             <input type="file" class="form-control" id="gu_pic" name="gu_pic" tabindex="12">
                                             <input type="hidden" id="gur_pic">
@@ -239,27 +278,6 @@
                 </div>
 
                 <div class="card">
-                    <div class="card-header">
-                        <div class="card-title">Data Analyis</div>
-                    </div>
-                    <div class="card-body">
-                        <div class="row">
-                            <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
-                                <div class="form-group">
-                                    <label for="cus_data"> Customer Data</label>
-                                    <input type="text" class="form-control" id="cus_data" name="cus_data" disabled placeholder="New/Existing" tabindex="13">
-                                </div>
-                            </div>
-
-                            <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12" style="display:none;">
-                                <div class="form-group">
-                                    <label for="cus_status"> Customer Status</label>
-                                    <input type="text" class="form-control" id="cus_status" name="cus_status" disabled placeholder="Additional/Renewal" tabindex="14">
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
                     <div id="data_checking_div" style="display: none;">
                         <div class="card-header">
                             <div class="card-title">Data Checking</div>
@@ -549,7 +567,7 @@
                             <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
                                 <div class="form-group">
                                     <label for="cus_limit"> Customer Limit</label><span class="text-danger">*</span>
-                                    <input type="number" class="form-control" id="cus_limit" name="cus_limit" placeholder="Enter Limit" tabindex="32">
+                                    <input type="number" class="form-control" id="cus_limit" name="cus_limit" placeholder="Enter Customer Limit" tabindex="32">
                                 </div>
                             </div>
                             <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
@@ -831,15 +849,15 @@
                             </div>
                             <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
                                 <div class="form-group">
-                                    <label for="agent_id_calc">Agent ID</label><span class="text-danger">*</span>
-                                    <select class="form-control" id="agent_id_calc" name="agent_id_calc" tabindex="26">
-                                        <option value="">Select Agent ID</option>
+                                    <label for="agent_id_calc">Agent Name</label><span class="text-danger">*</span>
+                                    <select class="form-control" id="agent_id_calc" name="agent_id_calc" tabindex="26" disabled>
+                                        <option value="">Select Agent Name</option>
                                     </select>
                                 </div>
                             </div>
                             <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
                                 <div class="form-group">
-                                    <label for="agent_name_calc">Agent Name</label><span class="text-danger">*</span>
+                                    <label for="agent_name_calc">Agent ID</label><span class="text-danger">*</span>
                                     <input type="text" class="form-control" id="agent_name_calc" name="agent_name_calc" tabindex="27" readonly>
                                 </div>
                             </div>
@@ -858,7 +876,7 @@
                             <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12"></div>
                             <div class="col-xl-2 col-lg-2 col-md-2 col-sm-2 col-12">
                                 <div class="form-group">
-                                    <label for="doc_need_calc">Document Need</label><span class="text-danger">*</span>
+                                    <label for="doc_need_calc">Document Need</label>
                                     <input type="text" class="form-control" id="doc_need_calc" name="doc_need_calc" tabindex="28">
                                 </div>
                             </div>
@@ -950,8 +968,8 @@
                             <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
                                 <div class="form-group">
                                     <label for="fam_live">Live/Deceased</label><span class="text-danger">*</span>
-                                    <select type="text" class="form-control" id="fam_live" name="fam_live" tabindex="1">
-                                        <option value="0">Select Live/Deceased</option>
+                                    <select class="form-control" id="fam_live" name="fam_live" tabindex="17">
+                                        <option value="">Select Live/Deceased</option>
                                         <option value="1">Live</option>
                                         <option value="2">Deceased</option>
                                     </select>
@@ -1213,6 +1231,13 @@
                                     <input type="hidden" id="add_proofOf_id" value='0'>
                                 </div>
                             </div>
+                            <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12 kyc_name_div" style="display:none">
+                                <div class="form-group">
+                                    <label for="kyc_name">Name</label><span class="text-danger">*</span>
+                                    <input class="form-control" name="kyc_name" id="kyc_name" tabindex="1" disabled placeholder="Enter Name">
+                                    <input type="hidden" id="kyc_nameid" value='0'>
+                                </div>
+                            </div>
                             <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12 fam_mem_div" style="display:none">
                                 <div class="form-group">
                                     <label for="fam_mem"> Family Member </label><span class="text-danger">*</span>
@@ -1244,8 +1269,8 @@
                             </div>
                             <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
                                 <div class="form-group">
-                                    <label for="proof_detail">Proof Detail</label><span class="text-danger">*</span>
-                                    <input class="form-control" name="proof_detail" id="proof_detail" tabindex="1" placeholder="Enter Proof Detail">
+                                    <label for="proof_detail">Proof Member</label><span class="text-danger">*</span>
+                                    <input class="form-control" name="proof_detail" id="proof_detail" tabindex="1" placeholder="Enter Proof Member">
                                     <input type="hidden" id="addproofdetail_id" value='0'>
                                 </div>
                             </div>

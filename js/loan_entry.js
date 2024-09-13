@@ -2,11 +2,11 @@ $(document).ready(function () {
     //Move Loan Entry 
     $(document).on('click', '.move-loan-entry', function () {
         let cus_sts_id = $(this).attr('value');
-        let cus_sts = 3;
-        moveToNext(cus_sts_id, cus_sts);
+        swalConfirm('Delete', 'Are you sure you want to move approval?', moveToNext, cus_sts_id);
+        return;
     });
     // Loan Entry Tab Change Radio buttons
-    $(document).on('click', '#add_loan, #back_btn', function () {
+    $(document).on('click', '#add_loan', function () {
         swapTableAndCreation();
     });
 
@@ -16,47 +16,51 @@ $(document).ready(function () {
         getBankInfoTable()
         getKycInfoTable()
         getAreaName()
+        $('.customer_content').hide();
         $('.personal_info_disble').attr("disabled", false);
         let cus_data = $('#cus_data').val();
         if (cus_data == 'Existing') {
             $('.cus_status_div').show();
-            // $('#data_checking_div').show();
+            $('#data_checking_div').show();
         } else {
             $('.cus_status_div').hide();
-            // $('#data_checking_div').hide();
+            $('#data_checking_div').hide();
         }
-        dataCheckList('','','');
+        dataCheckList('', '', '');
         $('#data_checking_table_div').hide();
     });
 
     $('#back_btn').click(function () {
-        let cus_profile_id = $('#customer_profile_id').val();
         let cus_id = $('#cus_id').val().replace(/\s/g, '');
-        getLoanEntryTable();
-        clearLoanCalcForm(); // To clear Loan Calculation
-        clearCusProfileForm('1'); // To Clear Customer Profile
-        // First, fetch the status for the given cus_profile_id
-        $.post('api/loan_entry/cus_sts_check.php', {'cus_id': cus_id,'cus_profile_id': cus_profile_id }, function (response) {
+        let cus_profile_id = $('#customer_profile_id').val();
+        $('.customer_content').show();
+        $.post('api/loan_entry/cus_sts_check.php', { 'cus_id': cus_id, 'cus_profile_id': cus_profile_id }, function (response) {
             if (response.status == 0) {
-                // If status is 0, proceed with deletion
-                $.post('api/loan_entry/cus_sts_delete.php', { 'cus_id': cus_id, 'cus_profile_id': cus_profile_id }, function (deleteResponse) {
-                    if (deleteResponse.success) {
-                        swalSuccess('Success', 'Customer profile and associated records deleted successfully.');
-                    } 
-                }, 'json');
-            } 
+                // If status is 0, proceed with confirmation
+                    swalConfirm('Warning', 'Are you sure you want to go back? Personal information will be lost because the customer profile is incomplete.', cusDeleteStatus, cus_id);
+                    return;
+                
+            }else {
+                // Do nothing if cancelled
+                swapTableAndCreation();
+                getLoanEntryTable();
+                clearLoanCalcForm(); // To clear Loan Calculation
+                clearCusProfileForm('1'); // To Clear Customer Profile
+            }
+
         }, 'json');
     });
-    
+
     $(document).on('click', '.edit-loan-entry', function () {
         let id = $(this).attr('value');
+        $('.customer_content').show();
         $('#customer_profile_id').val(id);
         let loanCalcId = $(this).attr('data-id');
         $('#loan_calculation_id').val(loanCalcId);
         swapTableAndCreation();
         editCustmerProfile(id)
         // loanCalculationEdit(loanCalcId);
-     
+
     });
 
     $('input[name=loan_entry_type]').click(function () {
@@ -93,6 +97,7 @@ $(document).ready(function () {
             removeCustomerName();
         }
     });
+
 
     $('#cus_id').on('blur', function () {
         let customerID = $('#cus_id').val().trim().replace(/\s/g, '');
@@ -269,11 +274,15 @@ $(document).ready(function () {
         var proofOf = $(this).val();
         if (proofOf == "2") { // Family Member selected
             $('.fam_mem_div').show();
+            $('.kyc_name_div').hide();
             $('#kyc_relationship').val('');
             getFamilyMember();
         } else { // Customer or any other selection
+            let cus_name = $("#cus_name").val();
+            $('#kyc_name').val(cus_name);
+            $('.kyc_name_div').show();
             $('.fam_mem_div').hide();
-            $('#kyc_relationship').val('Customer');
+            $('#kyc_relationship').val('NIL');
         }
     });
 
@@ -379,8 +388,12 @@ $(document).ready(function () {
                     if (response = 'Success') {
                         if (kyc_id == '') {
                             swalSuccess('Success', 'KYC Added Successfully!');
+                            $('.kyc_name_div').hide();
+                            $('.fam_mem_div').hide();
                         } else {
                             swalSuccess('Success', 'KYC Updated Successfully!')
+                            $('.kyc_name_div').hide();
+                            $('.fam_mem_div').hide();
                         }
                     } else {
                         swalError('Error', 'Error in table');
@@ -399,9 +412,15 @@ $(document).ready(function () {
                 $('#proof_of').val(response[0].proof_of);
 
                 if (response[0].proof_of == 1) { // Assuming 1 is for customer
+                    $('.kyc_name_div').show();
+                    // $("#kyc_name").val(response[0].k);
+                    let cus_name = $("#cus_name").val();
+                    $('#kyc_name').val(cus_name);
                     $('.fam_mem_div').hide();
                     $('#fam_mem').val('');
                 } else {
+                    $('.kyc_name_div').hide();
+                    $('#kyc_name').val('');
                     getFamilyMember();
                     setTimeout(() => {
                         $("#fam_mem").val(response[0].fam_mem);
@@ -409,7 +428,7 @@ $(document).ready(function () {
                     $('.fam_mem_div').show();
                 }
                 if (response[0].proof_of == 1) {
-                    $('#kyc_relationship').val('Customer');
+                    $('#kyc_relationship').val('NIL');
                 } else {
                     $('#kyc_relationship').val(response[0].fam_relationship);
                 }
@@ -442,7 +461,9 @@ $(document).ready(function () {
     $('#proof_of').on('change', function () {
         if ($(this).val() == "2") {
             $('.fam_mem_div').show();
+            $('.kyc_name_div').hide();
         } else {
+            $('.kyc_name_div').show();
             $('.fam_mem_div').hide();
         }
     });
@@ -550,7 +571,7 @@ $(document).ready(function () {
         let mobile1 = $('#mobile1').val();
         let mobile2 = $('#mobile2').val();
         let whatsapp_no = $('#whatsapp_no').val();
-        let aadhar_num=$('#aadhar_num').val().replace(/\s/g, '');
+        let aadhar_num = $('#aadhar_num').val().replace(/\s/g, '');
         let guarantor_name = $('#guarantor_name').val();
         let cus_data = $('#cus_data').val();
         let cus_status = $('#cus_status').val();
@@ -604,21 +625,6 @@ $(document).ready(function () {
                 isValid = false;
             }
         });
-        if (gu_pic === undefined && gur_pic === '') {
-            let isUploadValid = validateField('', 'gu_pic');
-            let isHiddenValid = validateField('', 'gur_pic');
-            if (!isUploadValid || !isHiddenValid) {
-                isValid = false;
-            }
-            else {
-                $('#gu_pic').css('border', '1px solid #cecece');
-                $('#gur_pic').css('border', '1px solid #cecece');
-            }
-        }
-        else {
-            $('#gu_pic').css('border', '1px solid #cecece');
-            $('#gur_pic').css('border', '1px solid #cecece');
-        }
 
         if (isValid) {
             if (famInfoRowCount === 0 || kycInfoRowCount === 0) {
@@ -635,7 +641,7 @@ $(document).ready(function () {
             entryDetail.append('mobile1', mobile1);
             entryDetail.append('mobile2', mobile2);
             entryDetail.append('whatsapp_no', whatsapp_no);
-            entryDetail.append('aadhar_num', aadhar_num); 
+            entryDetail.append('aadhar_num', aadhar_num);
             entryDetail.append('pic', pic);
             entryDetail.append('per_pic', per_pic);
             entryDetail.append('guarantor_name', guarantor_name);
@@ -671,6 +677,7 @@ $(document).ready(function () {
                     // Handle success response
                     if (response.status == 0) {
                         swalSuccess('Success', 'Customer Profile Updated Successfully!');
+                        $('#loan_calculation').trigger('click')
                     }
                     $('#customer_profile_id').val(response.last_id);
                 },
@@ -697,7 +704,7 @@ $(document).ready(function () {
         let mobile1 = $('#mobile1').val();
         let mobile2 = $('#mobile2').val();
         let whatsapp_no = $('#whatsapp_no').val();
-        let aadhar_num=$('#aadhar_num').val().replace(/\s/g, '');
+        let aadhar_num = $('#aadhar_num').val().replace(/\s/g, '');
         let customer_profile_id = $('#customer_profile_id').val();
 
         var data = ['cus_id', 'cus_name', 'gender', 'mobile1']
@@ -723,7 +730,7 @@ $(document).ready(function () {
             $('#pic').css('border', '1px solid #cecece');
             $('#per_pic').css('border', '1px solid #cecece');
         }
-      
+
         if (isValid) {
             let personalDetail = new FormData();
             personalDetail.append('cus_id', cus_id);
@@ -750,8 +757,10 @@ $(document).ready(function () {
                     // Handle success response
                     if (response.result == 0) {
                         swalSuccess('Success', 'Personal Info Updated Successfully!');
+                        $('.customer_content').show();
                     } else if (response.result == 1) {
                         swalSuccess('Success', 'Personal Info Added Successfully!');
+                        $('.customer_content').show();
                     } else {
 
                     }
@@ -760,7 +769,7 @@ $(document).ready(function () {
                     $('#cus_data').val(response.cus_data);
                     if (response.cus_data == 'Existing') {
                         $('.cus_status_div').show();
-                        // $('#data_checking_div').show();
+                        $('#data_checking_div').show();
                     }
                     $('#cus_status').val(response.cus_status);
                     $('.personal_info_disble').attr("disabled", true);
@@ -858,7 +867,8 @@ function getLoanEntryTable() {
     serverSideTable('#loan_entry_table', '', 'api/loan_entry/loan_entry_list.php');
     // setDropdownScripts();   
 }
-function moveToNext(cus_sts_id, cus_sts) {
+function moveToNext(cus_sts_id) {
+    let cus_sts = 3;
     $.post('api/common_files/move_to_next.php', { cus_sts_id, cus_sts }, function (response) {
         if (response == '0') {
             swalSuccess('Success', 'Moved to Approval');
@@ -961,7 +971,7 @@ function fetchCustomerData(name, cusid, mobile, cus_profile_id) {
 
 function addCustomerMobile(mobile) {
     $('#mobile_check .custom-option').remove();
-    if(mobile !=''){
+    if (mobile != '') {
         $('#mobile_check').append('<option class="custom-option" value="' + mobile + '">' + mobile + '</option>');
     }
 }
@@ -972,7 +982,7 @@ function removeCustomerMobile() {
 
 function updateCustomerID(id) {
     $('#aadhar_check .custom-option').remove();
-    if(id !=''){
+    if (id != '') {
         $('#aadhar_check').append('<option class="custom-option" value="' + id + '">' + id + '</option>');
     }
 }
@@ -982,11 +992,20 @@ function removeCustomerID() {
 }
 
 function updateCustomerName(name) {
+    // Remove any existing custom options (if already added)
     $('#name_check .custom-option').remove();
-    if(name !=''){
+
+    // Remove any previously selected cus_name option to avoid duplicates
+    $('#name_check option').filter(function () {
+        return $(this).val() === name;
+    }).remove();
+
+    // Append the new name as an option with a custom class
+    if (name !== '') {
         $('#name_check').append('<option class="custom-option" value="' + name + '">' + name + '</option>');
     }
 }
+
 
 function removeCustomerName() {
     $('#name_check .custom-option').remove();
@@ -1116,7 +1135,6 @@ function getPropertyTable() {
         $('#property_detail').val('');
     }, 'json')
 }
-
 function getPropertyInfoTable() {
     let cus_id = $('#cus_id').val().replace(/\s/g, '');
     let cus_profile_id = $('#customer_profile_id').val();
@@ -1251,6 +1269,7 @@ function getKycTable() {
         $('#kyc_form input').val('');
         $('#kyc_form input').css('border', '1px solid #cecece');
         $('#kyc_form select').css('border', '1px solid #cecece');
+        $('#Kyc_form.kyc_name_div').hide();
         $('#Kyc_form.fam_mem_div').hide();
         $('#kyc_form select').each(function () {
             $(this).val($(this).find('option:first').val());
@@ -1274,7 +1293,13 @@ function getKycInfoTable() {
         setdtable('#kyc_info');
     }, 'json')
 }
+// function customerName(){
+//     let cus_id = $('#cus_id').val().replace(/\s/g, '');
+//     $.post('api/loan_entry/get_kyc_name.php', { cus_id }, function (response) {
+//       $('#kyc_name').val(response[0].dob);
 
+//     }, 'json');
+// }
 function getFamilyMember() {
     let cus_id = $('#cus_id').val().replace(/\s/g, '');
     $.post('api/loan_entry/get_guarantor_name.php', { cus_id }, function (response) {
@@ -1390,28 +1415,57 @@ function dataCheckList(cus_id, cus_name, cus_mble_no) {
         //Adhar no
         $('#aadhar_check').empty();
         $('#aadhar_check').append("<option value=''>Select Aadhar Number</option>");
-        (cus_id !='') ? $('#aadhar_check').append('<option value="' + cus_id + '">' + cus_id + '</option>') : '';
+
+        // Append the provided Aadhar number with the customer name if both are present
+        if (cus_id && cus_name) {
+            $('#aadhar_check').append('<option value="' + cus_id + '">' + cus_id + ' - ' + cus_name + '</option>');
+        }
+
+        // Loop through the response and append Aadhar numbers with family names
         $.each(response, function (index, val) {
-            $('#aadhar_check').append("<option value='" + val.fam_aadhar + "'>" + val.fam_aadhar + "</option>");
+            if (val.fam_aadhar && val.fam_name) {
+                $('#aadhar_check').append('<option value="' + val.fam_aadhar + '">' + val.fam_aadhar + ' - ' + val.fam_name + '</option>');
+            }
         });
+
 
         //Mobile no 
         $('#mobile_check').empty();
         $('#mobile_check').append("<option value=''>Select Mobile Number</option>");
-        (cus_mble_no !='') ? $('#mobile_check').append('<option value="' + cus_mble_no + '">' + cus_mble_no + '</option>') : '';
+
+        // Append the provided customer mobile number and name if they are present
+        if (cus_mble_no && cus_name) {
+            $('#mobile_check').append('<option value="' + cus_mble_no + '">' + cus_mble_no + ' - ' + cus_name + '</option>');
+        }
+
+        // Loop through the response and append mobile numbers with family names
         $.each(response, function (index, val) {
-            $('#mobile_check').append("<option value='" + val.fam_mobile + "'>" + val.fam_mobile + "</option>");
+            if (val.fam_mobile && val.fam_name) {
+                $('#mobile_check').append('<option value="' + val.fam_mobile + '">' + val.fam_mobile + ' - ' + val.fam_name + '</option>');
+            }
         });
+
 
     }, 'json');
 }
 
-function checkAdditionalRenewal(cus_id){
-    $.post('api/loan_entry/check_additional_renewal.php', {cus_id},function(response){
+function checkAdditionalRenewal(cus_id) {
+    $.post('api/loan_entry/check_additional_renewal.php', { cus_id }, function (response) {
         $('#cus_status').val(response);
-    },'json');
+    }, 'json');
 }
-
+function cusDeleteStatus(cus_id) {
+    let cus_profile_id = $('#customer_profile_id').val();
+    // Proceed with deletion
+    $.post('api/loan_entry/cus_sts_delete.php', { 'cus_id': cus_id, 'cus_profile_id': cus_profile_id }, function (deleteResponse) {
+        if (deleteResponse.success) {
+            swalSuccess('Success', 'Personal Info Deleted Successfully.');
+            swapTableAndCreation()
+        } else {
+            swalError('Error', 'Failed to delete personal info.');
+        }
+    }, 'json');
+}
 function editCustmerProfile(id) {
     $.post('api/loan_entry/customer_profile_data.php', { id: id }, function (response) {
         $('#customer_profile_id').val(id);
@@ -1461,10 +1515,10 @@ function editCustmerProfile(id) {
         if (response[0].cus_data == 'Existing') {
             $('.cus_status_div').show();
             checkAdditionalRenewal(response[0].cus_id);
-            // $('#data_checking_div').show();
+            $('#data_checking_div').show();
         } else {
             $('.cus_status_div').hide();
-            // $('#data_checking_div').hide();
+            $('#data_checking_div').hide();
             $('#data_checking_table_div').hide();
         }
         let path = "uploads/loan_entry/cus_pic/";
@@ -1514,7 +1568,7 @@ function existingCustmerProfile(cus_id) {
             $('#about_cus').val('');
             $('#loan_entry_customer_profile').find('input[type="radio"]').prop('checked', false);
             $('.cus_status_div').hide();
-            // $('#data_checking_div').hide();
+            $('#data_checking_div').hide();
             $('#data_checking_table_div').hide();
 
             getFamilyInfoTable()
@@ -1571,7 +1625,7 @@ function existingCustmerProfile(cus_id) {
 
 
             $('.cus_status_div').show();
-            // $('#data_checking_div').show();
+            $('#data_checking_div').show();
             let path = "uploads/loan_entry/cus_pic/";
             $('#per_pic').val(response[0].pic);
             var img = $('#imgshow');
@@ -1764,6 +1818,7 @@ $(document).ready(function () {
             $('#agent_name_calc').val('');
             getAgentID();
         } else {
+            
             $('#agent_id_calc').prop('disabled', true).val('');
             $('#agent_name_calc').prop('readonly', true).val('');
         }
@@ -1773,7 +1828,7 @@ $(document).ready(function () {
         let id = $(this).val();
         $.post('api/agent_creation/agent_creation_data.php', { id }, function (response) {
             if (response.length > 0) {
-                $('#agent_name_calc').val(response[0].agent_name);
+                $('#agent_name_calc').val(response[0].agent_code);
             } else {
                 $('#agent_name_calc').val('');
             }
@@ -1855,7 +1910,7 @@ $(document).ready(function () {
                 'agent_id_calc': $('#agent_id_calc').val(),
                 'agent_name_calc': $('#agent_name_calc').val(),
                 'id': $('#loan_calculation_id').val(),
-                'cus_status':'2'
+                'cus_status': '2'
             }
             if (isFormDataValid(formData)) {
                 $.post('api/loan_entry/loan_calculation/submit_loan_calculation.php', formData, function (response) {
@@ -1919,14 +1974,14 @@ function getLoanCategoryName() {
 function getAgentID() {
     $.post('api/agent_creation/agent_creation_list.php', function (response) {
         let appendAgentIdOption = '';
-        appendAgentIdOption += '<option value="">Select Agent ID</option>';
+        appendAgentIdOption += '<option value="">Select Agent Name</option>';
         $.each(response, function (index, val) {
             let selected = '';
             let agent_id_edit_it = '';
             if (val.id == agent_id_edit_it) {
                 selected = 'selected';
             }
-            appendAgentIdOption += '<option value="' + val.id + '" ' + selected + '>' + val.agent_code + '</option>';
+            appendAgentIdOption += '<option value="' + val.id + '" ' + selected + '>' + val.agent_name + '</option>';
         });
         $('#agent_id_calc').empty().append(appendAgentIdOption);
     }, 'json');
@@ -1936,19 +1991,27 @@ function getLoanCatDetails(id, edittype) {
     $.post('api/loan_entry/loan_calculation/getLoanCatDetails.php', { id }, function (response) {
         $('#due_method_calc').val(response[0].due_method);
 
-        if (response[0].due_type == 'emi') {
+        if (response[0].due_type === 'emi') {
             $('#due_type_calc').val('EMI');
-        } else if (response[0].due_type == 'interest') {
+        } else if (response[0].due_type === 'interest') {
             $('#due_type_calc').val('Interest');
         }
+    
+        // Retrieve customer and loan limits
         let cus_limit = parseInt($('#cus_limit').val());
         let loan_limit = parseInt(response[0].loan_limit);
         let min_loan_limit;
+    
 
-        if (isNaN(cus_limit) || isNaN(loan_limit)) {
-            min_loan_limit = 0; // Both values are NaN
+        if (!cus_limit) {
+            // If cus_limit is empty or not a valid number, use loan_limit
+            min_loan_limit = loan_limit;
+        } else if (isNaN(cus_limit) || isNaN(loan_limit)) {
+            // If both cus_limit and loan_limit are NaN, set min_loan_limit to 0
+            min_loan_limit = 0;
         } else {
-            min_loan_limit = (cus_limit < loan_limit) ? cus_limit : loan_limit; // Both values are valid numbers
+            // Use the lesser of cus_limit and loan_limit
+            min_loan_limit = (cus_limit < loan_limit) ? cus_limit : loan_limit;
         }
         $('#loan_amount_calc').attr('onChange', `if( parseFloat($(this).val()) > '` + min_loan_limit + `' ){ alert("Enter Lesser than '${min_loan_limit}'"); $(this).val(""); }`); //To check value between range
 
@@ -1958,25 +2021,25 @@ function getLoanCatDetails(id, edittype) {
         var proc_fee_upd = ($('#proc_fees_upd').val()) ? $('#proc_fees_upd').val() : '';
         //To set min and maximum 
         $('.min-max-int').text('* (' + response[0].interest_rate_min + '% - ' + response[0].interest_rate_max + '%) ');
-        $('#interest_rate_calc').attr('onChange', `if( parseFloat($(this).val()) > '` + response[0].interest_rate_max + `' ){ alert("Enter Lesser Value"); $(this).val(""); }else if( parseFloat($(this).val()) < '`+ response[0].interest_rate_min + `' && parseFloat($(this).val()) != '' ){ alert("Enter Higher Value"); $(this).val(""); } `); //To check value between range
+        $('#interest_rate_calc').attr('onChange', `if( parseFloat($(this).val()) > '` + response[0].interest_rate_max + `' ){ alert("Enter Lesser Value"); $(this).val(""); }else if( parseFloat($(this).val()) < '` + response[0].interest_rate_min + `' && parseFloat($(this).val()) != '' ){ alert("Enter Higher Value"); $(this).val(""); } `); //To check value between range
         $('#interest_rate_calc').val(int_rate_upd);
         $('.min-max-due').text('* (' + response[0].due_period_min + ' - ' + response[0].due_period_max + ') ');
-        $('#due_period_calc').attr('onChange', `if( parseInt($(this).val()) > '` + response[0].due_period_max + `' ){ alert("Enter Lesser Value"); $(this).val(""); }else if( parseInt($(this).val()) < '`+ response[0].due_period_min + `' && parseInt($(this).val()) != '' ){ alert("Enter Higher Value"); $(this).val(""); } `); //To check value between range
+        $('#due_period_calc').attr('onChange', `if( parseInt($(this).val()) > '` + response[0].due_period_max + `' ){ alert("Enter Lesser Value"); $(this).val(""); }else if( parseInt($(this).val()) < '` + response[0].due_period_min + `' && parseInt($(this).val()) != '' ){ alert("Enter Higher Value"); $(this).val(""); } `); //To check value between range
         $('#due_period_calc').val(due_period_upd);
 
         $('.min-max-doc').text('* (' + response[0].doc_charge_min + '% - ' + response[0].doc_charge_max + '%) ');
-        $('#doc_charge_calc').attr('onChange', `if( parseFloat($(this).val()) > '` + response[0].doc_charge_max + `' ){ alert("Enter Lesser Value"); $(this).val(""); }else if( parseFloat($(this).val()) < '`+ response[0].doc_charge_min + `' && parseFloat($(this).val()) != '' ){ alert("Enter Higher Value"); $(this).val(""); } `); //To check value between range
+        $('#doc_charge_calc').attr('onChange', `if( parseFloat($(this).val()) > '` + response[0].doc_charge_max + `' ){ alert("Enter Lesser Value"); $(this).val(""); }else if( parseFloat($(this).val()) < '` + response[0].doc_charge_min + `' && parseFloat($(this).val()) != '' ){ alert("Enter Higher Value"); $(this).val(""); } `); //To check value between range
         $('#doc_charge_calc').val(doc_charge_upd);
 
         $('.min-max-proc').text('* (' + response[0].processing_fee_min + '% - ' + response[0].processing_fee_max + '%) ');
-        $('#processing_fees_calc').attr('onChange', `if( parseFloat($(this).val()) > '` + response[0].processing_fee_max + `' ){ alert("Enter Lesser Value"); $(this).val(""); }else if( parseFloat($(this).val()) < '`+ response[0].processing_fee_min + `' && parseInt($(this).val()) != '' ){ alert("Enter Higher Value"); $(this).val(""); } `); //To check value between range
+        $('#processing_fees_calc').attr('onChange', `if( parseFloat($(this).val()) > '` + response[0].processing_fee_max + `' ){ alert("Enter Lesser Value"); $(this).val(""); }else if( parseFloat($(this).val()) < '` + response[0].processing_fee_min + `' && parseInt($(this).val()) != '' ){ alert("Enter Higher Value"); $(this).val(""); } `); //To check value between range
         $('#processing_fees_calc').val(proc_fee_upd);
 
-        if(edittype ==1){
-        $('#interest_rate_calc').val('');
-        $('#due_period_calc').val('');
-        $('#doc_charge_calc').val('');
-        $('#processing_fees_calc').val('');
+        if (edittype == 1) {
+            $('#interest_rate_calc').val('');
+            $('#due_period_calc').val('');
+            $('#doc_charge_calc').val('');
+            $('#processing_fees_calc').val('');
 
         }
     }, 'json');
@@ -2388,7 +2451,7 @@ function isFormDataValid(formData) {
         'due_amnt_calc', 'doc_charge_calculate',
         'id', 'category_info_calc', 'due_method_calc', 'due_type_calc', 'profit_method_calc',
         'scheme_due_method_calc', 'scheme_day_calc', 'scheme_name_calc', 'agent_id_calc', 'due_period_calc', 'interest_rate_calc', 'processing_fees_calc', 'doc_charge_calc',
-        'agent_name_calc', 'customer_profile_id','cus_status'
+        'agent_name_calc', 'customer_profile_id', 'cus_status'
     ];
 
     // Validate all fields except the excluded ones
@@ -2444,12 +2507,12 @@ function isFormDataValid(formData) {
     let docNeedTable = $('#doc_need_table').DataTable();
     let docNeedRowCount = docNeedTable.rows().count();
 
-    if (docNeedRowCount <= 0) {
-        isValid = false;
-        $('#' + 'doc_need_calc').css('border', '1px solid #ff0000'); // Applying red border
-    } else {
-        $('#' + 'doc_need_calc').css('border', '1px solid #cecece'); // Resetting border to default
-    }
+    // if (docNeedRowCount <= 0) {
+    //     isValid = false;
+    //     $('#' + 'doc_need_calc').css('border', '1px solid #ff0000'); // Applying red border
+    // } else {
+    //     $('#' + 'doc_need_calc').css('border', '1px solid #cecece'); // Resetting border to default
+    // }
 
     docNeedTable.destroy();
 
@@ -2505,7 +2568,7 @@ function getDocNeedTable(cusProfileId) {
 
 function loanCalculationEdit(id) {
     $.post('api/loan_entry/loan_calculation/loan_calculation_data.php', { id }, function (response) {
-        if(response.length>0){
+        if (response.length > 0) {
             $('#loan_id_calc').val(response[0].loan_id);
             $('#loan_category_calc').val(response[0].loan_category);
             $('#loan_category_calc2').val(response[0].loan_category);
@@ -2534,7 +2597,7 @@ function loanCalculationEdit(id) {
             $('#maturity_date_calc').val(response[0].maturity_date);
             $('#referred_calc').val(response[0].referred);
             $('#referred_calc').trigger('change');
-    
+
             $('#profit_type_calc_scheme').show();
             if (response[0].profit_type == '0') {//Loan Calculation
                 $('.calc').show();
@@ -2545,13 +2608,13 @@ function loanCalculationEdit(id) {
                 dueMethodScheme(response[0].scheme_due_method, response[0].loan_category)
                 $('.calc').hide();
                 $('.scheme').show();
-                setTimeout(()=>{
-                    schemeCalAjax(response[0].scheme_name) 
-                },500);
-               
+                setTimeout(() => {
+                    schemeCalAjax(response[0].scheme_name)
+                }, 500);
+
             }
-    
-            
+
+
             setTimeout(() => {
                 $('#scheme_day_calc').val(response[0].scheme_day);
                 $('#agent_id_calc').val(response[0].agent_id);
