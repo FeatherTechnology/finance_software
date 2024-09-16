@@ -412,6 +412,7 @@ function getSchemeListTable(scheme_id) {
     if (Array.isArray(scheme_id)) {
         scheme_id = scheme_id.join(",");
     }
+    
     $.post('api/loan_category_creation/get_scheme_list_based_scheme_dropdown.php', { scheme_id }, function (response) {
         let schemeColumn = [
             "sno",
@@ -426,8 +427,11 @@ function getSchemeListTable(scheme_id) {
             "processing_fee_max",
             "overdue_penalty_percent"
         ]
+        
         appendDataToTable('#loan_scheme_table', response, schemeColumn);
-        setdtable('#loan_scheme_table');
+        setTimeout(function() {
+            setdtable('#loan_scheme_table');
+        }, 0);
     }, 'json');
 }
 

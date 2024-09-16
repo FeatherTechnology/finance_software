@@ -105,25 +105,25 @@
                                     <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
                                         <div class="form-group">
                                             <label for="cus_data"> Customer Data</label>
-                                            <input type="text" class="form-control" id="cus_data" name="cus_data" disabled tabindex="13">
+                                            <input type="text" class="form-control" id="cus_data" name="cus_data" disabled tabindex="2">
                                         </div>
                                     </div>
                                     <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
                                         <div class="form-group">
                                             <label for="cus_name"> Customer Name</label><span class="text-danger">*</span>
-                                            <input type="text" class="form-control personal_info_disble" id="cus_name" name="cus_name" pattern="[a-zA-Z\s]+" placeholder="Enter Customer Name" tabindex=" 2">
+                                            <input type="text" class="form-control personal_info_disble" id="cus_name" name="cus_name" pattern="[a-zA-Z\s]+" placeholder="Enter Customer Name" tabindex="3">
                                         </div>
                                     </div>
                                     <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12 cus_status_div" style="display:none;">
                                         <div class="form-group">
                                             <label for="cus_status"> Customer Status</label>
-                                            <input type="text" class="form-control" id="cus_status" name="cus_status" disabled tabindex="14">
+                                            <input type="text" class="form-control" id="cus_status" name="cus_status" disabled tabindex="4">
                                         </div>
                                     </div>
                                     <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
                                         <div class="form-group">
                                             <label for="gender">Gender</label><span class="text-danger">*</span>
-                                            <select type="text" class="form-control  personal_info_disble" id="gender" name="gender" tabindex="3">
+                                            <select type="text" class="form-control  personal_info_disble" id="gender" name="gender" tabindex="5">
                                                 <option value="">Select Gender</option>
                                                 <option value="1">Male</option>
                                                 <option value="2">Female</option>
@@ -134,36 +134,36 @@
                                     <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
                                         <div class="form-group">
                                             <label for="dob"> DOB</label>
-                                            <input type="date" class="form-control  personal_info_disble" id="dob" name="dob" placeholder="Enter Date Of Birth" tabindex="4">
+                                            <input type="date" class="form-control  personal_info_disble" id="dob" name="dob" placeholder="Enter Date Of Birth" tabindex="6">
                                         </div>
                                     </div>
                                     <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
                                         <div class="form-group">
                                             <label for="age"> Age</label>
-                                            <input type="number" class="form-control  personal_info_disble" id="age" name="age" readonly placeholder="Age" tabindex="5">
+                                            <input type="number" class="form-control  personal_info_disble" id="age" name="age" readonly placeholder="Age" tabindex="7">
                                         </div>
                                     </div>
                                     <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
                                         <div class="form-group">
                                             <label for="mobile1"> Mobile Number 1</label><span class="text-danger">*</span>
-                                            <input type="number" class="form-control  personal_info_disble" id="mobile1" name="mobile1" placeholder="Enter Mobile Number 1" onKeyPress="if(this.value.length==10) return false;" tabindex="6">
+                                            <input type="number" class="form-control  personal_info_disble" id="mobile1" name="mobile1" placeholder="Enter Mobile Number 1" onKeyPress="if(this.value.length==10) return false;" tabindex="8">
                                         </div>
                                     </div>
                                     <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
                                         <div class="form-group">
                                             <label for="mobile2"> Mobile Number 2</label>
-                                            <input type="number" class="form-control  personal_info_disble" id="mobile2" name="mobile2" onKeyPress="if(this.value.length==10) return false;" placeholder="Enter Mobile Number 2" tabindex="7">
+                                            <input type="number" class="form-control  personal_info_disble" id="mobile2" name="mobile2" onKeyPress="if(this.value.length==10) return false;" placeholder="Enter Mobile Number 2" tabindex="9">
                                         </div>
                                     </div>
                                     <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
                                         <div class="form-group">
                                             <label>Choose Mobile Number for WhatsApp:</label><br>
                                             <label>
-                                                <input type="radio" name="mobile_whatsapp" value="mobile1" id="mobile1_radio">
+                                                <input type="radio" name="mobile_whatsapp" value="mobile1" id="mobile1_radio" class="personal_info_disble">
                                                 Mobile Number 1
                                             </label><br>
                                             <label>
-                                                <input type="radio" name="mobile_whatsapp" value="mobile2" id="mobile2_radio">
+                                                <input type="radio" name="mobile_whatsapp" value="mobile2" id="mobile2_radio" class="personal_info_disble">
                                                 Mobile Number 2
                                             </label>
                                             <input type="hidden" id="selected_mobile_radio">
@@ -172,13 +172,13 @@
                                     <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
                                         <div class="form-group">
                                             <label for="whatsapp_no"> WhatsApp Number </label>
-                                            <input type="number" class="form-control  personal_info_disble" id="whatsapp_no" name="whatsapp_no" onKeyPress="if(this.value.length==10) return false;" placeholder="Enter WhatsApp Number" tabindex="7">
+                                            <input type="number" class="form-control  personal_info_disble" id="whatsapp_no" name="whatsapp_no" onKeyPress="if(this.value.length==10) return false;" placeholder="Enter WhatsApp Number" tabindex="10">
                                         </div>
                                     </div>
                                     <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
                                         <div class="form-group">
                                             <label for="aadhar_num">Aadhar No</label>
-                                            <input type="text" class="form-control personal_info_disble" name="aadhar_num" id="aadhar_num" tabindex="1" maxlength="14" data-type="adhaar-number" placeholder="Enter Aadhar Number">
+                                            <input type="text" class="form-control personal_info_disble" name="aadhar_num" id="aadhar_num" tabindex="11" maxlength="14" data-type="adhaar-number" placeholder="Enter Aadhar Number">
                                             <input type="hidden" id="addaadhar_id" value='0'>
                                         </div>
                                     </div>
@@ -190,7 +190,7 @@
                                         <div class="form-group">
                                             <label for="pic"> Photo</label><span class="text-danger">*</span><br>
                                             <img id='imgshow' class="img_show" src='img\avatar.png' />
-                                            <input type="file" class="form-control  personal_info_disble" id="pic" name="pic" tabindex="8">
+                                            <input type="file" class="form-control  personal_info_disble" id="pic" name="pic" tabindex="12">
                                             <input type="hidden" class="personal_info_disble" id="per_pic">
                                         </div>
                                     </div>
@@ -208,7 +208,7 @@
                 <div class="card">
                     <div class="card-header">
                         <div class="card-title">Family Info <span class="text-danger">*</span>
-                            <button type="button" class="btn btn-primary" id="add_group" name="add_group" data-toggle="modal" data-target="#add_fam_info_modal" onclick="getFamilyTable()" style="padding: 5px 35px; float: right;" tabindex='9'><span class="icon-add"></span></button>
+                            <button type="button" class="btn btn-primary" id="add_group" name="add_group" data-toggle="modal" data-target="#add_fam_info_modal" onclick="getFamilyTable()" style="padding: 5px 35px; float: right;" tabindex='13'><span class="icon-add"></span></button>
                         </div>
                     </div>
                     <div class="card-body">
@@ -248,7 +248,7 @@
                                         <div class="form-group">
                                             <label for="guarantor_name"> Guarantor Name</label><span class="text-danger">*</span>
                                             <input type="hidden" id="guarantor_name_edit">
-                                            <select type="text" class="form-control" id="guarantor_name" name="guarantor_name" tabindex="10">
+                                            <select type="text" class="form-control" id="guarantor_name" name="guarantor_name" tabindex="14">
                                                 <option value="">Select Guarantor Name</option>
                                             </select>
                                         </div>
@@ -256,7 +256,7 @@
                                     <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
                                         <div class="form-group">
                                             <label for="relationship"> Relationship</label><span class="text-danger">*</span>
-                                            <input type="text" class="form-control" id="relationship" name="relationship" pattern="[a-zA-Z\s]+" disabled placeholder="Enter Relationship" tabindex="11">
+                                            <input type="text" class="form-control" id="relationship" name="relationship" pattern="[a-zA-Z\s]+" disabled placeholder="Enter Relationship" tabindex="15">
                                         </div>
                                     </div>
                                 </div>
@@ -267,7 +267,7 @@
                                         <div class="form-group">
                                             <label for="pic"> Photo</label><br>
                                             <img id='gur_imgshow' class="img_show" src='img\avatar.png' />
-                                            <input type="file" class="form-control" id="gu_pic" name="gu_pic" tabindex="12">
+                                            <input type="file" class="form-control" id="gu_pic" name="gu_pic" tabindex="16">
                                             <input type="hidden" id="gur_pic">
                                         </div>
                                     </div>
@@ -276,86 +276,87 @@
                         </div>
                     </div>
                 </div>
-
-                <div class="card">
-                    <div id="data_checking_div" style="display: none;">
-                        <div class="card-header">
-                            <div class="card-title">Data Checking</div>
-                        </div>
-                        <div class="card-body">
-                            <div class="row">
-                                <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
-                                    <div class="form-group">
-                                        <label for="name_check">Name</label>
-                                        <select type="text" class="form-control" id="name_check" name="name_check" tabindex="15">
-                                            <option value="">Select Name</option>
-                                        </select>
-                                    </div>
-                                </div>
-                                <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
-                                    <div class="form-group">
-                                        <label for="aadhar_check">Aadhar</label>
-                                        <select type="text" class="form-control" id="aadhar_check" name="aadhar_check" tabindex="16">
-                                            <option value="">Select Aadhar</option>
-                                        </select>
-                                    </div>
-                                </div>
-                                <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
-                                    <div class="form-group">
-                                        <label for="mobile_check">Mobile</label>
-                                        <select type="text" class="form-control" id="mobile_check" name="mobile_check" tabindex="17">
-                                            <option value="">Select Mobile</option>
-                                        </select>
-                                    </div>
-                                </div>
+                <div id="checking_hide" style="display: none;">
+                    <div class="card">
+                        <div id="data_checking_div" style="display: none;">
+                            <div class="card-header">
+                                <div class="card-title">Data Checking</div>
                             </div>
-                        </div>
-                    </div>
-
-                    <div id="data_checking_table_div" style="display: none;">
-                        <div class="card-header">
-                            <div class="card-title">Customer Data</div>
-                        </div>
-                        <div class="card-body">
-                            <div class="row">
-                                <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
-                                    <div class="form-group">
-                                        <table id="cus_info" class="table custom-table">
-                                            <thead>
-                                                <tr>
-                                                    <th width="20">S.NO</th>
-                                                    <th>Customer ID</th>
-                                                    <th>Customer Name</th>
-                                                    <th>Mobile Number</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody></tbody>
-                                        </table>
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                                        <div class="form-group">
+                                            <label for="name_check">Name</label>
+                                            <select type="text" class="form-control" id="name_check" name="name_check" tabindex="17">
+                                                <option value="">Select Name</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                                        <div class="form-group">
+                                            <label for="aadhar_check">Aadhar</label>
+                                            <select type="text" class="form-control" id="aadhar_check" name="aadhar_check" tabindex="18">
+                                                <option value="">Select Aadhar</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                                        <div class="form-group">
+                                            <label for="mobile_check">Mobile</label>
+                                            <select type="text" class="form-control" id="mobile_check" name="mobile_check" tabindex="19">
+                                                <option value="">Select Mobile</option>
+                                            </select>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
 
-                        <div class="card-header">
-                            <div class="card-title">Family Data</div>
-                        </div>
-                        <div class="card-body">
-                            <div class="row">
-                                <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
-                                    <div class="form-group">
-                                        <table id="family_info" class="table custom-table">
-                                            <thead>
-                                                <tr>
-                                                    <th width="20">S.NO</th>
-                                                    <th>Customer ID</th>
-                                                    <th>Name</th>
-                                                    <th>Relationship</th>
-                                                    <th>Under Customer Name</th>
-                                                    <th>Under Customer ID</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody></tbody>
-                                        </table>
+                        <div id="data_checking_table_div" style="display: none;">
+                            <div class="card-header">
+                                <div class="card-title">Customer Data</div>
+                            </div>
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+                                        <div class="form-group">
+                                            <table id="cus_info" class="table custom-table">
+                                                <thead>
+                                                    <tr>
+                                                        <th width="20">S.NO</th>
+                                                        <th>Customer ID</th>
+                                                        <th>Customer Name</th>
+                                                        <th>Mobile Number</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody></tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="card-header">
+                                <div class="card-title">Family Data</div>
+                            </div>
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+                                        <div class="form-group">
+                                            <table id="family_info" class="table custom-table">
+                                                <thead>
+                                                    <tr>
+                                                        <th width="20">S.NO</th>
+                                                        <th>Customer ID</th>
+                                                        <th>Name</th>
+                                                        <th>Relationship</th>
+                                                        <th>Under Customer Name</th>
+                                                        <th>Under Customer ID</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody></tbody>
+                                            </table>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -546,7 +547,7 @@
                                                 <th>Proof Of</th>
                                                 <th>Relationship</th>
                                                 <th>Proof</th>
-                                                <th>Proof Detail</th>
+                                                <th>Proof Member</th>
                                                 <th>Upload</th>
                                             </tr>
                                         </thead>
@@ -1299,7 +1300,7 @@
                                     <th>Proof Of</th>
                                     <th>Relationship</th>
                                     <th>Proof</th>
-                                    <th>Proof Detail</th>
+                                    <th>Proof Member</th>
                                     <th>Upload</th>
                                     <th>Action</th>
                                 </tr>

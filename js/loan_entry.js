@@ -2,7 +2,7 @@ $(document).ready(function () {
     //Move Loan Entry 
     $(document).on('click', '.move-loan-entry', function () {
         let cus_sts_id = $(this).attr('value');
-        swalConfirm('Delete', 'Are you sure you want to move approval?', moveToNext, cus_sts_id);
+        swalConfirm('Delete', 'Are you ready to move to the Approval Screen?', moveToNext, cus_sts_id);
         return;
     });
     // Loan Entry Tab Change Radio buttons
@@ -22,9 +22,11 @@ $(document).ready(function () {
         if (cus_data == 'Existing') {
             $('.cus_status_div').show();
             $('#data_checking_div').show();
+            $('#checking_hide').show();
         } else {
             $('.cus_status_div').hide();
             $('#data_checking_div').hide();
+            $('#checking_hide').hide();
         }
         dataCheckList('', '', '');
         $('#data_checking_table_div').hide();
@@ -678,6 +680,9 @@ $(document).ready(function () {
                     if (response.status == 0) {
                         swalSuccess('Success', 'Customer Profile Updated Successfully!');
                         $('#loan_calculation').trigger('click')
+                        $('html, body').animate({
+                            scrollTop: $('.page-content').offset().top
+                        }, 3000);
                     }
                     $('#customer_profile_id').val(response.last_id);
                 },
@@ -770,6 +775,7 @@ $(document).ready(function () {
                     if (response.cus_data == 'Existing') {
                         $('.cus_status_div').show();
                         $('#data_checking_div').show();
+                        $('#checking_hide').show();
                     }
                     $('#cus_status').val(response.cus_status);
                     $('.personal_info_disble').attr("disabled", true);
@@ -1477,6 +1483,7 @@ function editCustmerProfile(id) {
         $('#age').val(response[0].age);
         $('#mobile2').val(response[0].mobile2);
         $('#whatsapp_no').val(response[0].whatsapp_no);
+        $('#aadhar_num').val(response[0].aadhar_num);
         $('#mobile1').val(response[0].mobile1);
         $('#guarantor_name_edit').val(response[0].guarantor_name);
         $('#cus_data').val(response[0].cus_data);
@@ -1516,9 +1523,11 @@ function editCustmerProfile(id) {
             $('.cus_status_div').show();
             checkAdditionalRenewal(response[0].cus_id);
             $('#data_checking_div').show();
+            $('#checking_hide').show();
         } else {
             $('.cus_status_div').hide();
             $('#data_checking_div').hide();
+            $('#checking_hide').hide();
             $('#data_checking_table_div').hide();
         }
         let path = "uploads/loan_entry/cus_pic/";
@@ -1568,6 +1577,7 @@ function existingCustmerProfile(cus_id) {
             $('#about_cus').val('');
             $('#loan_entry_customer_profile').find('input[type="radio"]').prop('checked', false);
             $('.cus_status_div').hide();
+            $('#checking_hide').hide();
             $('#data_checking_div').hide();
             $('#data_checking_table_div').hide();
 
@@ -1626,6 +1636,7 @@ function existingCustmerProfile(cus_id) {
 
             $('.cus_status_div').show();
             $('#data_checking_div').show();
+            $('#checking_hide').show();
             let path = "uploads/loan_entry/cus_pic/";
             $('#per_pic').val(response[0].pic);
             var img = $('#imgshow');
@@ -1916,8 +1927,18 @@ $(document).ready(function () {
                 $.post('api/loan_entry/loan_calculation/submit_loan_calculation.php', formData, function (response) {
                     if (response.status == '1') {
                         swalSuccess('Success', 'Loan Calculation Added Successfully!');
+                        if ($('.page-content').length) {
+                            $('html, body').animate({
+                                scrollTop: $('.page-content').offset().top
+                            }, 3000);
+                        } 
                     } else if (response.status == '2') {
                         swalSuccess('Success', 'Loan Calculation Updated Successfully!')
+                        if ($('.page-content').length) {
+                            $('html, body').animate({
+                                scrollTop: $('.page-content').offset().top
+                            }, 3000);
+                        }                        
                     } else {
                         swalError('Error', 'Error Occurs!')
                     }

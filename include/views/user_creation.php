@@ -195,6 +195,16 @@
                                             </select>
                                         </div>
                                     </div>
+                                    <div class="col-sm-4 col-md-4 col-lg-4">
+                                        <div class="form-group">
+                                            <label for="download_access">Download Access</label><span class="text-danger">*</span>
+                                            <select class="form-control" id="download_access" name="download_access" tabindex="18" >
+                                                <option value="">Select Download Access</option>
+                                                <option value="1">YES</option>
+                                                <option value="2">NO</option>
+                                            </select>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
