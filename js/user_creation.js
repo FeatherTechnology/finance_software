@@ -144,10 +144,11 @@ $(document).ready(function () {
 
             loan_category: $('#loan_category').val(),
             collection_access: $('#collection_access').val(),
+            download_access: $('#download_access').val(),
             submenus: selectedSubmenuIds,
             id: $('#user_creation_id').val()
         }
-        var data = ['name', 'user_id', 'designation', 'role', 'user_name', 'password', 'confirm_password', 'collection_access',]
+        var data = ['name', 'user_id', 'designation', 'role', 'user_name', 'password', 'confirm_password', 'collection_access','download_access']
 
         var isValid = true;
         data.forEach(function (entry) {
@@ -206,6 +207,7 @@ $(document).ready(function () {
             $('#password').val(response[0].password);
             $('#confirm_password').val(response[0].password);
             $('#collection_access').val(response[0].collection_access);
+            $('#download_access').val(response[0].download_access);
 
             setTimeout(() => {
                 getUserID(id)
@@ -295,6 +297,7 @@ $(document).ready(function () {
         $('#password').css('border', '1px solid #cecece');
         $('#confirm_password').css('border', '1px solid #cecece');
         $('#collection_access').css('border', '1px solid #cecece');
+        $('#download_access').css('border', '1px solid #cecece');
         $('#branch_name').closest('.choices').find('.choices__inner').css('border', '1px solid #cecece');
         $('#loan_category').closest('.choices').find('.choices__inner').css('border', '1px solid #cecece');
         $('#line_name').closest('.choices').find('.choices__inner').css('border', '1px solid #cecece');

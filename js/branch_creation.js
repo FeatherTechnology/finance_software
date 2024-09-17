@@ -87,8 +87,7 @@ $(document).ready(function () {
 
 $(function () {
     getBranchTable()
-
-
+    $('#pageHeaderName').html(' - Branch Creation <span style="float:right;">Branch Limit: 0</span>');
 });
 // function getBranchTable() {
 //     $.post('api/branch_creation/branch_creation_list.php', function (response) {
@@ -129,6 +128,7 @@ function swapTableAndCreation() {
         $('.addbranchBtn').show(); // Show the Add Branch button
         $('#branch_creation_content').hide();
         $('.backBtn').hide();
+        $('#pageHeaderName').html(' - Branch Creation <span style="float:right;">Branch Limit: 0</span>');
     }
 }
 
@@ -213,7 +213,7 @@ $('button[type="reset"], #back_btn').click(function () {
         }
     });
     $('textarea').val('');
-
+    $('#pageHeaderName').text(` - Branch Creation`);
     $('select').each(function () {
         $(this).val($(this).find('option:first').val());
 

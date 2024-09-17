@@ -12,22 +12,20 @@ $mobile = isset($_POST['mobile']) ? $_POST['mobile'] : '';
 $cus_profile_id = isset($_POST['cus_profile_id']) ? $_POST['cus_profile_id'] : '';
 
 // Construct the query based on the provided search criteria
-$query = "SELECT * FROM customer_profile WHERE id != '$cus_profile_id' AND  "; // Base query
+$query = "SELECT DISTINCT * FROM customer_profile WHERE id != '$cus_profile_id'";
 
 if (!empty($name)) {
-    $query .= " cus_name LIKE '%$name%'";
-    $famquery = " fi.fam_name LIKE '%$name%'";
+    $query .= " AND cus_name LIKE '%$name%'";
 }
 
 if (!empty($cusid)) {
-    $query .= " cus_id = '$cusid'";
-    $famquery = " fi.fam_aadhar = '$cusid'";
+    $query .= " AND cus_id = '$cusid'";
 }
 
 if (!empty($mobile)) {
-    $query .= " (mobile1 = '$mobile' OR mobile2 = '$mobile')";
-    $famquery = " fi.fam_mobile = '$mobile' ";
+    $query .= " AND (mobile1 = '$mobile' OR mobile2 = '$mobile')";
 }
+
 // Execute the query
 $result = $pdo->query($query);
 if ($result) {
@@ -36,7 +34,24 @@ if ($result) {
 }
 
 // Fetch related family info
-$familyResult = $pdo->query("SELECT fi.*, cp.cus_name AS under_customer_name, cp.cus_id AS under_customer_id FROM family_info fi LEFT JOIN customer_profile cp ON fi.cus_id = cp.cus_id WHERE $famquery AND cp.id != '$cus_profile_id'");
+$familyQuery = "SELECT DISTINCT fi.*, cp.cus_name AS under_customer_name, cp.cus_id AS under_customer_id 
+                FROM family_info fi 
+                LEFT JOIN customer_profile cp ON fi.cus_id = cp.cus_id 
+                WHERE cp.id != '$cus_profile_id'";
+
+if (!empty($name)) {
+    $familyQuery .= " AND fi.fam_name LIKE '%$name%'";
+}
+
+if (!empty($cusid)) {
+    $familyQuery .= " AND fi.fam_aadhar = '$cusid'";
+}
+
+if (!empty($mobile)) {
+    $familyQuery .= " AND fi.fam_mobile = '$mobile'";
+}
+
+$familyResult = $pdo->query($familyQuery);
 if ($familyResult) {
     $familyResponse = $familyResult->fetchAll(PDO::FETCH_ASSOC);
 }

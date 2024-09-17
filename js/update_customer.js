@@ -24,8 +24,6 @@ $(document).ready(function () {
 
         swapTableAndCreation();
         editCustmerProfile(id)
-
-
     });
 
     $('input[name=update_type]').click(function () {
@@ -78,7 +76,7 @@ $(document).ready(function () {
 
     $(document).on('click', '#documentation', function (event) {
         event.preventDefault();
-        let cus_id = $('#cus_id_upd').val(); 
+        let cus_id = $('#cus_id_upd').val();
         OnLoadFunctions(cus_id)
     })
     $('#cus_name').on('blur', function () {
@@ -228,18 +226,33 @@ $(document).ready(function () {
         }
     });
 
+    // $('#proof_of').change(function () {
+    //     var proofOf = $(this).val();
+    //     if (proofOf == "2") { // Family Member selected
+    //         $('.fam_mem_div').show();
+    //         $('#kyc_relationship').val('');
+    //         getFamilyMember('Select Family Member', '#fam_mem');
+    //     } else { // Customer or any other selection
+    //         $('.fam_mem_div').hide();
+    //         $('#kyc_relationship').val('Customer');
+    //     }
+    // });
+
     $('#proof_of').change(function () {
         var proofOf = $(this).val();
         if (proofOf == "2") { // Family Member selected
             $('.fam_mem_div').show();
+            $('.kyc_name_div').hide();
             $('#kyc_relationship').val('');
             getFamilyMember('Select Family Member', '#fam_mem');
         } else { // Customer or any other selection
+            let cus_name = $("#cus_name").val();
+            $('#kyc_name').val(cus_name);
+            $('.kyc_name_div').show();
             $('.fam_mem_div').hide();
-            $('#kyc_relationship').val('Customer');
+            $('#kyc_relationship').val('NIL');
         }
     });
-
     $('#fam_mem').change(function () {
         var familyMemberId = $(this).val();
         if (familyMemberId) {
@@ -347,8 +360,12 @@ $(document).ready(function () {
                     if (response = 'Success') {
                         if (kyc_id == '') {
                             swalSuccess('Success', 'KYC Added Successfully!');
+                            $('.kyc_name_div').hide();
+                            $('.fam_mem_div').hide();
                         } else {
                             swalSuccess('Success', 'KYC Updated Successfully!')
+                            $('.kyc_name_div').hide();
+                            $('.fam_mem_div').hide();
                         }
                     } else {
                         swalError('Error', 'Error in table');
@@ -371,17 +388,25 @@ $(document).ready(function () {
 
                 if (response[0].proof_of == 1) { // Assuming 1 is for customer
                     $('.fam_mem_div').hide();
+                    $('.kyc_name_div').show();
+                    let cus_name = $("#cus_name").val();
+                    $('#kyc_name').val(cus_name);
                     $('#fam_mem').val('');
-                    $('#kyc_relationship').val('Customer');
                 } else {
+                    $('.kyc_name_div').hide();
+                    $('#kyc_name').val('');
                     getFamilyMember('Select Family Member', '#fam_mem');
                     setTimeout(() => {
                         $("#fam_mem").val(response[0].fam_mem);
                     }, 100);
                     $('.fam_mem_div').show();
+                    // $('#kyc_relationship').val(response[0].fam_relationship);
+                }
+                if (response[0].proof_of == 1) {
+                    $('#kyc_relationship').val('NIL');
+                } else {
                     $('#kyc_relationship').val(response[0].fam_relationship);
                 }
-
 
                 getKycLoanId(); // Fetch all loan ID options
                 setTimeout(() => {
@@ -393,7 +418,6 @@ $(document).ready(function () {
             }
         }, 'json');
     });
-
     $('#clear_kyc_form').on('click', function () {
         $('.fam_mem_div').hide();
         $('#fam_mem').val('');
@@ -413,11 +437,12 @@ $(document).ready(function () {
     $('#proof_of').on('change', function () {
         if ($(this).val() == "2") {
             $('.fam_mem_div').show();
+            $('.kyc_name_div').hide();
         } else {
+            $('.kyc_name_div').show();
             $('.fam_mem_div').hide();
         }
     });
-
     //////KyC Proof Modal///////
     $('#submit_proof').click(function () {
         event.preventDefault();
@@ -493,6 +518,23 @@ $(document).ready(function () {
         }
     })
 
+    $('input[name="mobile_whatsapp"]:radio').change(function() {
+        let selectedValue = $(this).val();  // Get selected radio value
+        let mobileNumber = '';              // Initialize mobile number variable
+    
+        // Get the corresponding mobile number based on selected radio value
+        if (selectedValue === 'mobile1') {
+            mobileNumber = $('#mobile1').val();
+        } else if (selectedValue === 'mobile2') {
+            mobileNumber = $('#mobile2').val();
+        }
+    
+        // Set the selected mobile number in the WhatsApp field
+        $('#whatsapp_no').val(mobileNumber);
+    
+    });
+       
+    
     $('#submit_customer_profile').click(function (event) {
         event.preventDefault();
         // Validate form fields
@@ -509,6 +551,8 @@ $(document).ready(function () {
         let age = $('#age').val();
         let mobile1 = $('#mobile1').val();
         let mobile2 = $('#mobile2').val();
+        let whatsapp_no = $('#whatsapp_no').val();
+        let aadhar_num = $('#aadhar_num').val().replace(/\s/g, '');
         let guarantor_name = $('#guarantor_name').val();
         let cus_data = $('#cus_data').val();
         let cus_status = $('#cus_status').val();
@@ -564,22 +608,6 @@ $(document).ready(function () {
             }
         });
 
-        if (gu_pic === undefined && gur_pic === '') {
-            let isUploadValid = validateField('', 'gu_pic');
-            let isHiddenValid = validateField('', 'gur_pic');
-            if (!isUploadValid || !isHiddenValid) {
-                isValid = false;
-            }
-            else {
-                $('#gu_pic').css('border', '1px solid #cecece');
-                $('#gur_pic').css('border', '1px solid #cecece');
-            }
-        }
-        else {
-            $('#gu_pic').css('border', '1px solid #cecece');
-            $('#gur_pic').css('border', '1px solid #cecece');
-        }
-
         if (isValid) {
             if (famInfoRowCount === 0 || kycInfoRowCount === 0) {
                 swalError('Warning', 'Please Fill out Family Info and KYC Info!');
@@ -594,6 +622,8 @@ $(document).ready(function () {
             entryDetail.append('age', age);
             entryDetail.append('mobile1', mobile1);
             entryDetail.append('mobile2', mobile2);
+            entryDetail.append('whatsapp_no', whatsapp_no);
+            entryDetail.append('aadhar_num', aadhar_num);
             entryDetail.append('pic', pic);
             entryDetail.append('per_pic', per_pic);
             entryDetail.append('guarantor_name', guarantor_name);
@@ -629,8 +659,18 @@ $(document).ready(function () {
                     // Handle success response
                     if (response.status == 0) {
                         swalSuccess('Success', 'Customer Profile Updated Successfully!');
+                        $('html, body').animate({
+                            scrollTop: $('.page-content').offset().top
+                        }, 3000);
                     }
                     $('#customer_profile_id').val(response.last_id);
+                    $('#per_pic').val(response.pic);
+                    $('#cus_data').val(response.cus_data);
+                    if (response.cus_data == 'Existing') {
+                        $('.cus_status_div').show();
+                        $('#data_checking_div').show();
+                        $('#checking_hide').show();
+                    }
                 },
                 error: function () {
                     swalError('Error', 'Error occurred while processing your request.');
@@ -867,7 +907,11 @@ function getFamilyTable() {
         $('#fam_live').val('');
     }, 'json')
 }
-
+function checkAdditionalRenewal(cus_id) {
+    $.post('api/loan_entry/check_additional_renewal.php', { cus_id }, function (response) {
+        $('#cus_status').val(response);
+    }, 'json');
+}
 function getFamilyDelete(id) {
     let cus_id = $('#cus_id_upd').val().replace(/\s/g, '');
     let cus_profile_id = $('#customer_profile_id').val();
@@ -1104,6 +1148,7 @@ function getKycTable() {
         $('#kyc_form input').val('');
         $('#kyc_form input').css('border', '1px solid #cecece');
         $('#kyc_form select').css('border', '1px solid #cecece');
+        $('#Kyc_form.kyc_name_div').hide();
         $('#Kyc_form.fam_mem_div').hide();
         $('#kyc_form select').each(function () {
             $(this).val($(this).find('option:first').val());
@@ -1231,21 +1276,38 @@ function dataCheckList(cus_id, cus_name, cus_mble_no) {
             $('#name_check').append("<option value='" + val.fam_name + "'>" + val.fam_name + "</option>");
         });
 
-        //Adhar no
-        $('#aadhar_check').empty();
-        $('#aadhar_check').append("<option value=''>Select Aadhar Number</option>");
-        $('#aadhar_check').append('<option value="' + cus_id + '">' + cus_id + '</option>');
-        $.each(response, function (index, val) {
-            $('#aadhar_check').append("<option value='" + val.fam_aadhar + "'>" + val.fam_aadhar + "</option>");
-        });
+       //Adhar no
+       $('#aadhar_check').empty();
+       $('#aadhar_check').append("<option value=''>Select Aadhar Number</option>");
 
-        //Mobile no 
-        $('#mobile_check').empty();
-        $('#mobile_check').append("<option value=''>Select Mobile Number</option>");
-        $('#mobile_check').append('<option value="' + cus_mble_no + '">' + cus_mble_no + '</option>');
-        $.each(response, function (index, val) {
-            $('#mobile_check').append("<option value='" + val.fam_mobile + "'>" + val.fam_mobile + "</option>");
-        });
+       // Append the provided Aadhar number with the customer name if both are present
+       if (cus_id && cus_name) {
+           $('#aadhar_check').append('<option value="' + cus_id + '">' + cus_id + ' - ' + cus_name + '</option>');
+       }
+
+       // Loop through the response and append Aadhar numbers with family names
+       $.each(response, function (index, val) {
+           if (val.fam_aadhar && val.fam_name) {
+               $('#aadhar_check').append('<option value="' + val.fam_aadhar + '">' + val.fam_aadhar + ' - ' + val.fam_name + '</option>');
+           }
+       });
+
+
+       //Mobile no 
+       $('#mobile_check').empty();
+       $('#mobile_check').append("<option value=''>Select Mobile Number</option>");
+
+       // Append the provided customer mobile number and name if they are present
+       if (cus_mble_no && cus_name) {
+           $('#mobile_check').append('<option value="' + cus_mble_no + '">' + cus_mble_no + ' - ' + cus_name + '</option>');
+       }
+
+       // Loop through the response and append mobile numbers with family names
+       $.each(response, function (index, val) {
+           if (val.fam_mobile && val.fam_name) {
+               $('#mobile_check').append('<option value="' + val.fam_mobile + '">' + val.fam_mobile + ' - ' + val.fam_name + '</option>');
+           }
+       });
 
     }, 'json');
 }
@@ -1262,6 +1324,8 @@ function editCustmerProfile(id) {
         $('#age').val(response[0].age);
         $('#mobile2').val(response[0].mobile2);
         $('#mobile1').val(response[0].mobile1);
+        $('#whatsapp_no').val(response[0].whatsapp_no);
+        $('#aadhar_num').val(response[0].aadhar_num);
         $('#guarantor_name_edit').val(response[0].guarantor_name);
         $('#cus_data').val(response[0].cus_data);
         $('#cus_status').val(response[0].cus_status);
@@ -1278,6 +1342,13 @@ function editCustmerProfile(id) {
         $('#cus_limit').val(response[0].cus_limit);
         $('#about_cus').val(response[0].about_cus);
         dataCheckList(response[0].cus_id, response[0].cus_name, response[0].mobile1)
+        if (response[0].whatsapp_no === response[0].mobile1) {
+            $('#mobile1_radio').prop('checked', true);
+            $('#selected_mobile_radio').val('mobile1');
+        } else if (response[0].whatsapp_no === response[0].mobile2) {
+            $('#mobile2_radio').prop('checked', true);
+            $('#selected_mobile_radio').val('mobile2');
+        }
         getGuarantorName()
         getAreaName()
         setTimeout(() => {
@@ -1289,12 +1360,25 @@ function editCustmerProfile(id) {
             $('#guarantor_name').trigger('change');
         }, 1000);
 
+        // if (response[0].cus_data == 'Existing') {
+        //     $('#cus_status').show();
+        //     $('#data_checking_div').show();
+        // } else {
+        //     $('#cus_status').hide();
+        //     $('#data_checking_div').hide();
+        //     $('#data_checking_table_div').hide();
+        // }
+
         if (response[0].cus_data == 'Existing') {
-            $('#cus_status').show();
+            $('.cus_status_div').show();
+            checkAdditionalRenewal(response[0].cus_id);
             $('#data_checking_div').show();
+            $('#checking_hide').show();
+
         } else {
-            $('#cus_status').hide();
+            $('.cus_status_div').hide();
             $('#data_checking_div').hide();
+            $('#checking_hide').hide();
             $('#data_checking_table_div').hide();
         }
         let path = "uploads/loan_entry/cus_pic/";
@@ -1936,9 +2020,9 @@ $(document).ready(function () {
 $(function () {
 });
 
-function getLoanListTable(cus_id,pending_sts,od_sts,due_nil_sts,balAmnt) {
-   // let cus_id = $('#cus_id_upd').val();
-    $.post('api/update_customer_files/update_document_list.php', { cus_id,pending_sts,od_sts,due_nil_sts,balAmnt }, function (response) {
+function getLoanListTable(cus_id, pending_sts, od_sts, due_nil_sts, balAmnt) {
+    // let cus_id = $('#cus_id_upd').val();
+    $.post('api/update_customer_files/update_document_list.php', { cus_id, pending_sts, od_sts, due_nil_sts, balAmnt }, function (response) {
         var columnMapping = [
             'sno',
             'loan_id',
@@ -1957,7 +2041,7 @@ function getLoanListTable(cus_id,pending_sts,od_sts,due_nil_sts,balAmnt) {
     }, 'json');
 }
 
-function OnLoadFunctions(cus_id){
+function OnLoadFunctions(cus_id) {
     //To get loan sub Status
     var pending_arr = [];
     var od_arr = [];
@@ -1965,13 +2049,13 @@ function OnLoadFunctions(cus_id){
     var balAmnt = [];
     $.ajax({
         url: 'api/collection_files/resetCustomerStatus.php',
-        data: {'cus_id':cus_id},
-        dataType:'json',
-        type:'post',
+        data: { 'cus_id': cus_id },
+        dataType: 'json',
+        type: 'post',
         cache: false,
-        success: function(response){
-            if(response.follow_cus_sts != null){
-                for(var i=0;i< response['pending_customer'].length;i++){
+        success: function (response) {
+            if (response.follow_cus_sts != null) {
+                for (var i = 0; i < response['pending_customer'].length; i++) {
                     pending_arr[i] = response['pending_customer'][i]
                     od_arr[i] = response['od_customer'][i]
                     due_nil_arr[i] = response['due_nil_customer'][i]
@@ -1986,14 +2070,14 @@ function OnLoadFunctions(cus_id){
                 balAmnt = balAmnt.join(',');
             }
         }
-    }).then(function(){
-            showOverlay();//loader start
-            var pending_sts = $('#pending_sts').val()
-            var od_sts = $('#od_sts').val()
-            var due_nil_sts = $('#due_nil_sts').val()
-            getLoanListTable(cus_id,pending_sts,od_sts,due_nil_sts,balAmnt)    
-            hideOverlay();//loader stop
-        }); 
+    }).then(function () {
+        showOverlay();//loader start
+        var pending_sts = $('#pending_sts').val()
+        var od_sts = $('#od_sts').val()
+        var due_nil_sts = $('#due_nil_sts').val()
+        getLoanListTable(cus_id, pending_sts, od_sts, due_nil_sts, balAmnt)
+        hideOverlay();//loader stop
+    });
 }//Auto Load function END
 
 function getFamilyMember(optn, selector) {

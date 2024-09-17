@@ -216,7 +216,7 @@
                                     <!-- Fields -->
                                     <div class="col-md-3 col-sm-4">
                                         <div class="form-group">
-                                            <label for="scheme_name">Scheme Name</label>
+                                            <label for="scheme_name">Scheme Name</label><span class="text-danger">*</span>
                                             <input type="hidden" id="scheme_name2">
                                             <select class="form-control" id="scheme_name" name="scheme_name" tabindex="16" multiple>
                                                 <option value="">Select Scheme Name</option>

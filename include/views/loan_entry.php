@@ -58,20 +58,32 @@
                                     <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
                                         <div class="form-group">
                                             <label for="cus_id"> Customer ID</label><span class="text-danger">*</span>
-                                            <input type="text" class="form-control personal_info_disble" id="cus_id" name="cus_id" data-type="adhaar-number" placeholder="Enter Customer ID" tabindex="1" maxlength="14">
+                                            <input type="text" class="form-control personal_info_disble" id="cus_id" name="cus_id" placeholder="Enter Customer ID" tabindex="1" maxlength="14">
                                             <input type="hidden" id="cus_id_upd" name="cus_id_upd">
                                         </div>
                                     </div>
                                     <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
                                         <div class="form-group">
+                                            <label for="cus_data"> Customer Data</label>
+                                            <input type="text" class="form-control" id="cus_data" name="cus_data" disabled tabindex="2">
+                                        </div>
+                                    </div>
+                                    <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
+                                        <div class="form-group">
                                             <label for="cus_name"> Customer Name</label><span class="text-danger">*</span>
-                                            <input type="text" class="form-control personal_info_disble" id="cus_name" name="cus_name" pattern="[a-zA-Z\s]+" placeholder="Enter Customer Name" tabindex=" 2">
+                                            <input type="text" class="form-control personal_info_disble" id="cus_name" name="cus_name" pattern="[a-zA-Z\s]+" placeholder="Enter Customer Name" tabindex="3">
+                                        </div>
+                                    </div>
+                                    <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12 cus_status_div" style="display:none;">
+                                        <div class="form-group">
+                                            <label for="cus_status"> Customer Status</label>
+                                            <input type="text" class="form-control" id="cus_status" name="cus_status" disabled tabindex="4">
                                         </div>
                                     </div>
                                     <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
                                         <div class="form-group">
                                             <label for="gender">Gender</label><span class="text-danger">*</span>
-                                            <select type="text" class="form-control  personal_info_disble" id="gender" name="gender" tabindex="3">
+                                            <select type="text" class="form-control  personal_info_disble" id="gender" name="gender" tabindex="5">
                                                 <option value="">Select Gender</option>
                                                 <option value="1">Male</option>
                                                 <option value="2">Female</option>
@@ -82,31 +94,52 @@
                                     <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
                                         <div class="form-group">
                                             <label for="dob"> DOB</label>
-                                            <input type="date" class="form-control  personal_info_disble" id="dob" name="dob" placeholder="Enter Date Of Birth" tabindex="4">
+                                            <input type="date" class="form-control  personal_info_disble" id="dob" name="dob" placeholder="Enter Date Of Birth" tabindex="6">
                                         </div>
                                     </div>
                                     <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
                                         <div class="form-group">
                                             <label for="age"> Age</label>
-                                            <input type="number" class="form-control  personal_info_disble" id="age" name="age" readonly placeholder="Age" tabindex="5">
+                                            <input type="number" class="form-control  personal_info_disble" id="age" name="age" readonly placeholder="Age" tabindex="7">
                                         </div>
                                     </div>
                                     <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
                                         <div class="form-group">
                                             <label for="mobile1"> Mobile Number 1</label><span class="text-danger">*</span>
-                                            <input type="number" class="form-control  personal_info_disble" id="mobile1" name="mobile1" placeholder="Enter Mobile Number 1" onKeyPress="if(this.value.length==10) return false;" tabindex="6">
+                                            <input type="number" class="form-control  personal_info_disble" id="mobile1" name="mobile1" placeholder="Enter Mobile Number 1" onKeyPress="if(this.value.length==10) return false;" tabindex="8">
                                         </div>
                                     </div>
                                     <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
                                         <div class="form-group">
                                             <label for="mobile2"> Mobile Number 2</label>
-                                            <input type="number" class="form-control  personal_info_disble" id="mobile2" name="mobile2" onKeyPress="if(this.value.length==10) return false;" placeholder="Enter Mobile Number 2" tabindex="7">
+                                            <input type="number" class="form-control  personal_info_disble" id="mobile2" name="mobile2" onKeyPress="if(this.value.length==10) return false;" placeholder="Enter Mobile Number 2" tabindex="9">
+                                        </div>
+                                    </div>
+                                    <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
+                                        <div class="form-group">
+                                            <label>Choose Mobile Number for WhatsApp:</label><br>
+                                            <label>
+                                                <input type="radio" name="mobile_whatsapp" value="mobile1" id="mobile1_radio" class="personal_info_disble">
+                                                Mobile Number 1
+                                            </label><br>
+                                            <label>
+                                                <input type="radio" name="mobile_whatsapp" value="mobile2" id="mobile2_radio" class="personal_info_disble">
+                                                Mobile Number 2
+                                            </label>
+                                            <input type="hidden" id="selected_mobile_radio">
                                         </div>
                                     </div>
                                     <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
                                         <div class="form-group">
                                             <label for="whatsapp_no"> WhatsApp Number </label>
-                                            <input type="number" class="form-control  personal_info_disble" id="whatsapp_no" name="whatsapp_no" onKeyPress="if(this.value.length==10) return false;" placeholder="Enter WhatsApp Number" tabindex="7">
+                                            <input type="number" class="form-control  personal_info_disble" id="whatsapp_no" name="whatsapp_no" onKeyPress="if(this.value.length==10) return false;" placeholder="Enter WhatsApp Number" tabindex="10">
+                                        </div>
+                                    </div>
+                                    <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
+                                        <div class="form-group">
+                                            <label for="aadhar_num">Aadhar No</label>
+                                            <input type="text" class="form-control personal_info_disble" name="aadhar_num" id="aadhar_num" tabindex="11" maxlength="14" data-type="adhaar-number" placeholder="Enter Aadhar Number">
+                                            <input type="hidden" id="addaadhar_id" value='0'>
                                         </div>
                                     </div>
                                 </div>
@@ -117,7 +150,7 @@
                                         <div class="form-group">
                                             <label for="pic"> Photo</label><span class="text-danger">*</span><br>
                                             <img id='imgshow' class="img_show" src='img\avatar.png' />
-                                            <input type="file" class="form-control  personal_info_disble" id="pic" name="pic" tabindex="8">
+                                            <input type="file" class="form-control  personal_info_disble" id="pic" name="pic" tabindex="12">
                                             <input type="hidden" class="personal_info_disble" id="per_pic">
                                         </div>
                                     </div>
@@ -125,181 +158,34 @@
                             </div>
                             <div class="col-md-12 ">
                                 <div class="text-right">
-                                    <button type="submit" name="submit_personal_info" id="submit_personal_info" class="btn btn-primary" value="Submit"><span class="icon-check"></span>&nbsp;Submit</button>
+                                    <button type="submit" name="submit_personal_info" id="submit_personal_info" class="btn btn-primary" value="Submit"><span class="icon-check"></span>&nbsp;Proceed</button>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
-
-                <div class="card">
-                    <div class="card-header">
-                        <div class="card-title">Family Info <span class="text-danger">*</span>
-                            <button type="button" class="btn btn-primary" id="add_group" name="add_group" data-toggle="modal" data-target="#add_fam_info_modal" onclick="getFamilyTable()" style="padding: 5px 35px; float: right;" tabindex='9'><span class="icon-add"></span></button>
-                        </div>
-                    </div>
-                    <div class="card-body">
-                        <div class="row">
-                            <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
-                                <div class="form-group">
-                                    <table id="fam_info_table" class="table custom-table">
-                                        <thead>
-                                            <tr>
-                                                <th width="20">S.NO</th>
-                                                <th>Name</th>
-                                                <th>Relationship</th>
-                                                <th>Age</th>
-                                                <th>Live/Deceased</th>
-                                                <th>Occupation</th>
-                                                <th>Aadhar No</th>
-                                                <th>Mobile No</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody></tbody>
-                                    </table>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="card">
-                    <div class="card-header">
-                        <div class="card-title">Guarantor Info</div>
-                    </div>
-                    <div class="card-body">
-                        <div class="row">
-                            <div class="col-8">
-                                <div class="row">
-                                    <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
-                                        <div class="form-group">
-                                            <label for="guarantor_name"> Guarantor Name</label><span class="text-danger">*</span>
-                                            <input type="hidden" id="guarantor_name_edit">
-                                            <select type="text" class="form-control" id="guarantor_name" name="guarantor_name" tabindex="10">
-                                                <option value="">Select Guarantor Name</option>
-                                            </select>
-                                        </div>
-                                    </div>
-                                    <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
-                                        <div class="form-group">
-                                            <label for="relationship"> Relationship</label><span class="text-danger">*</span>
-                                            <input type="text" class="form-control" id="relationship" name="relationship" pattern="[a-zA-Z\s]+" disabled placeholder="Enter Relationship" tabindex="11">
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-4">
-                                <div class="row">
-                                    <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
-                                        <div class="form-group">
-                                            <label for="pic"> Photo</label><span class="text-danger">*</span><br>
-                                            <img id='gur_imgshow' class="img_show" src='img\avatar.png' />
-                                            <input type="file" class="form-control" id="gu_pic" name="gu_pic" tabindex="12">
-                                            <input type="hidden" id="gur_pic">
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="card">
-                    <div class="card-header">
-                        <div class="card-title">Data Analyis</div>
-                    </div>
-                    <div class="card-body">
-                        <div class="row">
-                            <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
-                                <div class="form-group">
-                                    <label for="cus_data"> Customer Data</label>
-                                    <input type="text" class="form-control" id="cus_data" name="cus_data" disabled placeholder="New/Existing" tabindex="13">
-                                </div>
-                            </div>
-
-                            <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12 cus_status_div" style="display:none;">
-                                <div class="form-group">
-                                    <label for="cus_status"> Customer Status</label>
-                                    <input type="text" class="form-control" id="cus_status" name="cus_status" disabled tabindex="14">
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div id="data_checking_div" >
+                <div class="customer_content" style="display:none;">
+                    <div class="card">
                         <div class="card-header">
-                            <div class="card-title">Data Checking</div>
-                        </div>
-                        <div class="card-body">
-                            <div class="row">
-                                <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
-                                    <div class="form-group">
-                                        <label for="name_check">Name</label>
-                                        <select type="text" class="form-control" id="name_check" name="name_check" tabindex="15">
-                                            <option value="">Select Name</option>
-                                        </select>
-                                    </div>
-                                </div>
-                                <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
-                                    <div class="form-group">
-                                        <label for="aadhar_check">Aadhar</label>
-                                        <select type="text" class="form-control" id="aadhar_check" name="aadhar_check" tabindex="16">
-                                            <option value="">Select Aadhar</option>
-                                        </select>
-                                    </div>
-                                </div>
-                                <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
-                                    <div class="form-group">
-                                        <label for="mobile_check">Mobile</label>
-                                        <select type="text" class="form-control" id="mobile_check" name="mobile_check" tabindex="17">
-                                            <option value="">Select Mobile</option>
-                                        </select>
-                                    </div>
-                                </div>
+                            <div class="card-title">Family Info <span class="text-danger">*</span>
+                                <button type="button" class="btn btn-primary" id="add_group" name="add_group" data-toggle="modal" data-target="#add_fam_info_modal" onclick="getFamilyTable()" style="padding: 5px 35px; float: right;" tabindex='13'><span class="icon-add"></span></button>
                             </div>
-                        </div>
-                    </div>
-
-                    <div id="data_checking_table_div" style="display: none;">
-                        <div class="card-header">
-                            <div class="card-title">Customer Data</div>
                         </div>
                         <div class="card-body">
                             <div class="row">
                                 <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
                                     <div class="form-group">
-                                        <table id="cus_info" class="table custom-table">
+                                        <table id="fam_info_table" class="table custom-table">
                                             <thead>
                                                 <tr>
                                                     <th width="20">S.NO</th>
-                                                    <th>Customer ID</th>
-                                                    <th>Customer Name</th>
-                                                    <th>Mobile Number</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody></tbody>
-                                        </table>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="card-header">
-                            <div class="card-title">Family Data</div>
-                        </div>
-                        <div class="card-body">
-                            <div class="row">
-                                <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
-                                    <div class="form-group">
-                                        <table id="family_info" class="table custom-table">
-                                            <thead>
-                                                <tr>
-                                                    <th width="20">S.NO</th>
-                                                    <th>Customer ID</th>
                                                     <th>Name</th>
                                                     <th>Relationship</th>
-                                                    <th>Under Customer Name</th>
-                                                    <th>Under Customer ID</th>
+                                                    <th>Age</th>
+                                                    <th>Live/Deceased</th>
+                                                    <th>Occupation</th>
+                                                    <th>Aadhar No</th>
+                                                    <th>Mobile No</th>
                                                 </tr>
                                             </thead>
                                             <tbody></tbody>
@@ -309,230 +195,362 @@
                             </div>
                         </div>
                     </div>
-                </div>
 
-                <div class="card">
-                    <div class="card-header">
-                        <div class="card-title">Resident Info</div>
+                    <div class="card">
+                        <div class="card-header">
+                            <div class="card-title">Guarantor Info</div>
+                        </div>
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-8">
+                                    <div class="row">
+                                        <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
+                                            <div class="form-group">
+                                                <label for="guarantor_name"> Guarantor Name</label><span class="text-danger">*</span>
+                                                <input type="hidden" id="guarantor_name_edit">
+                                                <select type="text" class="form-control" id="guarantor_name" name="guarantor_name" tabindex="14">
+                                                    <option value="">Select Guarantor Name</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
+                                            <div class="form-group">
+                                                <label for="relationship"> Relationship</label><span class="text-danger">*</span>
+                                                <input type="text" class="form-control" id="relationship" name="relationship" pattern="[a-zA-Z\s]+" disabled placeholder="Enter Relationship" tabindex="15">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-4">
+                                    <div class="row">
+                                        <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
+                                            <div class="form-group">
+                                                <label for="pic"> Photo</label><br>
+                                                <img id='gur_imgshow' class="img_show" src='img\avatar.png' />
+                                                <input type="file" class="form-control" id="gu_pic" name="gu_pic" tabindex="16">
+                                                <input type="hidden" id="gur_pic">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
-                    <div class="card-body">
-                        <div class="row">
-                            <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
-                                <div class="form-group">
-                                    <label for="res_type">Residential Type</label>
-                                    <select type="text" class="form-control" id="res_type" name="res_type" tabindex="18">
-                                        <option value="">Select Residential Type</option>
-                                        <option value="1">Own</option>
-                                        <option value="2">Rental</option>
-                                        <option value="3">Lease</option>
-                                        <option value="4">Quaters</option>
-                                    </select>
+
+                    <div id="checking_hide" style="display: none;">
+                        <div class="card">
+                            <div id="data_checking_div" style="display: none;">
+
+                                <div class="card-header">
+                                    <div class="card-title">Data Checking</div>
+                                </div>
+                                <div class="card-body">
+                                    <div class="row">
+                                        <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                                            <div class="form-group">
+                                                <label for="name_check">Name</label>
+                                                <select type="text" class="form-control" id="name_check" name="name_check" tabindex="17">
+                                                    <option value="">Select Name</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                                            <div class="form-group">
+                                                <label for="aadhar_check">Aadhar</label>
+                                                <select type="text" class="form-control" id="aadhar_check" name="aadhar_check" tabindex="18">
+                                                    <option value="">Select Aadhar</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                                            <div class="form-group">
+                                                <label for="mobile_check">Mobile</label>
+                                                <select type="text" class="form-control" id="mobile_check" name="mobile_check" tabindex="19">
+                                                    <option value="">Select Mobile</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+
+                            <div id="data_checking_table_div" style="display: none;">
+                                <div class="card-header">
+                                    <div class="card-title">Customer Data</div>
+                                </div>
+                                <div class="card-body">
+                                    <div class="row">
+                                        <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+                                            <div class="form-group">
+                                                <table id="cus_info" class="table custom-table">
+                                                    <thead>
+                                                        <tr>
+                                                            <th width="20">S.NO</th>
+                                                            <th>Customer ID</th>
+                                                            <th>Customer Name</th>
+                                                            <th>Mobile Number</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody></tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="card-header">
+                                    <div class="card-title">Family Data</div>
+                                </div>
+                                <div class="card-body">
+                                    <div class="row">
+                                        <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+                                            <div class="form-group">
+                                                <table id="family_info" class="table custom-table">
+                                                    <thead>
+                                                        <tr>
+                                                            <th width="20">S.NO</th>
+                                                            <th>Customer ID</th>
+                                                            <th>Name</th>
+                                                            <th>Relationship</th>
+                                                            <th>Under Customer Name</th>
+                                                            <th>Under Customer ID</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody></tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
-                            <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
-                                <div class="form-group">
-                                    <label for="res_detail"> Residential Details </label>
-                                    <input type="text" class="form-control" id="res_detail" name="res_detail" pattern="[a-zA-Z\s]+" placeholder="Enter Residential Details" tabindex="19">
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-header">
+                            <div class="card-title">Resident Info</div>
+                        </div>
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                                    <div class="form-group">
+                                        <label for="res_type">Residential Type</label>
+                                        <select type="text" class="form-control" id="res_type" name="res_type" tabindex="20">
+                                            <option value="">Select Residential Type</option>
+                                            <option value="1">Own</option>
+                                            <option value="2">Rental</option>
+                                            <option value="3">Lease</option>
+                                            <option value="4">Quaters</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                                    <div class="form-group">
+                                        <label for="res_detail"> Residential Details </label>
+                                        <input type="text" class="form-control" id="res_detail" name="res_detail" pattern="[a-zA-Z\s]+" placeholder="Enter Residential Details" tabindex="21">
+                                    </div>
+                                </div>
+                                <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                                    <div class="form-group">
+                                        <label for="res_address"> Address </label>
+                                        <input type="text" class="form-control" id="res_address" name="res_address" placeholder="Enter Address" tabindex="22">
+                                    </div>
+                                </div>
+                                <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                                    <div class="form-group">
+                                        <label for="native_address"> Native Address </label>
+                                        <input type="text" class="form-control" id="native_address" name="native_address" placeholder="Enter Native Address" tabindex="23">
+                                    </div>
                                 </div>
                             </div>
-                            <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
-                                <div class="form-group">
-                                    <label for="res_address"> Address </label>
-                                    <input type="text" class="form-control" id="res_address" name="res_address" placeholder="Enter Address" tabindex="20">
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-header">
+                            <div class="card-title">Occupation Info</div>
+                        </div>
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                                    <div class="form-group">
+                                        <label for="occupation"> Occupation </label>
+                                        <input type="text" class="form-control" id="occupation" name="occupation" pattern="[a-zA-Z\s]+" placeholder="Enter Occupation" tabindex="24">
+                                    </div>
+                                </div>
+                                <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                                    <div class="form-group">
+                                        <label for="occ_detail"> Occupation Detail</label>
+                                        <input type="text" class="form-control" id="occ_detail" name="occ_detail" placeholder="Enter Occupation Detail " tabindex="25">
+                                    </div>
+                                </div>
+                                <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                                    <div class="form-group">
+                                        <label for="occ_income"> Income</label>
+                                        <input type="number" class="form-control" id="occ_income" name="occ_income" placeholder="Enter Income" tabindex="26">
+                                    </div>
+                                </div>
+                                <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                                    <div class="form-group">
+                                        <label for="occ_address"> Address </label>
+                                        <input type="text" class="form-control" id="occ_address" name="occ_address" placeholder="Enter Address" tabindex="27">
+                                    </div>
                                 </div>
                             </div>
-                            <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
-                                <div class="form-group">
-                                    <label for="native_address"> Native Address </label>
-                                    <input type="text" class="form-control" id="native_address" name="native_address" placeholder="Enter Native Address" tabindex="21">
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-header">
+                            <div class="card-title">Area Confirmation</div>
+                        </div>
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                                    <div class="form-group">
+                                        <label for="area_confirm">Area Confirm</label><span class="text-danger">*</span>
+                                        <select type="text" class="form-control" id="area_confirm" name="area_confirm" tabindex="28">
+                                            <option value="">Select Area Confirm</option>
+                                            <option value="1">Resident</option>
+                                            <option value="2">Occupation</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                                    <div class="form-group">
+                                        <label for="area">Area</label><span class="text-danger">*</span>
+                                        <input type="hidden" id="area_edit">
+                                        <select type="text" class="form-control" id="area" name="area" tabindex="29">
+                                            <option value="">Select Area</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                                    <div class="form-group">
+                                        <label for="line"> Line </label><span class="text-danger">*</span>
+                                        <input type="text" class="form-control" id="line" name="line" disabled placeholder="Enter line" tabindex="30">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-header">
+                            <div class="card-title">Property Info
+                                <button type="button" class="btn btn-primary" id="add_property" name="add_property" data-toggle="modal" data-target="#add_prop_info_modal" onclick="getPropertyTable();getPropertyHolder()" style="padding: 5px 35px; float: right;" tabindex='31'><span class="icon-add"></span></button>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+                                    <div class="form-group">
+                                        <table id="prop_info" class="custom-table">
+                                            <thead>
+                                                <tr>
+                                                    <th width="20">S.NO</th>
+                                                    <th>Property</th>
+                                                    <th>Property Detail</th>
+                                                    <th>Property Holder</th>
+                                                    <th>Relationship</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody></tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-header">
+                            <div class="card-title">Bank Info
+                                <button type="button" class="btn btn-primary" id="add_bank" name="add_bank" data-toggle="modal" data-target="#add_bank_info_modal" onclick="getBankTable()" style="padding: 5px 35px; float: right;" tabindex='32'><span class="icon-add"></span></button>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+                                    <div class="form-group">
+                                        <table id="bank_info" class="custom-table">
+                                            <thead>
+                                                <tr>
+                                                    <th width="20">S.No.</th>
+                                                    <th>Bank Name</th>
+                                                    <th>Branch Name</th>
+                                                    <th>Account Holder Name</th>
+                                                    <th>Account Number</th>
+                                                    <th>IFSC Code</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody></tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-header">
+                            <div class="card-title">KYC Info <span class="text-danger">*</span>
+                                <button type="button" class="btn btn-primary" id="add_kyc" name="add_kyc" data-toggle="modal" data-target="#add_kyc_info_modal" onclick="getKycTable();fetchProofList()" style="padding: 5px 35px; float: right;" tabindex='33'><span class="icon-add"></span></button>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+                                    <div class="form-group">
+                                        <table id="kyc_info" class="table custom-table">
+                                            <thead>
+                                                <tr>
+                                                    <th width="20">S.NO</th>
+                                                    <th>Proof Of</th>
+                                                    <th>Relationship</th>
+                                                    <th>Proof</th>
+                                                    <th>Proof Member</th>
+                                                    <th>Upload</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody></tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-header">
+                            <div class="card-title">Customer Summary</div>
+                        </div>
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                                    <div class="form-group">
+                                        <label for="cus_limit"> Customer Limit</label>
+                                        <input type="number" class="form-control" id="cus_limit" name="cus_limit" placeholder="" disabled tabindex="34">
+                                    </div>
+                                </div>
+                                <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                                    <div class="form-group">
+                                        <label for="about_cus"> About Customer </label>
+                                        <textarea class="form-control" name="about_cus" id="about_cus" placeholder="Enter About Customer" tabindex="35"></textarea>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
-
-                <div class="card">
-                    <div class="card-header">
-                        <div class="card-title">Occupation Info</div>
-                    </div>
-                    <div class="card-body">
-                        <div class="row">
-                            <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
-                                <div class="form-group">
-                                    <label for="occupation"> Occupation </label>
-                                    <input type="text" class="form-control" id="occupation" name="occupation" pattern="[a-zA-Z\s]+" placeholder="Enter Occupation" tabindex="22">
-                                </div>
-                            </div>
-                            <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
-                                <div class="form-group">
-                                    <label for="occ_detail"> Occupation Detail</label>
-                                    <input type="text" class="form-control" id="occ_detail" name="occ_detail" placeholder="Enter Occupation Detail " tabindex="23">
-                                </div>
-                            </div>
-                            <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
-                                <div class="form-group">
-                                    <label for="occ_income"> Income</label>
-                                    <input type="number" class="form-control" id="occ_income" name="occ_income" placeholder="Enter Income" tabindex="24">
-                                </div>
-                            </div>
-                            <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
-                                <div class="form-group">
-                                    <label for="occ_address"> Address </label>
-                                    <input type="text" class="form-control" id="occ_address" name="occ_address" placeholder="Enter Address" tabindex="25">
-                                </div>
-                            </div>
+                <div class="customer_content" style="display:none;">
+                    <div class="col-md-12 ">
+                        <div class="text-right">
+                            <button type="submit" name="submit_customer_profile" id="submit_customer_profile" class="btn btn-primary" value="Submit" tabindex="36"><span class="icon-check"></span>&nbsp;Submit</button>
+                            <button type="reset" id="clear_loan" class="btn btn-outline-secondary" tabindex="37">Clear</button>
                         </div>
                     </div>
-                </div>
-
-                <div class="card">
-                    <div class="card-header">
-                        <div class="card-title">Area Confirmation</div>
-                    </div>
-                    <div class="card-body">
-                        <div class="row">
-                            <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
-                                <div class="form-group">
-                                    <label for="area_confirm">Area Confirm</label><span class="text-danger">*</span>
-                                    <select type="text" class="form-control" id="area_confirm" name="area_confirm" tabindex="26">
-                                        <option value="">Select Area Confirm</option>
-                                        <option value="1">Resident</option>
-                                        <option value="2">Occupation</option>
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
-                                <div class="form-group">
-                                    <label for="area">Area</label><span class="text-danger">*</span>
-                                    <input type="hidden" id="area_edit">
-                                    <select type="text" class="form-control" id="area" name="area" tabindex="27">
-                                        <option value="">Select Area</option>
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
-                                <div class="form-group">
-                                    <label for="line"> Line </label><span class="text-danger">*</span>
-                                    <input type="text" class="form-control" id="line" name="line" disabled placeholder="Enter line" tabindex="28">
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="card">
-                    <div class="card-header">
-                        <div class="card-title">Property Info
-                            <button type="button" class="btn btn-primary" id="add_property" name="add_property" data-toggle="modal" data-target="#add_prop_info_modal" onclick="getPropertyTable();getPropertyHolder()" style="padding: 5px 35px; float: right;" tabindex='29'><span class="icon-add"></span></button>
-                        </div>
-                    </div>
-                    <div class="card-body">
-                        <div class="row">
-                            <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
-                                <div class="form-group">
-                                    <table id="prop_info" class="custom-table">
-                                        <thead>
-                                            <tr>
-                                                <th width="20">S.NO</th>
-                                                <th>Property</th>
-                                                <th>Property Detail</th>
-                                                <th>Property Holder</th>
-                                                <th>Relationship</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody></tbody>
-                                    </table>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="card">
-                    <div class="card-header">
-                        <div class="card-title">Bank Info
-                            <button type="button" class="btn btn-primary" id="add_bank" name="add_bank" data-toggle="modal" data-target="#add_bank_info_modal" onclick="getBankTable()" style="padding: 5px 35px; float: right;" tabindex='30'><span class="icon-add"></span></button>
-                        </div>
-                    </div>
-                    <div class="card-body">
-                        <div class="row">
-                            <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
-                                <div class="form-group">
-                                    <table id="bank_info" class="custom-table">
-                                        <thead>
-                                            <tr>
-                                                <th width="20">S.No.</th>
-                                                <th>Bank Name</th>
-                                                <th>Branch Name</th>
-                                                <th>Account Holder Name</th>
-                                                <th>Account Number</th>
-                                                <th>IFSC Code</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody></tbody>
-                                    </table>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="card">
-                    <div class="card-header">
-                        <div class="card-title">KYC Info <span class="text-danger">*</span>
-                            <button type="button" class="btn btn-primary" id="add_kyc" name="add_kyc" data-toggle="modal" data-target="#add_kyc_info_modal" onclick="getKycTable();fetchProofList()" style="padding: 5px 35px; float: right;" tabindex='31'><span class="icon-add"></span></button>
-                        </div>
-                    </div>
-                    <div class="card-body">
-                        <div class="row">
-                            <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
-                                <div class="form-group">
-                                    <table id="kyc_info" class="table custom-table">
-                                        <thead>
-                                            <tr>
-                                                <th width="20">S.NO</th>
-                                                <th>Proof Of</th>
-                                                <th>Relationship</th>
-                                                <th>Proof</th>
-                                                <th>Proof Detail</th>
-                                                <th>Upload</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody></tbody>
-                                    </table>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="card">
-                    <div class="card-header">
-                        <div class="card-title">Customer Summary</div>
-                    </div>
-                    <div class="card-body">
-                        <div class="row">
-                            <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
-                                <div class="form-group">
-                                    <label for="cus_limit"> Customer Limit</label><span class="text-danger">*</span>
-                                    <input type="number" class="form-control" id="cus_limit" name="cus_limit" placeholder="Enter Limit" tabindex="32">
-                                </div>
-                            </div>
-                            <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
-                                <div class="form-group">
-                                    <label for="about_cus"> About Customer </label>
-                                    <textarea class="form-control" name="about_cus" id="about_cus" placeholder="Enter About Customer" tabindex="33"></textarea>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="col-md-12 ">
-                <div class="text-right">
-                    <button type="submit" name="submit_customer_profile" id="submit_customer_profile" class="btn btn-primary" value="Submit" tabindex="34"><span class="icon-check"></span>&nbsp;Submit</button>
-                    <button type="reset" id="clear_loan" class="btn btn-outline-secondary" tabindex="35">Clear</button>
                 </div>
             </div>
         </div>
@@ -797,15 +815,15 @@
                             </div>
                             <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
                                 <div class="form-group">
-                                    <label for="agent_id_calc">Agent ID</label><span class="text-danger">*</span>
-                                    <select class="form-control" id="agent_id_calc" name="agent_id_calc" tabindex="26">
-                                        <option value="">Select Agent ID</option>
+                                    <label for="agent_id_calc">Agent Name</label><span class="text-danger">*</span>
+                                    <select class="form-control" id="agent_id_calc" name="agent_id_calc" tabindex="26" disabled>
+                                        <option value="">Select Agent Name</option>
                                     </select>
                                 </div>
                             </div>
                             <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
                                 <div class="form-group">
-                                    <label for="agent_name_calc">Agent Name</label><span class="text-danger">*</span>
+                                    <label for="agent_name_calc">Agent ID</label><span class="text-danger">*</span>
                                     <input type="text" class="form-control" id="agent_name_calc" name="agent_name_calc" tabindex="27" readonly>
                                 </div>
                             </div>
@@ -824,7 +842,7 @@
                             <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12"></div>
                             <div class="col-xl-2 col-lg-2 col-md-2 col-sm-2 col-12">
                                 <div class="form-group">
-                                    <label for="doc_need_calc">Document Need</label><span class="text-danger">*</span>
+                                    <label for="doc_need_calc">Document Need</label>
                                     <input type="text" class="form-control" id="doc_need_calc" name="doc_need_calc" tabindex="28">
                                 </div>
                             </div>
@@ -1179,6 +1197,13 @@
                                     <input type="hidden" id="add_proofOf_id" value='0'>
                                 </div>
                             </div>
+                            <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12 kyc_name_div" style="display:none">
+                                <div class="form-group">
+                                    <label for="kyc_name">Name</label><span class="text-danger">*</span>
+                                    <input class="form-control" name="kyc_name" id="kyc_name" tabindex="1" disabled placeholder="Enter Name">
+                                    <input type="hidden" id="kyc_nameid" value='0'>
+                                </div>
+                            </div>
                             <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12 fam_mem_div" style="display:none">
                                 <div class="form-group">
                                     <label for="fam_mem"> Family Member </label><span class="text-danger">*</span>
@@ -1210,8 +1235,8 @@
                             </div>
                             <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
                                 <div class="form-group">
-                                    <label for="proof_detail">Proof Detail</label><span class="text-danger">*</span>
-                                    <input class="form-control" name="proof_detail" id="proof_detail" tabindex="1" placeholder="Enter Proof Detail">
+                                    <label for="proof_detail">Proof Member</label><span class="text-danger">*</span>
+                                    <input class="form-control" name="proof_detail" id="proof_detail" tabindex="1" placeholder="Enter Proof Member">
                                     <input type="hidden" id="addproofdetail_id" value='0'>
                                 </div>
                             </div>
@@ -1240,7 +1265,7 @@
                                     <th>Proof Of</th>
                                     <th>Relationship</th>
                                     <th>Proof</th>
-                                    <th>Proof Detail</th>
+                                    <th>Proof Member</th>
                                     <th>Upload</th>
                                     <th>Action</th>
                                 </tr>

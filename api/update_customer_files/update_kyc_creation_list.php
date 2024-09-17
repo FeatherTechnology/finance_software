@@ -11,11 +11,11 @@ try {
                                ki.proof_of, 
 
                                CASE 
-                                   WHEN ki.proof_of = 1 THEN 'Customer' 
+                                   WHEN ki.proof_of = 1 THEN cp.cus_name 
                                    ELSE fi.fam_name 
                                END AS proof_of_name, 
                                CASE 
-                                   WHEN ki.proof_of = 1 THEN 'Customer' 
+                                   WHEN ki.proof_of = 1 THEN 'NIL' 
                                    ELSE fi.fam_relationship 
                                END AS fam_relationship, 
                                pi.addProof_name as proof, 
@@ -24,7 +24,8 @@ try {
                         FROM kyc_info ki
                         JOIN proof_info pi ON ki.proof = pi.id
                         LEFT JOIN loan_entry_loan_calculation lelc ON ki.cus_profile_id = lelc.cus_profile_id
-                        LEFT JOIN family_info fi ON ki.fam_mem = fi.id WHERE ki.cus_id = '$cus_id'");
+                        LEFT JOIN family_info fi ON ki.fam_mem = fi.id 
+                         LEFT JOIN customer_profile cp ON ki.cus_id =cp.cus_id WHERE ki.cus_id = '$cus_id'");
 
     if (!$qry) {
         throw new Exception("Database query failed: " . implode(" - ", $pdo->errorInfo()));
