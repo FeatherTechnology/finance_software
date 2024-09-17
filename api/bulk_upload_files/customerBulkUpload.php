@@ -1,5 +1,4 @@
 <?php
-error_reporting(0);
 require '../../ajaxconfig.php';
 include 'bulkUploadClass.php';
 require_once('../../vendor/csvreader/php-excel-reader/excel_reader2.php');
@@ -7,8 +6,6 @@ require_once('../../vendor/csvreader/SpreadsheetReader_XLSX.php');
 
 
 $obj = new bulkUploadClass();
-//$userData = $obj->getUserDetails($pdo);
-
 
 $allowedFileType = ['application/vnd.ms-excel', 'text/xls', 'text/xlsx', 'text/csv', 'text/xml', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'];
 if (in_array($_FILES["excelFile"]["type"], $allowedFileType)) {
@@ -36,9 +33,6 @@ if (in_array($_FILES["excelFile"]["type"], $allowedFileType)) {
                 $agent_id = $obj->checkAgent($pdo, $data['agent_name']);
                 $data['agent_id'] = $agent_id;
                  
-                // $gur_id = $obj->guarantorName($pdo, $data['guarantor_name']);
-                // $data['gur_id'] = $gur_id;
-                // print_r($data['gur_id']);
 
                 $area_id = $obj->getAreaId($pdo, $data['area']);
                 $data['area_id'] = $area_id;
@@ -46,18 +40,15 @@ if (in_array($_FILES["excelFile"]["type"], $allowedFileType)) {
                 $areaLine = $obj->getAreaLine($pdo, $data['area_id']);
                 $data['line_id'] = $areaLine;
                 
-                // $areaLine = $obj->getAreaLine($pdo, $data['arline']);
-                // $data['line_id'] = $areaLine['line_id'];
-                // $checkCustomerData = $obj->checkCustomerData($pdo, $data['cus_id']);
-                // $data['cus_data'] = $checkCustomerData['cus_data'];
-                // $data['id'] = $checkCustomerData['id'];
-                
-                $cus_data_response = $obj->checkCustomerData($pdo, $data['cus_id']);
+                $cus_data_response = $obj->checkCustomerData($pdo, $data['cus_id'], $data['cus_profile_id']);
                 $data['cus_data'] = $cus_data_response['cus_data'];
                 $data['id'] = $cus_data_response['id'];
-                // If customer data exists, set it as "Additional/Renewal"
+                
+                // Set customer status based on the returned value
                 if ($cus_data_response['cus_data'] == 'Existing') {
-                    $data['cus_status'] = 'Additional/Renewal';
+                    $data['cus_status'] = $cus_data_response['cus_status']; // 'Additional' or 'Renewal'
+                } else {
+                    $data['cus_status'] = ''; // For new customers, status is empty
                 }
                 $data['scheme_id'] = $obj->getSchemeId($pdo, $data['scheme_name']);
 
@@ -68,8 +59,6 @@ if (in_array($_FILES["excelFile"]["type"], $allowedFileType)) {
                     $gur_id = $obj->guarantorName($pdo, $data['cus_id']);
                     $data['gur_id'] = $gur_id;   
                     $obj->LoanEntryTables($pdo, $data);
-                    // Call loanIssueTables function
-                   // $obj->loanIssueTables($pdo, $data);
                 } else {
                     $errtxt = "Please Check the input given in Serial No: " . ($rowChange) . " on below. <br><br>";
                     $errtxt .= "<ul>";

@@ -31,10 +31,6 @@ class bulkUploadClass
             'dob' => isset($Row[4]) ? $Row[4] : "",
             'age' => isset($Row[5]) ? $Row[5] : "",
             'mobile' => isset($Row[6]) ? $Row[6] : "",
-            // 'state' => isset($Row[7]) ? $Row[7] : "",
-            // 'district' => isset($Row[8]) ? $Row[8] : "",
-            // 'taluk' => isset($Row[9]) ? $Row[9] : "",
-            // 'address' => isset($Row[10]) ? $Row[10] : "",
             'cus_data' => isset($Row[7]) ? $Row[7] : "",
             'cus_status' => isset($Row[8]) ? $Row[8] : "",
             'guarantor_name' => isset($Row[9]) ? $Row[9] : "",
@@ -44,7 +40,6 @@ class bulkUploadClass
             'guarantor_age' => isset($Row[13]) ? $Row[13] : "",
             'guarantor_occupation' => isset($Row[14]) ? $Row[14] : "",
             'guarantor_live' => isset($Row[15]) ? $Row[15] : "",
-            // 'guarantor_income' => isset($Row[16]) ? $Row[16] : "",
             'residential_type' => isset($Row[16]) ? $Row[16] : "",
             'resident_detail' => isset($Row[17]) ? $Row[17] : "",
             'res_address' => isset($Row[18]) ? $Row[18] : "",
@@ -107,8 +102,6 @@ class bulkUploadClass
         $genderArray = ['Male' => '1', 'Female' => '2', 'Others' => '3'];
         $dataArray['gender'] = $this->arrayItemChecker($genderArray, $dataArray['gender']);
 
-        // $stateArray = ['TamilNadu' => 'TamilNadu', 'Puducherry' => 'Puducherry'];
-        // $dataArray['state'] = $this->arrayItemChecker($stateArray, $dataArray['state']);
         $dataArray['guarantor_aadhar_no'] = strlen($dataArray['guarantor_aadhar_no']) == 12 ? $dataArray['guarantor_aadhar_no'] : 'Invalid';
 
         $guarantor_relationshipArray = ['Father' => 'Father', 'Mother' => 'Mother', 'Spouse' => 'Spouse', 'Sister' => 'Sister', 'Brother' => 'Brother', 'Son' => 'Son', 'Daughter' => 'Daughter'];
@@ -130,12 +123,6 @@ class bulkUploadClass
 
         $due_method_calcArray = ['Monthly' => 'Monthly', 'Weekly' => 'Weekly', 'Daily' => 'Daily'];
         $dataArray['due_method'] = $this->arrayItemChecker($due_method_calcArray, $dataArray['due_method']);
-
-        // $due_typeArray = ['EMI' => 'EMI'];
-        // $dataArray['due_type'] = $this->arrayItemChecker($due_typeArray, $dataArray['due_type']);
-
-        // $profit_methodArray = ['After Interest' => 'after_interest'];
-        // $dataArray['profit_method'] = $this->arrayItemChecker($profit_methodArray, $dataArray['profit_method']);
 
         $due_method_schemeArray = ['Monthly' => '1', 'Weekly' => '2', 'Daily' => '3'];
         $due_method_scheme = $this->arrayItemChecker($due_method_schemeArray, $dataArray['due_method_scheme']);
@@ -179,28 +166,7 @@ class bulkUploadClass
         }
         return $arrayItem;
     }
-    // function getUserDetails($pdo)
-    // {
-    //     $data = [];
-
-    //     // Check if user_id is set in session
-    //     if (isset($_SESSION["user_id"])) {
-    //         $user_id = $_SESSION["user_id"];
-    //         $stmt =  $pdo->query("SELECT name, role FROM users WHERE user_id = '$user_id'");
-    //         $row = $stmt->fetch(PDO::FETCH_ASSOC);
-    //         $data['user_name'] = $row['name'];
-    //         if ($row['role'] == '7') {
-    //             $data['user_type'] = 'Admin';
-    //         } elseif ($row['role'] == '9') {
-    //             $data['user_type'] = 'Dev';
-    //         } else {
-    //             $data['user_type'] = 'Staff';
-    //         }
-    //     }
-
-    //     return $data;
-    // }
-
+   
     function getLoanCode($pdo, $id)
     {
         if (!isset($id) || $id == '') {
@@ -229,26 +195,41 @@ class bulkUploadClass
         return $loan_ID_final;
     }
 
-    function checkCustomerData($pdo, $cus_id)
+    function checkCustomerData($pdo, $cus_id, $cus_profile_id)
     {
         $cus_id = strip_tags($cus_id); // Sanitize input
-
-        $new_cus_check = $pdo->query("SELECT id FROM customer_profile WHERE cus_id = '$cus_id'");
-        if ($new_cus_check) {
-            if ($new_cus_check->rowCount() == 0) {
-                $response['cus_data'] = 'New';
-                $response['id'] = '';
-            } else {
-                $row = $new_cus_check->fetch(PDO::FETCH_ASSOC);
-                $response['cus_data'] = 'Existing';
-                $response['id'] = $row['id'];
-                $row['id'] = 'Additional/Existing';
+    
+        // Query to check customer profile and status
+        $qry = $pdo->query("SELECT cp.*, cs.status 
+                            FROM customer_profile cp
+                            INNER JOIN customer_status cs ON cp.cus_id = cs.cus_id
+                            WHERE cp.cus_id = '$cus_id' 
+                            AND cp.id != '$cus_profile_id'");
+    
+        if ($qry && $qry->rowCount() > 0) {
+            $result = $qry->fetch(PDO::FETCH_ASSOC);
+            $status = $result['status'];  // Fetch the customer status
+    
+            // Determine cus_status based on status value
+            if ($status >= 1 && $status <= 6) {
+                $cus_status = '';  // For status between 1 and 6, cus_status is empty
+            } elseif ($status == 7 || $status == 8) {
+                $cus_status = 'Additional';  // For status 7 or 8, cus_status is 'Additional'
+            } elseif ($status >= 9) {
+                $cus_status = 'Renewal';  // For status 9 or above, cus_status is 'Renewal'
             }
+    
+            $response['cus_data'] = 'Existing';  // Customer is 'Existing'
+            $response['id'] = $result['id'];     // Return the customer ID
+            $response['cus_status'] = $cus_status;  // Include the determined cus_status
+    
         } else {
-            // Handle query error or no result scenario
-            $response['cus_data'] = 'New'; // Assuming default to 'New' if query fails
-            $response['id'] = '';
+            // If no result is found, it's a new customer
+            $response['cus_data'] = 'New';   // Customer is 'New'
+            $response['id'] = '';            // No ID for new customers
+            $response['cus_status'] = '';    // cus_status is empty for new customers
         }
+    
         return $response;
     }
     function guarantorName($pdo,$cus_id)
@@ -373,28 +354,6 @@ class bulkUploadClass
     {
         // Print or log $data to see what values are being passed
         $user_id = $_SESSION['user_id'];
-
-        // Insert into family_info table
-        //     $insert_fam = $pdo->query("
-        //     INSERT INTO `family_info` (
-        //         `cus_id`, `fam_name`, `fam_relationship`, `fam_age`,`fam_live`, `fam_occupation`, 
-        //         `fam_aadhar`, `fam_mobile`, `insert_login_id`, `created_on`,`updated_on`
-        //     ) 
-        //     VALUES (
-        //         '" . $data['cus_id'] . "',
-        //         '" . $data['guarantor_name'] . "',
-        //         '" . $data['guarantor_relationship'] . "',
-        //         '" . $data['guarantor_age'] . "',
-        //           '" . $data['guarantor_live'] . "',
-        //         '" . $data['guarantor_occupation'] . "',
-        //         '" . $data['guarantor_aadhar_no'] . "',
-        //         '" . $data['guarantor_mobile_no'] . "',
-        //         '" . $user_id . "',
-        //         '" . strip_tags($data['loan_date']) . "',
-        //          '" . strip_tags($data['loan_date']) . "'
-        //     )
-        // ");
-
         $insert_cp_query = "INSERT INTO customer_profile (
             cus_id, cus_name, gender, dob, age, mobile1,pic, guarantor_name, gu_pic, cus_data, cus_status, res_type, res_detail, res_address, native_address, occupation, occ_detail, occ_income, occ_address, area_confirm, area, line, cus_limit, about_cus, insert_login_id, created_on, updated_on
         ) VALUES (
@@ -494,14 +453,7 @@ class bulkUploadClass
         if ($data['dob'] == 'Invalid Date') {
             $errcolumns[] = 'Date Of Birth';
         }
-        // if ($data['dob'] == 'Invalid Date') {
-        //     $errcolumns[] = 'Date of Birth';
-        // }
-
-        // if (!preg_match('/^[0-9]+$/', $data['age'])) {
-        //     $errcolumns[] = 'Age';
-        // }
-
+       
         if ($data['mobile'] == 'Invalid') {
             $errcolumns[] = 'Mobile Number';
         }
