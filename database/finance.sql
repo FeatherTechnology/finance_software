@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Aug 29, 2024 at 06:27 AM
+-- Generation Time: Sep 17, 2024 at 08:09 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -413,6 +413,8 @@ CREATE TABLE `customer_profile` (
   `age` varchar(100) NOT NULL,
   `mobile1` varchar(100) NOT NULL,
   `mobile2` varchar(100) NOT NULL,
+  `whatsapp_no` varchar(50) DEFAULT NULL,
+  `aadhar_num` varchar(100) DEFAULT NULL,
   `pic` varchar(100) NOT NULL,
   `guarantor_name` varchar(100) NOT NULL,
   `gu_pic` varchar(100) NOT NULL,
@@ -1042,7 +1044,7 @@ CREATE TABLE `repromotion_customer` (
   `c_sts` int(11) DEFAULT NULL,
   `insert_login_id` int(11) DEFAULT NULL,
   `created_on` date DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 -- --------------------------------------------------------
 
@@ -1513,6 +1515,7 @@ CREATE TABLE `users` (
   `loan_category` varchar(255) NOT NULL,
   `line` varchar(255) NOT NULL,
   `collection_access` int(11) NOT NULL,
+  `download_access` int(11) NOT NULL,
   `screens` varchar(255) NOT NULL,
   `insert_login_id` varchar(100) NOT NULL,
   `update_login_id` varchar(100) NOT NULL,
@@ -1524,12 +1527,13 @@ CREATE TABLE `users` (
 -- Dumping data for table `users`
 --
 
-INSERT INTO `users` (`id`, `name`, `user_code`, `role`, `designation`, `address`, `place`, `email`, `mobile`, `user_name`, `password`, `branch`, `loan_category`, `line`, `collection_access`, `screens`, `insert_login_id`, `update_login_id`, `created_on`, `updated_on`) VALUES
-(1, 'Super Admin', 'US-001', 1, 1, '', '', '', '', 'admin', '123', '1,2,4,5', '1,2', '1,2,6,8', 1, '1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,26,25', '1', '1', '2024-06-13', '2024-08-26'),
-(2, 'Raj', 'US-002', 2, 1, 'No 25', 'Vandavasi', '', '9842138111', 'Manager', '123', '1', '1', '1,2', 1, '1,10,11,12,15,16,17,21,22,23,24', '1', '', '2024-07-16', '0000-00-00'),
-(3, 'Prem', 'US-003', 2, 2, '25', 'Vandavasi', '', '', 'Prem', '123', '1', '1', '1', 1, '1,9,11,12', '1', '', '2024-07-16', '0000-00-00'),
-(4, 'SK', 'US-004', 2, 2, 'vsi', 'chetpet', '', '6549871230', 'sk', '123', '1,5', '1', '1,8', 2, '9,12', '1', '1', '2024-07-17', '2024-07-20'),
-(5, 'sham', 'US-005', 2, 2, '', '', '', '', 'staff', '123', '1,2,4,5', '2,1', '1,2,8,6', 1, '1,9,10,11,12,13,14,15,18,19,20,21,22,23,24,25', '1', '', '2024-07-18', '0000-00-00');
+INSERT INTO `users` (`id`, `name`, `user_code`, `role`, `designation`, `address`, `place`, `email`, `mobile`, `user_name`, `password`, `branch`, `loan_category`, `line`, `collection_access`, `download_access`, `screens`, `insert_login_id`, `update_login_id`, `created_on`, `updated_on`) VALUES
+(1, 'Super Admin', 'US-001', 1, 1, '', '', '', '', 'admin', '123', '1,2,4,5,6', '1,2,3,4', '1,2,6,8,10', 1, 1, '1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,26,25', '1', '1', '2024-06-13', '2024-09-17'),
+(2, 'Raj', 'US-002', 2, 1, 'No 25', 'Vandavasi', '', '9842138111', 'Manager', '123', '1', '1', '1,2', 1, 2, '1,10,11,12,15,16,17,21,22,23,24', '1', '', '2024-07-16', '0000-00-00'),
+(3, 'Prem', 'US-003', 2, 2, '25', 'Vandavasi', '', '', 'Prem', '123', '1', '1', '1', 1, 0, '1,9,11,12', '1', '', '2024-07-16', '0000-00-00'),
+(4, 'SK', 'US-004', 2, 2, 'vsi', 'chetpet', '', '6549871230', 'sk', '123', '1,5', '1', '1,8', 2, 0, '9,12', '1', '1', '2024-07-17', '2024-07-20'),
+(5, 'sham', 'US-005', 2, 2, '', '', '', '', 'staff', '123', '1,2,4,5,6', '1,2,4,3', '1,2,6,8,10,12', 1, 0, '1,9,10,11,12,13,14,15,18,19,20,21,22,23,24,26,25', '1', '1', '2024-07-18', '2024-09-02'),
+(6, 'Farzana', 'US-006', 2, 2, 'Potti Naidu street', 'Vandavasi', '', '', 'Farzana', 'Farz*', '1', '1', '1', 1, 0, '5,9,21,22,23,24,26', '1', '1', '2024-08-29', '2024-09-02');
 
 --
 -- Indexes for dumped tables
@@ -2137,7 +2141,7 @@ ALTER TABLE `taluks`
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- Constraints for dumped tables
