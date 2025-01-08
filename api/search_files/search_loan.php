@@ -73,17 +73,30 @@ if ($qry->rowCount() > 0) {
         }
         $response['info'] .=  "  </div> </div>";
 
-
-        $response['charts'] = "<div class='dropdown'>
-            <button class='btn btn-outline-secondary'>
-                <i class='fa'>&#xf107;</i>
-            </button>
-            <div class='dropdown-content'>
-                <a href='#' class='due-chart' value='" . $row['cus_profile_id'] . "'>Due Chart</a>
-                <a href='#' class='penalty-chart' value='" . $row['cus_profile_id'] . "'>Penalty Chart</a>
-                <a href='#' class='fine-chart' value='" . $row['cus_profile_id'] . "'>Fine Chart</a>
-            </div>
-        </div>";
+if($row['status'] =='5' || $row['status'] =='6'){
+    $response['charts'] = "<div class='dropdown'>
+    <button class='btn btn-outline-secondary' disabled>
+        <i class='fa'>&#xf107;</i>
+    </button>
+    <div class='dropdown-content'>
+        <a href='#' class='due-chart' value='" . $row['cus_profile_id'] . "'>Due Chart</a>
+        <a href='#' class='penalty-chart' value='" . $row['cus_profile_id'] . "'>Penalty Chart</a>
+        <a href='#' class='fine-chart' value='" . $row['cus_profile_id'] . "'>Fine Chart</a>
+    </div>
+</div>";
+}else{
+    $response['charts'] = "<div class='dropdown'>
+    <button class='btn btn-outline-secondary'>
+        <i class='fa'>&#xf107;</i>
+    </button>
+    <div class='dropdown-content'>
+        <a href='#' class='due-chart' value='" . $row['cus_profile_id'] . "'>Due Chart</a>
+        <a href='#' class='penalty-chart' value='" . $row['cus_profile_id'] . "'>Penalty Chart</a>
+        <a href='#' class='fine-chart' value='" . $row['cus_profile_id'] . "'>Fine Chart</a>
+    </div>
+</div>";
+}
+     
 
         $loan_list_arr[] = $response;
     }

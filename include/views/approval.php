@@ -372,7 +372,7 @@
                         <div class="row">
                             <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
                                 <div class="form-group">
-                                    <label for="res_type">Residential Type</label>
+                                    <label for="res_type">Residential Type</label><span class="text-danger">*</span>
                                     <select type="text" class="form-control" id="res_type" name="res_type" tabindex="18">
                                         <option value="">Select Residential Type</option>
                                         <option value="1">Own</option>
@@ -384,19 +384,19 @@
                             </div>
                             <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
                                 <div class="form-group">
-                                    <label for="res_detail"> Residential Details </label>
+                                    <label for="res_detail"> Residential Details </label><span class="text-danger">*</span>
                                     <input type="text" class="form-control" id="res_detail" name="res_detail" pattern="[a-zA-Z\s]+" placeholder="Enter Residential Details" tabindex="19">
                                 </div>
                             </div>
                             <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
                                 <div class="form-group">
-                                    <label for="res_address"> Address </label>
+                                    <label for="res_address"> Address </label><span class="text-danger">*</span>
                                     <input type="text" class="form-control" id="res_address" name="res_address" placeholder="Enter Address" tabindex="20">
                                 </div>
                             </div>
                             <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
                                 <div class="form-group">
-                                    <label for="native_address"> Native Address </label>
+                                    <label for="native_address"> Native Address </label><span class="text-danger">*</span>
                                     <input type="text" class="form-control" id="native_address" name="native_address" placeholder="Enter Native Address" tabindex="21">
                                 </div>
                             </div>
@@ -568,7 +568,7 @@
                             <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
                                 <div class="form-group">
                                     <label for="cus_limit"> Customer Limit</label><span class="text-danger">*</span>
-                                    <input type="number" class="form-control" id="cus_limit" name="cus_limit" placeholder="Enter Customer Limit" tabindex="32">
+                                    <input type="text" class="form-control" id="cus_limit" name="cus_limit" placeholder="Enter Customer Limit" tabindex="32">
                                 </div>
                             </div>
                             <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">

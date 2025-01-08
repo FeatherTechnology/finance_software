@@ -218,9 +218,11 @@ $(document).ready(function () {
     
         // Proceed with form submission if either Loan Calculation or Loan Scheme card is fully valid
         if (isValid && (isLoanCalculationValid || isLoanSchemeValid)) {
+            let loan_limit_value =   $('#loan_limit').val().replace(/,/g, '')
             let formData = {
                 loan_category: $('#loan_category').val(),
-                loan_limit: $('#loan_limit').val(),
+                
+                loan_limit: loan_limit_value,
                 due_method: $('#due_method').val(),
                 due_type: $('#due_type').val(),
                 interest_rate_min: $('#interest_rate_min').val(),
@@ -257,6 +259,12 @@ $(document).ready(function () {
     });
     function validateLoanCalculationCard() {
         let valid = true;
+        let due_type=$("#due_type").val();
+        if(due_type==""){
+            valid=false;
+            return valid;
+        }
+        else{
         valid &= validateField($('#due_type').val(), 'due_type');
         valid &= validateField($('#interest_rate_min').val(), 'interest_rate_min');
         valid &= validateField($('#interest_rate_max').val(), 'interest_rate_max');
@@ -268,6 +276,7 @@ $(document).ready(function () {
         valid &= validateField($('#processing_fee_max').val(), 'processing_fee_max');
         valid &= validateField($('#overdue_penalty').val(), 'overdue_penalty');
         return valid;
+    }
     }
     
     function validateLoanSchemeCard() {
@@ -285,7 +294,7 @@ $(document).ready(function () {
         $.post('api/loan_category_creation/loan_category_creation_data.php', { id }, function (response) {
             $('#loan_cat_creation_id').val(id);
             $('#loan_category2').val(response[0].loan_category);
-            $('#loan_limit').val(response[0].loan_limit);
+            $('#loan_limit').val(moneyFormatIndia(response[0].loan_limit));
             $('#due_type').val(response[0].due_type);
             $('#interest_rate_min').val(response[0].interest_rate_min);
             $('#interest_rate_max').val(response[0].interest_rate_max);
@@ -352,7 +361,6 @@ function swapTableAndCreation() {
         $('.add_loancategory_btn').show();
         $('#loan_category_creation_content').hide();
         $('.back_to_loancategory_btn').hide();
-
         getSchemeDropdown();
     }
 }
