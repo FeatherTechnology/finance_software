@@ -59,7 +59,7 @@
                                     <div class="col-lg-3 col-md-4">
                                         <div class="form-group">
                                             <label for="loan_limit">Loan Limit</label><span class="text-danger">*</span>
-                                            <input type="number" class="form-control" id="loan_limit" name="loan_limit" tabindex="3" placeholder="Enter Loan Limit">
+                                            <input type="text" class="form-control" id="loan_limit" name="loan_limit" tabindex="3" placeholder="Enter Loan Limit">
                                         </div>
                                     </div>
                                 </div>

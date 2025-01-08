@@ -58,7 +58,7 @@
                                     <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
                                         <div class="form-group">
                                             <label for="cus_id"> Customer ID</label><span class="text-danger">*</span>
-                                            <input type="text" class="form-control personal_info_disble" id="cus_id" name="cus_id" placeholder="Enter Customer ID" tabindex="1" maxlength="14">
+                                            <input type="text" class="form-control personal_info_disble" id="cus_id" name="cus_id" placeholder="Enter Customer ID" tabindex="1" maxlength="14" data-type="adhaar-number">
                                             <input type="hidden" id="cus_id_upd" name="cus_id_upd">
                                         </div>
                                     </div>
@@ -335,7 +335,7 @@
                             <div class="row">
                                 <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
                                     <div class="form-group">
-                                        <label for="res_type">Residential Type</label>
+                                        <label for="res_type">Residential Type</label><span class="text-danger">*</span>
                                         <select type="text" class="form-control" id="res_type" name="res_type" tabindex="20">
                                             <option value="">Select Residential Type</option>
                                             <option value="1">Own</option>
@@ -347,19 +347,19 @@
                                 </div>
                                 <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
                                     <div class="form-group">
-                                        <label for="res_detail"> Residential Details </label>
+                                        <label for="res_detail"> Residential Details </label><span class="text-danger">*</span>
                                         <input type="text" class="form-control" id="res_detail" name="res_detail" pattern="[a-zA-Z\s]+" placeholder="Enter Residential Details" tabindex="21">
                                     </div>
                                 </div>
                                 <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
                                     <div class="form-group">
-                                        <label for="res_address"> Address </label>
+                                        <label for="res_address"> Address </label><span class="text-danger">*</span>
                                         <input type="text" class="form-control" id="res_address" name="res_address" placeholder="Enter Address" tabindex="22">
                                     </div>
                                 </div>
                                 <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
                                     <div class="form-group">
-                                        <label for="native_address"> Native Address </label>
+                                        <label for="native_address"> Native Address </label><span class="text-danger">*</span>
                                         <input type="text" class="form-control" id="native_address" name="native_address" placeholder="Enter Native Address" tabindex="23">
                                     </div>
                                 </div>

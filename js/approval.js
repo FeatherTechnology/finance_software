@@ -1552,7 +1552,7 @@ function editCustmerProfile(id) {
         $('#occ_income').val(response[0].occ_income);
         $('#area_confirm').val(response[0].area_confirm);
         $('#line').val(response[0].line);
-        $('#cus_limit').val(response[0].cus_limit);
+        $('#cus_limit').val(moneyFormatIndia(response[0].cus_limit));
         $('#about_cus').val(response[0].about_cus);
         if (response[0].whatsapp_no === response[0].mobile1) {
             $('#mobile1_radio').prop('checked', true);
