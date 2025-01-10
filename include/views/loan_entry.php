@@ -597,7 +597,7 @@
                             <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
                                 <div class="form-group">
                                     <label for="loan_amount_calc"> Loan Amount</label><span class="text-danger">*</span>
-                                    <input type="number" class="form-control" id="loan_amount_calc" name="loan_amount_calc" tabindex="4">
+                                    <input type="text" class="form-control" id="loan_amount_calc" name="loan_amount_calc"  tabindex="4" >
                                 </div>
                             </div>
                             <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">

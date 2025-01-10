@@ -94,7 +94,7 @@ foreach ($result as $row) {
     $sub_array[] = isset($row['areaname']) ? $row['areaname'] : '';
     $sub_array[] = isset($row['linename']) ? $row['linename'] : '';
     $sub_array[] = isset($row['branch_name']) ? $row['branch_name'] : '';
-    $sub_array[] = isset($row['loan_amount']) ? $row['loan_amount'] : '';
+    $sub_array[] = isset($row['loan_amount']) ? moneyFormatIndia($row['loan_amount']) : '';
     $sub_array[] = isset($row['mobile1']) ? $row['mobile1'] : '';
     $action = "<div class='dropdown'>
     <button class='btn btn-outline-secondary'><i class='fa'>&#xf107;</i></button>
@@ -111,7 +111,6 @@ function count_all_data($pdo)
     $statement->execute();
     return $statement->fetchColumn();
 }
-
 $output = array(
     'draw' => isset($_POST['draw']) ? intval($_POST['draw']) : 0,
     'recordsTotal' => count_all_data($pdo),
@@ -120,3 +119,35 @@ $output = array(
 );
 
 echo json_encode($output);
+//Format number in Indian Format
+function moneyFormatIndia($num1)
+{
+    if ($num1 < 0) {
+        $num = str_replace("-", "", $num1);
+    } else {
+        $num = $num1;
+    }
+    $explrestunits = "";
+    if (strlen($num) > 3) {
+        $lastthree = substr($num, strlen($num) - 3, strlen($num));
+        $restunits = substr($num, 0, strlen($num) - 3);
+        $restunits = (strlen($restunits) % 2 == 1) ? "0" . $restunits : $restunits;
+        $expunit = str_split($restunits, 2);
+        for ($i = 0; $i < sizeof($expunit); $i++) {
+            if ($i == 0) {
+                $explrestunits .= (int)$expunit[$i] . ",";
+            } else {
+                $explrestunits .= $expunit[$i] . ",";
+            }
+        }
+        $thecash = $explrestunits . $lastthree;
+    } else {
+        $thecash = $num;
+    }
+
+    if ($num1 < 0 && $num1 != '') {
+        $thecash = "-" . $thecash;
+    }
+
+    return $thecash;
+}

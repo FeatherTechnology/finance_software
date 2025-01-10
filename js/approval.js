@@ -891,6 +891,12 @@ $(document).ready(function () {
             $('#add_kyc_info_modal').show();
         }
     });
+    $('#loan_amount_calc').on('keypress', function(event) {
+        var charCode = event.which || event.keyCode;
+        if (charCode < 48 || charCode > 57) {
+            event.preventDefault();
+        }
+    });
 
 }); ///////////////////////////////////////////////////////////////// Customer Profile - Document END ////////////////////////////////////////////////////////////////////
 
@@ -2520,11 +2526,12 @@ function getDocNeedTable(cusProfileId) {
 
 function loanCalculationEdit(id) {
     $.post('api/loan_entry/loan_calculation/loan_calculation_data.php', { id }, function (response) {
+        let loan_amt=moneyFormatIndia(response[0].loan_amount)
         $('#loan_id_calc').val(response[0].loan_id);
         $('#loan_category_calc').val(response[0].loan_category);
         $('#loan_category_calc2').val(response[0].loan_category);
         $('#category_info_calc').val(response[0].category_info);
-        $('#loan_amount_calc').val(response[0].loan_amount);
+        $('#loan_amount_calc').val(loan_amt);
         $('#profit_type_calc').val(response[0].profit_type);
         $('#due_method_calc').val(response[0].due_method);
         $('#due_type_calc').val(response[0].due_type);
