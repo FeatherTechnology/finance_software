@@ -539,7 +539,7 @@ function clearLoanCategory() {
 
 function clearLoanCategoryCreationForm() {
     // Reset all input fields except the ones specified
-    $('input:not(#due_method, #profit_method, #doc_charge_type, #processing_fee_type, #doc_charge_type_percent, #doc_charge_type_rupee, #processing_fee_type_percent, #processing_fee_type_rupee)').val('');
+    $('input:not(#due_method, #profit_method, #doc_charge_type, #processing_fee_type, #doc_charge_type_percent, #doc_charge_type_rupee, #processing_fee_type_percent, #processing_fee_type_rupee , #due_type)').val('');
     // Reset all select fields to their first option
     $('select').each(function () {
         $(this).val($(this).find('option:first').val());

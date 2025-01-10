@@ -84,11 +84,7 @@
                                     <div class="col-md-3 col-sm-4">
                                         <div class="form-group">
                                             <label for="due_type">Due Type</label><span class="text-danger">*</span>
-                                            <select class="form-control" id="due_type" name="due_type" tabindex="5">
-                                                <option value="">Select Due Type</option>
-                                                <option value="emi">EMI</option>
-                                                <option value="interest">Interest</option>
-                                            </select>
+                                            <input type="text" class="form-control" id="due_type" name="due_type" tabindex="5" value="EMI" readonly>
                                         </div>
                                     </div>
                                 </div>
