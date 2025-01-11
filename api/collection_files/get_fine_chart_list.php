@@ -59,12 +59,12 @@ function moneyFormatIndia($num)
             <tr>
                 <td><?php echo $i; ?></td>
                 <td><?php if(isset($row['coll_date'])) echo date('d-m-Y',strtotime($row['coll_date'])); ?></td>
-                <td><?php echo $collCharges; ?></td>
+                <td><?php echo moneyFormatIndia($collCharges); ?></td>
                 <td><?php echo $row['coll_purpose']; ?></td>
                 <td><?php if(isset($row['paid_date'])) echo date('d-m-Y',strtotime($row['paid_date'])); ?></td>
-                <td><?php echo $paidAmount; ?></td>
-                <td><?php echo $bal_amnt; ?></td>
-                <td><?php echo $waiverAmount; ?></td>
+                <td><?php echo moneyFormatIndia($paidAmount); ?></td>
+                <td><?php echo moneyFormatIndia($bal_amnt); ?></td>
+                <td><?php echo moneyFormatIndia($waiverAmount); ?></td>
             </tr>
 
         <?php $i++;
@@ -79,12 +79,12 @@ function moneyFormatIndia($num)
     <tr>
         <td></td>
         <td></td>
-        <td><b><?php echo $charges; ?></b></td>
+        <td><b><?php echo moneyFormatIndia($charges); ?></b></td>
         <td></td>
         <td></td>
-        <td><b><?php echo $paid_amt; ?></b></td>
-        <td><b><?php echo $bal_amnt; ?></b></td>
-        <td><b><?php echo $charges_waiver; ?></b></td>
+        <td><b><?php echo moneyFormatIndia($paid_amt); ?></b></td>
+        <td><b><?php echo moneyFormatIndia($bal_amnt); ?></b></td>
+        <td><b><?php echo moneyFormatIndia($charges_waiver); ?></b></td>
     </tr>
 </table>
 

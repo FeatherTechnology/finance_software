@@ -209,7 +209,7 @@ function moneyFormatIndia($num)
                 <td> </td>
             <?php } ?>
 
-            <td><?php echo $loan_amt; ?></td>
+            <td><?php echo moneyFormatIndia($loan_amt); ?></td>
             <td></td>
             <td></td>
             <td></td>
@@ -338,18 +338,17 @@ function moneyFormatIndia($num)
                         <td></td>
                         <td></td>
                     <?php } ?>
-
-                    <td><?php $pendingMinusCollection = (intVal($row['pending_amt'])); ?></td>
-                    <td><?php $payableMinusCollection = (intVal($row['payable_amt'])); ?></td>
+                    <td><?php $pendingMinusCollection = moneyFormatIndia(intval($row['pending_amt'])); ?></td>
+                    <td><?php $payableMinusCollection = moneyFormatIndia(intVal($row['payable_amt'])); ?></td>
                     <td><?php echo date('d-m-Y', strtotime($row['trans_date'] != '0000-00-00' ? $row['trans_date'] : $row['coll_date'])); ?></td>
 
                     <!-- for collected amt -->
                     <?php if ($loan_type == 'emi') { ?>
                         <td>
                             <?php if ($row['due_amt_track'] > 0) {
-                                echo $row['due_amt_track'];
+                                echo moneyFormatIndia($row['due_amt_track']);
                             } elseif ($row['pre_close_waiver'] > 0) {
-                                echo $row['pre_close_waiver'];
+                                echo moneyFormatIndia($row['pre_close_waiver']);
                             } ?>
                         </td>
                     <?php } ?>
@@ -364,14 +363,14 @@ function moneyFormatIndia($num)
                         </td>
                         <td>
                             <?php if ($IcollectionAmnt > 0) {
-                                echo $IcollectionAmnt;
+                                echo moneyFormatIndia($IcollectionAmnt);
                             } ?>
                         </td>
                     <?php } ?>
 
-                    <td><?php echo $bal_amt; ?></td>
+                    <td><?php echo moneyFormatIndia($bal_amt); ?></td>
                     <td><?php if ($row['pre_close_waiver'] > 0) {
-                            echo $row['pre_close_waiver'];
+                            echo moneyFormatIndia($row['pre_close_waiver']);
                         } else {
                             echo '0';
                         } ?></td>
@@ -461,12 +460,12 @@ function moneyFormatIndia($num)
                                 </td>
 
                                 <?php if ($loan_type == 'emi') { ?>
-                                    <td><?php echo $row['due_amt']; ?></td>
+                                    <td><?php echo moneyFormatIndia($row['due_amt']); ?></td>
                                 <?php } ?>
                                 <?php if ($loan_type == 'interest') { ?>
                                     <td><?php echo $last_princ_amt; ?></td>
-                                    <td><?php echo $row['due_amt'];
-                                        $last_int_amt = $row['due_amt']; ?></td>
+                                    <td><?php echo moneyFormatIndia($row['due_amt']);
+                                        $last_int_amt = moneyFormatIndia($row['due_amt']); ?></td>
                                 <?php } ?>
 
 
@@ -498,12 +497,12 @@ function moneyFormatIndia($num)
                                 </td>
 
                                 <?php if ($loan_type == 'emi') { ?>
-                                    <td><?php echo $row['due_amt']; ?></td>
+                                    <td><?php echo moneyFormatIndia($row['due_amt']); ?></td>
                                 <?php } ?>
                                 <?php if ($loan_type == 'interest') { ?>
                                     <td><?php echo $last_princ_amt; ?></td>
-                                    <td><?php echo $row['due_amt'];
-                                        $last_int_amt = $row['due_amt']; ?></td>
+                                    <td><?php echo moneyFormatIndia($row['due_amt']);
+                                        $last_int_amt = moneyFormatIndia($row['due_amt']); ?></td>
                                 <?php } ?>
 
 
@@ -515,15 +514,15 @@ function moneyFormatIndia($num)
                         <?php }
                         } ?>
 
-                        <td><?php $pendingMinusCollection = (intVal($row['pending_amt']));
+                        <td><?php $pendingMinusCollection = moneyFormatIndia(intVal($row['pending_amt']));
                             if ($pendingMinusCollection != '') {
-                                echo $pendingMinusCollection;
+                                echo ($pendingMinusCollection);
                             } else {
                                 echo 0;
                             } ?></td>
-                        <td><?php $payableMinusCollection = (intVal($row['payable_amt']));
+                        <td><?php $payableMinusCollection = moneyFormatIndia(intVal($row['payable_amt']));
                             if ($payableMinusCollection != '') {
-                                echo $payableMinusCollection;
+                                echo ($payableMinusCollection);
                             } else {
                                 echo 0;
                             } ?></td>
@@ -533,9 +532,9 @@ function moneyFormatIndia($num)
                         <?php if ($loan_type == 'emi') { ?>
                             <td>
                                 <?php if ($row['due_amt_track'] > 0) {
-                                    echo $row['due_amt_track'];
+                                    echo moneyFormatIndia($row['due_amt_track']);
                                 } elseif ($row['pre_close_waiver'] > 0) {
-                                    echo $row['pre_close_waiver'];
+                                    echo moneyFormatIndia($row['pre_close_waiver']);
                                 } ?>
                             </td>
                         <?php } ?>
@@ -545,23 +544,23 @@ function moneyFormatIndia($num)
                                 <?php if ($princ_amt_track > 0) {
                                     echo $princ_amt_track;
                                 } elseif ($row['pre_close_waiver'] > 0) {
-                                    echo $row['pre_close_waiver'];
+                                    echo moneyFormatIndia($row['pre_close_waiver']);
                                 } ?>
                             </td>
                             <td>
                                 <?php if ($int_amt_track > 0) {
-                                    echo $int_amt_track;
+                                    echo moneyFormatIndia($int_amt_track);
                                 } ?>
                             </td>
                         <?php } ?>
 
 
-                        <td><?php echo $bal_amt;
+                        <td><?php echo moneyFormatIndia($bal_amt);
                             if ($loan_type == 'interest') {
                                 $last_princ_amt = $bal_amt;
                             } ?></td>
                         <td><?php if ($row['pre_close_waiver'] > 0) {
-                                echo $row['pre_close_waiver'];
+                                echo moneyFormatIndia($row['pre_close_waiver']);
                             } else {
                                 echo '0';
                             } ?></td>
@@ -588,7 +587,7 @@ function moneyFormatIndia($num)
                     <td> <?php echo date('M', strtotime($cusDueMonth)); ?> </td>
 
                     <?php if ($loan_type == 'emi') { ?>
-                        <td><?php echo $due_amt_1; ?></td>
+                        <td><?php echo moneyFormatIndia($due_amt_1); ?></td>
                     <?php } ?>
                     <?php if ($loan_type == 'interest') { ?>
                         <td><?php echo $last_princ_amt; ?></td>
@@ -600,11 +599,11 @@ function moneyFormatIndia($num)
                         if (date('Y-m', strtotime($cusDueMonth)) <=  date('Y-m')) { ?>
                             <td>
                                 <?php $response = getNextLoanDetails($pdo, $cp_id, $cusDueMonth);
-                                echo $response['pending']; ?>
+                                echo moneyFormatIndia($response['pending']); ?>
                             </td>
                             <td>
                                 <?php $response = getNextLoanDetails($pdo, $cp_id, $cusDueMonth);
-                                echo $response['payable']; ?>
+                                echo moneyFormatIndia($response['payable']); ?>
                             </td>
                         <?php } else if (date('Y-m', strtotime($cusDueMonth)) >  date('Y-m') && $curDateChecker == true) { ?>
                             <td>
@@ -625,11 +624,11 @@ function moneyFormatIndia($num)
                         if (date('Y-m-d', strtotime($cusDueMonth)) <=  date('Y-m-d')) { ?>
                             <td>
                                 <?php $response = getNextLoanDetails($pdo, $cp_id, $cusDueMonth);
-                                echo $response['pending']; ?>
+                                echo moneyFormatIndia($response['pending']); ?>
                             </td>
                             <td>
                                 <?php $response = getNextLoanDetails($pdo, $cp_id, $cusDueMonth);
-                                echo $response['payable']; ?>
+                                echo moneyFormatIndia($response['payable']); ?>
                             </td>
                         <?php } else if (date('Y-m-d', strtotime($cusDueMonth)) >  date('Y-m-d') && $curDateChecker == true) { ?>
                             <td>
@@ -737,13 +736,13 @@ function moneyFormatIndia($num)
 
                     <td><?php $pendingMinusCollection = (intVal($row['pending_amt']));
                         if ($pendingMinusCollection != '') {
-                            echo $pendingMinusCollection;
+                            echo moneyFormatIndia($pendingMinusCollection);
                         } else {
                             echo 0;
                         } ?></td>
                     <td><?php $payableMinusCollection = (intVal($row['payable_amt']));
                         if ($payableMinusCollection != '') {
-                            echo $payableMinusCollection;
+                            echo moneyFormatIndia($payableMinusCollection);
                         }
                         ?></td>
                     <td><?php echo date('d-m-Y', strtotime($row['coll_date'])); ?></td>
@@ -751,9 +750,9 @@ function moneyFormatIndia($num)
                     <?php if ($loan_type == 'emi') { ?>
                         <td>
                             <?php if ($row['due_amt_track'] > 0) {
-                                echo $row['due_amt_track'];
+                                echo moneyFormatIndia($row['due_amt_track']);
                             } elseif ($row['pre_close_waiver'] > 0) {
-                                echo $row['pre_close_waiver'];
+                                echo moneyFormatIndia($row['pre_close_waiver']);
                             } ?>
                         </td>
                     <?php } ?>
@@ -768,14 +767,14 @@ function moneyFormatIndia($num)
                         </td>
                         <td>
                             <?php if ($IcollectionAmnt > 0) {
-                                echo $IcollectionAmnt;
+                                echo moneyFormatIndia($IcollectionAmnt);
                             } ?>
                         </td>
                     <?php } ?>
 
-                    <td><?php echo $bal_amt; ?></td>
+                    <td><?php echo moneyFormatIndia($bal_amt); ?></td>
                     <td><?php if ($row['pre_close_waiver'] > 0) {
-                            echo $row['pre_close_waiver'];
+                            echo moneyFormatIndia($row['pre_close_waiver']);
                         } else {
                             echo '0';
                         } ?></td>
