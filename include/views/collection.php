@@ -46,7 +46,7 @@
                         <div class="card-body">
                             <div class="row">
                                 <div class="col-8">
-                                    <div class="row">                                        
+                                    <div class="row">
                                         <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
                                             <div class="form-group">
                                                 <label for="cus_id">Customer ID</label>
@@ -63,21 +63,21 @@
                                             <div class="form-group">
                                                 <label for="cus_area">Area</label>
                                                 <input type="text" class="form-control" id="cus_area" name="cus_area" tabindex="3" disabled>
-                                                <input type="hidden" id="area_id" name="area_id" >
+                                                <input type="hidden" id="area_id" name="area_id">
                                             </div>
                                         </div>
                                         <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
                                             <div class="form-group">
                                                 <label for="cus_branch">Branch</label>
                                                 <input type="text" class="form-control" id="cus_branch" name="cus_branch" tabindex="4" disabled>
-                                                <input type="hidden" id="branch_id" name="branch_id" >
+                                                <input type="hidden" id="branch_id" name="branch_id">
                                             </div>
                                         </div>
                                         <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
                                             <div class="form-group">
                                                 <label for="cus_line">Line</label>
                                                 <input type="text" class="form-control" id="cus_line" name="cus_line" tabindex="5" disabled>
-                                                <input type="hidden" id="line_id" name="line_id" >
+                                                <input type="hidden" id="line_id" name="line_id">
                                             </div>
                                         </div>
                                         <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
@@ -138,10 +138,10 @@
                     <h5 class="card-title">Collection Info</h5>
                 </div>
 
-                <input type="hidden" name="loan_category_id" id="loan_category_id" >
-                <input type="hidden" name="cp_id" id="cp_id" >
-                <input type="hidden" name="status" id="status" >
-                <input type="hidden" name="sub_status" id="sub_status" >
+                <input type="hidden" name="loan_category_id" id="loan_category_id">
+                <input type="hidden" name="cp_id" id="cp_id">
+                <input type="hidden" name="status" id="status">
+                <input type="hidden" name="sub_status" id="sub_status">
 
                 <div class="card-body">
                     <div class="row">
@@ -182,14 +182,7 @@
                                     <div class="form-group">
                                         <label for="disabledInput">Payable Amount</label>&nbsp;<span class="text-danger payablespan">*</span>
                                         <input type="text" class="form-control" readonly id="payable_amt" name="payable_amt" value='' tabindex='12'>
-                                        <input type="hidden" class="form-control" readonly id="payableAmount" name="payableAmount" >
-                                    </div>
-                                </div>
-                                
-                                <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12 till-date-int">
-                                    <div class="form-group">
-                                        <label for="disabledInput">Till Date Interest</label>&nbsp;<span class="text-danger ">*</span>
-                                        <input type="text" class="form-control" readonly id="till_date_int" name="till_date_int" value='' tabindex='13'>
+                                        <input type="hidden" class="form-control" readonly id="payableAmount" name="payableAmount">
                                     </div>
                                 </div>
 
@@ -212,7 +205,7 @@
                 </div>
             </div>
             <!-- /////////////////////////////////////////////////// Collection Info END ///////////////////////////////////////// -->
-            
+
             <!-- /////////////////////////////////////////////////// Collection Track START ///////////////////////////////////////// -->
             <div class="card coll_details" style="display: none;">
                 <div class="card-header">
@@ -256,11 +249,11 @@
                                 <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
                                     <div class="form-group">
                                         <label for="disabledInput">Total Paid</label>
-                                        <input type="number" readonly class="form-control clearFields" id="total_paid_track" name="total_paid_track" value='' tabindex='21'>
+                                        <input type="text" readonly class="form-control clearFields" id="total_paid_track" name="total_paid_track" value='' tabindex='21'>
                                     </div>
                                 </div>
                             </div>
-                            
+
                             <!-- Waiver Access if the user have collection access. -->
                             <div class="row collection_access_div">
                                 <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
@@ -284,14 +277,16 @@
                                 <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
                                     <div class="form-group">
                                         <label for="disabledInput">Total Waiver</label>
-                                        <input type="number" readonly class="form-control clearFields" id="total_waiver" name="total_waiver" value='' tabindex='25'>
+                                        <input type="text" readonly class="form-control clearFields" id="total_waiver" name="total_waiver" value='' tabindex='25'>
                                     </div>
                                 </div>
                             </div>
                             <!-- Waiver Access if the user have collection access. -->
 
-                            <div class="row">    
-                                <div class="col-12"><hr></div>
+                            <div class="row">
+                                <div class="col-12">
+                                    <hr>
+                                </div>
                                 <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
                                     <div class="form-group">
                                         <label for="disabledInput">Collection Date</label>&nbsp;<span class="text-danger">*</span>
@@ -347,13 +342,12 @@
                                     </div>
                                 </div>
                             </div>
-
                         </div>
                     </div>
                 </div>
             </div>
             <!-- /////////////////////////////////////////////////// Collection Track END ///////////////////////////////////////// -->
-            
+
             <!-- Submit Button Start -->
             <div class="col-md-12 coll_details" style="display: none;">
                 <div class="text-right">
@@ -438,7 +432,7 @@
 
             </div>
             <div class="modal-footer">
-                <button class="btn btn-secondary" data-dismiss="modal"  onclick="closeChartsModal()" tabindex="4">Close</button>
+                <button class="btn btn-secondary" data-dismiss="modal" onclick="closeChartsModal()" tabindex="4">Close</button>
             </div>
         </div>
     </div>
@@ -450,7 +444,7 @@
         <div class="modal-content" style="background-color: white">
             <div class="modal-header">
                 <h5 class="modal-title" id="exampleModalLongTitle">Fine Chart</h5>
-                <button type="button" class="close" data-dismiss="modal" tabindex="1" aria-label="Close"  onclick="closeChartsModal()">
+                <button type="button" class="close" data-dismiss="modal" tabindex="1" aria-label="Close" onclick="closeChartsModal()">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
@@ -469,7 +463,7 @@
                 </table>
             </div>
             <div class="modal-footer">
-                <button class="btn btn-secondary" data-dismiss="modal"  onclick="closeChartsModal()" tabindex="4">Close</button>
+                <button class="btn btn-secondary" data-dismiss="modal" onclick="closeChartsModal()" tabindex="4">Close</button>
             </div>
         </div>
     </div>
@@ -486,25 +480,25 @@
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-            <div class="modal-body"> 
+            <div class="modal-body">
                 <div class="row">
                     <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
                         <div class="form-group">
-                            <label for="coll_date "> Date  </label> <span class="required">&nbsp;*</span>
-                            <input type="hidden" class="form-control" id="fine_cp_id" name="fine_cp_id" >
-                            <input type="text" class="form-control" id="fine_date" name="fine_date" readonly tabindex='1' >
+                            <label for="coll_date "> Date </label> <span class="required">&nbsp;*</span>
+                            <input type="hidden" class="form-control" id="fine_cp_id" name="fine_cp_id">
+                            <input type="text" class="form-control" id="fine_date" name="fine_date" readonly tabindex='1'>
                         </div>
                     </div>
                     <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
                         <div class="form-group">
-                            <label for="coll_purpose"> Purpose  </label> <span class="required">&nbsp;*</span>
+                            <label for="coll_purpose"> Purpose </label> <span class="required">&nbsp;*</span>
                             <input type="text" class="form-control" id="fine_purpose" name="fine_purpose" placeholder="Enter Purpose" onkeydown="return /[a-z ]/i.test(event.key)" tabindex='2'>
                         </div>
                     </div>
                     <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
                         <div class="form-group">
                             <label for="coll_amnt"> Amount </label> <span class="required">&nbsp;*</span>
-                            <input type="number" class="form-control" id="fine_Amnt" name="fine_Amnt" placeholder="Enter Amount"  tabindex='3'>
+                            <input type="number" class="form-control" id="fine_Amnt" name="fine_Amnt" placeholder="Enter Amount" tabindex='3'>
                         </div>
                     </div>
                     <div class="col-xl-2 col-lg-2 col-md-6 col-sm-4 col-12">

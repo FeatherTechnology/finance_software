@@ -992,7 +992,6 @@ $(document).ready(function () {
         //     let balance = parseFloat(response.balance);
         //     let issueAmount = parseFloat($('#issue_amount').val());
         //     let alertMessage = response.alert_message;
-
         //     if (issueAmount > balance) {
         //         let formattedMessage = `${alertMessage} ,\n\n Available Balance: ${balance}`;
         //         swalError('Warning', formattedMessage);

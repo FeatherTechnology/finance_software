@@ -110,20 +110,39 @@ $(document).ready(function(){
             'expenses_amnt' : $('#expenses_amnt').val(),
             'expenses_trans_id' : $('#expenses_trans_id').val(),
         }
-        if(expensesFormValid(expensesData)){
-            $.post('api/accounts_files/accounts/submit_expenses.php',expensesData,function(response){
-                if(response =='1'){
-                    swalSuccess('Success', 'Expenses added successfully.');
-                    expensesTable('#expenses_creation_table');
-                    getInvoiceNo();
-                    getClosingBal();
-                }else{
-                    swalError('Error', 'Failed.');
+            // Fetch closing balance and validate the expense amount before submitting
+            getClosingBal(function (hand_cash_balance, bank_cash_balance) {
+                let expensesAmount = parseFloat(expensesData.expenses_amnt);
+                let collMode = expensesData.coll_mode;
+    
+                // Check if cash mode is 1 (Hand Cash) and expenses amount is greater than hand cash balance
+                if (collMode == '1' && expensesAmount > hand_cash_balance) {
+                    swalError('Warning', 'Insufficient Hand cash balance');
+                    return;
                 }
-            },'json');
-        }else{
-            swalError('Warning', 'Kindly Fill Mandatory Fields.');
-        }
+    
+                // Check if cash mode is 2 (Bank Transaction) and expenses amount is greater than bank cash balance
+                if (collMode == '2' && expensesAmount > bank_cash_balance) {
+                    swalError('Warning', 'Insufficient Bank cash balance.');
+                    return;
+                }
+    
+                // Proceed if the balance check passes
+                if (expensesFormValid(expensesData)) {
+                    $.post('api/accounts_files/accounts/submit_expenses.php', expensesData, function (response) {
+                        if (response == '1') {
+                            swalSuccess('Success', 'Expenses added successfully.');
+                            expensesTable('#expenses_creation_table');
+                            getInvoiceNo();
+                            getClosingBal(); // Update the closing balance after submission
+                        } else {
+                            swalError('Error', 'Failed to add expenses.');
+                        }
+                    }, 'json');
+                } else {
+                    swalError('Warning', 'Kindly Fill Mandatory Fields.');
+                }
+            });
     });
 
     
@@ -262,20 +281,86 @@ $(document).ready(function(){
             'other_amnt' : $('#other_amnt').val(),
             'other_remark' : $('#other_remark').val()
         }
-        if(otherTransFormValid(otherTransData)){
-            $.post('api/accounts_files/accounts/submit_other_transaction.php',otherTransData,function(response){
-                if(response =='1'){
-                    swalSuccess('Success', 'Other Transaction added successfully.');
-                    otherTransTable('#other_transaction_table');
-                    getClosingBal();
-                }else{
-                    swalError('Error', 'Failed.');
+        let otherAmount = otherTransData.other_amnt;
+        let collMode = otherTransData.coll_mode;
+        let catType = otherTransData.cat_type; // 1 = Credit, 2 = Debit
+        let transCategory = parseInt(otherTransData.trans_category);
+        // Fetch user's total credit and debit amounts
+        $.post('api/accounts_files/accounts/get_user_transactions.php', {
+            // 'coll_mode': otherTransData.coll_mode,
+            'other_trans_name': otherTransData.other_trans_name
+        }, function (response) {
+            let totalCredit = parseFloat(response.total_type_1_amount || 0); // Total Credit
+            let totalDebit = parseFloat(response.total_type_2_amount || 0);  // Total Debit
+
+            let balance;
+            if (catType == '2') { // Debit Transaction
+                balance = totalCredit - totalDebit; // Calculate balance
+            } else if (catType == '1') { // Credit Transaction
+                balance = totalDebit - totalCredit; // Calculate balance  
+            }
+
+            // Validate Debit Transactions
+            if (transCategory >= 3 && transCategory <= 9) {
+                if (catType == '2') { // Debit Transaction
+                    if (balance > 0) {
+                        // Allow debit if balance is zero or negative, as long as debit amount does not exceed the absolute value of the balance
+                        if (otherAmount > Math.abs(balance)) {
+                            const formattedBalance = moneyFormatIndia(Math.abs(balance));
+                            swalError('Warning', 'You may only debit up to: ' + formattedBalance);
+                            return;
+                        }
+                    }
+                } else if (catType == '1') { // Credit Transaction
+                    // Allow credit if balance is negative or zero
+                    if (balance > 0) {
+                        if (otherAmount > Math.abs(balance)) {
+                            const formattedBalance = moneyFormatIndia(Math.abs(balance));
+                            swalError('Warning', 'You may only credit up to: ' + formattedBalance);
+                            return;
+                        }
+                    }
                 }
-            },'json');
-        }else{
-            swalError('Warning', 'Kindly Fill Mandatory Fields.');
-        }
-    });
+            } else if (transCategory <= 2) {
+                if (catType == '2' && totalCredit < totalDebit + otherAmount) {
+                    const formattedBalance = moneyFormatIndia(Math.abs(balance));
+                    swalError('Warning', 'You may only debit up to: ' + formattedBalance);
+                    return;
+                }
+            }
+
+            // Fetch hand cash and bank cash balances for validation
+            getClosingBal(function (hand_cash_balance, bank_cash_balance) {
+                if (catType == '2') { // Debit Transaction
+                    if (collMode == '1' && otherAmount > hand_cash_balance) {
+                        swalError('Warning', 'Insufficient hand cash balance.');
+                        return;
+                    }
+                    if (collMode == '2' && otherAmount > bank_cash_balance) {
+                        swalError('Warning', 'Insufficient bank cash balance.');
+                        return;
+                    }
+                }
+                //    Proceed if all validations pass
+                if (otherTransFormValid(otherTransData)) {
+                    $.post('api/accounts_files/accounts/submit_other_transaction.php', otherTransData, function (response) {
+                        if (response == '1') {
+                            swalSuccess('Success', 'Other Transaction added successfully.');
+                            otherTransTable('#other_transaction_table');
+                            getClosingBal(); // Update closing balance after submission
+                            $('#name_id_cont').show();
+                            $('#name_modl_btn').show();
+                        } else {
+                            swalError('Error', 'Failed to add transaction.');
+                        }
+                    }, 'json');
+                }
+                else {
+                    swalError('Warning', 'Please fill all required fields.');
+                }
+            });
+        }, 'json');
+    })
     
     $(document).on('click', '.transDeleteBtn', function () {
         let id = $(this).attr('value');
@@ -336,18 +421,25 @@ function getOpeningBal(){
     });
 }
 
-function getClosingBal(){
-    $.post('api/accounts_files/accounts/closing_balance.php',function(response){
-        if(response.length > 0){
+function getClosingBal(callback) {
+    $.post('api/accounts_files/accounts/closing_balance.php', function (response) {
+        if (response.length > 0) {
             let close = parseInt($('.opening_val').text()) + parseInt(response[0]['closing_balance']);
             let hand = parseInt($('.op_hand_cash_val').text()) + parseInt(response[0]['hand_cash']);
             let bank = parseInt($('.op_bank_cash_val').text()) + parseInt(response[0]['bank_cash']);
+
             $('.closing_val').text(close);
             $('.clse_hand_cash_val').text(hand);
             $('.clse_bank_cash_val').text(bank);
+
+            // Call the callback function if defined
+            if (typeof callback === "function") {
+                callback(hand, bank, close);
+            }
         }
-    },'json');
+    }, 'json');
 }
+
 
 function getCollectionList(){
     let cash_type = $("input[name='coll_cash_type']:checked").val();

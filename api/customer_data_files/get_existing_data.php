@@ -1,7 +1,7 @@
 <?php
 require '../../ajaxconfig.php';
-
-$user_id = isset($_SESSION['user_id']) ? $_SESSION['user_id'] : '';
+@session_start();
+$user_id = $_SESSION['user_id'];
 $cus_id = isset($_POST['cus_id']) ? $_POST['cus_id'] : '';
 
 $result = 0; 

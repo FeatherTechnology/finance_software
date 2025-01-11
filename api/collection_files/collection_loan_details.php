@@ -160,7 +160,6 @@ function calculateOthers($loan_arr, $response, $pdo)
         $current = DateTime::createFromFormat('Y-m', $current_date);
 
 
-
         for ($i = $start; $i < $current; $start->add($interval)) {
             $loandate_tillnow += 1;
             $toPaytilldate = intval($loandate_tillnow) * intval($dueCharge);
@@ -295,7 +294,11 @@ function calculateOthers($loan_arr, $response, $pdo)
             //If still current month is not ended, then penalty will be 0
             $response['penalty'] = 0;
             //If still current month is not ended, then payable will be due amt
+     
+
+            // Perform the calculation
             $response['payable'] = $response['due_amt'] - $response['total_paid'] - $response['pre_closure'];
+
 
             if ($loan_arr['loan_type'] == 'interest') {
                 $response['payable'] =  0;

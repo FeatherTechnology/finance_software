@@ -92,56 +92,56 @@ $(document).ready(function(){
             cache: false,
             success: function(response){
                 //Display all value to readonly fields
-                $('#tot_amt').val(response['total_amt'])
-                $('#paid_amt').val(response['total_paid'])
-                $('#bal_amt').val(response['balance'])
-                $('#due_amt').val(response['due_amt'])
-                $('#pending_amt').val(response['pending'])
-                $('#pend_amt').val(response['pending'])
-                $('#payable_amt').val(response['payable'])
-                $('#payableAmount').val(response['payable'])
-                $('#penalty').val(response['penalty'])
-                $('#coll_charge').val(response['coll_charge']);
-
-                if(response['loan_type'] == "interest"  ){
+                $('#tot_amt').val(moneyFormatIndia(response['total_amt']))
+                $('#paid_amt').val(moneyFormatIndia(response['total_paid']))
+                $('#bal_amt').val(moneyFormatIndia(response['balance']))
+                $('#due_amt').val(moneyFormatIndia(response['due_amt']))
+                $('#pending_amt').val(moneyFormatIndia(response['pending']))
+                $('#pend_amt').val(moneyFormatIndia(response['pending']))
+                $('#payable_amt').val(moneyFormatIndia(response['payable']))
+                $('#payableAmount').val(moneyFormatIndia(response['payable']))
+                $('#penalty').val(moneyFormatIndia(response['penalty']))
+                $('#coll_charge').val(moneyFormatIndia(response['coll_charge']));
+                
+                if (response['loan_type'] == "interest") {
                     $('.till-date-int').show();
                     $('#till_date_int').val(response['till_date_int'].toFixed(0))
                     $('#tot_amt').prev().prev().text('Principal Amount')
                     $('#due_amt').prev().prev().text('Interest Amount')
-
+                
                     $('.emiLoanDiv').hide()
                     $('.intLoanDiv').show()
-
-                    //Show all in span class
+                
+                    // Show all in span class
                     $('.totspan').text('*')
                     $('.paidspan').text('*')
                     $('.balspan').text('*')
                     $('.pendingspan').text('*')
                     $('.payablespan').text('*')
-
-                }else{
+                
+                } else {
                     $('.till-date-int').hide();
                     $('#till_date_int').val('')
                     $('#tot_amt').prev().prev().text('Total Amount')
                     $('#due_amt').prev().prev().text('Due Amount')
-
+                
                     $('.emiLoanDiv').show()
                     $('.intLoanDiv').hide()
                     
-                    //to get how many due are pending till now
+                    // to get how many due are pending till now
                     var totspan = (response['total_amt'] / response['due_amt']).toFixed(1);
-                    var paidspan =(response['total_paid'] / response['due_amt']).toFixed(1);
-                    var balspan =(response['balance'] / response['due_amt']).toFixed(1);
-                    var pendingspan =(response['pending'] / response['due_amt']).toFixed(1);
-                    var payablespan =(response['payable'] / response['due_amt']).toFixed(1);
-                    
-                    //Show all in span class
-                    $('.totspan').text('* (No of Due : '+totspan+')')
-                    $('.paidspan').text('* (No of Due : '+paidspan+')')
-                    $('.balspan').text('* (No of Due : '+balspan+')')
-                    $('.pendingspan').text('* (No of Due : '+pendingspan+')')
-                    $('.payablespan').text('* (No of Due : '+payablespan+')')
-                }
+                    var paidspan = (response['total_paid'] / response['due_amt']).toFixed(1);
+                    var balspan = (response['balance'] / response['due_amt']).toFixed(1);
+                    var pendingspan = (response['pending'] / response['due_amt']).toFixed(1);
+                    var payablespan = (response['payable'] / response['due_amt']).toFixed(1);
+                
+                    // Show all in span class with moneyFormatIndia applied
+                    $('.totspan').text('* (No of Due: ' + moneyFormatIndia(totspan) + ')');
+                    $('.paidspan').text('* (No of Due: ' + moneyFormatIndia(paidspan) + ')');
+                    $('.balspan').text('* (No of Due: ' + moneyFormatIndia(balspan) + ')');
+                    $('.pendingspan').text('* (No of Due: ' + moneyFormatIndia(pendingspan) + ')');
+                    $('.payablespan').text('* (No of Due: ' + moneyFormatIndia(payablespan) + ')');
+                }                
                 
                 //To set limitations for input fields
                 $('#due_amt_track').on('blur', function() {
@@ -243,24 +243,24 @@ $(document).ready(function(){
 
     $('#due_amt_track, #princ_amt_track, #int_amt_track, #penalty_track , #coll_charge_track').blur(function(){
         
-        var due_amt_track = ($('#due_amt_track').val()!='') ? $('#due_amt_track').val() : 0;
-        var penalty_track = ($('#penalty_track').val()!='') ? $('#penalty_track').val() : 0;
-        var coll_charge_track = ($('#coll_charge_track').val()!='') ? $('#coll_charge_track').val() : 0;
-        var princ_amt_track = ($('#princ_amt_track').val()!='') ? $('#princ_amt_track').val() : 0;
-        var int_amt_track = ($('#int_amt_track').val()!='') ? $('#int_amt_track').val() : 0;
+        var due_amt_track = ($('#due_amt_track').val()!='') ? $('#due_amt_track').val().replace(/,/g, '') : 0;
+        var penalty_track = ($('#penalty_track').val()!='') ? $('#penalty_track').val().replace(/,/g, '') : 0;
+        var coll_charge_track = ($('#coll_charge_track').val()!='') ? $('#coll_charge_track').val().replace(/,/g, '') : 0;
+        var princ_amt_track = ($('#princ_amt_track').val()!='') ? $('#princ_amt_track').val().replace(/,/g, ''): 0;
+        var int_amt_track = ($('#int_amt_track').val()!='') ? $('#int_amt_track').val().replace(/,/g, '') : 0;
         
         var total_paid_track = parseInt(due_amt_track) + parseInt(princ_amt_track) + parseInt(int_amt_track) + parseInt(penalty_track) + parseInt(coll_charge_track);
-        $('#total_paid_track').val(total_paid_track)
+        $('#total_paid_track').val(moneyFormatIndia(total_paid_track));
     });
 
     $('#pre_close_waiver , #penalty_waiver , #coll_charge_waiver').blur(function(){
         
-        var pre_close_waiver = ($('#pre_close_waiver').val()!='') ? $('#pre_close_waiver').val() : 0;
-        var penalty_waiver = ($('#penalty_waiver').val()!='') ? $('#penalty_waiver').val() : 0;
-        var coll_charge_waiver = ($('#coll_charge_waiver').val()!='') ? $('#coll_charge_waiver').val() : 0;
+        var pre_close_waiver = ($('#pre_close_waiver').val()!='') ? $('#pre_close_waiver').val().replace(/,/g, '') : 0;
+        var penalty_waiver = ($('#penalty_waiver').val()!='') ? $('#penalty_waiver').val().replace(/,/g, '') : 0;
+        var coll_charge_waiver = ($('#coll_charge_waiver').val()!='') ? $('#coll_charge_waiver').val().replace(/,/g, ''): 0;
 
         var total_waiver = parseInt(pre_close_waiver) + parseInt(penalty_waiver) + parseInt(coll_charge_waiver);
-        $('#total_waiver').val(total_waiver)
+        $('#total_waiver').val(moneyFormatIndia(total_waiver));
     });
 
     $(document).on('click','.due-chart', function(){
@@ -343,24 +343,24 @@ $(document).ready(function(){
             'loan_category_id' : $('#loan_category_id').val(),
             'status' : $('#status').val(),
             'sub_status' : $('#sub_status').val(),
-            'tot_amt' : $('#tot_amt').val(),
-            'paid_amt' : $('#paid_amt').val(),
-            'bal_amt' : $('#bal_amt').val(),
-            'due_amt' : $('#due_amt').val(),
-            'pending_amt' : $('#pending_amt').val(),
-            'payable_amt' : $('#payable_amt').val(),
-            'penalty' : $('#penalty').val(),
-            'coll_charge' : $('#coll_charge').val(),
-            'due_amt_track' : $('#due_amt_track').val(),
-            'princ_amt_track' : $('#princ_amt_track').val(),
-            'int_amt_track' : $('#int_amt_track').val(),
-            'penalty_track' : $('#penalty_track').val(),
-            'coll_charge_track' : $('#coll_charge_track').val(),
-            'total_paid_track' : $('#total_paid_track').val(),
-            'pre_close_waiver' : $('#pre_close_waiver').val(),
-            'penalty_waiver' : $('#penalty_waiver').val(),
-            'coll_charge_waiver' : $('#coll_charge_waiver').val(),
-            'total_waiver' : $('#total_waiver').val(),
+            'tot_amt' : $('#tot_amt').val().replace(/,/g, ''),
+            'paid_amt' : $('#paid_amt').val().replace(/,/g, ''),
+            'bal_amt' : $('#bal_amt').val().replace(/,/g, ''),
+            'due_amt' : $('#due_amt').val().replace(/,/g, ''),
+            'pending_amt' : $('#pending_amt').val().replace(/,/g, ''),
+            'payable_amt' : $('#payable_amt').val().replace(/,/g, ''),
+            'penalty' : $('#penalty').val().replace(/,/g, ''),
+            'coll_charge' : $('#coll_charge').val().replace(/,/g, ''),
+            'due_amt_track' : $('#due_amt_track').val().replace(/,/g, ''),
+            'princ_amt_track' : $('#princ_amt_track').val().replace(/,/g, ''),
+            'int_amt_track' : $('#int_amt_track').val().replace(/,/g, ''),
+            'penalty_track' : $('#penalty_track').val().replace(/,/g, ''),
+            'coll_charge_track' : $('#coll_charge_track').val().replace(/,/g, ''),
+            'total_paid_track' : $('#total_paid_track').val().replace(/,/g, ''),
+            'pre_close_waiver' : $('#pre_close_waiver').val().replace(/,/g, ''),
+            'penalty_waiver' : $('#penalty_waiver').val().replace(/,/g, ''),
+            'coll_charge_waiver' : $('#coll_charge_waiver').val().replace(/,/g, ''),
+            'total_waiver' : $('#total_waiver').val().replace(/,/g, ''),
             'collection_date' : $('#collection_date').val(),
             'collection_id' : $('#collection_id').val(),
             'collection_mode' : $('#collection_mode').val(),
