@@ -1333,7 +1333,7 @@ function calculateOthers($loan_arr, $response, $date, $pdo)
 function calculateNewInterestAmt($loan_arr, $response)
 {
     //to calculate current interest amount based on current balance value//bcoz interest will be calculated based on current balance amt only for interest loan
-    $int = $response['balance'] * ($loan_arr['int_rate'] / 100);
+    $int = $response['balance'] * ($loan_arr['interest_rate'] / 100);
     $curInterest = ceil($int / 5) * 5; //to increase Interest to nearest multiple of 5
     if ($curInterest < $int) {
         $curInterest += 5;

@@ -2200,6 +2200,7 @@ function getLoanAfterInterest(loan_amt, int_rate, due_period, doc_charge, proc_f
     $('#net_cash_calc').val(parseInt(net_cash).toFixed(0));
 }
 
+
 //To Get Loan Calculation for Interest due type
 function getLoanInterest(loan_amt, int_rate, doc_charge, proc_fee) {
 

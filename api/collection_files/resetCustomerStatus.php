@@ -30,7 +30,6 @@ $i = 0;
 foreach ($cp_arr as $cp_id) {
         
         $response['cp_id'][$i] = $cp_id;
-
         $result = $pdo->query("SELECT * FROM `loan_entry_loan_calculation` WHERE cus_profile_id = $cp_id ");
     if ($result->rowCount() > 0) {
         $row = $result->fetch();
@@ -148,7 +147,6 @@ foreach ($cp_arr as $cp_id) {
 
     $i++;
 }
-
 //for knowing the customer status for due followup screen
 //this will give the customer's sub status in the order of Legal, Error, OD, Due Nill, Pending, Current
 $response['follow_cus_sts'] = checkStatusOfCustomer($response, $loan_arr, $cus_id, $pdo);
@@ -658,6 +656,7 @@ function getTillDateInterest($loan_arr, $response, $pdo, $data)
 
 function checkStatusOfCustomer($response, $loan_arr, $cus_id, $pdo)
 {
+
     if($response){
         for ($i = 0; $i < count($response['pending_customer']); $i++) {
     
@@ -667,18 +666,21 @@ function checkStatusOfCustomer($response, $loan_arr, $cus_id, $pdo)
     
             if (date('Y-m-d', strtotime($loan_arr['due_startdate'])) > date('Y-m-d', strtotime($curdate))) { //If the start date is on upcoming date then the sub status is current, until current date reach due_start_from date.
                 $response['follow_cus_sts'] = 'Current';
-    
             } else {
                 if ($response['pending_customer'][$i] == true && $response['od_customer'][$i] == false) { //using i as 1 so subract it with 1
+              
                     $response['follow_cus_sts'] = 'Pending';
                     
                 } else if ($response['od_customer'][$i] == true && $response['due_nil_customer'][$i] == false) {
                     $response['follow_cus_sts'] = 'OD';
+                
                     
                 } elseif ($response['due_nil_customer'][$i] == true) {
+            
                     $response['follow_cus_sts'] = 'Due Nil';
                     
                 } elseif ($response['pending_customer'][$i] == false) {
+                   
                     $response['follow_cus_sts'] = 'Current';
                     
                 }

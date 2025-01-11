@@ -5,20 +5,25 @@ $type = $_POST['type'];
 $user_id = ($_POST['user_id'] != '') ? $userwhere = " AND insert_login_id = '" . $_POST['user_id'] . "' " : $userwhere = ''; //for user based
 
 if ($type == 'today') {
-    $where = " DATE(created_on) = CURDATE() - INTERVAL 1 DAY $userwhere";
-
+    $current_date = date('Y-m-d');
+    $where = " DATE(created_on) <='$current_date' - INTERVAL 1 DAY $userwhere";
 } else if ($type == 'day') {
     $from_date = $_POST['from_date'];
     $to_date = $_POST['to_date'];
-    $where = " (DATE(created_on) >= '$from_date' && DATE(created_on) <= '$to_date' ) $userwhere ";
-
+    //$where = " (DATE(created_on) >= '$from_date' && DATE(created_on) <= '$from_date' ) $userwhere ";
+    $where = " DATE(created_on) <= DATE('$from_date') - INTERVAL 1 DAY $userwhere";
 } else if ($type == 'month') {
-    $month = date('m', strtotime($_POST['month']));
-    $year = date('Y', strtotime($_POST['month']));
-    $where = " (MONTH(created_on) = '$month' AND YEAR(created_on) = $year) $userwhere";
+    // Get the selected month and subtract one month
+    $selectedMonth = $_POST['month'];
+    $previousMonth = date('Y-m', strtotime('-1 month', strtotime($selectedMonth)));
 
+    // Extract the previous month and year
+    $month = date('m', strtotime($previousMonth));
+    $year = date('Y', strtotime($previousMonth));
+
+    // Apply the filter to fetch data from the previous month
+    $where = " (MONTH(created_on) <= '$month' AND YEAR(created_on) = '$year') $userwhere";
 }
-
 $op_data = array();
 $op_data[0]['hand_cash'] = 0;
 $op_data[0]['bank_cash'] = 0;
