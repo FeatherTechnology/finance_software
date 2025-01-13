@@ -58,11 +58,11 @@ function moneyFormatIndia($num)
             <tr>
                 <td><?php echo $i; ?></td>
                 <td><?php echo $row['penalty_date']!=''?date('d-m-Y',strtotime($row['penalty_date'])):''; ?></td>
-                <td><?php echo $penaltys; ?></td>
+                <td><?php echo moneyFormatIndia($penaltys); ?></td>
                 <td><?php echo $row['paid_date']!=''?date('d-m-Y',strtotime($row['paid_date'])):''; ?></td>
-                <td><?php echo $paid_amount; ?></td>
-                <td><?php echo $bal_amnt; ?></td>
-                <td><?php echo $waivers; ?></td>
+                <td><?php echo moneyFormatIndia($paid_amount); ?></td>
+                <td><?php echo moneyFormatIndia($bal_amnt); ?></td>
+                <td><?php echo moneyFormatIndia($waivers); ?></td>
             </tr>
 
         <?php $i++;

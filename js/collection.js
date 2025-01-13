@@ -50,10 +50,20 @@ $(document).ready(function(){
         
         {
             // Get today's date
-            var today = new Date().toISOString().split('T')[0];
-            //Set loan date
-            $('#collection_date').val(today);
+            var today = new Date();
+            
+            // Extract day, month, and year
+            var day = String(today.getDate()).padStart(2, '0');
+            var month = String(today.getMonth() + 1).padStart(2, '0'); // Months are zero-indexed, so add 1
+            var year = today.getFullYear();
+            
+            // Construct the date in dd-mm-yyyy format
+            var formattedDate = day + '-' + month + '-' + year;
+            
+            // Set loan date
+            $('#collection_date').val(formattedDate);
         }
+        
 
         //To get the loan category ID to store when collection form submitted
         $.ajax({
@@ -171,20 +181,33 @@ $(document).ready(function(){
                 });
                 
                 $('#penalty_track').on('blur', function() {
-                    if (parseInt($(this).val()) > response['penalty']) {
+                    var penaltyValue = parseInt($(this).val()); // Value entered in the field
+                    var penaltyLimit = parseInt(response['penalty']); // Value from the response
+                
+                    if (isNaN(penaltyValue)) {
+                        console.log("Penalty value is not a valid number");
+                        return; // Exit if the value is not a valid number
+                    }
+                
+                    if (penaltyValue > penaltyLimit) {
                         alert("Enter a Lesser Value");
-                        $(this).val("");
-                        $('#total_paid_track').val("");
+                        $(this).val("");  // Clear the penalty input field
+                        $('#total_paid_track').val("");  // Clear the total paid track field
                     }
                 });
                 
+                
                 $('#coll_charge_track').on('blur', function() {
-                    if (parseInt($(this).val()) > response['coll_charge']) {
+                    var collChargeValue = parseInt($(this).val());
+                    var responseCollCharge = parseInt(response['coll_charge']);
+                    // Compare the input value with the response collection charge
+                    if (collChargeValue > responseCollCharge) {
                         alert("Enter a Lesser Value");
-                        $(this).val("");
-                        $('#total_paid_track').val("");
+                        $(this).val("");  // Clear the input field
+                        $('#total_paid_track').val("");  // Clear the total paid field
                     }
                 });
+                
                 
                 //To set Limitation that should not cross its limit with considering track values and previous readonly values
                 $('#pre_close_waiver').on('blur', function() {
@@ -240,7 +263,42 @@ $(document).ready(function(){
         $('#coll_main_container input').css('border', '1px solid #cecece');
         $('#coll_main_container select').css('border', '1px solid #cecece');
     });
-
+    function printCollection(coll_id) {
+        Swal.fire({
+            title: 'Print',
+            text: 'Do you want to print this collection?',
+            imageUrl: 'img/printer.png',
+            imageWidth: 300,
+            imageHeight: 210,
+            imageAlt: 'Custom image',
+            showCancelButton: true,
+            confirmButtonColor: '#009688',
+            cancelButtonColor: '#d33',
+            cancelButtonText: 'No',
+            confirmButtonText: 'Yes'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                $.ajax({
+                    url: 'api/collection_files/print_collection.php',
+                    data: { 'coll_id': coll_id },
+                    type: 'POST',
+                    cache: false,
+                    success: function (html) {
+                        // Update the HTML content inside #printcollection div
+                        $('#printcollection').html(html);
+                        
+                        // Print the content inside the #printcollection div
+                        var content = $("#printcollection").html();
+                    },
+                    error: function (xhr, status, error) {
+                        console.error('AJAX Error:', status, error);
+                    }
+                });
+            }
+        });
+    }
+    
+    
     $('#due_amt_track, #princ_amt_track, #int_amt_track, #penalty_track , #coll_charge_track').blur(function(){
         
         var due_amt_track = ($('#due_amt_track').val()!='') ? $('#due_amt_track').val().replace(/,/g, '') : 0;
@@ -383,6 +441,9 @@ $(document).ready(function(){
                 }
                 $('#submit_collection').attr('disabled', false);
                 $('#back_to_loan_list').trigger('click');
+                setTimeout(function () {
+                    printCollection(response.coll_id); // Pass the collection ID here
+                }, 1000);
             },'json');
         }else{
             $('#submit_collection').attr('disabled', false);
