@@ -412,9 +412,9 @@ $(function(){
 function getOpeningBal(){
     $.post('api/accounts_files/accounts/opening_balance.php',function(response){
         if(response.length > 0){
-            $('.opening_val').text(response[0]['opening_balance']);
-            $('.op_hand_cash_val').text(response[0]['hand_cash']);
-            $('.op_bank_cash_val').text(response[0]['bank_cash']);
+            $('.opening_val').text(moneyFormatIndia(response[0]['opening_balance']));
+            $('.op_hand_cash_val').text(moneyFormatIndia(response[0]['hand_cash']));
+            $('.op_bank_cash_val').text(moneyFormatIndia(response[0]['bank_cash']));
         }
     },'json').then(function(){
         getClosingBal();
@@ -424,13 +424,13 @@ function getOpeningBal(){
 function getClosingBal(callback) {
     $.post('api/accounts_files/accounts/closing_balance.php', function (response) {
         if (response.length > 0) {
-            let close = parseInt($('.opening_val').text()) + parseInt(response[0]['closing_balance']);
-            let hand = parseInt($('.op_hand_cash_val').text()) + parseInt(response[0]['hand_cash']);
-            let bank = parseInt($('.op_bank_cash_val').text()) + parseInt(response[0]['bank_cash']);
+            let close = parseInt($('.opening_val').text().replace(/,/g,'')) + parseInt(response[0]['closing_balance']);
+            let hand = parseInt($('.op_hand_cash_val').text().replace(/,/g,'')) + parseInt(response[0]['hand_cash']);
+            let bank = parseInt($('.op_bank_cash_val').text().replace(/,/g,'')) + parseInt(response[0]['bank_cash']);
 
-            $('.closing_val').text(close);
-            $('.clse_hand_cash_val').text(hand);
-            $('.clse_bank_cash_val').text(bank);
+            $('.closing_val').text(moneyFormatIndia(close));
+            $('.clse_hand_cash_val').text(moneyFormatIndia(hand));
+            $('.clse_bank_cash_val').text(moneyFormatIndia(bank));
 
             // Call the callback function if defined
             if (typeof callback === "function") {
