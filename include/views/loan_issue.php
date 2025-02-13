@@ -71,9 +71,30 @@
                     </div>
                 </div>
                 <!--- -------------------------------------- Document Need END ------------------------------- -->
-
-                <!--- -------------------------------------- Cheque Info START ------------------------------- -->
                 <div class="card">
+                    <div class="card-header">
+                        <div class="card-title">Document Info</div>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                                <div class="form-group">
+                                    <label for="document_type">Document Type</label>
+                                    <select class="form-control" id="document_type" name="document_type" tabindex="2">
+                                        <option value="">Select Document Type</option>
+                                        <option value="1">Cheque Info</option>
+                                        <option value="2">Document Info</option>
+                                        <option value="3">Mortgage Info</option>
+                                        <option value="4">Endorsement Info</option>
+                                        <option value="5">Gold Info</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!--- -------------------------------------- Cheque Info START ------------------------------- -->
+                <div class="card cheque-div" style="display: none;">
                     <div class="card-header">
                         <div class="card-title">Cheque Info
                             <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#add_cheque_info_modal" style="padding: 5px 35px; float: right;" tabindex='9' onclick="getChequeCreationTable();"><span class="icon-add"></span></button>
@@ -105,7 +126,7 @@
                 <!--- -------------------------------------- Cheque Info END ------------------------------- -->
 
                 <!--- -------------------------------------- Document Info START ------------------------------- -->
-                <div class="card">
+                <div class="card doc_div"style="display: none;">
                     <div class="card-header">
                         <div class="card-title">Document Info
                             <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#add_doc_info_modal" onclick="getFamilyMember('Select Holder Name', '#doc_holder_name'); getDocCreationTable();" style="padding: 5px 35px; float: right;" tabindex='29'><span class="icon-add"></span></button>
@@ -136,7 +157,7 @@
                 <!--- -------------------------------------- Document Info END ------------------------------- -->
 
                 <!--- -------------------------------------- Mortgage Info START ------------------------------- -->
-                <div class="card">
+                <div class="card mortgage-div"style="display: none;">
                     <div class="card-header">
                         <div class="card-title">Mortgage Info
                             <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#add_mortgage_info_modal" onclick="getFamilyMember('Select Property Holder Name', '#property_holder_name');getMortCreationTable()" style="padding: 5px 35px; float: right;" tabindex='30'><span class="icon-add"></span></button>
@@ -171,7 +192,7 @@
                 <!--- -------------------------------------- Mortgage Info END ------------------------------- -->
 
                 <!--- -------------------------------------- Endorsement Info START ------------------------------- -->
-                <div class="card">
+                <div class="card endorsement-div" style="display: none;">
                     <div class="card-header">
                         <div class="card-title">Endorsement Info
                             <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#add_endorsement_info_modal" onclick="getFamilyMember('Select Proof Of', '#owner_name');getEndorsementCreationTable();" style="padding: 5px 35px; float: right;" tabindex='31'><span class="icon-add"></span></button>
@@ -204,7 +225,7 @@
                 <!--- -------------------------------------- Endorsement Info END ------------------------------- -->
 
                 <!--- -------------------------------------- Gold Info START ------------------------------- -->
-                <div class="card">
+                <div class="card gold-div" style="display: none;">
                     <div class="card-header">
                         <div class="card-title">Gold Info
                             <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#add_gold_info_modal" style="padding: 5px 35px; float: right;" tabindex='31' onclick="getGoldCreationTable()"><span class="icon-add"></span></button>

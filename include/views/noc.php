@@ -132,7 +132,7 @@
             <div class="row gutters" id="noc_summary" style="display:none">
                 <input type="hidden" id="cp_id">
                 <div class="col-12">
-                    <div class="card">
+                    <div class="card cheque-div" style="display:none">
                         <div class="card-header">
                             <h5 class="card-title">Cheque List</h5>
                         </div>
@@ -154,7 +154,7 @@
                             </table>
                         </div>
                     </div>
-                    <div class="card">
+                    <div class="card mortgage-div" style="display:none">
                         <div class="card-header">
                             <h5 class="card-title">Mortgage List</h5>
                         </div>
@@ -177,7 +177,7 @@
                             </table>
                         </div>
                     </div>
-                    <div class="card">
+                    <div class="card endorsement-div"style="display:none">
                         <div class="card-header">
                             <h5 class="card-title">Endorsement List</h5>
                         </div>
@@ -200,7 +200,7 @@
                             </table>
                         </div>
                     </div>
-                    <div class="card">
+                    <div class="card doc_div"style="display:none">
                         <div class="card-header">
                             <h5 class="card-title">Other Document List</h5>
                         </div>
@@ -221,7 +221,7 @@
                             </table>
                         </div>
                     </div>
-                    <div class="card">
+                    <div class="card gold-div"style="display:none">
                         <div class="card-header">
                             <h5 class="card-title">Gold List</h5>
                         </div>

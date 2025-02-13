@@ -11,7 +11,7 @@ $loan_list_arr = array();
 $status = [
     1 => 'Loan Entry', 2 => 'Loan Entry', 3 => 'Loan Approval',
     4 => 'Loan Issued', 5 => 'Loan Approval', 6 => 'Loan Approval',
-    7 => 'Present', 8 => 'Closed', 9 => 'Closed', 10 => 'NOC',11=>'NOC'
+    7 => 'Present', 8 => 'Closed', 9 => 'Closed', 10 => 'NOC',11=>'NOC',12 =>'NOC'
 ];
 
 $whereClause = "WHERE 1"; // Initial WHERE clause
@@ -159,6 +159,9 @@ function loanCustomerStatus($pdo, $cus_profile_id)
         } elseif ($cs_status == '10') {
             $status = 'Pending';
         } elseif ($cs_status == '11') {
+            $status = 'Completed';
+        }
+        elseif ($cs_status == '12') {
             $status = 'Completed';
         }
 

@@ -15,6 +15,7 @@ $(document).ready(function () {
     });
     $('#back_to_noc_list').click(function (event) {
         event.preventDefault();
+        getNOCList();
         $('#noc_main_container,.back_to_noc_list').hide();
         $('#noc_list').show();
     })
@@ -225,59 +226,53 @@ function getNOCLoanList(cus_id) {
     });
 }
 
-function callAllFunctions(cp_id) {
-    getChequeList(cp_id);
-    getMortgageList(cp_id);
-    getEndorsementList(cp_id);
-    getOtherDocumentList(cp_id);
-    getGoldList(cp_id);
-    {
+ async function callAllFunctions(cp_id) {
+        // Run all the functions concurrently
+        await Promise.all([
+            getChequeList(cp_id),
+            getMortgageList(cp_id),
+            getEndorsementList(cp_id),
+            getOtherDocumentList(cp_id),
+            getGoldList(cp_id)
+        ]);
+
         // Get today's date
-        var today = new Date().toISOString().split('T')[0];
-        //Set NOC date
+        const today = new Date().toISOString().split('T')[0];
+        // Set NOC date
         $('#date_of_noc').val(today);
-    }
-    $('#noc_relation').val('');
-    getFamilyMember();
-    setTimeout(() => {
+
+        // Clear the NOC relation field
+        $('#noc_relation').val('');
+
+        // Wait for getFamilyMember to complete
+        await getFamilyMember();
+        
+        // Set the submitted disabled state
         setSubmittedDisabled();
-    }, 1000);
 }
 
 function getChequeList(cp_id) {
-    $.post('api/noc_files/noc_cheque_list.php', { cp_id }, function (response) {
+    return $.post('api/noc_files/noc_cheque_list.php', { cp_id }, function (response) {
+        if (response && response.length > 0) {
+            $('.cheque-div').show();
+        }
         let nocChequeColumns = [
-            'sno',
-            'holder_type',
-            'holder_name',
-            'relationship',
-            'bank_name',
-            'cheque_no',
-            'date_of_noc',
-            'noc_member',
-            'noc_relationship',
-            'action'
+            'sno', 'holder_type', 'holder_name', 'relationship', 'bank_name', 
+            'cheque_no', 'date_of_noc', 'noc_member', 'noc_relationship', 'action'
         ];
         appendDataToTable('#noc_cheque_list_table', response, nocChequeColumns);
         setdtable('#noc_cheque_list_table');
-
     }, 'json');
 }
 
 function getMortgageList(cp_id) {
-    $.post('api/noc_files/noc_mortgage_list.php', { cp_id }, function (response) {
+    return $.post('api/noc_files/noc_mortgage_list.php', { cp_id }, function (response) {
+        if (response && response.length > 0) {
+            $('.mortgage-div').show();
+        }
         let nocMortgageColumns = [
-            'sno',
-            'fam_name',
-            'relationship',
-            'property_details',
-            'mortgage_name',
-            'designation',
-            'reg_office',
-            'date_of_noc',
-            'noc_member',
-            'noc_relationship',
-            'action'
+            'sno', 'fam_name', 'relationship', 'property_details', 'mortgage_name', 
+            'designation', 'reg_office', 'date_of_noc', 'noc_member', 'noc_relationship', 'action'
         ];
         appendDataToTable('#noc_mortgage_list_table', response, nocMortgageColumns);
         setdtable('#noc_mortgage_list_table');
@@ -285,19 +280,13 @@ function getMortgageList(cp_id) {
 }
 
 function getEndorsementList(cp_id) {
-    $.post('api/noc_files/noc_endorsement_list.php', { cp_id }, function (response) {
+    return $.post('api/noc_files/noc_endorsement_list.php', { cp_id }, function (response) {
+        if (response && response.length > 0) {
+            $('.endorsement-div').show();
+        }
         let nocEndorseColumns = [
-            'sno',
-            'fam_name',
-            'relationship',
-            'vehicle_details',
-            'endorsement_name',
-            'key_original',
-            'rc_original',
-            'date_of_noc',
-            'noc_member',
-            'noc_relationship',
-            'action'
+            'sno', 'fam_name', 'relationship', 'vehicle_details', 'endorsement_name', 
+            'key_original', 'rc_original', 'date_of_noc', 'noc_member', 'noc_relationship', 'action'
         ];
         appendDataToTable('#noc_endorsement_list_table', response, nocEndorseColumns);
         setdtable('#noc_endorsement_list_table');
@@ -305,17 +294,13 @@ function getEndorsementList(cp_id) {
 }
 
 function getOtherDocumentList(cp_id) {
-    $.post('api/noc_files/noc_document_info_list.php', { cp_id }, function (response) {
+    return $.post('api/noc_files/noc_document_info_list.php', { cp_id }, function (response) {
+        if (response && response.length > 0) {
+            $('.doc_div').show();
+        }
         let nocDocInfoColumns = [
-            'sno',
-            'doc_name',
-            'doc_type',
-            'fam_name',
-            'upload',
-            'date_of_noc',
-            'noc_member',
-            'noc_relationship',
-            'action'
+            'sno', 'doc_name', 'doc_type', 'fam_name', 'upload', 'date_of_noc', 
+            'noc_member', 'noc_relationship', 'action'
         ];
         appendDataToTable('#noc_document_list_table', response, nocDocInfoColumns);
         setdtable('#noc_document_list_table');
@@ -323,26 +308,22 @@ function getOtherDocumentList(cp_id) {
 }
 
 function getGoldList(cp_id) {
-    $.post('api/noc_files/noc_gold_list.php', { cp_id }, function (response) {
+    return $.post('api/noc_files/noc_gold_list.php', { cp_id }, function (response) {
+        if (response && response.length > 0) {
+            $('.gold-div').show();
+        }
         let nocGoldColumns = [
-            'sno',
-            'gold_type',
-            'purity',
-            'weight',
-            'date_of_noc',
-            'noc_member',
-            'noc_relationship',
-            'action'
+            'sno', 'gold_type', 'purity', 'weight', 'date_of_noc', 
+            'noc_member', 'noc_relationship', 'action'
         ];
         appendDataToTable('#noc_gold_list_table', response, nocGoldColumns);
         setdtable('#noc_gold_list_table');
     }, 'json');
 }
-
 function getFamilyMember() {
     let cus_id = $('#cus_id').val();
     let cus_name = $('#cus_name').val();
-    $.post('api/loan_entry/get_guarantor_name.php', { cus_id }, function (response) {
+    return  $.post('api/loan_entry/get_guarantor_name.php', { cus_id }, function (response) {
         let appendOption = '';
         appendOption += "<option value=''>Select Member Name</option>";
         appendOption += "<option value='" + cus_name + "'>" + cus_name + "</option>";
@@ -462,13 +443,15 @@ function setSubmittedDisabled() {
             $(this).attr('checked', true).attr('disabled', true);
         }
     });
+console.log($('.noc_gold_chkbx:disabled').length);
+console.log($('.noc_gold_chkbx').length);
 
     var cheque_checkDisabled = $('.noc_cheque_chkbx:disabled').length === $('.noc_cheque_chkbx').length;
     var mort_checkDisabled = $('.noc_mortgage_chkbx:disabled').length === $('.noc_mortgage_chkbx').length;
     var endorse_checkDisabled = $('.noc_endorsement_chkbx:disabled').length === $('.noc_endorsement_chkbx').length;
     var doc_checkDisabled = $('.noc_doc_info_chkbx:disabled').length === $('.noc_doc_info_chkbx').length;
     var gold_checkDisabled = $('.noc_gold_chkbx:disabled').length === $('.noc_gold_chkbx').length;
-
+    console.log(cheque_checkDisabled);
     if (cheque_checkDisabled && mort_checkDisabled && endorse_checkDisabled && doc_checkDisabled && gold_checkDisabled) {
         $('#submit_noc').hide();
     } else {

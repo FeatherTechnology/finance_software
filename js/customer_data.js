@@ -82,6 +82,8 @@ $(document).ready(function () {
                 }
                 else if (response.status == 11) {
                     statusMsg = "NOC";
+                } else if (response.status == 12) {
+                    statusMsg = "NOC";
                 }
                 swalError('Warning', 'Mobile number already exists. Customer status: ' + statusMsg);
                 return false;
