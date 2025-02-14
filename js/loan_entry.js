@@ -2018,7 +2018,7 @@ function getLoanCatDetails(id, edittype) {
     $.post('api/loan_entry/loan_calculation/getLoanCatDetails.php', { id }, function (response) {
         $('#due_method_calc').val(response[0].due_method);
 
-        if (response[0].due_type === 'emi') {
+        if (response[0].due_type === 'EMI') {
             $('#due_type_calc').val('EMI');
         } else if (response[0].due_type === 'interest') {
             $('#due_type_calc').val('Interest');
@@ -2027,7 +2027,7 @@ function getLoanCatDetails(id, edittype) {
         // Retrieve customer and loan limits
         let cus_limit = parseInt($('#cus_limit').val());
         let loan_limit = parseInt(response[0].loan_limit);
-        let min_loan_limit;
+        let min_loan_limit;      
     
 
         if (!cus_limit) {

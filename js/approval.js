@@ -1954,7 +1954,7 @@ function getLoanCatDetails(id, edittype) {
     $.post('api/loan_entry/loan_calculation/getLoanCatDetails.php', { id }, function (response) {
         $('#due_method_calc').val(response[0].due_method);
 
-        if (response[0].due_type === 'emi') {
+        if (response[0].due_type === 'EMI') {
             $('#due_type_calc').val('EMI');
         } else if (response[0].due_type === 'interest') {
             $('#due_type_calc').val('Interest');
