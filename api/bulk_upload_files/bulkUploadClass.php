@@ -427,8 +427,13 @@ class bulkUploadClass
             ':user_id' => $user_id,
             ':cus_profile_id' => $cus_profile_id
         ]);
+        $update_qry = "UPDATE customer_profile 
+        SET cus_data = 'Existing', 
+        cus_status = '" . strip_tags($data['cus_status']) . "' 
+        WHERE id = '" . strip_tags($data['cus_profile_id']) . "'";
+            $pdo->query($update_qry);
     }
-
+   
     function handleError($data)
     {
         $errcolumns = array();

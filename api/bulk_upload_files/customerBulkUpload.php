@@ -40,16 +40,9 @@ if (in_array($_FILES["excelFile"]["type"], $allowedFileType)) {
                 $areaLine = $obj->getAreaLine($pdo, $data['area_id']);
                 $data['line_id'] = $areaLine;
                 
-                $cus_data_response = $obj->checkCustomerData($pdo, $data['cus_id'], $data['cus_profile_id']);
-                $data['cus_data'] = $cus_data_response['cus_data'];
-                $data['id'] = $cus_data_response['id'];
-                
+        
                 // Set customer status based on the returned value
-                if ($cus_data_response['cus_data'] == 'Existing') {
-                    $data['cus_status'] = $cus_data_response['cus_status']; // 'Additional' or 'Renewal'
-                } else {
-                    $data['cus_status'] = ''; // For new customers, status is empty
-                }
+             
                 $data['scheme_id'] = $obj->getSchemeId($pdo, $data['scheme_name']);
 
                 $err_columns = $obj->handleError($data);
@@ -59,6 +52,16 @@ if (in_array($_FILES["excelFile"]["type"], $allowedFileType)) {
                     $gur_id = $obj->guarantorName($pdo, $data['cus_id']);
                     $data['gur_id'] = $gur_id;   
                     $obj->LoanEntryTables($pdo, $data);
+                    $cus_data_response = $obj->checkCustomerData($pdo, $data['cus_id'], $data['cus_profile_id']);
+                    $data['cus_data'] = $cus_data_response['cus_data'];
+                    
+                    $data['id'] = $cus_data_response['id'];
+                    if ($cus_data_response['cus_data'] == 'Existing') {
+                        $data['cus_status'] = $cus_data_response['cus_status']; // 'Additional' or 'Renewal'
+                    } else {
+                        $data['cus_status'] = ''; // For new customers, status is empty
+                    }
+                    
                 } else {
                     $errtxt = "Please Check the input given in Serial No: " . ($rowChange) . " on below. <br><br>";
                     $errtxt .= "<ul>";

@@ -581,6 +581,28 @@
                     </div>
                 </div>
                 <!--Loan List End--->
+                <div class="card" id="document_type_div"style="display: none;">
+                    <div class="card-header">
+                        <div class="card-title">Document Info</div>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                                <div class="form-group">
+                                    <label for="document_type">Document Type</label>
+                                    <select class="form-control" id="document_type" name="document_type" tabindex="2">
+                                        <option value="">Select Document Type</option>
+                                        <option value="1">Cheque Info</option>
+                                        <option value="2">Document Info</option>
+                                        <option value="3">Mortgage Info</option>
+                                        <option value="4">Endorsement Info</option>
+                                        <option value="5">Gold Info</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
                 <!--- -------------------------------------- Cheque Info START ------------------------------- -->
                 <div class="card" id="cheque_info_card" style="display: none;">
                     <div class="card-header">

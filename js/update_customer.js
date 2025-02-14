@@ -10,6 +10,7 @@ $(document).ready(function () {
         getcusUpdateTable();
         //clearLoanCalcForm();//To clear Loan Calculation.
         clearCusProfileForm('1');//To Clear Customer Profile
+        $('#document_type_div').hide();
         $('#cheque_info_card').hide();
         $('#document_info_card').hide();
         $('#mortgage_info_card').hide();
@@ -37,7 +38,10 @@ $(document).ready(function () {
 
         }
     })
-
+    $('.selector-item_label').click(function () {
+        var radioId = $(this).attr('for');
+        $('#' + radioId).prop('checked', true);
+      });
     // Function to format Aadhaar number input
     $('input[data-type="adhaar-number"]').keyup(function () {
         var value = $(this).val();
@@ -1411,11 +1415,17 @@ $(document).ready(function () {
         $('#cus_id_upd').val(cusID);
         //swapTableAndCreation();
         //  getDocNeedTable(id);
-        $('#cheque_info_card').show();
-        $('#document_info_card').show();
-        $('#mortgage_info_card').show();
-        $('#endorsement_info_card').show();
-        $('#gold_info_card').show();
+        $('#document_type_div').show();
+        // $('#document_info_card').show();
+        // $('#mortgage_info_card').show();
+        // $('#endorsement_info_card').show();
+        // $('#gold_info_card').show();
+        $('#document_type').val('');
+        $('#cheque_info_card').hide();
+        $('#document_info_card').hide();
+        $('#mortgage_info_card').hide();
+        $('#endorsement_info_card').hide();
+        $('#gold_info_card').hide();
         getChequeInfoTable();
         getDocInfoTable();
         getMortInfoTable();
@@ -1424,7 +1434,33 @@ $(document).ready(function () {
     });
 
 
-
+    $('#document_type').change(function () {
+        var documentType = $(this).val();
+        // Hide all         
+        $('#cheque_info_card').hide();
+        $('#document_info_card').hide();
+        $('#mortgage_info_card').hide();
+        $('#endorsement_info_card').hide();
+        $('#gold_info_card').hide();
+        if (documentType == '1') {
+            $('#cheque_info_card').show();
+        } else if (documentType == '2') {
+            $('#document_info_card').show();
+        } else if (documentType == '3') {
+            $('#mortgage_info_card').show();
+        }
+        else if (documentType == '4') {
+            $('#endorsement_info_card').show();
+        }
+        else if (documentType == '5') {
+            $('#gold_info_card').show();
+        }
+        getChequeInfoTable();
+        getDocInfoTable();
+        getMortInfoTable();
+        getEndorsementInfoTable();
+        getGoldInfoTable();
+    });
     ///////////////////////////////////////////////////////////////////Cheque info START ////////////////////////////////////////////////////////////////////////////
     $('#cq_holder_type').change(function () {
         let holderType = $(this).val();
@@ -2139,6 +2175,10 @@ function getChequeCreationTable() {
 function getChequeInfoTable() {
     let cus_profile_id = $('#customer_profile_id').val();
     $.post('api/loan_issue_files/cheque_info_list.php', { cus_profile_id }, function (response) {
+        if (response && response.length > 0) {
+            // Show the cheque div and populate the table if the condition is met
+            $('#cheque_info_card').show();
+        }
         let chequeColumn = [
             "sno",
             "holder_type",
@@ -2188,6 +2228,10 @@ function refreshChequeModal() {
 function getDocInfoTable() {
     let cus_profile_id = $('#customer_profile_id').val();
     $.post('api/loan_issue_files/doc_info_list.php', { cus_profile_id }, function (response) {
+        if (response && response.length > 0) {
+            // Show the cheque div and populate the table if the condition is met
+            $('#document_info_card').show();
+        }
         let docColumn = [
             "sno",
             "doc_name",
@@ -2240,6 +2284,10 @@ function getMortCreationTable() {
 function getMortInfoTable() {
     let cus_profile_id = $('#customer_profile_id').val();
     $.post('api/loan_issue_files/mortgage_info_list.php', { cus_profile_id }, function (response) {
+        if (response && response.length > 0) {
+            // Show the cheque div and populate the table if the condition is met
+            $('#mortgage_info_card').show();
+        }
         let mortgageColumn = [
             "sno",
             "fam_name",
@@ -2294,6 +2342,10 @@ function getEndorsementCreationTable() {
 function getEndorsementInfoTable() {
     let cus_profile_id = $('#customer_profile_id').val();
     $.post('api/loan_issue_files/endorsement_info_list.php', { cus_profile_id }, function (response) {
+        if (response && response.length > 0) {
+            // Show the cheque div and populate the table if the condition is met
+            $('#endorsement_info_card').show();
+        }
         let endorsementColumn = [
             "sno",
             "fam_name",
@@ -2343,6 +2395,10 @@ function getGoldCreationTable() {
 function getGoldInfoTable() {
     let cus_profile_id = $('#customer_profile_id').val();
     $.post('api/loan_issue_files/gold_info_list.php', { cus_profile_id }, function (response) {
+        if (response && response.length > 0) {
+            // Show the cheque div and populate the table if the condition is met
+            $('#gold_info_card').show();
+        }
         let goldColumn = [
             "sno",
             "gold_type",
