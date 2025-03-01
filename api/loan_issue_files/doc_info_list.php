@@ -3,7 +3,23 @@ require "../../ajaxconfig.php";
 
 $doc_info_arr = array();
 $cus_profile_id = $_POST['cus_profile_id'];
-$qry = $pdo->query("SELECT di.id as d_id, di.*, fi.* FROM document_info di LEFT JOIN family_info fi ON di.holder_name = fi.id WHERE di.cus_profile_id = '$cus_profile_id' ");
+
+// Corrected SQL query
+$qry = $pdo->query("
+    SELECT 
+        di.id as d_id, 
+        di.*, 
+        CASE 
+            WHEN di.holder_name = 0 THEN cp.cus_name 
+            ELSE fi.fam_name 
+        END as holder_name, 
+        fi.* 
+    FROM document_info di 
+    LEFT JOIN family_info fi ON di.holder_name = fi.id 
+    LEFT JOIN customer_profile cp ON di.cus_profile_id= cp.id 
+    WHERE di.cus_profile_id = '$cus_profile_id'
+");
+
 if ($qry->rowCount() > 0) {
     while ($doc_info = $qry->fetch(PDO::FETCH_ASSOC)) {
         $doc_info['doc_type'] = ($doc_info['doc_type'] == '1') ? 'Original' : 'Xerox';
@@ -12,5 +28,6 @@ if ($qry->rowCount() > 0) {
         $doc_info_arr[] = $doc_info;
     }
 }
-$pdo = null; //Connection Close.
+
+$pdo = null; // Connection Close.
 echo json_encode($doc_info_arr);

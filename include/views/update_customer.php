@@ -499,7 +499,7 @@
                                                 <th>Proof Of</th>
                                                 <th>Relationship</th>
                                                 <th>Proof</th>
-                                                <th>Proof Member</th>
+                                                <th>Proof Number</th>
                                                 <th>Upload</th>
                                             </tr>
                                         </thead>
@@ -1137,8 +1137,8 @@
                             </div>
                             <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
                                 <div class="form-group">
-                                    <label for="proof_detail">Proof Member</label><span class="text-danger">*</span>
-                                    <input class="form-control" name="proof_detail" id="proof_detail" tabindex="1" placeholder="Enter Proof Member">
+                                    <label for="proof_detail">Proof Number</label><span class="text-danger">*</span>
+                                    <input class="form-control" name="proof_detail" id="proof_detail" tabindex="1" placeholder="Enter Proof Number">
                                     <input type="hidden" id="addproofdetail_id" value='0'>
                                 </div>
                             </div>
@@ -1168,7 +1168,7 @@
                                     <th>Proof Of</th>
                                     <th>Relationship</th>
                                     <th>Proof</th>
-                                    <th>Proof Member</th>
+                                    <th>Proof Number</th>
                                     <th>Upload</th>
                                     <th>Action</th>
                                 </tr>

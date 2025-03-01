@@ -214,9 +214,12 @@ $(document).ready(function () {
     ///////////////////////////////////////////////////////////////////Document info START ////////////////////////////////////////////////////////////////////////////
     $('#doc_holder_name').change(function () {
         let id = $(this).val();
-        if (id != '') {
+        if (id != '' && id != 0) {
             getRelationship(id, '#doc_relationship')
-        } else {
+        } else if (id == 0) {
+            $('#doc_relationship').val('Customer');
+        }
+        else {
             $('#doc_relationship').val('');
         }
 
@@ -305,8 +308,10 @@ $(document).ready(function () {
     ///////////////////////////////////////////////////////////////////Mortgage info START ////////////////////////////////////////////////////////////////////////////
     $('#property_holder_name').change(function () {
         let id = $(this).val();
-        if (id != '') {
+        if (id != '' && id != 0) {
             getRelationship(id, '#mort_relationship')
+        } else if (id == 0) {
+            $('#mort_relationship').val('Customer');
         } else {
             $('#mort_relationship').val('');
         }
@@ -410,8 +415,10 @@ $(document).ready(function () {
     ///////////////////////////////////////////////////////////////////Endorsement info START ////////////////////////////////////////////////////////////////////////////
     $('#owner_name').change(function () {
         let id = $(this).val();
-        if (id != '') {
+        if (id != '' && id != 0) {
             getRelationship(id, '#owner_relationship')
+        } else if (id == 0) {
+            $('#owner_relationship').val('Customer');
         } else {
             $('#owner_relationship').val('');
         }
@@ -645,15 +652,25 @@ function getDocNeedTable(cusProfileId) {
 
 function getFamilyMember(optn, selector) {
     let cus_id = $('#cus_id').val();
-    $.post('api/loan_entry/get_guarantor_name.php', { cus_id }, function (response) {
+
+    $.post('api/loan_issue_files/get_guarantor.php', { cus_id }, function (response) {
         let appendOption = '';
-        appendOption += "<option value=''>" + optn + "</option>";
+        appendOption += "<option value=''>" + optn + "</option>"; // Default option 
+
+        // Dynamic options from the response
         $.each(response, function (index, val) {
-            appendOption += "<option value='" + val.id + "'>" + val.fam_name + "</option>";
+            // Differentiating between customer and family member
+            if (val.type === 'Customer') {
+                appendOption += "<option value='0'>" + val.name + "</option>";  // Customer
+            } else if (val.type === 'Family') {
+                appendOption += "<option value='" + val.id + "'>" + val.name + " </option>";  // Family Member
+            }
         });
-        $(selector).empty().append(appendOption);
+
+        $(selector).empty().append(appendOption);  // Append options to the select element
     }, 'json');
 }
+
 
 function getNameRelationship(id, type) {
     $.post('api/loan_issue_files/get_cus_fam_members.php', { id, type }, function (response) {
@@ -743,7 +760,7 @@ function getDocCreationTable() {
             "sno",
             "doc_name",
             "doc_type",
-            "fam_name",
+            "holder_name",
             "relationship",
             "upload",
             "action"
@@ -763,17 +780,17 @@ function getDocInfoTable() {
         if (response && response.length > 0) {
             $('.doc_div').show();
         }
-            let docColumn = [
-                "sno",
-                "doc_name",
-                "doc_type",
-                "fam_name",
-                "relationship",
-                "upload"
-            ]
-            appendDataToTable('#document_info', response, docColumn);
-            setdtable('#document_info')
-   
+        let docColumn = [
+            "sno",
+            "doc_name",
+            "doc_type",
+            "holder_name",
+            "relationship",
+            "upload"
+        ]
+        appendDataToTable('#document_info', response, docColumn);
+        setdtable('#document_info')
+
     }, 'json');
 }
 
@@ -797,7 +814,7 @@ function getMortCreationTable() {
     $.post('api/loan_issue_files/mortgage_info_list.php', { cus_profile_id }, function (response) {
         let mortInfoColumn = [
             "sno",
-            "fam_name",
+            "holder_name",
             "relationship",
             "property_details",
             "mortgage_name",
@@ -821,7 +838,7 @@ function getMortInfoTable() {
         }
         let mortgageColumn = [
             "sno",
-            "fam_name",
+            "holder_name",
             "relationship",
             "property_details",
             "mortgage_name",
@@ -856,7 +873,7 @@ function getEndorsementCreationTable() {
     $.post('api/loan_issue_files/endorsement_info_list.php', { cus_profile_id }, function (response) {
         let endorsementInfoColumn = [
             "sno",
-            "fam_name",
+            "holder_name",
             "relationship",
             "vehicle_details",
             "endorsement_name",
@@ -878,7 +895,7 @@ function getEndorsementInfoTable() {
         }
         let endorsementColumn = [
             "sno",
-            "fam_name",
+            "holder_name",
             "relationship",
             "vehicle_details",
             "endorsement_name",
@@ -929,16 +946,16 @@ function getGoldInfoTable() {
         if (response && response.length > 0) {
             $('.gold-div').show();
         }
-            let goldColumn = [
-                "sno",
-                "gold_type",
-                "purity",
-                "weight",
-                "value"
-            ]
-            appendDataToTable('#gold_info', response, goldColumn);
-            setdtable('#gold_info')
-     
+        let goldColumn = [
+            "sno",
+            "gold_type",
+            "purity",
+            "weight",
+            "value"
+        ]
+        appendDataToTable('#gold_info', response, goldColumn);
+        setdtable('#gold_info')
+
     }, 'json');
 }
 
@@ -1014,36 +1031,138 @@ $(document).ready(function () {
             }
         }
     });
+    // $('#payment_type').change(function () {    
+    //     let paymentType = $('#payment_type').val();
+    //     if (paymentType == '1') { 
+    //         $('#balance_remark_container').show();
+    //         $('.transaction').hide();
+    //         $('.checque').hide();
+    //         $('.cash_issue').hide();
+    //         $('#transaction_id').val('');
+    //         $('#chequeno').val('');
+    //         $('#payment_mode').val('');
+    //     }else {
+    //         $('#balance_remark_container').hide();
+    //         $('.transaction').hide();
+    //         $('.checque').hide();
+    //         $('.cash_issue').hide();
+    //         $('#transaction_id').val('');
+    //         $('#chequeno').val('');
+    //         $('#payment_mode').val('');
+    //     }
+    //     $('.payment').show();
+    // });
+    $('#payment_type').change(function () {
+        var mode = $(this).val();
+        // $('#cashAck').hide();
+        $('#payment_mode, #issue_amount, #transaction_id, #chequeno, #cash, #chequeValue, #transaction_value, #bank_name, #chequeRemark, #transaction_remark').css('border', '1px solid #cecece');
+
+        $('#cash').removeAttr('readonly');
+        $('#chequeValue').removeAttr('readonly');
+        $('#transaction_value').removeAttr('readonly');
+
+        if (mode == '1') {
+            $('#cash').val('');
+            $('#bank_name').val('');
+            $('#chequeno').val('');
+            $('#chequeValue').val('');
+            $('#chequeRemark').val('');
+            $('#transaction_id').val('');
+            $('#transaction_value').val('');
+            $('#transaction_remark').val('');
+            $('#balance_amount').val('');
+            getBankName();
+            $('.payment').hide();
+            $('.cash_issue').show();
+            $('.checque').show();
+            $('.transaction').show();
+            $('.balance_remark_container').show();
+
+            $('#bank_container').show();//show bank id
+        } else if (mode == '2') {
+            $('.cash_issue').hide();
+            $('.checque').hide();
+            $('.transaction').hide();
+            $('#bank_container').hide();//hide bank id
+            $('.payment').show();
+            $('.balance_remark_container').hide();
+            $('#balance_amount').val('');
+
+        } else {
+            $('.cash_issue').hide();
+            $('.checque').hide();
+            $('.transaction').hide();
+            $('#bankDiv').hide();//hide bank id
+            $('.paymentType').hide();
+            $('.balance').hide();
+        }
+
+        $('#cash').val('');
+        $('#bank_name').val('');
+        $('#chequeno').val('');
+        $('#chequeValue').val('');
+        $('#chequeRemark').val('');
+        $('#transaction_id').val('');
+        $('#transaction_value').val('');
+        $('#transaction_remark').val('');
+        $('#payment_mode').val('');
+
+    })
 
     // Payment Mode
     $('#payment_mode').change(function () {
+        $('#payment_mode, #issue_amount, #transaction_id, #chequeno, #cash, #chequeValue, #transaction_value, #bank_name, #chequeRemark, #transaction_remark').css('border', '1px solid #cecece');
+
         $('#transaction_id').val('');
         $('#chequeno').val('');
         $('#issue_amount').val('');
+
         var type = $(this).val();
-        var netcash = $('#balance_net_cash').val();
-        $('#issue_amount').val(netcash);
-        $('#issue_amount').attr('readonly', true);
 
-        if (type == '1') {
-            $('.transaction').hide();
-            $('.checque').hide();
-            $('.cash_issue').show();
+        // $('#issue_amount').attr('readonly', true);
+        let paymentType = $('#payment_type').val();
+        if (paymentType == '2') {  // Handling for Payment Type 2
+            var netcash = $('#balance_net_cash').val();
 
-        } else if (type == '2') {
-            $('.transaction').show();
-            $('.checque').hide();
-            $('.cash_issue').show();
+            if (type == '1') {
+                $('#cash').attr('readonly', true);
+                $('#cash').val(netcash);
+                $('#chequeValue').val('');
+                $('#transaction_value').val('');
+                $('.transaction').hide();
+                $('.checque').hide();
+                $('.cash_issue').show();
+                $('#bank_container').hide();//hide bank id
 
-        } else if (type == '3') {
-            $('.transaction').hide();
-            $('.checque').show();
-            $('.cash_issue').show();
+            } else if (type == '2') {
+                $('#transaction_value').attr('readonly', true);
 
-        } else {
-            $('.transaction').hide();
-            $('.checque').hide();
-            $('.cash_issue').hide();
+                $('#cash').val('');
+                $('#chequeValue').val('');
+                getBankName()
+                $('#transaction_value').val(netcash);
+                $('.transaction').show();
+                $('.checque').hide();
+                $('.cash_issue').hide();
+                $('#bank_container').show();//hide bank id
+
+            } else if (type == '3') {
+                $('#transaction_value').val('');
+                $('#cash').val('');
+                $('#chequeValue').attr('readonly', true);
+                $('#chequeValue').val(netcash);
+                getBankName()
+                $('.transaction').hide();
+                $('.checque').show();
+                $('.cash_issue').hide();
+                $('#bank_container').show();//hide bank id
+
+            } else {
+                $('.transaction').hide();
+                $('.checque').hide();
+                $('.cash_issue').hide();
+                $('#bank_container').hide();//hide bank id
+            }
         }
 
         // $.post('api/loan_issue_files/get_balance_amount.php',{ 'cus_id': $('#cus_id').val(), 'payment_mode': type },function(response){
@@ -1059,6 +1178,26 @@ $(document).ready(function () {
         //     }
         // }, 'json');
 
+    });
+    $('#cash, #chequeValue, #transaction_value').on('input', function () {
+        // Remove commas first, then parse to float
+        let settle_balance = parseFloat($('#balance_net_cash').val().replace(/,/g, '')) || 0; // Convert to float, default to 0 if empty
+        let payment_type = $('#payment_type').val();
+        let cash_amount = parseFloat($('#cash').val().replace(/,/g, '')) || 0; // Convert to float, default to 0 if empty
+        let che_amount = parseFloat($('#chequeValue').val().replace(/,/g, '')) || 0; // Convert to float, default to 0 if empty
+        let trans_amount = parseFloat($('#transaction_value').val().replace(/,/g, '')) || 0; // Convert to float, default to 0 if empty
+        if (payment_type == '1') { // Split Payment
+            var totalAmount = cash_amount + che_amount + trans_amount;
+            calculateBalance();
+            // Compare totalAmount with settle_balance
+            if (totalAmount > settle_balance) {
+                swalError('Warning', 'The entered amount exceeds the Net Cash Balance.');
+                $('#cash').val('');
+                $('#chequeValue').val('');
+                $('#transaction_value').val('');
+                $('#balance_amount').val(0);
+            }
+        }
     });
 
     $('#issue_person').change(function () {
@@ -1080,11 +1219,19 @@ $(document).ready(function () {
             'loan_amnt': $('#loan_amnt_calc').val(),
             'due_startdate': $('#due_startdate_calc').val(),
             'maturity_date': $('#maturity_date_calc').val(),
-            'net_cash': $('#balance_net_cash').val(),
+            'bal_net_cash': $('#balance_net_cash').val(),
+            'bal_amount': $('#balance_amount').val(),
+            'payment_type': $('#payment_type').val(),
+            'cash': $('#cash').val(),
+            'bank_name': $('#bank_name').val(),
+            'chequeValue': $('#chequeValue').val(),
+            'chequeRemark': $('#chequeRemark').val(),
+            'transaction_remark': $('#transaction_remark').val(),
+            'transaction_value': $('#transaction_value').val(),
+            'net_cash': $('#net_cash_calc').val(),
             'payment_mode': $('#payment_mode').val(),
             'transaction_id': $('#transaction_id').val(),
             'chequeno': $('#chequeno').val(),
-            'issue_amount': $('#issue_amount').val(),
             'issue_date': $('#issue_date').val(),
             'issue_person': $('#issue_person').val(),
             'issue_relationship': $('#issue_relationship').val(),
@@ -1112,6 +1259,10 @@ $(function () {
 });
 function callLoanCaculationFunctions() {
     personalInfo();
+    setTimeout(() => {
+        checkBalance();
+    }, 1000);
+
 }
 
 function personalInfo() {
@@ -1131,7 +1282,7 @@ function personalInfo() {
         $('#doc_charge_calculate').val(response[0].doc_charge_calculate);
         $('#processing_fees_calculate').val(response[0].processing_fees_calculate);
         $('#net_cash_calc').val(response[0].net_cash);
-        $('#balance_net_cash').val(response[0].net_cash);
+        // $('#balance_net_cash').val(response[0].net_cash);
         $('#loan_date_calc').val(response[0].loan_date);
         $('#due_startdate_calc').val(response[0].due_startdate);
         $('#maturity_date_calc').val(response[0].maturity_date);
@@ -1166,53 +1317,143 @@ function getIssuePerson(cus_name) {
 
 function refreshIssueInfo() {
     $('#payment_mode').val('');
+    $('#payment_type').val('');
     $('#transaction_id').val('');
     $('#chequeno').val('');
     $('#issue_amount').val('');
     $('#issue_person').val('');
     $('#issue_relationship').val('');
+    $('.payment').hide();
     $('.transaction').hide();
     $('.checque').hide();
     $('.cash_issue').hide();
+    $('.balance_remark_container').hide();
+    $('#bank_container').hide();//hide bank id
 }
 
 // Function to check if all values in an object are not empty
 function isFormDataValid(formData) {
+    let isValid = true;
+
     // Reset border styles for all fields
-    $('#payment_mode, #issue_amount, #transaction_id, #chequeno').css('border', '1px solid #cecece');
+    $('#payment_mode, #issue_amount, #transaction_id, #chequeno, #cash, #chequeValue, #transaction_value, #bank_name, #chequeRemark, #transaction_remark').css('border', '1px solid #cecece');
 
     if (!validateField(formData['issue_person'], 'issue_person')) {
         isValid = false;
     }
-    if (formData['payment_mode'] === '1') { // Cash
-        if (!validateField(formData['issue_amount'], 'issue_amount')) {
-            return false;
-        }
-    } else if (formData['payment_mode'] === '2') { // Bank Transfer
-        if (!validateField(formData['transaction_id'], 'transaction_id') || !validateField(formData['issue_amount'], 'issue_amount')) {
-            return false;
-        }
-    } else if (formData['payment_mode'] === '3') { // Cheque
-        if (!validateField(formData['chequeno'], 'chequeno') || !validateField(formData['issue_amount'], 'issue_amount')) {
-            return false;
-        }
-    } else if (formData['payment_mode'] == '') { //if Empty
-        if (!validateField(formData['payment_mode'], 'payment_mode')) {
-            return false;
-        }
+
+    if (!validateField(formData['payment_type'], 'payment_type')) {
+        isValid = false;
     }
-    // Check other mandatory fields not related to payment_mode
-    for (let key in formData) {
-        if (key !== 'payment_mode' && key !== 'issue_amount' && key !== 'transaction_id' && key !== 'chequeno') {
-            if (!validateField(formData[key], key)) {
+    // Validation for payment type
+    if (formData['payment_type'] === '1') { // Split Payment
+        // Check if either `chequeValue` or `transaction_value` is filled
+        if (formData['chequeValue'] !== '') {
+            // Validate bank_name, chequeno, and chequeRemark
+            if (!validateField(formData['bank_name'], 'bank_name') && !validateField(formData['chequeno'], 'chequeno') && !validateField(formData['chequeRemark'], 'chequeRemark')) {
+                return false;
+            }
+        }
+
+        if (formData['transaction_value'] !== '') {
+            // Validate bank_name, transaction_id, and transaction_remark
+            if (!validateField(formData['bank_name'], 'bank_name') && !validateField(formData['transaction_id'], 'transaction_id') && !validateField(formData['transaction_remark'], 'transaction_remark')) {
+                return false;
+            }
+        }
+
+        // Ensure at least one of the cash, chequeValue, or transaction_value fields is filled
+        if (formData['cash'] === '' && formData['chequeValue'] === '' && formData['transaction_value'] === '') {
+            swalError('Warning', 'Please enter at least one payment value (Cash, Cheque Value, or Transaction Value).');
+            return false;
+        }
+    } else if (formData['payment_type'] === '2') { // Single Payment
+        // Validate based on payment mode
+        if (formData['payment_mode'] === '1') { // Cash
+            if (!validateField(formData['cash'], 'cash')) {
+                return false;
+            }
+        } else if (formData['payment_type'] === '2') {
+            if (formData['payment_mode'] === '2') {
+                ['transaction_id', 'transaction_value', 'bank_name', 'transaction_remark'].forEach(field => {
+                    if (!validateField(formData[field], field)) return false;
+                });
+            } else if (formData['payment_mode'] === '3') {
+                ['chequeno', 'chequeValue', 'chequeRemark', 'bank_name'].forEach(field => {
+                    if (!validateField(formData[field], field)) return false;
+                });
+            }
+        } else if (formData['payment_mode'] === '') { // Payment Mode empty
+            if (!validateField(formData['payment_mode'], 'payment_mode')) {
                 return false;
             }
         }
     }
 
-    return true;
+    // Check other mandatory fields not related to payment_mode
+    for (let key in formData) {
+        if (key !== 'payment_mode' && key !== 'bal_amount' && key !== 'payment_type' && key !== 'transaction_id' && key !== 'chequeno' && key !== 'cash' && key !== 'chequeValue' && key !== 'transaction_value' && key !== 'transaction_remark' && key !== 'chequeRemark' && key !== 'bank_name') {
+            if (!validateField(formData[key], key)) {
+                console.log((key));
+                return false;
+            }
+        }
+    }
+
+    return isValid;
 }
 
 
 
+function checkBalance() {
+    let cus_profile_id = $('#customer_profile_id').val();
+    $.ajax({
+        url: 'api/loan_issue_files/get_loan_balance.php',
+        type: 'POST',
+        data: { 'cus_profile_id': cus_profile_id },
+        dataType: 'json',
+        success: function (response) {
+            if (response && response.balance_amount !== undefined) {
+                // Check if balance amount is zero
+                let balanceAmount = response.balance_amount;
+                if (balanceAmount === 'null' || balanceAmount === null) {
+                    $('#balance_net_cash').val($('#net_cash_calc').val());
+                    $('#due_startdate_calc').attr('readonly', false);
+                } else {
+                    $('#due_startdate_calc').attr('readonly', true);
+                    $('#balance_net_cash').val((balanceAmount));
+                }
+
+            } else {
+                console.error('Balance amount not found in response');
+            }
+        }
+    });
+}
+function calculateBalance() {
+    // Get the settlement balance and remove commas, then parse it as a float
+    let settlementBalance = parseFloat($('#balance_net_cash').val().replace(/,/g, '')) || 0;
+    let cashVal = parseFloat($('#cash').val()) || 0;
+    let cheqVal = parseFloat($('#chequeValue').val()) || 0;
+    let transVal = parseFloat($('#transaction_value').val()) || 0;
+    // Calculate the remaining balance
+    let remainingBalance = settlementBalance - (cashVal + cheqVal + transVal);
+
+    // Format the remaining balance using the moneyFormatIndia function
+    $('#balance_amount').val((remainingBalance));
+}
+function getBankName() {
+    $.post('api/common_files/bank_name_list.php', function (response) {
+        let appendBankOption = "<option value=''>Select Bank Name</option>";
+        $.each(response, function (index, val) {
+            let selected = '';
+            let editGId = $('#bank_name_edit').val(); // Existing guarantor ID (if any)
+            if (val.id == editGId) {
+                selected = 'selected';
+            }
+            appendBankOption += "<option value='" + val.id + "' " + selected + ">" + val.bank_name + "</option>";
+        });
+        $('#bank_name').empty().append(appendBankOption);
+    }, 'json');
+}
 /////////////////////////////////////////////////////////// Loan Issue END////////////////////////////////////////////////

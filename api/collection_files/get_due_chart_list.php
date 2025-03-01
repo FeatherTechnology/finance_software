@@ -340,7 +340,13 @@ function moneyFormatIndia($num)
                     <?php } ?>
                     <td><?php $pendingMinusCollection = moneyFormatIndia(intval($row['pending_amt'])); ?></td>
                     <td><?php $payableMinusCollection = moneyFormatIndia(intVal($row['payable_amt'])); ?></td>
-                    <td><?php echo date('d-m-Y', strtotime($row['trans_date'] != '0000-00-00' ? $row['trans_date'] : $row['coll_date'])); ?></td>
+                    <td>
+                        <?php
+                        // Check if trans_date is valid (not null, not empty, and not '0000-00-00')
+                        $trans_date = (!empty($row['trans_date']) && $row['trans_date'] != '0000-00-00') ? $row['trans_date'] : $row['coll_date'];
+                        echo date('d-m-Y', strtotime($trans_date));
+                        ?>
+                    </td>
 
                     <!-- for collected amt -->
                     <?php if ($loan_type == 'emi') { ?>
@@ -377,7 +383,8 @@ function moneyFormatIndia($num)
                     <td><?php echo $row['role']; ?>
                     </td>
                     <td><?php echo $row['name']; ?></td>
-                    <!-- <td><?php #if ($row['coll_location'] == '1') {echo 'By Self'; } elseif ($row['coll_location'] == '2') { echo 'On Spot';} elseif ($row['coll_location'] == '3') { echo 'Bank Transfer';} ?></td> -->
+                    <!-- <td><?php #if ($row['coll_location'] == '1') {echo 'By Self'; } elseif ($row['coll_location'] == '2') { echo 'On Spot';} elseif ($row['coll_location'] == '3') { echo 'Bank Transfer';} 
+                                ?></td> -->
                     <td> <a class='print_due_coll' id="" value="<?php echo $row['coll_code']; ?>"> <i class="fa fa-print" aria-hidden="true"></i> </a> </td>
                 </tr>
 
@@ -421,13 +428,13 @@ function moneyFormatIndia($num)
 
             if ($run->rowCount() > 0) {
 
-                while ($row = $run->fetch()) { 
+                while ($row = $run->fetch()) {
                     $due_amt_track = intVal($row['due_amt_track']);
                     if ($loanFrom['due_method'] == 'Monthly' || $loanFrom['scheme_due_method'] == '1') {
                         $princ_amt_track = intVal($row['princ_amt_track']);
                         $int_amt_track = intVal($row['int_amt_track']);
                     }
-                    
+
                     $waiver = intVal($row['pre_close_waiver']);
                     if ($loan_type == 'emi') {
                         $bal_amt = intVal($row['bal_amt']) - $due_amt_track - $waiver;
@@ -526,7 +533,13 @@ function moneyFormatIndia($num)
                             } else {
                                 echo 0;
                             } ?></td>
-                        <td><?php echo date('d-m-Y', strtotime($row['trans_date'] != '0000-00-00' ? $row['trans_date'] : $row['coll_date'])); ?></td>
+                        <td>
+                            <?php
+                            // Check if trans_date is valid (not null, not empty, and not '0000-00-00')
+                            $trans_date = (!empty($row['trans_date']) && $row['trans_date'] != '0000-00-00') ? $row['trans_date'] : $row['coll_date'];
+                            echo date('d-m-Y', strtotime($trans_date));
+                            ?>
+                        </td>
 
                         <!-- for collected amt -->
                         <?php if ($loan_type == 'emi') { ?>
@@ -566,7 +579,8 @@ function moneyFormatIndia($num)
                             } ?></td>
                         <td><?php echo $row['role']; ?></td>
                         <td><?php echo $row['name']; ?></td>
-                        <!-- <td><?php #if ($row['coll_location'] == '1') {echo 'By Self';} elseif ($row['coll_location'] == '2') {echo 'On Spot';} elseif ($row['coll_location'] == '3') {echo 'Bank Transfer';} ?></td> -->
+                        <!-- <td><?php #if ($row['coll_location'] == '1') {echo 'By Self';} elseif ($row['coll_location'] == '2') {echo 'On Spot';} elseif ($row['coll_location'] == '3') {echo 'Bank Transfer';} 
+                                    ?></td> -->
                         <td> <a class='print_due_coll' id="" value="<?php echo $row['coll_code']; ?>"> <i class="fa fa-print" aria-hidden="true"></i> </a> </td>
                     </tr>
 
@@ -780,7 +794,8 @@ function moneyFormatIndia($num)
                         } ?></td>
                     <td><?php echo $row['role']; ?></td>
                     <td><?php echo $row['name']; ?></td>
-                    <!-- <td><?php #if ($row['coll_location'] == '1') {echo 'By Self';} elseif ($row['coll_location'] == '2') {echo 'On Spot';} elseif ($row['coll_location'] == '3') {echo 'Bank Transfer';} ?></td> -->
+                    <!-- <td><?php #if ($row['coll_location'] == '1') {echo 'By Self';} elseif ($row['coll_location'] == '2') {echo 'On Spot';} elseif ($row['coll_location'] == '3') {echo 'Bank Transfer';} 
+                                ?></td> -->
                     <td> <a class='print_due_coll' id="" value="<?php echo $row['coll_code']; ?>"> <i class="fa fa-print" aria-hidden="true"></i> </a> </td>
                 </tr>
 

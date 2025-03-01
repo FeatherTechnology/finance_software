@@ -228,6 +228,11 @@ function getNOCLoanList(cus_id) {
 
  async function callAllFunctions(cp_id) {
         // Run all the functions concurrently
+        $('.cheque-div').hide();
+        $('.doc_div').hide();
+        $('.mortgage-div').hide();
+        $('.endorsement-div').hide();
+        $('.gold-div').hide();
         await Promise.all([
             getChequeList(cp_id),
             getMortgageList(cp_id),
@@ -271,7 +276,7 @@ function getMortgageList(cp_id) {
             $('.mortgage-div').show();
         }
         let nocMortgageColumns = [
-            'sno', 'fam_name', 'relationship', 'property_details', 'mortgage_name', 
+            'sno', 'holder_name', 'relationship', 'property_details', 'mortgage_name', 
             'designation', 'reg_office', 'date_of_noc', 'noc_member', 'noc_relationship', 'action'
         ];
         appendDataToTable('#noc_mortgage_list_table', response, nocMortgageColumns);
@@ -285,7 +290,7 @@ function getEndorsementList(cp_id) {
             $('.endorsement-div').show();
         }
         let nocEndorseColumns = [
-            'sno', 'fam_name', 'relationship', 'vehicle_details', 'endorsement_name', 
+            'sno', 'holder_name', 'relationship', 'vehicle_details', 'endorsement_name', 
             'key_original', 'rc_original', 'date_of_noc', 'noc_member', 'noc_relationship', 'action'
         ];
         appendDataToTable('#noc_endorsement_list_table', response, nocEndorseColumns);
@@ -299,7 +304,7 @@ function getOtherDocumentList(cp_id) {
             $('.doc_div').show();
         }
         let nocDocInfoColumns = [
-            'sno', 'doc_name', 'doc_type', 'fam_name', 'upload', 'date_of_noc', 
+            'sno', 'doc_name', 'doc_type', 'holder_name', 'upload', 'date_of_noc', 
             'noc_member', 'noc_relationship', 'action'
         ];
         appendDataToTable('#noc_document_list_table', response, nocDocInfoColumns);

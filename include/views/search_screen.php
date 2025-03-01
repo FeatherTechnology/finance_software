@@ -110,12 +110,13 @@
             <div class="row gutters" id="noc_summary" style="display:none">
                 <input type="hidden" id="cp_id">
                 <div class="col-12">
-                    <div class="card" style="box-shadow: none;background-color: transparent;">
+                    <div class="card" >
+                        <!-- style="box-shadow: none;background-color: transparent;" -->
                         <div class="card-header">
                             <h5 class="card-title">NOC Summary&nbsp;<button type="button" id="back_to_cus_status" style="float:right" class="btn btn-primary "><span class="icon-arrow-left"></span>&nbsp;Back</button></h5>
                         </div>
                         <div class="card-body">
-                            <div class="card">
+                            <div class="card cheque-div" style="display:none">
                                 <div class="card-header">
                                     <h5 class="card-title">Cheque List</h5>
                                 </div>
@@ -137,7 +138,7 @@
                                     </table>
                                 </div>
                             </div>
-                            <div class="card">
+                            <div class="card mortgage-div" style="display:none">
                                 <div class="card-header">
                                     <h5 class="card-title">Mortgage List</h5>
                                 </div>
@@ -160,7 +161,7 @@
                                     </table>
                                 </div>
                             </div>
-                            <div class="card">
+                            <div class="card endorsement-div" style="display:none">
                                 <div class="card-header">
                                     <h5 class="card-title">Endorsement List</h5>
                                 </div>
@@ -183,7 +184,7 @@
                                     </table>
                                 </div>
                             </div>
-                            <div class="card">
+                            <div class="card doc_div" style="display:none">
                                 <div class="card-header">
                                     <h5 class="card-title">Other Document List</h5>
                                 </div>
@@ -195,6 +196,26 @@
                                             <th>Document Type</th>
                                             <th>Document Holder</th>
                                             <th>Document</th>
+                                            <th>Date of NOC</th>
+                                            <th>Handover Person</th>
+                                            <th>Relationship</th>
+                                            <th>Checklist</th>
+                                        </thead>
+                                        <tbody></tbody>
+                                    </table>
+                                </div>
+                            </div>
+                            <div class="card gold-div" style="display:none">
+                                <div class="card-header">
+                                    <h5 class="card-title">Gold List</h5>
+                                </div>
+                                <div class="card-body">
+                                    <table class="table custom-table" id="noc_gold_list_table">
+                                        <thead>
+                                            <th>S No.</th>
+                                            <th>Gold Type</th>
+                                            <th>Purity</th>
+                                            <th>Weight</th>
                                             <th>Date of NOC</th>
                                             <th>Handover Person</th>
                                             <th>Relationship</th>
@@ -808,7 +829,7 @@
                                                 <th>Proof Of</th>
                                                 <th>Relationship</th>
                                                 <th>Proof</th>
-                                                <th>Proof Detail</th>
+                                                <th>Proof Number</th>
                                                 <th>Upload</th>
                                             </tr>
                                         </thead>
@@ -1201,7 +1222,7 @@
                 <!--- -------------------------------------- Document Need END ------------------------------- -->
 
                 <!--- -------------------------------------- Cheque Info START ------------------------------- -->
-                <div class="card">
+                <div class="card cheque-div" style="display: none;">
                     <div class="card-header">
                         <div class="card-title">Cheque Info</div>
                     </div>
@@ -1231,7 +1252,7 @@
                 <!--- -------------------------------------- Cheque Info END ------------------------------- -->
 
                 <!--- -------------------------------------- Document Info START ------------------------------- -->
-                <div class="card">
+                <div class="card doc_div" style="display: none;">
                     <div class="card-header">
                         <div class="card-title">Document Info
                         </div>
@@ -1261,7 +1282,7 @@
                 <!--- -------------------------------------- Document Info END ------------------------------- -->
 
                 <!--- -------------------------------------- Mortgage Info START ------------------------------- -->
-                <div class="card">
+                <div class="card mortgage-div" style="display: none;">
                     <div class="card-header">
                         <div class="card-title">Mortgage Info
                         </div>
@@ -1295,7 +1316,7 @@
                 <!--- -------------------------------------- Mortgage Info END ------------------------------- -->
 
                 <!--- -------------------------------------- Endorsement Info START ------------------------------- -->
-                <div class="card">
+                <div class="card endorsement-div" style="display: none;">
                     <div class="card-header">
                         <div class="card-title">Endorsement Info
                         </div>
@@ -1327,7 +1348,7 @@
                 <!--- -------------------------------------- Endorsement Info END ------------------------------- -->
 
                 <!--- -------------------------------------- Gold Info START ------------------------------- -->
-                <div class="card">
+                <div class="card gold-div" style="display: none;">
                     <div class="card-header">
                         <div class="card-title">Gold Info
                         </div>
