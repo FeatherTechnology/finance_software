@@ -37,7 +37,7 @@ LEFT JOIN agent_creation ac ON lelc.agent_id = ac.id
             cus_profile_id
     ) c ON li.cus_profile_id = c.cus_profile_id
 JOIN customer_status cs ON li.cus_profile_id = cs.cus_profile_id
-WHERE cs.status >=7 AND cs.status <=8 AND date(li.issue_date) <= date('$to_date') ";
+WHERE cs.status >=7 AND cs.status <=8 AND date(li.issue_date) <= date('$to_date')  group by li.cus_profile_id ";
 
 if (isset($_POST['search']) && $_POST['search'] != "") {
     $search = $_POST['search'];

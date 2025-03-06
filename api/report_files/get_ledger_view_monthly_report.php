@@ -36,37 +36,64 @@ $to_date = $_POST['toDate'];
     </thead>
     <tbody>
         <?php
-        $query = "SELECT
-    cp.id,
-    cp.cus_id,
-    lelc.loan_id,
-    li.issue_date,
-    lelc.maturity_date,
-    c.coll_sub_status,
-    COALESCE((SELECT (bal_amt - due_amt_track) FROM collection WHERE cus_profile_id = cp.id ORDER BY id DESC LIMIT 1),li.issue_amnt) AS bal_amt
-FROM
-    loan_issue li
-JOIN customer_profile cp ON
-    li.cus_profile_id = cp.id
-JOIN loan_entry_loan_calculation lelc ON
-    li.cus_profile_id = lelc.cus_profile_id
-LEFT JOIN(
-    SELECT
-        cus_profile_id,
-        coll_sub_status
-    FROM
-        collection
-    GROUP BY
-        cus_profile_id
-) c
-ON
-    li.cus_profile_id = c.cus_profile_id
-JOIN customer_status cs ON
-    li.cus_profile_id = cs.cus_profile_id
-WHERE
-    COALESCE((SELECT (bal_amt - due_amt_track) FROM collection WHERE cus_profile_id = cp.id ORDER BY id DESC LIMIT 1),li.issue_amnt) != 0 AND (lelc.profit_type = 0 OR (lelc.profit_type = 1 AND lelc.scheme_due_method = 1)) AND li.issue_date BETWEEN DATE_FORMAT('$to_date', '%Y-%m-01') AND '$to_date'
-ORDER BY
-    li.id ASC; "; //loan type 0 = calculation, 1 = Scheme and monthly loan =2. 
+       $query = "SELECT
+       cp.id,
+       cp.cus_id,
+       lelc.loan_id,
+       li.issue_date,
+       lelc.maturity_date,
+       c.coll_sub_status,
+       COALESCE(
+           (SELECT (bal_amt - due_amt_track) 
+            FROM collection 
+            WHERE cus_profile_id = cp.id 
+            ORDER BY id DESC 
+            LIMIT 1),
+           loan_bal.total_bal
+       ) AS bal_amt
+   FROM
+       loan_issue li
+   JOIN customer_profile cp ON
+       li.cus_profile_id = cp.id
+   JOIN loan_entry_loan_calculation lelc ON
+       li.cus_profile_id = lelc.cus_profile_id
+   LEFT JOIN(
+       SELECT
+           cus_profile_id,
+           coll_sub_status
+       FROM
+           collection
+       GROUP BY
+           cus_profile_id
+   ) c ON
+       li.cus_profile_id = c.cus_profile_id
+   JOIN customer_status cs ON
+       li.cus_profile_id = cs.cus_profile_id
+   -- Subquery to calculate sum of cash, cheque_val, and transaction_val
+   LEFT JOIN (
+       SELECT 
+           cus_profile_id,
+           SUM(cash) + SUM(cheque_val) + SUM(transaction_val) AS total_bal
+       FROM 
+           loan_issue
+       GROUP BY 
+           cus_profile_id
+   ) loan_bal ON li.cus_profile_id = loan_bal.cus_profile_id
+   WHERE
+     COALESCE(
+       (SELECT (bal_amt - due_amt_track) 
+        FROM collection 
+        WHERE cus_profile_id = cp.id 
+        ORDER BY id DESC 
+        LIMIT 1),
+       loan_bal.total_bal
+     ) != 0
+   AND (lelc.profit_type = 0 OR (lelc.profit_type = 1 AND lelc.scheme_due_method = 1)) 
+   AND li.issue_date BETWEEN DATE_FORMAT('$to_date', '%Y-%m-01') AND '$to_date'
+   GROUP BY li.cus_profile_id 
+   ORDER BY
+       li.id ASC";
+     //loan type 0 = calculation, 1 = Scheme and monthly loan =2. 
         $dailyData = $pdo->prepare($query);
         $dailyData->execute();
         $i = 1;

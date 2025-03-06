@@ -170,6 +170,11 @@ $(document).ready(function () {
         $('#customer_profile_id').val(id);
         let cusID = $(this).attr('data-id'); //Cus id From List Page.
         $('#cus_id').val(cusID);
+        $('.cheque-div').hide();
+        $('.doc_div').hide();
+        $('.mortgage-div').hide();
+        $('.endorsement-div').hide();
+        $('.gold-div').hide();
          getDocTable(id);
          getChequeInfoTable();
          getDocInfoTable();
@@ -672,6 +677,10 @@ function editCustmerProfile(id) {
 function getChequeInfoTable(){
     let cus_profile_id = $('#customer_profile_id').val();
     $.post('api/loan_issue_files/cheque_info_list.php', { cus_profile_id }, function (response) {
+        if (response && response.length > 0) {
+            // Show the cheque div and populate the table if the condition is met
+            $('.cheque-div').show();
+        }
         let chequeColumn = [
             "sno",
             "holder_type",
@@ -698,11 +707,14 @@ function getDocTable(cusProfileId) {
 function getDocInfoTable(){
     let cus_profile_id = $('#customer_profile_id').val();
     $.post('api/loan_issue_files/doc_info_list.php', { cus_profile_id }, function (response) {
+        if (response && response.length > 0) {
+            $('.doc_div').show();
+        }
         let docColumn = [
             "sno",
             "doc_name",
             "doc_type",
-            "fam_name",
+            "holder_name",
             "relationship",
             "upload"
         ]
@@ -713,9 +725,12 @@ function getDocInfoTable(){
 function getMortInfoTable(){
     let cus_profile_id = $('#customer_profile_id').val();
     $.post('api/loan_issue_files/mortgage_info_list.php', { cus_profile_id }, function (response) {
+        if (response && response.length > 0) {
+            $('.mortgage-div').show();
+        }
         let mortgageColumn = [
             "sno",
-            "fam_name",
+            "holder_name",
             "relationship",
             "property_details",
             "mortgage_name",
@@ -732,9 +747,12 @@ function getMortInfoTable(){
 function getEndorsementInfoTable(){
     let cus_profile_id = $('#customer_profile_id').val();
     $.post('api/loan_issue_files/endorsement_info_list.php', { cus_profile_id }, function (response) {
+        if (response && response.length > 0) {
+            $('.endorsement-div').show();
+        }
         let endorsementColumn = [
             "sno",
-            "fam_name",
+            "holder_name",
             "relationship",
             "vehicle_details",
             "endorsement_name",
@@ -749,6 +767,9 @@ function getEndorsementInfoTable(){
 function getGoldInfoTable(){
     let cus_profile_id = $('#customer_profile_id').val();
     $.post('api/loan_issue_files/gold_info_list.php', { cus_profile_id }, function (response) {
+        if (response && response.length > 0) {
+            $('.gold-div').show();
+        }
         let goldColumn = [
             "sno",
             "gold_type",
@@ -1107,10 +1128,17 @@ function loanCalculationEdit(id) {
 //////////////////////////////////////////////////////////////// Loan Calculation END //////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////// NOC //////////////////////////////////////////////////////////////////////
 function callAllFunctions(cp_id) {
+    $('.cheque-div').hide();
+    $('.doc_div').hide();
+    $('.mortgage-div').hide();
+    $('.endorsement-div').hide();
+    $('.gold-div').hide();
     getChequeList(cp_id);
     getMortgageList(cp_id);
     getEndorsementList(cp_id);
     getOtherDocumentList(cp_id);
+    getGoldList(cp_id);
+
     $('#noc_relation').val('');
     getFamilyMember();
     setTimeout(() => {
@@ -1120,6 +1148,9 @@ function callAllFunctions(cp_id) {
 
 function getChequeList(cp_id) {
     $.post('api/noc_files/noc_cheque_list.php', { cp_id }, function (response) {
+        if (response && response.length > 0) {
+            $('.cheque-div').show();
+        }
         let nocChequeColumns = [
             'sno',
             'holder_type',
@@ -1140,9 +1171,12 @@ function getChequeList(cp_id) {
 
 function getMortgageList(cp_id) {
     $.post('api/noc_files/noc_mortgage_list.php', { cp_id }, function (response) {
+        if (response && response.length > 0) {
+            $('.mortgage-div').show();
+        }
         let nocMortgageColumns = [
             'sno',
-            'fam_name',
+            'holder_name',
             'relationship',
             'property_details',
             'mortgage_name',
@@ -1160,9 +1194,12 @@ function getMortgageList(cp_id) {
 
 function getEndorsementList(cp_id) {
     $.post('api/noc_files/noc_endorsement_list.php', { cp_id }, function (response) {
+        if (response && response.length > 0) {
+            $('.endorsement-div').show();
+        }
         let nocEndorseColumns = [
             'sno',
-            'fam_name',
+            'holder_name',
             'relationship',
             'vehicle_details',
             'endorsement_name',
@@ -1180,11 +1217,14 @@ function getEndorsementList(cp_id) {
 
 function getOtherDocumentList(cp_id) {
     $.post('api/noc_files/noc_document_info_list.php', { cp_id }, function (response) {
+        if (response && response.length > 0) {
+            $('.doc_div').show();
+        }
         let nocDocInfoColumns = [
             'sno',
             'doc_name',
             'doc_type',
-            'fam_name',
+            'holder_name',
             'upload',
             'date_of_noc',
             'noc_member',
@@ -1195,7 +1235,19 @@ function getOtherDocumentList(cp_id) {
         setdtable('#noc_document_list_table');
     }, 'json');
 }
-
+function getGoldList(cp_id) {
+     $.post('api/noc_files/noc_gold_list.php', { cp_id }, function (response) {
+        if (response && response.length > 0) {
+            $('.gold-div').show();
+        }
+        let nocGoldColumns = [
+            'sno', 'gold_type', 'purity', 'weight', 'date_of_noc', 
+            'noc_member', 'noc_relationship', 'action'
+        ];
+        appendDataToTable('#noc_gold_list_table', response, nocGoldColumns);
+        setdtable('#noc_gold_list_table');
+    }, 'json');
+}
 
 
 function getFamilyMember() {

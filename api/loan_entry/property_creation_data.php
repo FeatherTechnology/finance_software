@@ -5,7 +5,7 @@ $id = $_POST['id'];
 
 $qry = $pdo->query("SELECT pi.id, pi.property, pi.property_detail, pi.property_holder, fi.fam_relationship
     FROM property_info pi
-     JOIN family_info fi ON pi.property_holder = fi.id
+     LEFT JOIN family_info fi ON pi.property_holder = fi.id
     WHERE pi.id='$id'");
 if ($qry->rowCount() > 0) {
     $result = $qry->fetchAll(PDO::FETCH_ASSOC);

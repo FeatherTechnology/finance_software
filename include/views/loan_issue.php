@@ -126,7 +126,7 @@
                 <!--- -------------------------------------- Cheque Info END ------------------------------- -->
 
                 <!--- -------------------------------------- Document Info START ------------------------------- -->
-                <div class="card doc_div"style="display: none;">
+                <div class="card doc_div" style="display: none;">
                     <div class="card-header">
                         <div class="card-title">Document Info
                             <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#add_doc_info_modal" onclick="getFamilyMember('Select Holder Name', '#doc_holder_name'); getDocCreationTable();" style="padding: 5px 35px; float: right;" tabindex='29'><span class="icon-add"></span></button>
@@ -157,7 +157,7 @@
                 <!--- -------------------------------------- Document Info END ------------------------------- -->
 
                 <!--- -------------------------------------- Mortgage Info START ------------------------------- -->
-                <div class="card mortgage-div"style="display: none;">
+                <div class="card mortgage-div" style="display: none;">
                     <div class="card-header">
                         <div class="card-title">Mortgage Info
                             <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#add_mortgage_info_modal" onclick="getFamilyMember('Select Property Holder Name', '#property_holder_name');getMortCreationTable()" style="padding: 5px 35px; float: right;" tabindex='30'><span class="icon-add"></span></button>
@@ -436,6 +436,16 @@
                             </div>
                             <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
                                 <div class="form-group">
+                                    <label for="payment_type">Payment Type</label><span class="text-danger">*</span>
+                                    <select class="form-control" id="payment_type" name="payment_type" tabindex="18">
+                                        <option value="">Select Payment Type</option>
+                                        <option value="1">Split Payment</option>
+                                        <option value="2">Single Payment</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12  payment" style="display:none">
+                                <div class="form-group">
                                     <label for="payment_mode">Payment Mode</label><span class="text-danger">*</span>
                                     <select type="text" class="form-control" id="payment_mode" name="payment_mode" tabindex="19">
                                         <option value=""> Select Payment Mode</option>
@@ -445,28 +455,89 @@
                                     </select>
                                 </div>
                             </div>
-                            <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12 transaction" style="display:none">
+                        </div>
+                        <div class="row">
+                            <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12" id="bank_container" style="display: none;">
                                 <div class="form-group">
-                                    <label for="transaction_id">Transaction ID</label><span class="text-danger">*</span>
-                                    <input type="number" class="form-control" id="transaction_id" name="transaction_id" tabindex="20">
+                                    <label for="bank_name">Bank Name</label><span class="text-danger">*</span>
+                                    <select class="form-control" id="bank_name" name="bank_name" tabindex="20">
+                                        <option value="">Select Bank Name</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+
+                            <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12 cash_issue" style="display:none">
+                                <div class="form-group">
+                                    <label for="disabledInput">Cash</label>
+                                    <input type="number" class="form-control" id="cash" name="cash" tabindex="34">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+
+                            <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12 checque" style="display:none">
+                                <div class="form-group">
+                                    <label for="">Cheque number</label>
+                                    <input type="number" class="form-control" id="chequeno" name="chequeno" tabindex="35">
                                 </div>
                             </div>
 
                             <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12 checque" style="display:none">
                                 <div class="form-group">
-                                    <label for="chequeno">Cheque number</label><span class="text-danger">*</span>
-                                    <input type="number" class="form-control" id="chequeno" name="chequeno" tabindex="21">
+                                    <label for="">Cheque Value</label>
+                                    <input type="number" class="form-control" id="chequeValue" name="chequeValue" tabindex="36">
                                 </div>
                             </div>
-                            <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12 cash_issue" style="display:none">
+                            <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12 checque" style="display:none">
                                 <div class="form-group">
-                                    <label for="issue_amount">Issue Amount</label><span class="text-danger">*</span>
-                                    <input type="number" class="form-control" id="issue_amount" name="issue_amount" tabindex="22">
+                                    <label for="">Cheque Remark</label>
+                                    <input type="text" class="form-control" id="chequeRemark" name="chequeRemark" tabindex="37">
                                 </div>
                             </div>
+
+                        </div>
+
+                        <div class="row">
+
+                            <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12 transaction" style="display:none">
+                                <div class="form-group">
+                                    <label for="disabledInput">Transaction ID</label>
+                                    <input type="text" class="form-control" id="transaction_id" name="transaction_id" tabindex="38">
+                                    <span class="text-danger" style="display: none;" id="transact_id"> Please Enter Transaction ID </span>
+                                </div>
+                            </div>
+
+                            <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12 transaction" style="display:none">
+                                <div class="form-group">
+                                    <label for="disabledInput">Transaction Value </label>
+                                    <input type="number" class="form-control" id="transaction_value" name="transaction_value" tabindex="39">
+                                    <span class="text-danger" style="display: none;" id="transact_val"> Please Enter Transaction Value </span>
+                                </div>
+                            </div>
+                            <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12 transaction" style="display:none">
+                                <div class="form-group">
+                                    <label for="disabledInput">Transaction Remark </label>
+                                    <input type="text" class="form-control" id="transaction_remark" name="transaction_remark" tabindex="40">
+                                    <span class="text-danger" style="display: none;" id="transact_remark"> Please Enter Transaction Remark </span>
+                                </div>
+                            </div>
+
+                            <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12 balance_remark_container" style="display:none">
+                                <div class="form-group">
+                                    <label for="disabledInput">Balance Amount </label>
+                                    <input type="text" class="form-control" id="balance_amount" name="balance_amount" readonly tabindex='41'>
+                                </div>
+                            </div>
+
+
+                        </div>
+                        <div class="row">
                             <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
                                 <div class="form-group">
-                                    <label for="issue_date">Issue date</label><span class="text-danger">*</span>
+                                    <label for="issue_date">Issue Date</label><span class="text-danger">*</span>
                                     <input type="date" class="form-control" id="issue_date" name="issue_date" tabindex="23" readonly>
                                 </div>
                             </div>
@@ -485,19 +556,20 @@
                                     <input type="text" class="form-control" name="issue_relationship" id="issue_relationship" tabindex="25" placeholder="Relationship" readonly>
                                 </div>
                             </div>
-
                         </div>
+
                     </div>
                 </div>
-                <!--- -------------------------------------- Issue Info END ------------------------------- -->
+            </div>
+            <!--- -------------------------------------- Issue Info END ------------------------------- -->
 
-                <div class="col-12 mt-3 text-right">
-                    <button name="submit_loan_issue" id="submit_loan_issue" class="btn btn-primary" tabindex="30"><span class="icon-check"></span>&nbsp;Submit</button>
-                </div>
+            <div class="col-12 mt-3 text-right">
+                <button name="submit_loan_issue" id="submit_loan_issue" class="btn btn-primary" tabindex="30"><span class="icon-check"></span>&nbsp;Submit</button>
             </div>
         </div>
-    </form>
-    <!-- -------------------------------------- Loan Issue END ------------------------------ -->
+</div>
+</form>
+<!-- -------------------------------------- Loan Issue END ------------------------------ -->
 </div> <!-- Loan Issue Content END - Customer profile & Loan Issue -->
 
 

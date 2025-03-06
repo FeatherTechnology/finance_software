@@ -41,7 +41,7 @@ $(document).ready(function () {
     $('.selector-item_label').click(function () {
         var radioId = $(this).attr('for');
         $('#' + radioId).prop('checked', true);
-      });
+    });
     // Function to format Aadhaar number input
     $('input[data-type="adhaar-number"]').keyup(function () {
         var value = $(this).val();
@@ -205,7 +205,11 @@ $(document).ready(function () {
             $('#property').val(response[0].property);
             $('#property_detail').val(response[0].property_detail);
             $('#property_holder').val(response[0].property_holder);
-            $('#prop_relationship').val(response[0].fam_relationship);
+            if (response[0].fam_relationship == null) {
+                $('#prop_relationship').val('Customer');
+            } else {
+                $('#prop_relationship').val(response[0].fam_relationship);
+            }
         }, 'json');
     });
 
@@ -223,8 +227,10 @@ $(document).ready(function () {
 
     $('#property_holder').change(function () {
         var propertyHolderId = $(this).val();
-        if (propertyHolderId) {
+        if (propertyHolderId != '' && propertyHolderId != 0) {
             getRelationshipName(propertyHolderId);
+        } else if (propertyHolderId == 0) {
+            $('#prop_relationship').val('Customer');
         } else {
             $('#prop_relationship').val('');
         }
@@ -522,23 +528,23 @@ $(document).ready(function () {
         }
     })
 
-    $('input[name="mobile_whatsapp"]:radio').change(function() {
+    $('input[name="mobile_whatsapp"]:radio').change(function () {
         let selectedValue = $(this).val();  // Get selected radio value
         let mobileNumber = '';              // Initialize mobile number variable
-    
+
         // Get the corresponding mobile number based on selected radio value
         if (selectedValue === 'mobile1') {
             mobileNumber = $('#mobile1').val();
         } else if (selectedValue === 'mobile2') {
             mobileNumber = $('#mobile2').val();
         }
-    
+
         // Set the selected mobile number in the WhatsApp field
         $('#whatsapp_no').val(mobileNumber);
-    
+
     });
-       
-    
+
+
     $('#submit_customer_profile').click(function (event) {
         event.preventDefault();
         // Validate form fields
@@ -1035,10 +1041,12 @@ function getPropertyInfoTable() {
 }
 
 function getPropertyHolder() {
-    let cus_id = $('#cus_id_upd').val().replace(/\s/g, '');
+    let cus_id = $('#cus_id').val().replace(/\s/g, '');
+    let cus_name = $('#cus_name').val();
     $.post('api/loan_entry/get_guarantor_name.php', { cus_id }, function (response) {
         let appendHolderOption = '';
         appendHolderOption += "<option value=''>Select Property Holder</option>";
+        appendHolderOption += "<option value='" + 0 + "'>" + cus_name + "</option>";
         $.each(response, function (index, val) {
             appendHolderOption += "<option value='" + val.id + "'>" + val.fam_name + "</option>";
         });
@@ -1280,38 +1288,38 @@ function dataCheckList(cus_id, cus_name, cus_mble_no) {
             $('#name_check').append("<option value='" + val.fam_name + "'>" + val.fam_name + "</option>");
         });
 
-       //Adhar no
-       $('#aadhar_check').empty();
-       $('#aadhar_check').append("<option value=''>Select Aadhar Number</option>");
+        //Adhar no
+        $('#aadhar_check').empty();
+        $('#aadhar_check').append("<option value=''>Select Aadhar Number</option>");
 
-       // Append the provided Aadhar number with the customer name if both are present
-       if (cus_id && cus_name) {
-           $('#aadhar_check').append('<option value="' + cus_id + '">' + cus_id + ' - ' + cus_name + '</option>');
-       }
+        // Append the provided Aadhar number with the customer name if both are present
+        if (cus_id && cus_name) {
+            $('#aadhar_check').append('<option value="' + cus_id + '">' + cus_id + ' - ' + cus_name + '</option>');
+        }
 
-       // Loop through the response and append Aadhar numbers with family names
-       $.each(response, function (index, val) {
-           if (val.fam_aadhar && val.fam_name) {
-               $('#aadhar_check').append('<option value="' + val.fam_aadhar + '">' + val.fam_aadhar + ' - ' + val.fam_name + '</option>');
-           }
-       });
+        // Loop through the response and append Aadhar numbers with family names
+        $.each(response, function (index, val) {
+            if (val.fam_aadhar && val.fam_name) {
+                $('#aadhar_check').append('<option value="' + val.fam_aadhar + '">' + val.fam_aadhar + ' - ' + val.fam_name + '</option>');
+            }
+        });
 
 
-       //Mobile no 
-       $('#mobile_check').empty();
-       $('#mobile_check').append("<option value=''>Select Mobile Number</option>");
+        //Mobile no 
+        $('#mobile_check').empty();
+        $('#mobile_check').append("<option value=''>Select Mobile Number</option>");
 
-       // Append the provided customer mobile number and name if they are present
-       if (cus_mble_no && cus_name) {
-           $('#mobile_check').append('<option value="' + cus_mble_no + '">' + cus_mble_no + ' - ' + cus_name + '</option>');
-       }
+        // Append the provided customer mobile number and name if they are present
+        if (cus_mble_no && cus_name) {
+            $('#mobile_check').append('<option value="' + cus_mble_no + '">' + cus_mble_no + ' - ' + cus_name + '</option>');
+        }
 
-       // Loop through the response and append mobile numbers with family names
-       $.each(response, function (index, val) {
-           if (val.fam_mobile && val.fam_name) {
-               $('#mobile_check').append('<option value="' + val.fam_mobile + '">' + val.fam_mobile + ' - ' + val.fam_name + '</option>');
-           }
-       });
+        // Loop through the response and append mobile numbers with family names
+        $.each(response, function (index, val) {
+            if (val.fam_mobile && val.fam_name) {
+                $('#mobile_check').append('<option value="' + val.fam_mobile + '">' + val.fam_mobile + ' - ' + val.fam_name + '</option>');
+            }
+        });
 
     }, 'json');
 }
@@ -1614,9 +1622,12 @@ $(document).ready(function () {
     ///////////////////////////////////////////////////////////////////Document info START ////////////////////////////////////////////////////////////////////////////
     $('#doc_holder_name').change(function () {
         let id = $(this).val();
-        if (id != '') {
+        if (id != '' && id != 0) {
             getRelationship(id, '#doc_relationship')
-        } else {
+        } else if (id == 0) {
+            $('#doc_relationship').val('Customer');
+        }
+        else {
             $('#doc_relationship').val('');
         }
 
@@ -1722,8 +1733,10 @@ $(document).ready(function () {
     ///////////////////////////////////////////////////////////////////Mortgage info START ////////////////////////////////////////////////////////////////////////////
     $('#property_holder_name').change(function () {
         let id = $(this).val();
-        if (id != '') {
+        if (id != '' && id != 0) {
             getRelationship(id, '#mort_relationship')
+        } else if (id == 0) {
+            $('#mort_relationship').val('Customer');
         } else {
             $('#mort_relationship').val('');
         }
@@ -1843,8 +1856,10 @@ $(document).ready(function () {
     ///////////////////////////////////////////////////////////////////Endorsement info START ////////////////////////////////////////////////////////////////////////////
     $('#owner_name').change(function () {
         let id = $(this).val();
-        if (id != '') {
+        if (id != '' && id != 0) {
             getRelationship(id, '#owner_relationship')
+        } else if (id == 0) {
+            $('#owner_relationship').val('Customer');
         } else {
             $('#owner_relationship').val('');
         }
@@ -2117,13 +2132,18 @@ function OnLoadFunctions(cus_id) {
 }//Auto Load function END
 
 function getFamilyMember(optn, selector) {
-    let cus_id = $('#cus_id_upd').val();
+    let cus_id = $('#cus_id').val();
+    let cus_name = $('#cus_name').val();
     $.post('api/loan_entry/get_guarantor_name.php', { cus_id }, function (response) {
         let appendOption = '';
-        appendOption += "<option value=''>" + optn + "</option>";
+        appendOption += "<option value=''>" + optn + "</option>"; // Default option
+        appendOption += "<option value='" + 0 + "'>" + cus_name + "</option>";
+
+        // Dynamic options from the response
         $.each(response, function (index, val) {
             appendOption += "<option value='" + val.id + "'>" + val.fam_name + "</option>";
         });
+
         $(selector).empty().append(appendOption);
     }, 'json');
 }
@@ -2211,7 +2231,7 @@ function getDocCreationTable() {
             "sno",
             "doc_name",
             "doc_type",
-            "fam_name",
+            "holder_name",
             "relationship",
             "upload",
             "action"
@@ -2236,7 +2256,7 @@ function getDocInfoTable() {
             "sno",
             "doc_name",
             "doc_type",
-            "fam_name",
+            "holder_name",
             "relationship",
             "upload"
         ]
@@ -2265,7 +2285,7 @@ function getMortCreationTable() {
     $.post('api/loan_issue_files/mortgage_info_list.php', { cus_profile_id }, function (response) {
         let mortInfoColumn = [
             "sno",
-            "fam_name",
+            "holder_name",
             "relationship",
             "property_details",
             "mortgage_name",
@@ -2290,7 +2310,7 @@ function getMortInfoTable() {
         }
         let mortgageColumn = [
             "sno",
-            "fam_name",
+            "holder_name",
             "relationship",
             "property_details",
             "mortgage_name",
@@ -2325,7 +2345,7 @@ function getEndorsementCreationTable() {
     $.post('api/loan_issue_files/endorsement_info_list.php', { cus_profile_id }, function (response) {
         let endorsementInfoColumn = [
             "sno",
-            "fam_name",
+            "holder_name",
             "relationship",
             "vehicle_details",
             "endorsement_name",
@@ -2348,7 +2368,7 @@ function getEndorsementInfoTable() {
         }
         let endorsementColumn = [
             "sno",
-            "fam_name",
+            "holder_name",
             "relationship",
             "vehicle_details",
             "endorsement_name",

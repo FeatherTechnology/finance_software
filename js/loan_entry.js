@@ -2,7 +2,7 @@ $(document).ready(function () {
     //Move Loan Entry 
     $(document).on('click', '.move-loan-entry', function () {
         let cus_sts_id = $(this).attr('value');
-        swalConfirm('Delete', 'Are you ready to move to the Approval Screen?', moveToNext, cus_sts_id);
+        swalConfirm('Approve', 'Are you ready to move to the Approval Screen?', moveToNext, cus_sts_id);
         return;
     });
     // Loan Entry Tab Change Radio buttons
@@ -253,7 +253,12 @@ $(document).ready(function () {
             $('#property').val(response[0].property);
             $('#property_detail').val(response[0].property_detail);
             $('#property_holder').val(response[0].property_holder);
+           if( response[0].fam_relationship == null){
+            $('#prop_relationship').val('Customer');
+           }else{
             $('#prop_relationship').val(response[0].fam_relationship);
+           }
+            
         }, 'json');
     });
 
@@ -265,9 +270,11 @@ $(document).ready(function () {
 
     $('#property_holder').change(function () {
         var propertyHolderId = $(this).val();
-        if (propertyHolderId) {
+        if (propertyHolderId != '' &&  propertyHolderId !=0) {
             getRelationshipName(propertyHolderId);
-        } else {
+        } else if(propertyHolderId == 0){
+            $('#prop_relationship').val('Customer');
+        }else {
             $('#prop_relationship').val('');
         }
     });
@@ -588,7 +595,7 @@ $(document).ready(function () {
         let area_confirm = $('#area_confirm').val();
         let area = $('#area').val();
         let line = $('#line').attr('data-id');
-        let cus_limit = $('#cus_limit').val();
+        let cus_limit = $('#cus_limit').val().replace(/,/g, '');
         let about_cus = $('#about_cus').val();
         let customer_profile_id = $('#customer_profile_id').val();
         if (customer_profile_id === '') {
@@ -1165,9 +1172,11 @@ function getPropertyInfoTable() {
 
 function getPropertyHolder() {
     let cus_id = $('#cus_id').val().replace(/\s/g, '');
+    let cus_name = $('#cus_name').val();
     $.post('api/loan_entry/get_guarantor_name.php', { cus_id }, function (response) {
         let appendHolderOption = '';
         appendHolderOption += "<option value=''>Select Property Holder</option>";
+        appendHolderOption += "<option value='" + 0 + "'>" + cus_name + "</option>";
         $.each(response, function (index, val) {
             appendHolderOption += "<option value='" + val.id + "'>" + val.fam_name + "</option>";
         });
@@ -1738,8 +1747,8 @@ $(document).ready(function () {
 
     $('#refresh_cal').click(function () {
         $('.int-diff').text('*'); $('.due-diff').text('*'); $('.doc-diff').text('*'); $('.proc-diff').text('*'); $('.refresh_loan_calc').val('');
-        let loan_amt = $('#loan_amount_calc').val(); let int_rate = $('#interest_rate_calc').val(); let due_period = $('#due_period_calc').val(); let doc_charge = $('#doc_charge_calc').val(); let proc_fee = $('#processing_fees_calc').val();
-
+        let loan_amt = $('#loan_amount_calc').val().replace(/,/g, ''); let int_rate = $('#interest_rate_calc').val(); let due_period = $('#due_period_calc').val(); let doc_charge = $('#doc_charge_calc').val(); let proc_fee = $('#processing_fees_calc').val();
+console.log(loan_amt);
         if (loan_amt != '' && int_rate != '' && due_period != '' && doc_charge != '' && proc_fee != '') {
             let due_type = $('#due_type_calc').val(); //If Changes not found in profit method, calculate loan amt for monthly basis
             if (due_type == 'Interest') {
@@ -1900,7 +1909,7 @@ $(document).ready(function () {
                 'loan_id_calc': $('#loan_id_calc').val(),
                 'loan_category_calc': $('#loan_category_calc').val(),
                 'category_info_calc': $('#category_info_calc').val(),
-                'loan_amount_calc': $('#loan_amount_calc').val(),
+                'loan_amount_calc': $('#loan_amount_calc').val().replace(/,/g, ''),
                 'profit_type_calc': $('#profit_type_calc').val(),
                 'due_method_calc': $('#due_method_calc').val(),
                 'due_type_calc': $('#due_type_calc').val(),
@@ -2025,7 +2034,7 @@ function getLoanCatDetails(id, edittype) {
         }
     
         // Retrieve customer and loan limits
-        let cus_limit = parseInt($('#cus_limit').val());
+        let cus_limit = parseInt($('#cus_limit').val().replace(/,/g, ''));
         let loan_limit = parseInt(response[0].loan_limit);
         let min_loan_limit;      
     
@@ -2040,7 +2049,7 @@ function getLoanCatDetails(id, edittype) {
             // Use the lesser of cus_limit and loan_limit
             min_loan_limit = (cus_limit < loan_limit) ? cus_limit : loan_limit;
         }
-        $('#loan_amount_calc').attr('onChange', `if( parseFloat($(this).val()) > '` + min_loan_limit + `' ){ alert("Enter Lesser than '${min_loan_limit}'"); $(this).val(""); }`); //To check value between range
+        $('#loan_amount_calc').attr('onChange', `if( parseFloat($(this).val().replace(/,/g, '')) > '` + min_loan_limit + `' ){ alert("Enter Lesser than '${min_loan_limit}'"); $(this).val(""); }`); //To check value between range
 
         var int_rate_upd = ($('#int_rate_upd').val()) ? $('#int_rate_upd').val() : '';
         var due_period_upd = ($('#due_period_upd').val()) ? $('#due_period_upd').val() : '';
@@ -2614,7 +2623,7 @@ function loanCalculationEdit(id) {
             $('#due_period_upd').val(response[0].due_period);
             $('#doc_charge_upd').val(response[0].doc_charge);
             $('#proc_fees_upd').val(response[0].processing_fees);
-            $('#loan_amnt_calc').val(response[0].loan_amnt);
+            $('#loan_amnt_calc').val(response[0].loan_amount);
             $('#principal_amnt_calc').val(response[0].principal_amnt);
             $('#interest_amnt_calc').val(response[0].interest_amnt);
             $('#total_amnt_calc').val(response[0].total_amnt);

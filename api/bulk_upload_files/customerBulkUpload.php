@@ -40,7 +40,7 @@ if (in_array($_FILES["excelFile"]["type"], $allowedFileType)) {
                 $areaLine = $obj->getAreaLine($pdo, $data['area_id']);
                 $data['line_id'] = $areaLine;
                 
-        
+                $data['bank_id'] = $obj->getBankId($pdo, $data['bank_name']);
                 // Set customer status based on the returned value
              
                 $data['scheme_id'] = $obj->getSchemeId($pdo, $data['scheme_name']);
