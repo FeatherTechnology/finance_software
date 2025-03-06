@@ -79,13 +79,20 @@ class bulkUploadClass
             'referred' => isset($Row[52]) ? $Row[52] : "",
             'agent_id' => isset($Row[53]) ? $Row[53] : "",
             'agent_name' => isset($Row[54]) ? $Row[54] : "",
-            'payment_mode' => isset($Row[55]) ? $Row[55] : "",
-            'issue_amount' => isset($Row[56]) ? $Row[56] : "",
-            'transaction_id' => isset($Row[57]) ? $Row[57] : "",
-            'cheque_no' => isset($Row[58]) ? $Row[58] : "",
-            'issue_date' => isset($Row[59]) ? $Row[59] : "",
-            'issue_person' => isset($Row[60]) ? $Row[60] : "",
-            'relationship' => isset($Row[61]) ? $Row[61] : "",
+            'payment_type' => isset($Row[55]) ? $Row[55] : "",
+            'payment_mode' => isset($Row[56]) ? $Row[56] : "",
+            'balance_cash' => isset($Row[57]) ? $Row[57] : "",
+            'cash' => isset($Row[58]) ? $Row[58] : "",
+            'cheque_val' => isset($Row[59]) ? $Row[59] : "",
+            'transaction_val' => isset($Row[60]) ? $Row[60] : "",
+            'transaction_id' => isset($Row[61]) ? $Row[61] : "",
+            'cheque_no' => isset($Row[62]) ? $Row[62] : "",
+            'bank_name' => isset($Row[63]) ? $Row[63] : "",
+            'cheque_remark' => isset($Row[64]) ? $Row[64] : "",
+            'trans_remark' => isset($Row[65]) ? $Row[65] : "",
+            'issue_date' => isset($Row[66]) ? $Row[66] : "",
+            'issue_person' => isset($Row[67]) ? $Row[67] : "",
+            'relationship' => isset($Row[68]) ? $Row[68] : "",
         );
 
         $dataArray['cus_id'] = strlen($dataArray['cus_id']) == 12 ? $dataArray['cus_id'] : 'Invalid';
@@ -140,6 +147,11 @@ class bulkUploadClass
         $referred_typeArray = ['Yes' => '0', 'No' => '1'];
         $dataArray['referred'] = $this->arrayItemChecker($referred_typeArray, $dataArray['referred']);
 
+        // Check only if 'payment_type' field is not empty
+        if (!empty($dataArray['payment_type'])) {
+            $refer_typeArray = ['Split' => '1', 'Single' => '2'];
+            $dataArray['payment_type'] = $this->arrayItemChecker($refer_typeArray, $dataArray['payment_type']);
+        }
         $payment_typeArray = ['Cash' => '1', 'Bank Transfer' => '2', 'Cheque' => '3'];
         $dataArray['payment_mode'] = $this->arrayItemChecker($payment_typeArray, $dataArray['payment_mode']);
 
@@ -324,6 +336,20 @@ class bulkUploadClass
         }
         return $scheme_id;
     }
+    function getBankId($pdo, $bank_name)
+    {
+        $stmt = $pdo->query("SELECT b.id
+    FROM `loan_issue` si 
+    JOIN bank_creation b ON FIND_IN_SET(b.id, si.bank_name)
+    WHERE LOWER(REPLACE(TRIM(b.bank_name), ' ', '')) = LOWER(REPLACE(TRIM('$bank_name'), ' ', ''))");
+
+        if ($stmt->rowCount() > 0) {
+            $bank_id = $stmt->fetch(PDO::FETCH_ASSOC)['id'];
+        } else {
+            $bank_id = ''; // Return 'Not Found' if branch does not exist
+        }
+        return $bank_id;
+    }
     function FamilyTable($pdo, $data)
     {
         $user_id = $_SESSION['user_id'];
@@ -410,9 +436,8 @@ class bulkUploadClass
         ]);
 
         $insert_li_query = "INSERT INTO `loan_issue` 
-        (`cus_id`, `cus_profile_id`, `loan_amnt`, `net_cash`, `payment_mode`, `issue_amnt`, `transaction_id`, `cheque_no`, `issue_date`, `issue_person`, `relationship`, `insert_login_id`, `created_on`) 
-        VALUES ('" . strip_tags($data['cus_id']) . "','" . strip_tags($cus_profile_id) . "','" . strip_tags($data['loan_amount']) . "','" . strip_tags($data['net_cash']) .  "', '" . strip_tags($data['payment_mode']) . "', 
-         '" . strip_tags($data['net_cash']) .  "', '" . strip_tags($data['transaction_id']) . "','" . strip_tags($data['cheque_no']) . "', '" . strip_tags($data['issue_date']) . "', '" . strip_tags($data['issue_person']) . "', '" . strip_tags($data['relationship']) . "', 
+        (`cus_id`, `cus_profile_id`, `loan_amnt`, `net_cash`,`net_bal_cash`,`payment_type`, `payment_mode`,`bank_name`, `cash`,`cheque_val`,`transaction_val`,`transaction_id`,`cheque_remark`,`tran_remark`, `cheque_no`, `issue_date`, `issue_person`, `relationship`, `insert_login_id`, `created_on`) 
+        VALUES ('" . strip_tags($data['cus_id']) . "','" . strip_tags($cus_profile_id) . "','" . strip_tags($data['loan_amount']) . "','" . strip_tags($data['net_cash']) .  "','" . strip_tags($data['balance_cash']) . "', '" . strip_tags($data['payment_type']) . "',  '" . strip_tags($data['payment_mode']) . "', '" . strip_tags($data['bank_id']) . "', '" . strip_tags($data['cash']) .  "', '" . strip_tags($data['cheque_val']) .  "', '" . strip_tags($data['transaction_val']) .  "','" . strip_tags($data['transaction_id']) . "','" . strip_tags($data['cheque_no']) . "','" . strip_tags($data['cheque_remark']) . "','" . strip_tags($data['trans_remark']) . "', '" . strip_tags($data['issue_date']) . "', '" . strip_tags($data['issue_person']) . "', '" . strip_tags($data['relationship']) . "', 
          '" .  $user_id . "', '"  . strip_tags($data['loan_date']) . "')";
 
 
@@ -609,8 +634,8 @@ class bulkUploadClass
             $errcolumns[] = 'Issue Person';
         }
 
-        if ($data['payment_mode'] == 'Not Found') {
-            $errcolumns[] = 'Payment Mode';
+        if ($data['payment_type'] == 'Not Found') {
+            $errcolumns[] = 'Payment Type';
         }
         if ($data['area_id'] == 'Not Found') {
             $errcolumns[] = 'Area ID';
