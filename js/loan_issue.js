@@ -1303,8 +1303,9 @@ function personalInfo() {
 }
 
 function getIssuePerson(cus_name) {
-    let cus_id = $('#cus_id').val();
-    $.post('api/loan_entry/get_guarantor_name.php', { cus_id }, function (response) {
+    let aadhar_num = $('#aadhar_num').val();
+    console.log("cus_if",aadhar_num);
+    $.post('api/loan_entry/get_guarantor_name.php', { aadhar_num }, function (response) {
         let appendOption = '';
         appendOption += "<option value='' data-val=''>Select Issue Person</option>";
         appendOption += "<option value='" + cus_name + "' data-val='Customer'>" + cus_name + "</option>";

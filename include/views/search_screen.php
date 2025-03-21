@@ -20,7 +20,7 @@
                                     <div class="col-md-4 col-sm-6">
                                         <div class="form-group">
                                             <label for="cust_id">Customer ID</label><span class="text-danger">*</span>
-                                            <input type="text" class="form-control" id="cust_id" name="cust_id" placeholder="Enter Customer ID" tabindex="1" maxlength="14">
+                                            <input type="text" class="form-control" id="cust_id" name="cust_id" placeholder="Enter Customer ID" tabindex="1" >
                                         </div>
                                     </div>
                                     <div class="col-md-4 col-sm-6">

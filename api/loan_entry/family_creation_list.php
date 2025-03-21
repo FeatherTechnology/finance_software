@@ -1,10 +1,10 @@
 <?php
 require '../../ajaxconfig.php';
-$cus_id = $_POST['cus_id'];
+$aadhar_num = $_POST['aadhar_num'];
 $family_list_arr = array();
 $i = 0;
 $live_arr = [1 => 'Live', 2 => 'Deceased'];
-$qry = $pdo->query("SELECT id,fam_name,fam_relationship,fam_age,fam_live,fam_occupation,fam_aadhar,fam_mobile FROM family_info WHERE cus_id = '$cus_id' ");
+$qry = $pdo->query("SELECT id,fam_name,fam_relationship,remarks,fam_age,fam_live,fam_occupation,fam_aadhar,fam_mobile FROM family_info WHERE aadhar_num = '$aadhar_num' ");
 
 if ($qry->rowCount() > 0) {
 
@@ -18,6 +18,7 @@ if ($qry->rowCount() > 0) {
         $family_list_arr[$i]['id'] = $row['id'];
         $family_list_arr[$i]['fam_name'] = $row['fam_name'];
         $family_list_arr[$i]['fam_relationship'] = $row['fam_relationship'];
+        $family_list_arr[$i]['remarks'] = $row['remarks'];
         $family_list_arr[$i]['fam_age'] = $row['fam_age'];
         $family_list_arr[$i]['fam_live'] = $fam_live_value;
         $family_list_arr[$i]['fam_occupation'] = $row['fam_occupation'];

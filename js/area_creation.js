@@ -147,7 +147,7 @@ $(document).ready(function () {
                 }
 
                 $('#area_creation').trigger('reset');
-                getAreaCreationTable();
+                // getAreaCreationTable();
                 swapTableAndCreation();//to change to div to table content.
 
             });

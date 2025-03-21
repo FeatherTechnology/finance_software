@@ -265,6 +265,7 @@
         <input type="hidden" id="due_method_calc">
         <input type="hidden" id="scheme_due_method_calc">
         <input type="hidden" id="scheme_day_calc">
+        <input type="hidden" id="aadhar_num">
         <div class="row gutters">
             <div class="col-12">
 

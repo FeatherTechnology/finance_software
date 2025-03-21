@@ -187,6 +187,7 @@ function getPersonalInfo(cus_id) {
         $('#cus_branch').val(response[0].branch_name);
         $('#cus_line').val(response[0].linename);
         $('#cus_mobile').val(response[0].mobile1);
+        $('#aadhar_num').val(response[0].aadhar_num);
         let path = "uploads/loan_entry/cus_pic/";
         if (response[0].pic) {
             $('#per_pic').val(response[0].pic);
@@ -326,9 +327,9 @@ function getGoldList(cp_id) {
     }, 'json');
 }
 function getFamilyMember() {
-    let cus_id = $('#cus_id').val();
+    let aadhar_num = $('#aadhar_num').val();
     let cus_name = $('#cus_name').val();
-    return  $.post('api/loan_entry/get_guarantor_name.php', { cus_id }, function (response) {
+    return  $.post('api/loan_entry/get_guarantor_name.php', { aadhar_num }, function (response) {
         let appendOption = '';
         appendOption += "<option value=''>Select Member Name</option>";
         appendOption += "<option value='" + cus_name + "'>" + cus_name + "</option>";

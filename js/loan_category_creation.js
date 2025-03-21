@@ -548,7 +548,7 @@ function clearLoanCategoryCreationForm() {
     // Reset all select fields to their first option
     $('#loan_category_creation select').css('border', '1px solid #cecece');
     scheme_choices.clearInput();
-    getSchemeDropdown();
+    // getSchemeDropdown();
 }
 
 function checkMinMaxValue(minSelector, maxSelector) {

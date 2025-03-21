@@ -1,10 +1,10 @@
 $(document).ready(function () {
 
-    $('#cust_id').on('keyup', function () {
-        var value = $(this).val();
-        value = value.replace(/\D/g, "").split(/(?:([\d]{4}))/g).filter(s => s.length > 0).join(" ");
-        $(this).val(value);
-    });
+    // $('#cust_id').on('keyup', function () {
+    //     var value = $(this).val();
+    //     value = value.replace(/\D/g, "").split(/(?:([\d]{4}))/g).filter(s => s.length > 0).join(" ");
+    //     $(this).val(value);
+    // });
 
     $('#cus_mobile').change(function () {
         let mobileValue = $(this).val().trim();  // Retrieve and trim the value of the mobile input
@@ -186,7 +186,7 @@ $(document).ready(function () {
 
     $('#submit_search').click(function (event) {
         event.preventDefault();
-        let cus_id = $('#cust_id').val().replace(/\s/g, '');
+        let cus_id = $('#cust_id').val();
         let cus_name = $('#cust_name').val();
         let area = $('#cus_area').val();
         let mobile = $('#cus_mobile').val();

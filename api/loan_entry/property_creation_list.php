@@ -2,14 +2,14 @@
 require '../../ajaxconfig.php';
 
 $property_list_arr = array();
-$cus_id = $_POST['cus_id'];
+$aadhar_num = $_POST['aadhar_num'];
 $i = 0;
 $qry = $pdo->query("SELECT pi.id, pi.property, pi.property_detail,CASE 
             WHEN pi.property_holder = 0 THEN cp.cus_name 
             ELSE fi.fam_name 
         END as property_holder, fi.fam_relationship 
 FROM property_info pi 
-LEFT JOIN family_info fi ON pi.property_holder = fi.id LEFT JOIN customer_profile cp ON pi.cus_profile_id= cp.id WHERE pi.cus_id = '$cus_id' GROUP BY pi.id;");
+LEFT JOIN family_info fi ON pi.property_holder = fi.id LEFT JOIN customer_profile cp ON pi.cus_profile_id= cp.id WHERE pi.aadhar_num = '$aadhar_num' GROUP BY pi.id;");
 
 if ($qry->rowCount() > 0) {
     while ($row = $qry->fetch(PDO::FETCH_ASSOC)) {

@@ -16,7 +16,7 @@ $column = array(
     'cp.mobile1',
     'cp.id'
 );
-$query = "SELECT cp.id, cp.cus_id, cp.cus_name, lelc.loan_id, lc.loan_category, lelc.loan_amount, anc.areaname, lnc.linename, bc.branch_name , cp.mobile1, lelc.id as loan_calc_id, cs.id as cus_sts_id, cs.status as c_sts 
+$query = "SELECT cp.id, cp.cus_id, cp.cus_name, lelc.loan_id, lc.loan_category, lelc.loan_amount,lelc.loan_date, anc.areaname, lnc.linename, bc.branch_name , cp.mobile1,cp.cus_data, lelc.id as loan_calc_id, cs.id as cus_sts_id, cs.status as c_sts 
  FROM customer_profile cp 
  LEFT JOIN loan_entry_loan_calculation lelc ON cp.id = lelc.cus_profile_id 
  LEFT JOIN loan_category_creation lcc ON lelc.loan_category = lcc.id
@@ -68,15 +68,16 @@ foreach ($result as $row) {
     $sub_array = array();
 
     $sub_array[] = $sno++;
+    $sub_array[] = isset($row['loan_date']) ? date('d-m-Y', strtotime($row['loan_date'])) : '';
     $sub_array[] = isset($row['cus_id']) ? $row['cus_id'] : '';
     $sub_array[] = isset($row['cus_name']) ? $row['cus_name'] : '';
-    $sub_array[] = isset($row['loan_id']) ? $row['loan_id'] : '';
-    $sub_array[] = isset($row['loan_category']) ? $row['loan_category'] : '';
-    $sub_array[] = isset($row['loan_amount']) ? moneyFormatIndia($row['loan_amount'] ): '';
     $sub_array[] = isset($row['areaname']) ? $row['areaname'] : '';
     $sub_array[] = isset($row['linename']) ? $row['linename'] : '';
     $sub_array[] = isset($row['branch_name']) ? $row['branch_name'] : '';
     $sub_array[] = isset($row['mobile1']) ? $row['mobile1'] : '';
+    $sub_array[] = isset($row['loan_category']) ? $row['loan_category'] : '';
+    $sub_array[] = isset($row['loan_amount']) ? moneyFormatIndia($row['loan_amount'] ): '';
+    $sub_array[] = isset($row['cus_data']) ? $row['cus_data'] : '';
     $action= "<div class='dropdown'>
                 <button class='btn btn-outline-secondary'><i class='fa'>&#xf107;</i></button>
                <div class='dropdown-content'>";

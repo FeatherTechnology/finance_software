@@ -68,11 +68,11 @@ $(document).ready(function () {
 
 
     $('#mobile1').on('blur', function () {
-        let cus_id = $('#cus_id_upd').val().trim().replace(/\s/g, '');
+        let aadhar_num = $('#aadhar_nums').val().trim().replace(/\s/g, '');
         let cus_name = $('#cus_name').val();
         let customerMobile = $(this).val().trim();
         if (customerMobile) {
-            dataCheckList(cus_id, cus_name, customerMobile)
+            dataCheckList(aadhar_num, cus_name, customerMobile)
         } else {
             removeCustomerMobile();
         }
@@ -84,11 +84,12 @@ $(document).ready(function () {
         OnLoadFunctions(cus_id)
     })
     $('#cus_name').on('blur', function () {
-        let customerID = $('#cus_id_upd').val().trim().replace(/\s/g, '');
+        let aadhar_num = $('#aadhar_nums').val().trim().replace(/\s/g, '');
         let customerName = $('#cus_name').val().trim();
-        if (customerID && customerName) {
-            addPropertyHolder(customerID, customerName);
-        } else {
+        if (aadhar_num && customerName) {
+            addPropertyHolder(aadhar_num, customerName);
+        }
+        else {
             removeCustomerEntries();
         }
     });
@@ -110,8 +111,10 @@ $(document).ready(function () {
         event.preventDefault();
         // Validation
         let cus_profile_id = $('#customer_profile_id').val();
-        let cus_id = $('#cus_id_upd').val().replace(/\s/g, ''); // Remove spaces from cus_id
+        let cus_id = $('#auto_gen_cus_id').val();
+        let aadhar_num = $('#aadhar_nums').val().replace(/\s/g, ''); // Remove spaces from cus_id
         let fam_name = $('#fam_name').val();
+        let remarks = $('#remarks').val();
         let fam_relationship = $('#fam_relationship').val();
         let fam_age = $('#fam_age').val();
         let fam_live = $('#fam_live').val();
@@ -119,6 +122,7 @@ $(document).ready(function () {
         let fam_aadhar = $('#fam_aadhar').val().replace(/\s/g, '');
         let fam_mobile = $('#fam_mobile').val();
         let family_id = $('#family_id').val();
+        console.log("fam",family_id);
 
         if (cus_profile_id == '') {
             swalError('Warning', 'Kindly Fill the Personal Info');
@@ -135,7 +139,7 @@ $(document).ready(function () {
         });
 
         if (isValid) {
-            $.post('api/loan_entry/submit_family_info.php', { cus_id, fam_name, fam_relationship, fam_age, fam_live, fam_occupation, fam_aadhar, fam_mobile, family_id }, function (response) {
+            $.post('api/loan_entry/submit_family_info.php', { cus_id, aadhar_num, fam_name, fam_relationship,remarks, fam_age, fam_live, fam_occupation, fam_aadhar, fam_mobile, family_id }, function (response) {
                 if (response == '1') {
                     swalSuccess('Success', 'Family Info Added Successfully!');
                 } else {
@@ -147,12 +151,14 @@ $(document).ready(function () {
         }
     });
 
+
     $(document).on('click', '.familyActionBtn', function () {
         var id = $(this).attr('value'); // Get value attribute
         $.post('api/loan_entry/family_creation_data.php', { id: id }, function (response) {
             $('#family_id').val(id);
             $('#fam_name').val(response[0].fam_name);
             $('#fam_relationship').val(response[0].fam_relationship);
+            $('#remarks').val(response[0].remarks);
             $('#fam_age').val(response[0].fam_age);
             $('#fam_live').val(response[0].fam_live);
             $('#fam_occupation').val(response[0].fam_occupation);
@@ -172,7 +178,8 @@ $(document).ready(function () {
         event.preventDefault();
         //Validation
         let cus_profile_id = $('#customer_profile_id').val();
-        let cus_id = $('#cus_id_upd').val().replace(/\s/g, '');
+        let cus_id = $('#auto_gen_cus_id').val();
+        let aadhar_num = $('#aadhar_nums').val().replace(/\s/g, '');
         let property = $('#property').val(); let property_detail = $('#property_detail').val(); let property_holder = $('#property_holder').val(); let property_id = $('#property_id').val();
         if (cus_profile_id == '') {
             swalError('Warning', 'Kindly Fill the Personal Info');
@@ -187,7 +194,7 @@ $(document).ready(function () {
             }
         });
         if (isValid) {
-            $.post('api/loan_entry/submit_property.php', { cus_id, property, property_detail, property_holder, property_id, cus_profile_id }, function (response) {
+            $.post('api/loan_entry/submit_property.php', { cus_id,aadhar_num, property, property_detail, property_holder, property_id, cus_profile_id }, function (response) {
                 if (response == '1') {
                     swalSuccess('Success', 'Property Info Added Successfully!');
                 } else {
@@ -277,7 +284,8 @@ $(document).ready(function () {
         event.preventDefault();
         //Validation
         let cus_profile_id = $('#customer_profile_id').val();
-        let cus_id = $('#cus_id_upd').val().replace(/\s/g, '');
+        let cus_id = $('#auto_gen_cus_id').val();
+        let aadhar_num = $('#aadhar_nums').val().replace(/\s/g, '');
         let bank_name = $('#bank_name').val(); let branch_name = $('#branch_name').val(); let acc_holder_name = $('#acc_holder_name').val(); let acc_number = $('#acc_number').val(); let ifsc_code = $('#ifsc_code').val(); let bank_id = $('#bank_id').val();
         if (cus_profile_id == '') {
             swalError('Warning', 'Kindly Fill the Personal Info');
@@ -292,7 +300,7 @@ $(document).ready(function () {
             }
         });
         if (isValid) {
-            $.post('api/loan_entry/submit_bank.php', { cus_id, bank_name, branch_name, acc_holder_name, acc_number, ifsc_code, bank_id, cus_profile_id }, function (response) {
+            $.post('api/loan_entry/submit_bank.php', { cus_id, aadhar_num, bank_name, branch_name, acc_holder_name, acc_number, ifsc_code, bank_id, cus_profile_id }, function (response) {
                 if (response == '1') {
                     swalSuccess('Success', 'Bank Info Added Successfully!');
                 } else {
@@ -322,22 +330,19 @@ $(document).ready(function () {
     });
 
     ////////////Kyc Modal///////
-    $('#submit_kyc').click(function () {
+    $('#submit_kyc').click(function (event) {
         event.preventDefault();
         //Validation
         let cus_profile_id = $('#customer_profile_id').val();
-        let kycloan_id = $('#kycloan_id').val();
-        let cus_id = $('#cus_id_upd').val().replace(/\s/g, '');
+        let cus_id = $('#auto_gen_cus_id').val();
+        let aadhar_num = $('#aadhar_nums').val().replace(/\s/g, '');
         let upload = $('#upload')[0].files[0]; let kyc_upload = $('#kyc_upload').val();
         let proof_of = $('#proof_of').val(); let fam_mem = $("#fam_mem").val(); let proof = $('#proof').val(); let proof_detail = $('#proof_detail').val(); let kyc_id = $('#kyc_id').val();
         if (cus_profile_id == '') {
             swalError('Warning', 'Kindly Fill the Personal Info');
             return false;
         }
-        var data = ['kycloan_id', 'proof_of', 'kyc_relationship', 'proof', 'proof_detail']
-        if (proof_of == '2') {
-            data.push('fam_mem');
-        }
+        var data = ['proof_of', 'kyc_relationship', 'proof', 'proof_detail']
         var isValid = true;
         data.forEach(function (entry) {
             var fieldIsValid = validateField($('#' + entry).val(), entry);
@@ -351,9 +356,9 @@ $(document).ready(function () {
             if (proof_of !== 'Customer') {
                 kycDetail.append('fam_mem', fam_mem);
             }
-
             kycDetail.append('cus_profile_id', cus_profile_id)
             kycDetail.append('cus_id', cus_id)
+            kycDetail.append('aadhar_num', aadhar_num)
             kycDetail.append('proof', proof)
             kycDetail.append('proof_detail', proof_detail)
             kycDetail.append('upload', upload)
@@ -554,7 +559,8 @@ $(document).ready(function () {
         let per_pic = $('#per_pic').val();
         let gu_pic = $('#gu_pic')[0].files[0];
         let gur_pic = $('#gur_pic').val();
-        let cus_id = $('#cus_id').val().replace(/\s/g, '');
+        let cus_id = $('#auto_gen_cus_id').val();
+        let aadhar_num = $('#aadhar_nums').val().replace(/\s/g, '');
         let cus_name = $("#cus_name").val();
         let gender = $('#gender').val();
         let dob = $('#dob').val();
@@ -562,7 +568,7 @@ $(document).ready(function () {
         let mobile1 = $('#mobile1').val();
         let mobile2 = $('#mobile2').val();
         let whatsapp_no = $('#whatsapp_no').val();
-        let aadhar_num = $('#aadhar_num').val().replace(/\s/g, '');
+        // let aadhar_num = $('#aadhar_num').val().replace(/\s/g, '');
         let guarantor_name = $('#guarantor_name').val();
         let cus_data = $('#cus_data').val();
         let cus_status = $('#cus_status').val();
@@ -577,7 +583,7 @@ $(document).ready(function () {
         let area_confirm = $('#area_confirm').val();
         let area = $('#area').val();
         let line = $('#line').attr('data-id');
-        let cus_limit = $('#cus_limit').val();
+        let cus_limit = $('#cus_limit').val().replace(/,/g, '');
         let about_cus = $('#about_cus').val();
         let customer_profile_id = $('#customer_profile_id').val();
         if (customer_profile_id === '') {
@@ -585,7 +591,6 @@ $(document).ready(function () {
             return false;
         }
         let isValid = true;
-
         // Validate fields based on area_confirm value
         if (area_confirm == '1') {
             let validationResults = [
@@ -608,9 +613,9 @@ $(document).ready(function () {
                 isValid = false;
             }
         }
-        data = ['cus_name', 'gender', 'mobile1', 'guarantor_name', 'area_confirm', 'area', 'line', 'cus_limit'];
+        data = ['cus_name', 'gender', 'mobile1', 'guarantor_name', 'area_confirm', 'area', 'line'];
 
-        //var isValid = true;
+        //  var isValid = true;
         data.forEach(function (entry) {
             var fieldIsValid = validateField($('#' + entry).val(), entry);
             if (!fieldIsValid) {
@@ -805,10 +810,10 @@ function clearCusProfileForm(type) {
     $('#gur_imgshow').attr('src', 'img/avatar.png');
 }
 
-function fetchCustomerData(name, cusid, mobile, cus_profile_id) {
-    $.post('api/loan_entry/search_customer.php', { name, cusid, mobile, cus_profile_id }, function (response) {
+function fetchCustomerData(name, aadhar_num, mobile, cus_profile_id) {
+    $.post('api/loan_entry/search_customer.php', { name, aadhar_num, mobile, cus_profile_id }, function (response) {
         // Process customer data
-        var customerMapping = ['index', 'cus_id', 'cus_name', 'mobiles'];
+        var customerMapping = ['index', 'aadhar_num', 'cus_name', 'mobiles'];
         var customerData = response.customers.map(function (customer, index) {
             let mobiles = customer.mobile1;
             if (customer.mobile2) {
@@ -816,7 +821,7 @@ function fetchCustomerData(name, cusid, mobile, cus_profile_id) {
             }
             return {
                 index: index + 1,
-                cus_id: customer.cus_id,
+                aadhar_num: customer.aadhar_num,
                 cus_name: customer.cus_name,
                 mobiles: mobiles
             };
@@ -824,11 +829,11 @@ function fetchCustomerData(name, cusid, mobile, cus_profile_id) {
         appendDataToTable('#cus_info', customerData, customerMapping);
 
         // Process family data
-        var familyMapping = ['index', 'cus_id', 'fam_name', 'fam_relationship', 'under_customer_name', 'under_customer_id'];
+        var familyMapping = ['index', 'aadhar_num', 'fam_name', 'fam_relationship', 'under_customer_name', 'under_customer_id'];
         var familyData = response.family.map(function (member, index) {
             return {
                 index: index + 1,
-                cus_id: member.cus_id,
+                aadhar_num: member.aadhar_num,
                 fam_name: member.fam_name,
                 fam_relationship: member.fam_relationship,
                 under_customer_name: member.under_customer_name,
@@ -867,9 +872,9 @@ function removeCustomerName() {
     $('#name_check .custom-option').remove();
 }
 
-function addPropertyHolder(id, name) {
+function addPropertyHolder(aadhar_num, name) {
     $('#property_holder .custom-option').remove();
-    $('#property_holder').append('<option class="custom-option" value="' + id + '">' + name + '</option>');
+    $('#property_holder').append('<option class="custom-option" value="' + aadhar_num + '">' + name + '</option>');
 }
 
 function removeCustomerEntries() {
@@ -877,12 +882,13 @@ function removeCustomerEntries() {
 }
 
 function getFamilyInfoTable() {
-    let cus_id = $('#cus_id_upd').val().replace(/\s/g, '');
-    $.post('api/loan_entry/family_creation_list.php', { cus_id }, function (response) {
+    let aadhar_num = $('#aadhar_nums').val().replace(/\s/g, '');
+    $.post('api/loan_entry/family_creation_list.php', { aadhar_num }, function (response) {
         var columnMapping = [
             'sno',
             'fam_name',
             'fam_relationship',
+            'remarks',
             'fam_age',
             'fam_live',
             'fam_occupation',
@@ -895,12 +901,13 @@ function getFamilyInfoTable() {
 }
 
 function getFamilyTable() {
-    let cus_id = $('#cus_id_upd').val().replace(/\s/g, '');
-    $.post('api/loan_entry/family_creation_list.php', { cus_id: cus_id }, function (response) {
+    let aadhar_num = $('#aadhar_nums').val().replace(/\s/g, '');
+    $.post('api/loan_entry/family_creation_list.php', { aadhar_num: aadhar_num }, function (response) {
         var columnMapping = [
             'sno',
             'fam_name',
             'fam_relationship',
+            'remarks',
             'fam_age',
             'fam_live',
             'fam_occupation',
@@ -914,6 +921,7 @@ function getFamilyTable() {
         $('#family_form input').css('border', '1px solid #cecece');
         $('#family_form select').css('border', '1px solid #cecece');
         $('#fam_relationship').val('');
+        $('#remarks').val('');
         $('#fam_live').val('');
     }, 'json')
 }
@@ -923,9 +931,9 @@ function checkAdditionalRenewal(cus_id) {
     }, 'json');
 }
 function getFamilyDelete(id) {
-    let cus_id = $('#cus_id_upd').val().replace(/\s/g, '');
+    let aadhar_num = $('#aadhar_nums').val().replace(/\s/g, '');
     let cus_profile_id = $('#customer_profile_id').val();
-    $.post('api/loan_entry/delete_family_creation.php', { id, cus_id, cus_profile_id }, function (response) {
+    $.post('api/loan_entry/delete_family_creation.php', { id, aadhar_num, cus_profile_id }, function (response) {
         if (response == '0') {
             swalError('Warning', 'Have to maintain atleast one Family Info');
         } else if (response == '1') {
@@ -956,8 +964,8 @@ function resetValidate() {
     });
 }
 function getGuarantorName() {
-    let cus_id = $('#cus_id_upd').val().replace(/\s/g, '');
-    $.post('api/loan_entry/get_guarantor_name.php', { cus_id }, function (response) {
+    let aadhar_num = $('#aadhar_nums').val().replace(/\s/g, '');
+    $.post('api/loan_entry/get_guarantor_name.php', { aadhar_num }, function (response) {
         let appendGuarantorOption = '';
         appendGuarantorOption += "<option value=''>Select Guarantor Name</option>";
         $.each(response, function (index, val) {
@@ -1041,9 +1049,9 @@ function getPropertyInfoTable() {
 }
 
 function getPropertyHolder() {
-    let cus_id = $('#cus_id').val().replace(/\s/g, '');
+    let aadhar_num = $('#aadhar_nums').val().replace(/\s/g, '');
     let cus_name = $('#cus_name').val();
-    $.post('api/loan_entry/get_guarantor_name.php', { cus_id }, function (response) {
+    $.post('api/loan_entry/get_guarantor_name.php', { aadhar_num }, function (response) {
         let appendHolderOption = '';
         appendHolderOption += "<option value=''>Select Property Holder</option>";
         appendHolderOption += "<option value='" + 0 + "'>" + cus_name + "</option>";
@@ -1278,12 +1286,12 @@ function getAlineName(areaId) {
     });
 }
 
-function dataCheckList(cus_id, cus_name, cus_mble_no) {
-    $.post('api/loan_entry/datacheck_name.php', { cus_id }, function (response) {
+function dataCheckList(aadhar_num, cus_name, cus_mble_no) {
+    $.post('api/loan_entry/datacheck_name.php', { aadhar_num }, function (response) {
         //Name
         $('#name_check').empty();
         $('#name_check').append("<option value=''>Select Name</option>");
-        $('#name_check').append('<option value="' + cus_name + '">' + cus_name + '</option>');
+        (cus_name != '') ? $('#name_check').append('<option value="' + cus_name + '">' + cus_name + '</option>') : '';
         $.each(response, function (index, val) {
             $('#name_check').append("<option value='" + val.fam_name + "'>" + val.fam_name + "</option>");
         });
@@ -1293,8 +1301,8 @@ function dataCheckList(cus_id, cus_name, cus_mble_no) {
         $('#aadhar_check').append("<option value=''>Select Aadhar Number</option>");
 
         // Append the provided Aadhar number with the customer name if both are present
-        if (cus_id && cus_name) {
-            $('#aadhar_check').append('<option value="' + cus_id + '">' + cus_id + ' - ' + cus_name + '</option>');
+        if (aadhar_num && cus_name) {
+            $('#aadhar_check').append('<option value="' + aadhar_num + '">' + aadhar_num + ' - ' + cus_name + '</option>');
         }
 
         // Loop through the response and append Aadhar numbers with family names
@@ -1328,7 +1336,8 @@ function editCustmerProfile(id) {
     $.post('api/loan_entry/customer_profile_data.php', { id: id }, function (response) {
         $('#customer_profile_id').val(id);
         $('#area_edit').val(response[0].area);
-        $('#cus_id').val(response[0].cus_id);
+        $('#auto_gen_cus_id').val(response[0].cus_id);
+        $('#aadhar_nums').val(response[0].aadhar_num);
         $('#cus_id_upd').val(response[0].cus_id);
         $('#cus_name').val(response[0].cus_name);
         $('#gender').val(response[0].gender);
@@ -1337,7 +1346,6 @@ function editCustmerProfile(id) {
         $('#mobile2').val(response[0].mobile2);
         $('#mobile1').val(response[0].mobile1);
         $('#whatsapp_no').val(response[0].whatsapp_no);
-        $('#aadhar_num').val(response[0].aadhar_num);
         $('#guarantor_name_edit').val(response[0].guarantor_name);
         $('#cus_data').val(response[0].cus_data);
         $('#cus_status').val(response[0].cus_status);
