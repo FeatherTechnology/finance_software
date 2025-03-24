@@ -1745,9 +1745,9 @@ function checkAdditionalRenewal(aadhar_num) {
 
 // }
 
-function editCustmerProfile(id) {
-    $.post('api/loan_entry/customer_profile_data.php', { id: id }, function (response) {
-        $('#customer_profile_id').val(id);
+function editCustmerProfile(aadhar_num) {
+    $.post('api/loan_entry/customer_profile_data.php', { aadhar_num: aadhar_num }, function (response) {
+        $('#customer_profile_id').val(response[0].id);
         $('#area_edit').val(response[0].area);
         $('#auto_gen_cus_id').val(response[0].cus_id);
         $('#aadhar_nums').val(response[0].aadhar_num);
@@ -2019,7 +2019,9 @@ $(document).ready(function () {
         let docName = $('#doc_need_calc').val();
         let cusProfileId = $('#customer_profile_id').val();
         let cusID = $('#auto_gen_cus_id').val();
-
+console.log("cus_id ",cusID);
+console.log("cus_pro id ",cusProfileId);
+console.log("cus_name  ",docName);
         if (docName != '') {
 
             $.post('api/loan_entry/loan_calculation/submit_document_need.php', { docName, cusProfileId, cusID }, function (response) {

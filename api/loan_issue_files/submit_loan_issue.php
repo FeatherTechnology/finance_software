@@ -32,10 +32,10 @@ $qry2 = $pdo->query("UPDATE `loan_entry_loan_calculation` SET `due_startdate`='$
 if ($payment_type == "1") {
     // Check if balance_amount is zero
     if ($bal_amount == 0) {
-$qry3 = $pdo->query("UPDATE `customer_status` SET `status`='7',`update_login_id`='$user_id',`updated_on`=now() WHERE `cus_profile_id`='$cus_profile_id' "); //Loan Issued.
+$qry3 = $pdo->query("UPDATE `customer_status` SET `status`='7',`coll_status`='Current',`update_login_id`='$user_id',`updated_on`=now() WHERE `cus_profile_id`='$cus_profile_id' "); //Loan Issued.
     }
 }else if ($payment_type == "2"){
-    $qry3 = $pdo->query("UPDATE `customer_status` SET `status`='7',`update_login_id`='$user_id',`updated_on`=now() WHERE `cus_profile_id`='$cus_profile_id' "); //Loan Issued.
+    $qry3 = $pdo->query("UPDATE `customer_status` SET `status`='7',`coll_status`='Current',`update_login_id`='$user_id',`updated_on`=now() WHERE `cus_profile_id`='$cus_profile_id' "); //Loan Issued.
 }
 
 // $qry = $pdo->query("SELECT cus_name, mobile1 FROM `customer_profile` WHERE `id` = '$cus_profile_id' ");

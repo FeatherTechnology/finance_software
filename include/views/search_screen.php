@@ -8,6 +8,7 @@
                 <input type="hidden" name="od_sts" id="od_sts" value="" />
                 <input type="hidden" name="due_nil_sts" id="due_nil_sts" value="" />
                 <input type="hidden" name="bal_amt" id="bal_amt" value="bal_amt" />
+                <input type="hidden" name="aadhar_num" id="aadhar_num"  />
                 <div class="row gutters">
                     <div class="col-12">
                         <div class="card">
@@ -486,6 +487,7 @@
                                                 <th width="20">S.NO</th>
                                                 <th>Name</th>
                                                 <th>Relationship</th>
+                                                <th>Remarks</th>
                                                 <th>Age</th>
                                                 <th>Live/Deceased</th>
                                                 <th>Occupation</th>

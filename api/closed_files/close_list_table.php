@@ -105,7 +105,7 @@ foreach ($result as $row) {
     $action = "<div class='dropdown'>
     <button class='btn btn-outline-secondary'><i class='fa'>&#xf107;</i></button>
    <div class='dropdown-content'>";
-    $action .=  "<a href='#' class='closed-details' value='" . $row['cus_id'] . "' title='Close'>Close</a>";
+    $action .=  "<a href='#' class='closed-details' value='" . $row['cus_id'] . "' title='Close'>View</a>";
     $qry2 = $pdo->prepare("SELECT cus_id  FROM customer_status WHERE cus_id = ? AND status = 9");
     $qry2->execute([$row['cus_id']]);
     if ($qry2->rowCount() > 0) {

@@ -20,11 +20,11 @@ $(document).ready(function () {
     });
 
     $(document).on('click', '.edit-cus-update', function () {
-        let id = $(this).attr('value');
-        $('#customer_profile_id').val(id);
+        let aadhar_num = $(this).attr('value');
+        $('#customer_profile_id').val(aadhar_num);
 
         swapTableAndCreation();
-        editCustmerProfile(id)
+        editCustmerProfile(aadhar_num)
     });
 
     $('input[name=update_type]').click(function () {
@@ -1332,9 +1332,9 @@ function dataCheckList(aadhar_num, cus_name, cus_mble_no) {
     }, 'json');
 }
 
-function editCustmerProfile(id) {
-    $.post('api/loan_entry/customer_profile_data.php', { id: id }, function (response) {
-        $('#customer_profile_id').val(id);
+function editCustmerProfile(aadhar_num) {
+    $.post('api/loan_entry/customer_profile_data.php', { aadhar_num: aadhar_num }, function (response) {
+        $('#customer_profile_id').val(response[0].id);
         $('#area_edit').val(response[0].area);
         $('#auto_gen_cus_id').val(response[0].cus_id);
         $('#aadhar_nums').val(response[0].aadhar_num);

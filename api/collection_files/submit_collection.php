@@ -40,6 +40,8 @@ $trans_date = $_POST['trans_date'];
 
 $qry = $pdo->query("INSERT INTO `collection`( `coll_code`, `cus_profile_id`, `cus_id`, `cus_name`, `branch`, `area`, `line`, `loan_category`, `coll_status`, `coll_sub_status`, `tot_amt`, `paid_amt`, `bal_amt`, `due_amt`, `pending_amt`, `payable_amt`, `penalty`, `coll_charge`, `coll_mode`, `bank_id`, `cheque_no`, `trans_id`, `trans_date`, `coll_date`, `due_amt_track`, `princ_amt_track`, `int_amt_track`, `penalty_track`, `coll_charge_track`, `total_paid_track`, `pre_close_waiver`, `penalty_waiver`, `coll_charge_waiver`, `total_waiver`, `insert_login_id`, `created_date`) VALUES ('$collection_id','$cp_id','$cus_id','$cus_name','$branch_id','$area_id','$line_id','$loan_category_id','$status','$sub_status','$tot_amt','$paid_amt','$bal_amt','$due_amt','$pending_amt','$payable_amt','$penalty','$coll_charge','$collection_mode','$bank_id','$cheque_no','$trans_id','$trans_date','".$collection_date.' '.date('H:i:s')."','$due_amt_track','$princ_amt_track','$int_amt_track','$penalty_track','$coll_charge_track','$total_paid_track','$pre_close_waiver','$penalty_waiver','$coll_charge_waiver','$total_waiver','$user_id',current_timestamp )");
 
+$qry = $pdo->query("UPDATE `customer_status` SET `coll_status`='$sub_status',`updated_on`='current_timestamp ' WHERE cus_profile_id='$cp_id' ");
+
 if ($qry) {
     $coll_id = $collection_id;
     $result = '1';

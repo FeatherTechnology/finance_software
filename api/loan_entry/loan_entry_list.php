@@ -16,7 +16,7 @@ $column = array(
     'cp.mobile1',
     'cp.id'
 );
-$query = "SELECT cp.id, cp.cus_id, cp.cus_name, lelc.loan_id, lc.loan_category, lelc.loan_amount,lelc.loan_date, anc.areaname, lnc.linename, bc.branch_name , cp.mobile1,cp.cus_data, lelc.id as loan_calc_id, cs.id as cus_sts_id, cs.status as c_sts 
+$query = "SELECT cp.id, cp.cus_id, cp.cus_name,cp.aadhar_num, lelc.loan_id, lc.loan_category, lelc.loan_amount,lelc.loan_date, anc.areaname, lnc.linename, bc.branch_name , cp.mobile1,cp.cus_data, lelc.id as loan_calc_id, cs.id as cus_sts_id, cs.status as c_sts 
  FROM customer_profile cp 
  LEFT JOIN loan_entry_loan_calculation lelc ON cp.id = lelc.cus_profile_id 
  LEFT JOIN loan_category_creation lcc ON lelc.loan_category = lcc.id
@@ -82,7 +82,7 @@ foreach ($result as $row) {
                 <button class='btn btn-outline-secondary'><i class='fa'>&#xf107;</i></button>
                <div class='dropdown-content'>";
     if ($row['c_sts'] == '1' || $row['c_sts'] == '2') {
-        $action .= "<a href='#' class='edit-loan-entry' value='" . $row['id'] . "' data-id='" . $row['loan_calc_id'] . "' title='Edit details'>Edit</a>";
+        $action .= "<a href='#' class='edit-loan-entry' value='" . $row['aadhar_num'] . "' data-id='" . $row['loan_calc_id'] . "' title='Edit details'>Edit</a>";
     }
     if ($row['c_sts'] == '2') {
         $action  .= "<a href='#' class='move-loan-entry' value='" . $row['cus_sts_id'] . "' title='Move'>Move</a>";

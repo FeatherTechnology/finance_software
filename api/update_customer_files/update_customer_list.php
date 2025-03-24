@@ -13,7 +13,7 @@ $column = array(
     'cp.id'
 );
 $subQuery = "SELECT MAX(id) as max_id FROM customer_profile GROUP BY cus_id";
-$query = "SELECT cp.id, cp.cus_id, cp.cus_name,anc.areaname , lnc.linename, bc.branch_name , cp.mobile1, cs.id as cus_sts_id, cs.status as c_sts 
+$query = "SELECT cp.id, cp.cus_id, cp.aadhar_num, cp.cus_name,anc.areaname , lnc.linename, bc.branch_name , cp.mobile1, cs.id as cus_sts_id, cs.status as c_sts 
  FROM customer_profile cp 
  LEFT JOIN line_name_creation lnc ON cp.line = lnc.id
  LEFT JOIN area_name_creation anc ON cp.area = anc.id
@@ -67,7 +67,7 @@ foreach ($result as $row) {
     $action = "<div class='dropdown'>
     <button class='btn btn-outline-secondary'><i class='fa'>&#xf107;</i></button>
    <div class='dropdown-content'>";
-    $action .= "<a href='#' class='edit-cus-update' value='" . $row['id'] . "' title='Edit details'>Edit</a>";
+    $action .= "<a href='#' class='edit-cus-update' value='" . $row['aadhar_num'] . "' title='Edit details'>Edit</a>";
     $action .= "</div></div>";
     $sub_array[] = $action;
     $data[] = $sub_array;
