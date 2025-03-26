@@ -185,13 +185,6 @@
                                             <input type="number" class="form-control  personal_info_disble" id="whatsapp_no" name="whatsapp_no" onKeyPress="if(this.value.length==10) return false;" placeholder="Enter WhatsApp Number" tabindex="11">
                                         </div>
                                     </div>
-                                    <!-- <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
-                                        <div class="form-group">
-                                            <label for="aadhar_num">Aadhar No</label>
-                                            <input type="text" class="form-control personal_info_disble" name="aadhar_num" id="aadhar_num" tabindex="11" maxlength="14" data-type="adhaar-number" placeholder="Enter Aadhar Number">
-                                            <input type="hidden" id="addaadhar_id" value='0'>
-                                        </div>
-                                    </div> -->
                                 </div>
                             </div>
                             <div class="col-4">
@@ -384,7 +377,7 @@
                             <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
                                 <div class="form-group">
                                     <label for="res_type">Residential Type</label><span class="text-danger">*</span>
-                                    <select type="text" class="form-control" id="res_type" name="res_type" tabindex="18">
+                                    <select type="text" class="form-control" id="res_type" name="res_type" tabindex="20">
                                         <option value="">Select Residential Type</option>
                                         <option value="1">Own</option>
                                         <option value="2">Rental</option>
@@ -396,19 +389,19 @@
                             <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
                                 <div class="form-group">
                                     <label for="res_detail"> Residential Details </label><span class="text-danger">*</span>
-                                    <input type="text" class="form-control" id="res_detail" name="res_detail" pattern="[a-zA-Z\s]+" placeholder="Enter Residential Details" tabindex="19">
+                                    <input type="text" class="form-control" id="res_detail" name="res_detail" pattern="[a-zA-Z\s]+" placeholder="Enter Residential Details" tabindex="21">
                                 </div>
                             </div>
                             <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
                                 <div class="form-group">
                                     <label for="res_address"> Address </label><span class="text-danger">*</span>
-                                    <input type="text" class="form-control" id="res_address" name="res_address" placeholder="Enter Address" tabindex="20">
+                                    <input type="text" class="form-control" id="res_address" name="res_address" placeholder="Enter Address" tabindex="22">
                                 </div>
                             </div>
                             <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
                                 <div class="form-group">
                                     <label for="native_address"> Native Address </label><span class="text-danger">*</span>
-                                    <input type="text" class="form-control" id="native_address" name="native_address" placeholder="Enter Native Address" tabindex="21">
+                                    <input type="text" class="form-control" id="native_address" name="native_address" placeholder="Enter Native Address" tabindex="23">
                                 </div>
                             </div>
                         </div>
@@ -424,25 +417,25 @@
                             <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
                                 <div class="form-group">
                                     <label for="occupation"> Occupation </label>
-                                    <input type="text" class="form-control" id="occupation" name="occupation" pattern="[a-zA-Z\s]+" placeholder="Enter Occupation" tabindex="22">
+                                    <input type="text" class="form-control" id="occupation" name="occupation" pattern="[a-zA-Z\s]+" placeholder="Enter Occupation" tabindex="24">
                                 </div>
                             </div>
                             <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
                                 <div class="form-group">
                                     <label for="occ_detail"> Occupation Detail</label>
-                                    <input type="text" class="form-control" id="occ_detail" name="occ_detail" placeholder="Enter Occupation Detail " tabindex="23">
+                                    <input type="text" class="form-control" id="occ_detail" name="occ_detail" placeholder="Enter Occupation Detail " tabindex="25">
                                 </div>
                             </div>
                             <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
                                 <div class="form-group">
                                     <label for="occ_income"> Income</label>
-                                    <input type="number" class="form-control" id="occ_income" name="occ_income" placeholder="Enter Income" tabindex="24">
+                                    <input type="number" class="form-control" id="occ_income" name="occ_income" placeholder="Enter Income" tabindex="26">
                                 </div>
                             </div>
                             <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
                                 <div class="form-group">
                                     <label for="occ_address"> Address </label>
-                                    <input type="text" class="form-control" id="occ_address" name="occ_address" placeholder="Enter Address" tabindex="25">
+                                    <input type="text" class="form-control" id="occ_address" name="occ_address" placeholder="Enter Address" tabindex="27">
                                 </div>
                             </div>
                         </div>
@@ -458,7 +451,7 @@
                             <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
                                 <div class="form-group">
                                     <label for="area_confirm">Area Confirm</label><span class="text-danger">*</span>
-                                    <select type="text" class="form-control" id="area_confirm" name="area_confirm" tabindex="26">
+                                    <select type="text" class="form-control" id="area_confirm" name="area_confirm" tabindex="28">
                                         <option value="">Select Area Confirm</option>
                                         <option value="1">Resident</option>
                                         <option value="2">Occupation</option>
@@ -469,7 +462,7 @@
                                 <div class="form-group">
                                     <label for="area">Area</label><span class="text-danger">*</span>
                                     <input type="hidden" id="area_edit">
-                                    <select type="text" class="form-control" id="area" name="area" tabindex="27">
+                                    <select type="text" class="form-control" id="area" name="area" tabindex="29">
                                         <option value="">Select Area</option>
                                     </select>
                                 </div>
@@ -477,7 +470,7 @@
                             <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
                                 <div class="form-group">
                                     <label for="line"> Line </label><span class="text-danger">*</span>
-                                    <input type="text" class="form-control" id="line" name="line" disabled placeholder="Enter line" tabindex="28">
+                                    <input type="text" class="form-control" id="line" name="line" disabled placeholder="Enter line" tabindex="30">
                                 </div>
                             </div>
                         </div>
@@ -487,7 +480,7 @@
                 <div class="card">
                     <div class="card-header">
                         <div class="card-title">Property Info
-                            <button type="button" class="btn btn-primary" id="add_property" name="add_property" data-toggle="modal" data-target="#add_prop_info_modal" onclick="getPropertyTable();getPropertyHolder()" style="padding: 5px 35px; float: right;" tabindex='29'><span class="icon-add"></span></button>
+                            <button type="button" class="btn btn-primary" id="add_property" name="add_property" data-toggle="modal" data-target="#add_prop_info_modal" onclick="getPropertyTable();getPropertyHolder()" style="padding: 5px 35px; float: right;" tabindex='31'><span class="icon-add"></span></button>
                         </div>
                     </div>
                     <div class="card-body">
@@ -515,7 +508,7 @@
                 <div class="card">
                     <div class="card-header">
                         <div class="card-title">Bank Info
-                            <button type="button" class="btn btn-primary" id="add_bank" name="add_bank" data-toggle="modal" data-target="#add_bank_info_modal" onclick="getBankTable()" style="padding: 5px 35px; float: right;" tabindex='30'><span class="icon-add"></span></button>
+                            <button type="button" class="btn btn-primary" id="add_bank" name="add_bank" data-toggle="modal" data-target="#add_bank_info_modal" onclick="getBankTable()" style="padding: 5px 35px; float: right;" tabindex='32'><span class="icon-add"></span></button>
                         </div>
                     </div>
                     <div class="card-body">
@@ -544,7 +537,7 @@
                 <div class="card">
                     <div class="card-header">
                         <div class="card-title">KYC Info <span class="text-danger">*</span>
-                            <button type="button" class="btn btn-primary" id="add_kyc" name="add_kyc" data-toggle="modal" data-target="#add_kyc_info_modal" onclick="getKycTable();fetchProofList()" style="padding: 5px 35px; float: right;" tabindex='31'><span class="icon-add"></span></button>
+                            <button type="button" class="btn btn-primary" id="add_kyc" name="add_kyc" data-toggle="modal" data-target="#add_kyc_info_modal" onclick="getKycTable();fetchProofList()" style="padding: 5px 35px; float: right;" tabindex='33'><span class="icon-add"></span></button>
                         </div>
                     </div>
                     <div class="card-body">
@@ -579,13 +572,13 @@
                             <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
                                     <div class="form-group">
                                         <label for="loan_count"> Loan Count </label><span class="text-danger">*</span>
-                                        <input type="text" class="form-control" id="loan_count" name="loan_count" disabled placeholder="Loan Count" tabindex="32" readonly>
+                                        <input type="text" class="form-control" id="loan_count" name="loan_count" disabled placeholder="Loan Count" tabindex="34" readonly>
                                     </div>
                                 </div>
                             <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
                                     <div class="form-group">
                                         <label for="first_loan_date"> First Loan Date </label><span class="text-danger">*</span>
-                                        <input type="text" class="form-control" id="first_loan_date" name="first_loan_date" disabled placeholder="First Loan Date" tabindex="33" readonly>
+                                        <input type="text" class="form-control" id="first_loan_date" name="first_loan_date" disabled placeholder="First Loan Date" tabindex="35" readonly>
                                     </div>
                                 </div>
                             </div>
@@ -596,13 +589,13 @@
                             <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
                                 <div class="form-group">
                                     <label for="cus_limit"> Customer Limit</label><span class="text-danger">*</span>
-                                    <input type="text" class="form-control" id="cus_limit" name="cus_limit" placeholder="Enter Customer Limit" tabindex="34">
+                                    <input type="text" class="form-control" id="cus_limit" name="cus_limit" placeholder="Enter Customer Limit" tabindex="36">
                                 </div>
                             </div>
                             <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
                                 <div class="form-group">
                                     <label for="about_cus"> About Customer </label>
-                                    <textarea class="form-control" name="about_cus" id="about_cus" placeholder="Enter About Customer" tabindex="35"></textarea>
+                                    <textarea class="form-control" name="about_cus" id="about_cus" placeholder="Enter About Customer" tabindex="37"></textarea>
                                 </div>
                             </div>
                         </div>
@@ -612,8 +605,8 @@
 
             <div class="col-md-12 ">
                 <div class="text-right">
-                    <button type="submit" name="submit_customer_profile" id="submit_customer_profile" class="btn btn-primary" value="Submit" tabindex="36"><span class="icon-check"></span>&nbsp;Submit</button>
-                    <button type="reset" id="clear_loan" class="btn btn-outline-secondary" tabindex="35">Clear</button>
+                    <button type="submit" name="submit_customer_profile" id="submit_customer_profile" class="btn btn-primary" value="Submit" tabindex="38"><span class="icon-check"></span>&nbsp;Submit</button>
+                    <button type="reset" id="clear_loan" class="btn btn-outline-secondary" tabindex="39">Clear</button>
                 </div>
             </div>
         </div>

@@ -1,3 +1,13 @@
+const scheme_choices = new Choices('#existing_details', {
+    removeItemButton: true,
+    noChoicesText: 'Select Existing Details',
+    allowHTML: true
+});
+const repromotion_details = new Choices('#repromotion_details', {
+    removeItemButton: true,
+    noChoicesText: 'Select Repromotion Details',
+    allowHTML: true
+});
 $(document).ready(function () {
     $('.new_table_content').show();
     $('.existing_table_content').hide();
@@ -16,7 +26,7 @@ $(document).ready(function () {
             $('.new_table_content').hide();
             $('.existing_table_content').hide();
             $('.repromotion_table_content').show();
-            getRePromotionTable();
+            getRePromotionTable('');
         }
     });
     $('#submit_new').click(function (event) {
@@ -126,30 +136,39 @@ $(document).ready(function () {
         }
     });
 
-    $(document).on('change', '.existingNeedBtn', function () {
+    $(document).on('click', '.exs_needed, .exs_later, .exs_to_follow', function () {
         var cus_id = $(this).attr('value');
-        var checkbox = $(this); // Reference to the checkbox element
-        swalConfirm('Are You Sure', '', getExistingData, cus_id, function () {
-            checkbox.prop('checked', false); // Uncheck the checkbox if the user presses "No"
+        var coll_data = $(this).attr('data');
+        var datas = { cus_id: cus_id, coll_data: coll_data };
+        // var checkbox = $(this); // Reference to the checkbox element
+        swalConfirm('Are You Sure', '', getExistingData,datas, function () {
         });
         return;
     });
 
-    $(document).on('change', '.repromotionBtn', function () {
+    $(document).on('click', '.needed, .later, .to_follow',function () {
         var cus_id = $(this).attr('value');
-        var checkbox = $(this); // Reference to the checkbox element
-        swalConfirm('Are You Sure', '', InsertRepromotionData, cus_id, function () {
+        var coll_data = $(this).attr('data');
+        var datas = { cus_id: cus_id, coll_data: coll_data };
+        swalConfirm('Are You Sure', '', InsertRepromotionData, datas, function () {
             checkbox.prop('checked', false); // Uncheck the checkbox if the user presses "No"
         });
         return;
     });
-
+    $(document).on('click', '#existing_detail_btn', function () {
+        var existing_details = $("#existing_details").val();
+        getExistingPromotionTable(existing_details);
+    });
+    $(document).on('click', '#repromotion_detail_btn', function () {
+        var repromotion_details = $("#repromotion_details").val();
+        getRePromotionTable(repromotion_details);
+    });
 })
 
 
 $(function () {
     getNewPromotionTable();
-    getExistingPromotionTable();
+    getExistingPromotionTable('');
 
 });
 function getNewPromotionTable() {
@@ -179,9 +198,9 @@ function getNewPromoDelete(id) {
         }
     }, 'json');
 }
-function getExistingPromotionTable() {
+function getExistingPromotionTable(existing_details) {
 
-    $.post('api/customer_data_files/get_existing_promotion.php', { }, function (response) {
+    $.post('api/customer_data_files/get_existing_promotion.php', {existing_details }, function (response) {
         var columnMapping = [
             'id',
             'cus_id',
@@ -196,12 +215,13 @@ function getExistingPromotionTable() {
         ];
         appendDataToTable('#existing_list_table', response, columnMapping);
         setdtable('#existing_list_table');
+        setDropdownScripts();
 
     }, 'json')
 }
 
-function getRePromotionTable() {
-    $.post('api/customer_data_files/get_repromotion_list.php', { }, function (response) {
+function getRePromotionTable(repromotion_details) {
+    $.post('api/customer_data_files/get_repromotion_list.php', { repromotion_details}, function (response) {
         var columnMapping = [
             'id',
             'cus_id',
@@ -215,27 +235,32 @@ function getRePromotionTable() {
         ];
         appendDataToTable('#repromotion_list_table', response, columnMapping);
         setdtable('#repromotion_list_table');
+        setDropdownScripts();
     }, 'json')
 }
 
-function getExistingData(cus_id) {
-    $.post('api/customer_data_files/get_existing_data.php', { cus_id }, function (response) {
+function getExistingData(datas) {
+    let cus_id=datas.cus_id;
+    let coll_data=datas.coll_data;
+    $.post('api/customer_data_files/get_existing_data.php', { cus_id,coll_data }, function (response) {
         if (response == '1') {
             swalSuccess("Success", "Existing Data Added Successfully!", "success");
-            // Replace the checkbox with "Needed" text
-            $('.existingNeedBtn[value="' + cus_id + '"]').replaceWith('<span>Needed</span>');
+            getExistingPromotionTable('');
         } else {
             swalError("Error", "Failed to Add Existing Data", "error");
         }
     });
 }
 
-function InsertRepromotionData(cus_id) {
-    $.post('api/customer_data_files/submit_repromotion.php', { cus_id }, function (response) {
+function InsertRepromotionData(datas) {
+    
+    let cus_id=datas.cus_id;
+    let repro_data=datas.coll_data;
+    $.post('api/customer_data_files/submit_repromotion.php', { cus_id ,repro_data  }, function (response) {
         if (response == '1') {
             swalSuccess("Success", "Repromotion Data Added Successfully!", "success");
             // Replace the checkbox with "Needed" text
-            $('.repromotionBtn[value="' + cus_id + '"]').replaceWith('<span>Needed</span>');
+            getRePromotionTable('');
         } else {
             swalError("Error", "Failed to Add Repromotion Data", "error");
         }

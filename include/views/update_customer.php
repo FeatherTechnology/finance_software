@@ -839,7 +839,6 @@
                                 <div class="form-group">
                                     <label for="remarks">Remarks</label>
                                     <textarea class="form-control" name="remarks" id="remarks" tabindex="1"></textarea>
-                                    <!-- <input type="hidden" id="addpropdetail_id" value='0'> -->
                                 </div>
                             </div>
                             <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">

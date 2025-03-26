@@ -104,7 +104,6 @@ $(document).ready(function () {
 
     $('#aadhar_nums').on('blur', function () {
         let aadhar_num = $('#aadhar_nums').val().trim().replace(/\s/g, '');
-        console.log("sdjfdsjf",aadhar_num);
         let cus_name = $('#cus_name').val();
         let mobileno = $('#mobile1').val();
         if (aadhar_num) {
@@ -171,7 +170,6 @@ $(document).ready(function () {
         let fam_aadhar = $('#fam_aadhar').val().replace(/\s/g, '');
         let fam_mobile = $('#fam_mobile').val();
         let family_id = $('#family_id').val();
-        console.log("fam",family_id);
 
         if (cus_profile_id == '') {
             swalError('Warning', 'Kindly Fill the Personal Info');
@@ -432,7 +430,6 @@ $(document).ready(function () {
 
                 if (response[0].proof_of == 1) { // Assuming 1 is for customer
                     $('.kyc_name_div').show();
-                    // $("#kyc_name").val(response[0].k);
                     let cus_name = $("#cus_name").val();
                     $('#kyc_name').val(cus_name);
                     $('.fam_mem_div').hide();
@@ -591,7 +588,6 @@ $(document).ready(function () {
         let mobile1 = $('#mobile1').val();
         let mobile2 = $('#mobile2').val();
         let whatsapp_no = $('#whatsapp_no').val();
-        // let aadhar_num = $('#aadhar_num').val().replace(/\s/g, '');
         let guarantor_name = $('#guarantor_name').val();
         let cus_data = $('#cus_data').val();
         let cus_status = $('#cus_status').val();
@@ -792,8 +788,6 @@ $(document).ready(function () {
                     $('#cus_data').val(response.cus_data);
                     if (response.cus_data == 'Existing') {
                         $('.cus_status_div').show();
-                        // $('#data_checking_div').show();
-                        // $('#checking_hide').show();
                         $('#loan_count_div').show();
                         getLoanCount(cus_id);
                     }
@@ -809,31 +803,6 @@ $(document).ready(function () {
         }
     })
 
-    // $('#area_confirm').change(function () {
-    //     let cus_id = $('#cus_id').val().replace(/\s/g, ''); 
-    //     let area_confirm = $(this).val(); 
-
-    //     $.post('api/loan_entry/area_confirm.php', { cus_id, area_confirm }, function (response) {
-    //         if(!response){
-    //             if (response.error) {
-    //                 // Handle error
-    //                 swalError('Error', response.error);
-    //             } else {
-    //                 if (area_confirm == '1') { // Resident
-    //                     $('#res_type').val(response.res_type);
-    //                     $('#res_detail').val(response.res_detail);
-    //                     $('#res_address').val(response.res_address);
-    //                     $('#native_address').val(response.native_address);
-    //                 } else if (area_confirm == '2') { // Occupation
-    //                     $('#occupation').val(response.occupation);
-    //                     $('#occ_detail').val(response.occ_detail);
-    //                     $('#occ_income').val(response.occ_income);
-    //                     $('#occ_address').val(response.occ_address);
-    //                 }
-    //             }
-    //         }
-    //     }, 'json')
-    // });
 
     $('#name_check, #aadhar_check, #mobile_check').on('input', function () {
         var name = $('#name_check').val().trim();
@@ -1347,13 +1316,6 @@ function getKycInfoTable() {
         setdtable('#kyc_info');
     }, 'json')
 }
-// function customerName(){
-//     let cus_id = $('#cus_id').val().replace(/\s/g, '');
-//     $.post('api/loan_entry/get_kyc_name.php', { cus_id }, function (response) {
-//       $('#kyc_name').val(response[0].dob);
-
-//     }, 'json');
-// }
 function getFamilyMember() {
     let aadhar_num = $('#aadhar_nums').val().replace(/\s/g, '');
     $.post('api/loan_entry/get_guarantor_name.php', { aadhar_num }, function (response) {
@@ -1572,12 +1534,8 @@ function editCustmerProfile(id) {
         if (response[0].cus_data == 'Existing') {
             $('.cus_status_div').show();
             checkAdditionalRenewal(response[0].aadhar_num);
-            // $('#data_checking_div').show();
-            // $('#checking_hide').show();
         } else {
             $('.cus_status_div').hide();
-            // $('#data_checking_div').hide();
-            // $('#checking_hide').hide();
             $('#data_checking_table_div').hide();
         }
         let path = "uploads/loan_entry/cus_pic/";
@@ -1627,8 +1585,6 @@ function existingCustmerProfile(aadhar_num) {
             $('#about_cus').val('');
             $('#loan_entry_customer_profile').find('input[type="radio"]').prop('checked', false);
             $('.cus_status_div').hide();
-            // $('#checking_hide').hide();
-            // $('#data_checking_div').hide();
             $('#data_checking_table_div').hide();
 
             getFamilyInfoTable()
@@ -1685,8 +1641,6 @@ function existingCustmerProfile(aadhar_num) {
 
 
             $('.cus_status_div').show();
-            // $('#data_checking_div').show();
-            // $('#checking_hide').show();
             let path = "uploads/loan_entry/cus_pic/";
             $('#per_pic').val(response[0].pic);
             var img = $('#imgshow');
@@ -1921,17 +1875,10 @@ $(document).ready(function () {
         if (docName != '') {
 
             $.post('api/loan_entry/loan_calculation/submit_document_need.php', { docName, cusProfileId, cusID }, function (response) {
-                // if (response == '1') {
-                //     swalError('Warning', 'Document Need Already Exists!');
-                // } else if (response == '2') {
-                //     swalSuccess('Success', 'Document Need Added Successfully!');
-                // }
-
                 getDocNeedTable(cusProfileId);
             }, 'json');
 
             $('#doc_need_calc').val('');
-            // $('input').css('border', '1px solid #cecece');
         }
 
     });
@@ -2042,12 +1989,6 @@ function getAutoGenLoanId(id) {
         $('#loan_id_calc').val(response);
     }, 'json');
 }
-// function autoGenCusId(id) {
-//     $.post('api/loan_entry/loan_calculation/get_autoGen_cus_id.php', { id }, function (response) {
-//             console.log("jkhjh");
-//             $('#auto_gen_cus_id').val($response['auto_cus_id']);
-//     }, 'json');
-// }
 function autoGenCusId(id) {
     $.ajax({
         url: "api/loan_entry/loan_calculation/get_autoGen_cus_id.php",
@@ -2056,7 +1997,6 @@ function autoGenCusId(id) {
         dataType: 'json',
         cache: false,
         success: function (response) {
-            console.log("hjf",response['cus_id']);
             $('#auto_gen_cus_id').val(response['cus_id']);
         },
         error: function (xhr, status, error) {
@@ -2748,7 +2688,6 @@ function loanCalculationEdit(id) {
     $.post('api/loan_entry/loan_calculation/loan_calculation_data.php', { id }, function (response) {
         if (response.length > 0) {
             let loan_amt=moneyFormatIndia(response[0].loan_amount)
-            console.log("skjfhjkdhf"+loan_amt);
             $('#loan_id_calc').val(response[0].loan_id);
             $('#loan_category_calc').val(response[0].loan_category);
             $('#loan_category_calc2').val(response[0].loan_category);

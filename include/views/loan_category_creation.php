@@ -349,7 +349,6 @@
                             <div class="col-sm-4 col-md-4 col-lg-4">
                                 <div class="form-group">
                                     <label for="profit_method">Profit Method</label><span class="text-danger">*</span>
-                                    <!-- <input type="text" class="form-control" id="profit_method" name="profit_method" tabindex="4" value="Pre Benefit" readonly> -->
                                     <select class="form-control" id="profit_method" name="profit_method" tabindex="4">
                                                 <option value="">Select Profit Method</option>
                                                 <option value="Pre Benefit">Pre Benefit</option>

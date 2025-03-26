@@ -142,13 +142,6 @@
                                             <input type="number" class="form-control  personal_info_disble" id="whatsapp_no" name="whatsapp_no" onKeyPress="if(this.value.length==10) return false;" placeholder="Enter WhatsApp Number" tabindex="11">
                                         </div>
                                     </div>
-                                    <!-- <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
-                                        <div class="form-group">
-                                            <label for="aadhar_num">Aadhar No</label>
-                                            <input type="text" class="form-control personal_info_disble" name="aadhar_num" id="aadhar_num" tabindex="11" maxlength="14" data-type="adhaar-number" placeholder="Enter Aadhar Number">
-                                            <input type="hidden" id="addaadhar_id" value='0'>
-                                        </div>
-                                    </div> -->
                                 </div>
                             </div>
                             <div class="col-4">

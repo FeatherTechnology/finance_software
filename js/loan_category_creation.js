@@ -281,9 +281,15 @@ $(document).ready(function () {
     
     function validateLoanSchemeCard() {
         let valid = true;
-        valid &= validateField($('#scheme_name').val(), 'scheme_name');
-        $('#scheme_name').closest('.choices').find('.choices__inner').css('border', '1px solid #ff0000');
-        // Add additional validation for Loan Scheme fields if required
+        let value=$('#scheme_name').val();
+        console.log("value",$('#scheme_name').val())
+        if(value === '' || value === null || value === undefined){
+                 $('#scheme_name').closest('.choices').find('.choices__inner').css('border', '1px solid #ff0000');
+                 valid = false;
+        }else{
+            $('#scheme_name').closest('.choices').find('.choices__inner').css('border', '1px solid #cecece');
+ 
+        }
         return valid;
     }
     
@@ -563,15 +569,3 @@ function checkMinMaxValue(minSelector, maxSelector) {
         }
     }
 }
-
-// Function to check if all values in an object are not empty
-// function isFormDataValid(formData) {
-//     for (let key in formData) {
-//         if (key != 'id') {
-//             if (formData[key] == '' || formData[key] == null || formData[key] == undefined) {
-//                 return false;
-//             }
-//         }
-//     }
-//     return true;
-// }

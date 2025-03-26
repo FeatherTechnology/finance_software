@@ -8,7 +8,6 @@ $(document).ready(function () {
 
     $('#back_btn').click(function () {
         getcusUpdateTable();
-        //clearLoanCalcForm();//To clear Loan Calculation.
         clearCusProfileForm('1');//To Clear Customer Profile
         $('#document_type_div').hide();
         $('#cheque_info_card').hide();
@@ -122,7 +121,6 @@ $(document).ready(function () {
         let fam_aadhar = $('#fam_aadhar').val().replace(/\s/g, '');
         let fam_mobile = $('#fam_mobile').val();
         let family_id = $('#family_id').val();
-        console.log("fam",family_id);
 
         if (cus_profile_id == '') {
             swalError('Warning', 'Kindly Fill the Personal Info');
@@ -242,18 +240,6 @@ $(document).ready(function () {
             $('#prop_relationship').val('');
         }
     });
-
-    // $('#proof_of').change(function () {
-    //     var proofOf = $(this).val();
-    //     if (proofOf == "2") { // Family Member selected
-    //         $('.fam_mem_div').show();
-    //         $('#kyc_relationship').val('');
-    //         getFamilyMember('Select Family Member', '#fam_mem');
-    //     } else { // Customer or any other selection
-    //         $('.fam_mem_div').hide();
-    //         $('#kyc_relationship').val('Customer');
-    //     }
-    // });
 
     $('#proof_of').change(function () {
         var proofOf = $(this).val();
@@ -1379,16 +1365,6 @@ function editCustmerProfile(aadhar_num) {
             $('#area').trigger('change');
             $('#guarantor_name').trigger('change');
         }, 1000);
-
-        // if (response[0].cus_data == 'Existing') {
-        //     $('#cus_status').show();
-        //     $('#data_checking_div').show();
-        // } else {
-        //     $('#cus_status').hide();
-        //     $('#data_checking_div').hide();
-        //     $('#data_checking_table_div').hide();
-        // }
-
         if (response[0].cus_data == 'Existing') {
             $('.cus_status_div').show();
             checkAdditionalRenewal(response[0].cus_id);
@@ -1429,13 +1405,7 @@ $(document).ready(function () {
         $('#customer_profile_id').val(id);
         let cusID = $(this).attr('data-id'); //Cus id From List Page.
         $('#cus_id_upd').val(cusID);
-        //swapTableAndCreation();
-        //  getDocNeedTable(id);
         $('#document_type_div').show();
-        // $('#document_info_card').show();
-        // $('#mortgage_info_card').show();
-        // $('#endorsement_info_card').show();
-        // $('#gold_info_card').show();
         $('#document_type').val('');
         $('#cheque_info_card').hide();
         $('#document_info_card').hide();

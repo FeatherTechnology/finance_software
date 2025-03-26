@@ -3,6 +3,7 @@ require '../../ajaxconfig.php';
 @session_start();
 $user_id = $_SESSION['user_id'];
 $cus_id = isset($_POST['cus_id']) ? $_POST['cus_id'] : '';
+$repromotion_detail = isset($_POST['repro_data']) ? $_POST['repro_data'] : '';
 
 $result = 0; 
 
@@ -22,7 +23,7 @@ if ($qry->rowCount() > 0) {
         $branch_name = $row['branch_name'];
         $c_sts = $row['c_sts'];
     
-        $qry1 = $pdo->query("INSERT INTO `repromotion_customer`(`cus_id`, `cus_name`, `mobile1`, `area`, `linename`,`branch_name`, `c_sts`, `insert_login_id`, `created_on` ) VALUES ('$cus_id','$cus_name','$mobile1','$area','linename','$branch_name','$c_sts','$user_id',now())");
+        $qry1 = $pdo->query("INSERT INTO `repromotion_customer`(`cus_id`, `cus_name`, `mobile1`, `area`, `linename`,`branch_name`, `c_sts`,`repromotion_detail`, `insert_login_id`, `created_on` ) VALUES ('$cus_id','$cus_name','$mobile1','$area','linename','$branch_name','$c_sts','$repromotion_detail','$user_id',now())");
         
         $result = 1; // Insert successful
     }
