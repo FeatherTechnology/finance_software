@@ -9,7 +9,7 @@ $qry = $pdo->query("SELECT pi.id, pi.property, pi.property_detail,CASE
             ELSE fi.fam_name 
         END as property_holder, fi.fam_relationship 
 FROM property_info pi 
-LEFT JOIN family_info fi ON pi.property_holder = fi.id LEFT JOIN customer_profile cp ON pi.cus_profile_id= cp.id WHERE pi.cus_id = '$cus_id' GROUP BY ki.id");
+LEFT JOIN family_info fi ON pi.property_holder = fi.id LEFT JOIN customer_profile cp ON pi.cus_profile_id= cp.id WHERE pi.cus_id = '$cus_id' GROUP BY pi.id");
 
 if ($qry->rowCount() > 0) {
     while ($row = $qry->fetch(PDO::FETCH_ASSOC)) {

@@ -29,7 +29,7 @@ if ($qry->rowCount() > 0) {
 
         if ($loanInfo['status'] == '8') {
             
-            $loanInfo['action'] .= "<a href='#' class='closed-view' value='" . $loanInfo['cus_profile_id'] . "'>View</a>";
+            $loanInfo['action'] .= "<a href='#' class='closed-view' value='" . $loanInfo['cus_profile_id'] . "'>Close</a>";
         }
 
         $loanInfo['action'] .= "</div></div>";

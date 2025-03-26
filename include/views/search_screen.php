@@ -8,6 +8,7 @@
                 <input type="hidden" name="od_sts" id="od_sts" value="" />
                 <input type="hidden" name="due_nil_sts" id="due_nil_sts" value="" />
                 <input type="hidden" name="bal_amt" id="bal_amt" value="bal_amt" />
+                <input type="hidden" name="aadhar_num" id="aadhar_num"  />
                 <div class="row gutters">
                     <div class="col-12">
                         <div class="card">
@@ -20,7 +21,7 @@
                                     <div class="col-md-4 col-sm-6">
                                         <div class="form-group">
                                             <label for="cust_id">Customer ID</label><span class="text-danger">*</span>
-                                            <input type="text" class="form-control" id="cust_id" name="cust_id" placeholder="Enter Customer ID" tabindex="1" maxlength="14">
+                                            <input type="text" class="form-control" id="cust_id" name="cust_id" placeholder="Enter Customer ID" tabindex="1" >
                                         </div>
                                     </div>
                                     <div class="col-md-4 col-sm-6">
@@ -486,6 +487,7 @@
                                                 <th width="20">S.NO</th>
                                                 <th>Name</th>
                                                 <th>Relationship</th>
+                                                <th>Remarks</th>
                                                 <th>Age</th>
                                                 <th>Live/Deceased</th>
                                                 <th>Occupation</th>

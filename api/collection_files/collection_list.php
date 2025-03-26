@@ -55,6 +55,9 @@ if (isset($_POST['search'])) {
                           OR cp.mobile1 LIKE '%" . $search . "%')";
     }
 }
+if (isset($_POST['params']['collection_status']) && $_POST['params']['collection_status']!='' ) {
+    $query .= " and  cs.coll_status = 'Due Nil' ";
+}
 $query .= "GROUP BY cp.cus_id ";
 if (isset($_POST['order'])) {
     $query .= " ORDER BY " . $column[$_POST['order']['0']['column']] . ' ' . $_POST['order']['0']['dir'];
@@ -89,7 +92,11 @@ foreach ($result as $row) {
     $sub_array[] = isset($row['linename']) ? $row['linename'] : '';
     $sub_array[] = isset($row['branch_name']) ? $row['branch_name'] : '';
     $sub_array[] = isset($row['mobile1']) ? $row['mobile1'] : '';
-    $action = "<a href='#' class='collection-details' value='" . $row['cus_id'] . "'><button class='btn btn-primary'>View</button></a>";
+    if($_POST['params']['collection_status']!=''){
+        $action = "<a href='#' class='collection-details' value='" . $row['cus_id'] . "' sts='Due_Nil'><button class='btn btn-primary'>View</button></a>";
+    }else{
+        $action = "<a href='#' class='collection-details' value='" . $row['cus_id'] . "'><button class='btn btn-primary'>View</button></a>";
+    }
     $sub_array[] = $action;
     $data[] = $sub_array;
 }
