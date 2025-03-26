@@ -71,7 +71,7 @@
                                     <p class="show-username"></p>
                                 </div>
                                 <a href="#"><i class="icon-user1"></i> My Profile</a>
-                                <a href="logout.php"><i class="icon-log-out1"></i> Sign Out</a>
+                                <a href="logout.php" class="logout-link"><i class="icon-log-out1"></i>Log Out</a>
                             </div>
                         </div>
                     </li>

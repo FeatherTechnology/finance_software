@@ -31,19 +31,24 @@ $user_id = $_SESSION['user_id'];
 // echo json_encode($loan_issue_list_arr);
 $column = array(
     'cp.id',
+    'lelc.loan_date',
     'cp.cus_id',
     'cp.cus_name',
     'anc.areaname',
     'lnc.linename',
     'bc.branch_name',
-    'lelc.loan_amount',
     'cp.mobile1',
+    'lc.loan_category',
+    'lelc.loan_amount',
+    'cp.cus_data',
     'cp.id'
 );
-$query = "SELECT cp.id, cp.cus_id, cp.cus_name, anc.areaname, lnc.linename, bc.branch_name , lelc.loan_amount, cp.mobile1, lelc.id as loan_calc_id, cs.id as cus_sts_id, cs.status as c_sts 
+$query = "SELECT cp.id, lelc.loan_date, cp.cus_id, cp.cus_name, anc.areaname, lnc.linename, bc.branch_name , cp.mobile1, lc.loan_category, lelc.loan_amount, cp.cus_data, lelc.id as loan_calc_id, cs.id as cus_sts_id, cs.status as c_sts 
 FROM customer_profile cp 
 LEFT JOIN loan_entry_loan_calculation lelc ON cp.id = lelc.cus_profile_id
+LEFT JOIN loan_category_creation lcc ON lelc.loan_category = lcc.id
 LEFT JOIN line_name_creation lnc ON cp.line = lnc.id
+LEFT JOIN loan_category lc ON lcc.loan_category = lc.id
 LEFT JOIN area_name_creation anc ON cp.area = anc.id
 LEFT JOIN area_creation ac ON cp.line = ac.line_id
 LEFT JOIN branch_creation bc ON ac.branch_id = bc.id
@@ -54,12 +59,16 @@ WHERE cs.status = 4 AND u.id ='$user_id' AND us.id ='$user_id'";
 if (isset($_POST['search'])) {
     if ($_POST['search'] != "") {
         $search = $_POST['search'];
-        $query .= " AND (cp.cus_id LIKE '" . $search . "%'
+        $query .= " AND (lelc.loan_date LIKE '" . $search . "%'
+                      OR cp.cus_id LIKE '%" . $search . "%'
                       OR cp.cus_name LIKE '%" . $search . "%'
                       OR anc.areaname LIKE '%" . $search . "%'
                       OR lnc.linename LIKE '%" . $search . "%'
                       OR bc.branch_name LIKE '%" . $search . "%'
-                      OR cp.mobile1 LIKE '%" . $search . "%')";
+                      OR cp.mobile1 LIKE '%" . $search . "%'
+                      OR lc.loan_category LIKE '%" . $search . "%'
+                      OR lelc.loan_amount LIKE '%" . $search . "%'
+                      OR cp.cus_data LIKE '%" . $search . "%')";
     }
 }
 
@@ -89,17 +98,22 @@ foreach ($result as $row) {
     $sub_array = array();
 
     $sub_array[] = $sno++;
+    $sub_array[] = isset($row['loan_date']) && !empty($row['loan_date']) ? date('d-m-Y', strtotime($row['loan_date'])) : '';
     $sub_array[] = isset($row['cus_id']) ? $row['cus_id'] : '';
     $sub_array[] = isset($row['cus_name']) ? $row['cus_name'] : '';
     $sub_array[] = isset($row['areaname']) ? $row['areaname'] : '';
     $sub_array[] = isset($row['linename']) ? $row['linename'] : '';
     $sub_array[] = isset($row['branch_name']) ? $row['branch_name'] : '';
-    $sub_array[] = isset($row['loan_amount']) ? moneyFormatIndia($row['loan_amount']) : '';
     $sub_array[] = isset($row['mobile1']) ? $row['mobile1'] : '';
+    $sub_array[] = isset($row['loan_category']) ? $row['loan_category'] : '';
+    $sub_array[] = isset($row['loan_amount']) ? $row['loan_amount'] : '';
+    $sub_array[] = isset($row['cus_data']) ? $row['cus_data'] : '';
     $action = "<div class='dropdown'>
     <button class='btn btn-outline-secondary'><i class='fa'>&#xf107;</i></button>
-   <div class='dropdown-content'>";
+    <div class='dropdown-content'>";
     $action .= "<a href='#' class='edit-loan-issue' value='" . $row['id'] . "' data-id='" . $row['cus_id'] . "' title='Edit details'>Edit</a>";
+    $action .= "<a href='#' class='loan-issue-cancel' value='" . $row['cus_sts_id'] . "' title='Cancel'>Cancel</a>";
+    $action .= "<a href='#' class='loan-issue-revoke' value='" . $row['cus_sts_id'] . "' title='Revoke'>Revoke</a>";
     $action .= "</div></div>";
     $sub_array[] = $action;
     $data[] = $sub_array;
