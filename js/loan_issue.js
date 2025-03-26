@@ -1404,6 +1404,7 @@ function refreshIssueInfo() {
     $('.cash_issue').hide();
     $('.balance_remark_container').hide();
     $('#bank_container').hide();//hide bank id
+    resetFieldBorders(['payment_mode','payment_type','cash','transaction_value','chequeValue','issue_person']);
 }
 
 function resetFieldBorders(fields) {
