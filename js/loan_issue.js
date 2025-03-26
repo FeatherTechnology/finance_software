@@ -19,6 +19,41 @@ $(document).ready(function () {
         getGoldInfoTable();
     });
 
+    $(document).on('click', '.loan-issue-cancel', function () {
+        let cus_sts_id = $(this).attr('value');
+        let cus_sts = 13;
+        $('#add_info_modal').modal('show');
+        $('.modal_revoke').text('Cancel');
+        $('#cus_sts_id').val(cus_sts_id);
+        $('#customer_status').val(cus_sts);
+        $('#remark').val('');
+    });
+
+    $(document).on('click', '.loan-issue-revoke', function () {
+        let cus_sts_id = $(this).attr('value');
+        let cus_sts = 14;
+        $('#add_info_modal').modal('show');
+        $('.modal_revoke').text('Revoke');
+        $('#cus_sts_id').val(cus_sts_id);
+        $('#customer_status').val(cus_sts);
+        $('#remark').val('');
+    });
+
+    $(document).on('click', '#submit_remark', function () {
+        event.preventDefault();
+        let action = $('.modal_revoke').text().toLowerCase(); // Get action (cancel or revoke)
+        let cus_sts_id = $('#cus_sts_id').val();
+        let cus_sts = $('#customer_status').val();
+        let remark = $('#remark').val();
+
+        if (remark === '') {
+            alert('Please enter a remark.');
+            return;
+        }
+
+        submitForm(action, cus_sts_id, cus_sts, remark);
+    });
+
     $('#back_btn').click(function () {
         swapTableAndCreation();
     });
@@ -535,10 +570,6 @@ $(document).ready(function () {
             }
         });
 
-        // if (goldInfo.gold_type == '' || goldInfo.purity == '' || goldInfo.weight == '' || goldInfo.value == '') {
-        //     swalError('Alert', 'Please fill Mandatory fields');
-        //     return;
-        // }
         if (isValid) {
             $.post('api/loan_issue_files/submit_gold_info.php', goldInfo, function (response) {
                 if (response == '1') {
@@ -622,6 +653,39 @@ $(function () {
 
 function getLoanIssueTable() {
     serverSideTable('#loan_issue_table', '', 'api/loan_issue_files/loan_issue_list.php');
+}
+
+function moveToNext(cus_sts_id, cus_sts) {
+    $.post('api/common_files/move_to_next.php', { cus_sts_id, cus_sts }, function (response) {
+        if (response == '0') {
+            let alertName;
+            if (cus_sts == '13') {
+                alertName = 'Cancelled Successfully';
+            }
+            else if (cus_sts == '14') {
+                alertName = 'Revoked Successfully';
+            }
+            swalSuccess('Success', alertName);
+            getLoanIssueTable();
+        } else {
+            swalError('Alert', 'Failed To Move');
+        }
+    }, 'json');
+}
+
+function submitForm(action, cus_sts_id, cus_sts, remark) {
+    $.post('api/common_files/update_status.php', { cus_sts_id, remark, cus_sts }, function (response) {
+        if (response == '0') {
+            $('#add_info_modal').modal('hide');
+            moveToNext(cus_sts_id, cus_sts);
+        } else {
+            swalError('Alert', 'Failed to ' + action);
+        }
+    }, 'json');
+}
+
+function closeRemarkModal() {
+    $('#add_info_modal').modal('hide');
 }
 
 function swapTableAndCreation() {
@@ -1031,133 +1095,118 @@ $(document).ready(function () {
             }
         }
     });
-    // $('#payment_type').change(function () {    
-    //     let paymentType = $('#payment_type').val();
-    //     if (paymentType == '1') { 
-    //         $('#balance_remark_container').show();
-    //         $('.transaction').hide();
-    //         $('.checque').hide();
-    //         $('.cash_issue').hide();
-    //         $('#transaction_id').val('');
-    //         $('#chequeno').val('');
-    //         $('#payment_mode').val('');
-    //     }else {
-    //         $('#balance_remark_container').hide();
-    //         $('.transaction').hide();
-    //         $('.checque').hide();
-    //         $('.cash_issue').hide();
-    //         $('#transaction_id').val('');
-    //         $('#chequeno').val('');
-    //         $('#payment_mode').val('');
-    //     }
-    //     $('.payment').show();
-    // });
+
     $('#payment_type').change(function () {
-        var mode = $(this).val();
-        // $('#cashAck').hide();
-        $('#payment_mode, #issue_amount, #transaction_id, #chequeno, #cash, #chequeValue, #transaction_value, #bank_name, #chequeRemark, #transaction_remark').css('border', '1px solid #cecece');
+        $('#payment_mode, #transaction_id, #chequeno, #cash, #chequeValue, #transaction_value, #bank_name, #chequeRemark, #transaction_remark').css('border', '1px solid #cecece');
 
         $('#cash').removeAttr('readonly');
         $('#chequeValue').removeAttr('readonly');
         $('#transaction_value').removeAttr('readonly');
 
-        if (mode == '1') {
-            $('#cash').val('');
-            $('#bank_name').val('');
-            $('#chequeno').val('');
-            $('#chequeValue').val('');
-            $('#chequeRemark').val('');
-            $('#transaction_id').val('');
-            $('#transaction_value').val('');
-            $('#transaction_remark').val('');
-            $('#balance_amount').val('');
-            getBankName();
-            $('.payment').hide();
-            $('.cash_issue').show();
-            $('.checque').show();
-            $('.transaction').show();
-            $('.balance_remark_container').show();
-
-            $('#bank_container').show();//show bank id
-        } else if (mode == '2') {
-            $('.cash_issue').hide();
-            $('.checque').hide();
-            $('.transaction').hide();
-            $('#bank_container').hide();//hide bank id
-            $('.payment').show();
-            $('.balance_remark_container').hide();
-            $('#balance_amount').val('');
-
-        } else {
-            $('.cash_issue').hide();
-            $('.checque').hide();
-            $('.transaction').hide();
-            $('#bankDiv').hide();//hide bank id
-            $('.paymentType').hide();
-            $('.balance').hide();
-        }
-
-        $('#cash').val('');
-        $('#bank_name').val('');
-        $('#chequeno').val('');
-        $('#chequeValue').val('');
-        $('#chequeRemark').val('');
-        $('#transaction_id').val('');
-        $('#transaction_value').val('');
-        $('#transaction_remark').val('');
+        $('.cash_issue').hide();
+        $('.checque').hide();
+        $('.transaction').hide();
+        $('#bank_container').hide(); // Hide bank section
+        $('.balance_remark_container').hide();
+        $('#balance_amount').val('');
         $('#payment_mode').val('');
 
     })
 
     // Payment Mode
     $('#payment_mode').change(function () {
-        $('#payment_mode, #issue_amount, #transaction_id, #chequeno, #cash, #chequeValue, #transaction_value, #bank_name, #chequeRemark, #transaction_remark').css('border', '1px solid #cecece');
+        $('#payment_mode, #transaction_id, #chequeno, #cash, #chequeValue, #transaction_value, #bank_name, #chequeRemark, #transaction_remark').css('border', '1px solid #cecece');
 
         $('#transaction_id').val('');
         $('#chequeno').val('');
-        $('#issue_amount').val('');
-
         var type = $(this).val();
-
-        // $('#issue_amount').attr('readonly', true);
         let paymentType = $('#payment_type').val();
-        if (paymentType == '2') {  // Handling for Payment Type 2
+
+        if (paymentType == '1') {  // Split Payment (Editable)
+
+            $('#cash').attr('readonly', false);
+            $('#chequeValue').attr('readonly', false);
+            $('#transaction_value').attr('readonly', false);
+
+            if (type == '1') {
+                $('.balance_remark_container').show();
+                $('#cash').val('');
+                $('#chequeValue').val('');
+                $('#transaction_value').val('');
+                $('.transaction').hide();
+                $('.checque').hide();
+                $('.cash_issue').show();
+                $('#bank_container').hide();
+                $('#balance_amount').val('');
+
+            } else if (type == '2') {
+                $('#cash').val('');
+                $('#chequeValue').val('');
+                getBankName();
+                $('#transaction_value').val('');
+                $('.transaction').show();
+                $('.checque').hide();
+                $('.cash_issue').hide();
+                $('#bank_container').show();
+                $('.balance_remark_container').show();
+                $('#balance_amount').val('');
+
+            } else if (type == '3') {
+                $('#transaction_value').val('');
+                $('#cash').val('');
+                $('#chequeValue').val('');
+                getBankName();
+                $('.transaction').hide();
+                $('.checque').show();
+                $('.cash_issue').hide();
+                $('#bank_container').show();
+                $('.balance_remark_container').show();
+                $('#balance_amount').val('');
+            }
+            else {
+                $('.transaction').hide();
+                $('.checque').hide();
+                $('.cash_issue').hide();
+                $('#bank_container').hide();//hide bank id
+            }
+        } else if (paymentType == '2') {  // Single Payment (Read-only)
+
+            $('#cash').attr('readonly', true);
+            $('#chequeValue').attr('readonly', true);
+            $('#transaction_value').attr('readonly', true);
+
             var netcash = $('#balance_net_cash').val();
 
             if (type == '1') {
-                $('#cash').attr('readonly', true);
                 $('#cash').val(netcash);
                 $('#chequeValue').val('');
                 $('#transaction_value').val('');
                 $('.transaction').hide();
                 $('.checque').hide();
                 $('.cash_issue').show();
-                $('#bank_container').hide();//hide bank id
+                $('#bank_container').hide();
 
             } else if (type == '2') {
-                $('#transaction_value').attr('readonly', true);
-
                 $('#cash').val('');
                 $('#chequeValue').val('');
-                getBankName()
+                getBankName();
                 $('#transaction_value').val(netcash);
                 $('.transaction').show();
                 $('.checque').hide();
                 $('.cash_issue').hide();
-                $('#bank_container').show();//hide bank id
+                $('#bank_container').show();
 
             } else if (type == '3') {
                 $('#transaction_value').val('');
                 $('#cash').val('');
-                $('#chequeValue').attr('readonly', true);
                 $('#chequeValue').val(netcash);
-                getBankName()
+                getBankName();
                 $('.transaction').hide();
                 $('.checque').show();
                 $('.cash_issue').hide();
-                $('#bank_container').show();//hide bank id
-
-            } else {
+                $('#bank_container').show();
+            }
+            else {
                 $('.transaction').hide();
                 $('.checque').hide();
                 $('.cash_issue').hide();
@@ -1273,8 +1322,21 @@ function personalInfo() {
         $('#cus_data').val(response[0].cus_data);
         $('#mobile1').val(response[0].mobile1);
         $('#cus_area').val(response[0].areaname);
+        $('#loan_id_calc').val(response[0].loan_id);
         $('#loan_category_calc').val(response[0].loan_category);
+        $('#category_info_calc').val(response[0].category_info);
         $('#loan_amnt_calc').val(response[0].loan_amnt);
+        $('#profit_type_calc').val(response[0].profit_type);
+        $('#due_method_calc').val(response[0].due_method);
+        $('#scheme_due_method_calc').val(response[0].scheme_due_method);
+        $('#scheme_day_calc').val(response[0].scheme_day);
+        $('#due_type_calc').val(response[0].due_type);
+        $('#scheme_name_calc').val(response[0].scheme_name);
+        $('#profit_method_calc').val(response[0].profit_method);
+        $('#interest_rate_calc').val(response[0].interest_rate);
+        $('#due_period_calc').val(response[0].due_period);
+        $('#doc_charge_calc').val(response[0].doc_charge);
+        $('#processing_fees_calc').val(response[0].processing_fees);
         $('#principal_amnt_calc').val(response[0].principal_amnt);
         $('#interest_amnt_calc').val(response[0].interest_amnt);
         $('#total_amnt_calc').val(response[0].total_amnt);
@@ -1282,15 +1344,9 @@ function personalInfo() {
         $('#doc_charge_calculate').val(response[0].doc_charge_calculate);
         $('#processing_fees_calculate').val(response[0].processing_fees_calculate);
         $('#net_cash_calc').val(response[0].net_cash);
-        // $('#balance_net_cash').val(response[0].net_cash);
         $('#loan_date_calc').val(response[0].loan_date);
         $('#due_startdate_calc').val(response[0].due_startdate);
         $('#maturity_date_calc').val(response[0].maturity_date);
-        $('#due_period_calc').val(response[0].due_period);
-        $('#profit_type_calc').val(response[0].profit_type);
-        $('#due_method_calc').val(response[0].due_method);
-        $('#scheme_due_method_calc').val(response[0].scheme_due_method);
-        $('#scheme_day_calc').val(response[0].scheme_day);
         getIssuePerson(response[0].cus_name);
         $('#due_startdate_calc').attr('min', response[0].loan_date);
 
@@ -1298,6 +1354,26 @@ function personalInfo() {
         $('#per_pic').val(response[0].pic);
         var img = $('#imgshow');
         img.attr('src', path + response[0].pic);
+
+        $('.calc_scheme_title').text((response[0].profit_type == '0') ? 'Calculation' : 'Scheme');
+        $('#profit_type_calc_scheme').show();
+
+        if (response[0].profit_type == '0') { // Loan Calculation
+            $('.calc').show();
+            $('.scheme').hide();
+            $('.scheme_day').hide();
+
+        } else if (response[0].profit_type == '1') { // Scheme
+            $('.calc').hide();
+            $('.scheme').show();
+
+            if (response[0].scheme_due_method == '2') {
+                $('.scheme_day').show();
+            } else {
+                $('.scheme_day').hide();
+                $('.scheme_day_calc').val('');
+            }
+        }
 
     }, 'json');
 }
@@ -1323,12 +1399,18 @@ function refreshIssueInfo() {
     $('#issue_amount').val('');
     $('#issue_person').val('');
     $('#issue_relationship').val('');
-    $('.payment').hide();
     $('.transaction').hide();
     $('.checque').hide();
     $('.cash_issue').hide();
     $('.balance_remark_container').hide();
     $('#bank_container').hide();//hide bank id
+    resetFieldBorders(['payment_mode','payment_type','cash','transaction_value','chequeValue','issue_person']);
+}
+
+function resetFieldBorders(fields) {
+    fields.forEach(field => {
+        document.getElementById(field).style.border = '1px solid #cecece';
+    });
 }
 
 // Function to check if all values in an object are not empty
@@ -1338,6 +1420,7 @@ function isFormDataValid(formData) {
     // Reset border styles for all fields
     $('#payment_mode, #issue_amount, #transaction_id, #chequeno, #cash, #chequeValue, #transaction_value, #bank_name, #chequeRemark, #transaction_remark').css('border', '1px solid #cecece');
 
+    // Validate required fields
     if (!validateField(formData['issue_person'], 'issue_person')) {
         isValid = false;
     }
@@ -1345,56 +1428,91 @@ function isFormDataValid(formData) {
     if (!validateField(formData['payment_type'], 'payment_type')) {
         isValid = false;
     }
-    // Validation for payment type
-    if (formData['payment_type'] === '1') { // Split Payment
-        // Check if either `chequeValue` or `transaction_value` is filled
-        if (formData['chequeValue'] !== '') {
-            // Validate bank_name, chequeno, and chequeRemark
-            if (!validateField(formData['bank_name'], 'bank_name') && !validateField(formData['chequeno'], 'chequeno') && !validateField(formData['chequeRemark'], 'chequeRemark')) {
-                return false;
-            }
+
+    if (!validateField(formData['payment_mode'], 'payment_mode')) {
+        isValid = false;
+    }
+
+    // Check if payment_type is "1" (Split Payment)
+    if (formData['payment_type'] === "1") {
+        // Validate payment_mode again
+        if (!validateField(formData['payment_mode'], 'payment_mode')) {
+            isValid = false;
         }
 
-        if (formData['transaction_value'] !== '') {
-            // Validate bank_name, transaction_id, and transaction_remark
-            if (!validateField(formData['bank_name'], 'bank_name') && !validateField(formData['transaction_id'], 'transaction_id') && !validateField(formData['transaction_remark'], 'transaction_remark')) {
-                return false;
-            }
-        }
-
-        // Ensure at least one of the cash, chequeValue, or transaction_value fields is filled
-        if (formData['cash'] === '' && formData['chequeValue'] === '' && formData['transaction_value'] === '') {
-            swalError('Warning', 'Please enter at least one payment value (Cash, Cheque Value, or Transaction Value).');
-            return false;
-        }
-    } else if (formData['payment_type'] === '2') { // Single Payment
-        // Validate based on payment mode
-        if (formData['payment_mode'] === '1') { // Cash
+        // Validate specific fields based on payment_mode
+        if (formData['payment_mode'] === "1") { // Cash
             if (!validateField(formData['cash'], 'cash')) {
-                return false;
+                isValid = false;
             }
-        } else if (formData['payment_type'] === '2') {
-            if (formData['payment_mode'] === '2') {
-                ['transaction_id', 'transaction_value', 'bank_name', 'transaction_remark'].forEach(field => {
-                    if (!validateField(formData[field], field)) return false;
-                });
-            } else if (formData['payment_mode'] === '3') {
-                ['chequeno', 'chequeValue', 'chequeRemark', 'bank_name'].forEach(field => {
-                    if (!validateField(formData[field], field)) return false;
-                });
+        } else if (formData['payment_mode'] === "2") { // Cheque
+            if (!validateField(formData['transaction_id'], 'transaction_id')) {
+                isValid = false;
             }
-        } else if (formData['payment_mode'] === '') { // Payment Mode empty
-            if (!validateField(formData['payment_mode'], 'payment_mode')) {
-                return false;
+            if (!validateField(formData['transaction_value'], 'transaction_value')) {
+                isValid = false;
+            }
+            if (!validateField(formData['bank_name'], 'bank_name')) {
+                isValid = false;
+            }
+        } else if (formData['payment_mode'] === "3") { // Transaction
+            if (!validateField(formData['chequeno'], 'chequeno')) {
+                isValid = false;
+            }
+            if (!validateField(formData['chequeValue'], 'chequeValue')) {
+                isValid = false;
+            }
+            if (!validateField(formData['bank_name'], 'bank_name')) {
+                isValid = false;
+            }
+        }
+        // Ensure that at least one payment method is filled
+        let isCashFilled = formData['cash'] > 0;
+        let isTransactionFilled = formData['transaction_value'] > 0;
+        let isChequeFilled = formData['chequeValue'] > 0;
+
+        if (!(isCashFilled || isChequeFilled || isTransactionFilled)) {
+            isValid = false;
+            $('#cash, #transaction_value , #chequeValue').css('border', '1px solid #ff0000');
+        } else {
+            resetFieldBorders(['cash','transaction_value','chequeValue']);
+        }
+    } 
+    else if (formData['payment_type'] == "2") { // Single Payment
+        if (!validateField(formData['payment_mode'], 'payment_mode')) {
+            isValid = false;
+        }
+
+        if (formData['payment_mode'] == "1") { // Cash
+            if (!validateField(formData['cash'], 'cash')) {
+                isValid = false;
+            }
+        } else if (formData['payment_mode'] == "2") { // Cheque
+            if (!validateField(formData['transaction_id'], 'transaction_id')) {
+                isValid = false;
+            }
+            if (!validateField(formData['transaction_value'], 'transaction_value') ) {
+                isValid = false;
+            }
+            if (!validateField(formData['bank_name'], 'bank_name')) {
+                isValid = false;
+            }
+        } else if (formData['payment_mode'] == "3") { // Transaction
+            if (!validateField(formData['chequeno'], 'chequeno')) {
+                isValid = false;
+            }
+            if (!validateField(formData['chequeValue'], 'chequeValue')) {
+                isValid = false;
+            }
+            if (!validateField(formData['bank_name'], 'bank_name')) {
+                isValid = false;
             }
         }
     }
-
     // Check other mandatory fields not related to payment_mode
     for (let key in formData) {
         if (key !== 'payment_mode' && key !== 'bal_amount' && key !== 'payment_type' && key !== 'transaction_id' && key !== 'chequeno' && key !== 'cash' && key !== 'chequeValue' && key !== 'transaction_value' && key !== 'transaction_remark' && key !== 'chequeRemark' && key !== 'bank_name') {
             if (!validateField(formData[key], key)) {
-                console.log((key));
                 return false;
             }
         }
@@ -1402,8 +1520,6 @@ function isFormDataValid(formData) {
 
     return isValid;
 }
-
-
 
 function checkBalance() {
     let cus_profile_id = $('#customer_profile_id').val();
@@ -1430,6 +1546,7 @@ function checkBalance() {
         }
     });
 }
+
 function calculateBalance() {
     // Get the settlement balance and remove commas, then parse it as a float
     let settlementBalance = parseFloat($('#balance_net_cash').val().replace(/,/g, '')) || 0;
@@ -1442,6 +1559,7 @@ function calculateBalance() {
     // Format the remaining balance using the moneyFormatIndia function
     $('#balance_amount').val((remainingBalance));
 }
+
 function getBankName() {
     $.post('api/common_files/bank_name_list.php', function (response) {
         let appendBankOption = "<option value=''>Select Bank Name</option>";
