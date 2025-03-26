@@ -1,7 +1,6 @@
 $(document).ready(function () {
     $('#branch_id').change(function () {
         let branch_id = $(this).val();
-        console.log(branch_id)
         $.post('api/dashboard_files/get_branch_lines.php', { branch_id }, function (response) {
             $('#line_id').val(response);
             setTimeout(() => {

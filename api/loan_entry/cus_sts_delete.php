@@ -3,16 +3,16 @@
 require '../../ajaxconfig.php';
 
 // Retrieve the cus_id and cus_profile_id from POST request
-$custId = $_POST['cus_id'];
+$aadhar_num = $_POST['aadhar_num'];
 $custProfileId = $_POST['cus_profile_id'];
 
 try {
     // Use prepared statements to avoid SQL injection and ensure proper syntax
-    $stmt1 = $pdo->prepare("DELETE FROM customer_status WHERE cus_id = :cusId AND cus_profile_id = :cusProfileId");
-    $stmt1->execute(['cusId' => $custId, 'cusProfileId' => $custProfileId]);
+    $stmt1 = $pdo->prepare("DELETE FROM customer_status WHERE aadhar_num = :aadhar_num AND cus_profile_id = :cusProfileId");
+    $stmt1->execute(['aadhar_num' => $aadhar_num, 'cusProfileId' => $custProfileId]);
 
-    $stmt2 = $pdo->prepare("DELETE FROM customer_profile WHERE cus_id = :cusId AND id = :cusProfileId");
-    $stmt2->execute(['cusId' => $custId, 'cusProfileId' => $custProfileId]);
+    $stmt2 = $pdo->prepare("DELETE FROM customer_profile WHERE aadhar_num = :aadhar_num AND id = :cusProfileId");
+    $stmt2->execute(['aadhar_num' => $aadhar_num, 'cusProfileId' => $custProfileId]);
 
     echo json_encode(['success' => true]);
 

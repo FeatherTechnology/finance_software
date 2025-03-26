@@ -48,12 +48,31 @@
         <div class="card-header">
             <div class="card-title">Existing List </div>
         </div>
+        <br>
+        <div class="card-body">
+            <div class="col-6" style="display: flex;">
+                <div>
+                    <label for="existing_details">Existing Details</label>
+                    <input type="hidden" id="existing_id">
+                    <select class="form-control" id="existing_details" name="existing_details" tabindex="16" multiple>
+                        <option value="">Select Existing Details</option>
+                        <option value="needed">Needed</option>
+                        <option value="later">Later</option>
+                        <option value="to_follow">To Follow</option>
+                    </select>
+                </div>
+                <div style="margin-top:23px ; margin-left:40px;">
+                    <button type="button" class="btn btn-primary" id="existing_detail_btn">Proceed</button>
+                </div>
+            </div>
+
+        </div>
         <div class="card-body">
             <div class="col-12">
                 <table id="existing_list_table" class="table custom-table">
                     <thead>
                         <tr>
-                            <th width="20" >S.NO</th>
+                            <th width="20">S.NO</th>
                             <th>Customer ID</th>
                             <th>Customer Name</th>
                             <th>Mobile</th>
@@ -62,7 +81,7 @@
                             <th>Branch</th>
                             <th>Status</th>
                             <th>Sub Status</th>
-                            <th>Need</th>
+                            <th>Action</th>
                         </tr>
                     </thead>
                     <tbody></tbody>
@@ -76,12 +95,31 @@
         <div class="card-header">
             <div class="card-title">Repromotion List </div>
         </div>
+        <br>
+        <div class="card-body">
+            <div class="col-6" style="display: flex;">
+                <div>
+                    <label for="repromotion_details">Repromotion Details</label>
+                    <input type="hidden" id="existing_id">
+                    <select class="form-control" id="repromotion_details" name="repromotion_details" tabindex="16" multiple>
+                        <option value="">Select Existing Details</option>
+                        <option value="needed">Needed</option>
+                        <option value="later">Later</option>
+                        <option value="to_follow">To Follow</option>
+                    </select>
+                </div>
+                <div style="margin-top:23px ; margin-left:40px;">
+                    <button type="button" class="btn btn-primary" id="repromotion_detail_btn">Proceed</button>
+                </div>
+            </div>
+
+        </div>
         <div class="card-body">
             <div class="col-12">
                 <table id="repromotion_list_table" class="table custom-table">
                     <thead>
                         <tr>
-                            <th width="20" >S.NO</th>
+                            <th width="20">S.NO</th>
                             <th>Customer ID</th>
                             <th>Customer Name</th>
                             <th>Mobile</th>
@@ -89,7 +127,7 @@
                             <th>Line</th>
                             <th>Branch</th>
                             <th>Status</th>
-                            <th>Need</th>
+                            <th>Action</th>
                         </tr>
                     </thead>
                     <tbody></tbody>
@@ -160,7 +198,7 @@
                 </div>
             </div>
             <div class="modal-footer">
-                <button class="btn btn-secondary" data-dismiss="modal"  onclick="getNewPromotionTable()" tabindex="1">Close</button>
+                <button class="btn btn-secondary" data-dismiss="modal" onclick="getNewPromotionTable()" tabindex="1">Close</button>
             </div>
         </div>
     </div>

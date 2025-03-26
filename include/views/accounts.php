@@ -387,7 +387,7 @@ function moneyFormatIndia($num1) {
                                         <option value="10">Office Maintenance</option>
                                         <option value="11">Salary</option>
                                         <option value="12">Tax & Auditor</option>
-                                        <option value="13">Int Less</option>
+                                        <option value="13">Add Waiver</option>
                                         <option value="14">Agent Incentive</option>
                                         <option value="15">Common</option>
                                         <option value="16">Other</option>
