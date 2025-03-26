@@ -1,7 +1,24 @@
 $(document).ready(function(){
+    $('#due_nill_btn').click(function (event) {
+        event.preventDefault();
+        let Customer_Status=$(this).val();
+        getCollectionListTable(Customer_Status);
+        $('#all_btn').show();
+        $('#due_nill_btn').hide();
+        // $("#duenill_id").val('');
+    })
+    $('#all_btn').click(function (event) {
+        event.preventDefault();
+        getCollectionListTable('');
+        $('#all_btn').hide();
+        $('#due_nill_btn').show();
+        $("#coll_sts").val('');
+    })
+
     $(document).on('click','.collection-details',function(){
         let cusId = $(this).attr('value');
-        getPersonalInfo(cusId);
+        let sts = $(this).attr('sts');
+        getPersonalInfo(cusId,sts);
         OnLoadFunctions(cusId)
         $('#collection_list').hide();
         $('#back_to_coll_list').show();
@@ -10,6 +27,12 @@ $(document).ready(function(){
 
     $('#back_to_coll_list').click(function(){
         swapTableAndCreation();
+        let coll_sts=$('#coll_sts').val();
+        if(coll_sts!=''){
+            $("#due_nill_btn").click(); 
+        }else{
+            getCollectionListTable('');
+        }
     });
 
     $('#collection_mode').change(function(){
@@ -503,11 +526,12 @@ $(document).ready(function(){
 });
 /////////////////////////////////////////////////////////////////////////   Document END /////////////////////////////////////////////////////////////////////////
 $(function(){
-    getCollectionListTable();
+    getCollectionListTable("");
 });
 
-function getCollectionListTable(){
-        serverSideTable('#collection_list_table','', 'api/collection_files/collection_list.php');
+function getCollectionListTable(collection_status){
+    let params = { 'collection_status': collection_status };
+        serverSideTable('#collection_list_table',params, 'api/collection_files/collection_list.php');
 }
 
 function swapTableAndCreation() {
@@ -520,13 +544,14 @@ function swapTableAndCreation() {
         $('#collection_list').show();
         $('#coll_main_container').hide();
         $('#back_to_coll_list').hide();
-        getCollectionListTable();
+        // getCollectionListTable();
     }
 }
 
-function getPersonalInfo(cusId){
+function getPersonalInfo(cusId,sts){
     $.post('api/common_files/personal_info.php', { cus_id: cusId }, function(response){
         if(response.length > 0){
+            $('#coll_sts').val(sts);
             $('#cus_id').val(response[0].cus_id);
             $('#cus_name').val(response[0].cus_name);
             $('#cus_area').val(response[0].area);

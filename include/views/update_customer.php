@@ -52,10 +52,17 @@
                         <div class="row">
                             <div class="col-8">
                                 <div class="row">
+                                <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
+                                        <div class="form-group">
+                                            <label for="auto_gen_cus_id"> Customer ID</label><span class="text-danger">*</span>
+                                            <input type="text" class="form-control personal_info_disble" id="auto_gen_cus_id" name="auto_gen_cus_id" tabindex="1"  data-type="adhaar-number" readonly>
+                                        </div>
+                                    </div>
                                     <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
                                         <div class="form-group">
-                                            <label for="cus_id"> Customer ID</label><span class="text-danger">*</span>
-                                            <input type="text" class="form-control" id="cus_id" name="cus_id" tabindex="1" readonly>
+                                            <label for="aadhar_nums"> Aadhar Number</label><span class="text-danger">*</span>
+                                            <input type="text" class="form-control personal_info_disble" name="aadhar_nums" id="aadhar_nums" tabindex="2" maxlength="14" data-type="adhaar-number" placeholder="Enter Aadhar Number">
+                                            <input type="hidden" id="aadhar_num_upd" name="aadhar_num_upd">
                                         </div>
                                     </div>
                                     <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
@@ -131,13 +138,7 @@
                                             <input type="number" class="form-control" id="whatsapp_no" name="whatsapp_no" onKeyPress="if(this.value.length==10) return false;" placeholder="Enter WhatsApp Number" tabindex="10">
                                         </div>
                                     </div>
-                                    <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
-                                        <div class="form-group">
-                                            <label for="aadhar_num">Aadhar No</label>
-                                            <input type="text" class="form-control" name="aadhar_num" id="aadhar_num" tabindex="11" maxlength="14" data-type="adhaar-number" placeholder="Enter Aadhar Number">
-                                            <input type="hidden" id="addaadhar_id" value='0'>
-                                        </div>
-                                    </div>
+                                    
                                 </div>
                             </div>
                             <div class="col-4">
@@ -172,6 +173,7 @@
                                                 <th width="20">S.NO</th>
                                                 <th>Name</th>
                                                 <th>Relationship</th>
+                                                <th>Remarks</th>
                                                 <th>Age</th>
                                                 <th>Live/Deceased</th>
                                                 <th>Occupation</th>
@@ -298,7 +300,7 @@
                                                 <thead>
                                                     <tr>
                                                         <th width="20">S.NO</th>
-                                                        <th>Customer ID</th>
+                                                        <th>Aadhar Number</th>
                                                         <th>Name</th>
                                                         <th>Relationship</th>
                                                         <th>Under Customer Name</th>
@@ -515,6 +517,23 @@
                     <div class="card-header">
                         <div class="card-title">Customer Summary</div>
                     </div>
+                    <div class="card-body" style="display:none;" id="loan_count_div">
+                            <div class="row">
+                            <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                                    <div class="form-group">
+                                        <label for="loan_count"> Loan Count </label><span class="text-danger">*</span>
+                                        <input type="text" class="form-control" id="loan_count" name="loan_count" disabled placeholder="Loan Count" tabindex="34" readonly>
+                                    </div>
+                                </div>
+                            <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                                    <div class="form-group">
+                                        <label for="first_loan_date"> First Loan Date </label><span class="text-danger">*</span>
+                                        <input type="text" class="form-control" id="first_loan_date" name="first_loan_date" disabled placeholder="First Loan Date" tabindex="35" readonly>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
                     <div class="card-body">
                         <div class="row">
                             <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
@@ -818,6 +837,12 @@
                             </div>
                             <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
                                 <div class="form-group">
+                                    <label for="remarks">Remarks</label>
+                                    <textarea class="form-control" name="remarks" id="remarks" tabindex="1"></textarea>
+                                </div>
+                            </div>
+                            <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                                <div class="form-group">
                                     <label for="fam_age">Age</label>
                                     <input type="number" class="form-control" name="fam_age" id="fam_age" tabindex="1" placeholder="Enter Age">
                                     <input type="hidden" id="addage_id" value='0'>
@@ -874,6 +899,7 @@
                                     <th width="10">S.No.</th>
                                     <th>Name</th>
                                     <th>Relationship</th>
+                                    <th>Remarks</th>
                                     <th>Age</th>
                                     <th>Live/Deceased</th>
                                     <th>Occupation</th>

@@ -263,12 +263,6 @@
 
     <!-- -------------------------------------- Loan Issue START ------------------------------ -->
     <form id="loan_issue_form" name="loan_issue_form" style="display: none;">
-        <input type="hidden" id="due_method_calc">
-        <input type="hidden" id="doc_charge_upd">
-        <input type="hidden" id="proc_fees_upd">
-        <input type="hidden" id="int_rate_upd">
-        <input type="hidden" id="due_period_upd">
-
         <div class="row gutters">
             <div class="col-12">
 
