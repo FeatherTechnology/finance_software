@@ -265,7 +265,7 @@
     <form id="loan_issue_form" name="loan_issue_form" style="display: none;">
         <div class="row gutters">
             <div class="col-12">
-
+            <input type="hidden" id="aadhar_num">
                 <!--- -------------------------------------- Personal Info START ------------------------------- -->
                 <div class="card">
                     <div class="card-header">

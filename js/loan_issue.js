@@ -1347,6 +1347,7 @@ function personalInfo() {
         $('#loan_date_calc').val(response[0].loan_date);
         $('#due_startdate_calc').val(response[0].due_startdate);
         $('#maturity_date_calc').val(response[0].maturity_date);
+        $('#aadhar_num').val(response[0].aadhar_num);
         getIssuePerson(response[0].cus_name);
         $('#due_startdate_calc').attr('min', response[0].loan_date);
 
