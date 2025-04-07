@@ -7,6 +7,7 @@
                     <tr>
                         <th>S.NO</th>
                         <th>Customer ID</th>
+                        <th>Aadhar Number</th>
                         <th>Customer Name</th>
                         <th>Area</th>
                         <th>Line</th>

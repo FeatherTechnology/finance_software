@@ -1350,6 +1350,14 @@ function personalInfo() {
         getIssuePerson(response[0].cus_name);
         $('#due_startdate_calc').attr('min', response[0].loan_date);
 
+        if (response[0].cus_data == 'Existing') {
+            $('#loan_count_div').show();
+            let cus_id = response[0].cus_id; // Add this line
+            getLoanCount(cus_id);
+        } else {
+            $('#loan_count_div').hide();
+        }
+
         let path = "uploads/loan_entry/cus_pic/";
         $('#per_pic').val(response[0].pic);
         var img = $('#imgshow');
@@ -1376,6 +1384,21 @@ function personalInfo() {
         }
 
     }, 'json');
+}
+
+function getLoanCount(cus_id) {
+    $.ajax({
+        url: 'api/loan_entry/get_loan_count.php',
+        type: 'POST',
+        data: { cus_id: cus_id },
+        dataType: 'json',
+        cache: false,
+        success: function (response) {
+            $('#loan_count').val(response.loan_count);
+            let formattedDate = response.first_loan_date.split('-').reverse().join('-');
+            $('#first_loan_date').val(formattedDate);
+        },
+    });
 }
 
 function getIssuePerson(cus_name) {
