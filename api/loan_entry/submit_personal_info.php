@@ -66,7 +66,7 @@ if ($customer_profile_id != '') {
     $result = 1; //Insert
     $status=0;
     $last_id = $pdo->lastInsertId();
-    $qry = $pdo->query("INSERT INTO `customer_status`( `cus_id`,`aadhar_num`, `cus_profile_id`, `status`, `insert_login_id`, `created_on`) VALUES ('$cus_id','$aadhar_num', '$last_id', '0', '$user_id',CURRENT_TIMESTAMP() )");
+    $qry = $pdo->query("INSERT INTO `customer_status`( `cus_id`, `cus_profile_id`, `status`, `insert_login_id`, `created_on`) VALUES ('$cus_id', '$last_id', '0', '$user_id',CURRENT_TIMESTAMP() )");
 }
 
 $result = array('result' => $result, 'last_id' => $last_id, 'cus_data' => $cus_data, 'cus_status' => $cus_status, 'pic' => $picture);

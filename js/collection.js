@@ -526,7 +526,7 @@ $(document).ready(function(){
 });
 /////////////////////////////////////////////////////////////////////////   Document END /////////////////////////////////////////////////////////////////////////
 $(function(){
-    getCollectionListTable("");
+    getCollectionListTable('');
 });
 
 function getCollectionListTable(collection_status){

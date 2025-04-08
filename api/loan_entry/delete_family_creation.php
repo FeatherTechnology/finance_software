@@ -2,11 +2,11 @@
 require "../../ajaxconfig.php";
 
 $id = $_POST['id'];
-$aadhar_num = $_POST['aadhar_num'];
+$cus_id = $_POST['cus_id'];
 $cus_profile_id = $_POST['cus_profile_id'];
 
 try {
-    $qry = $pdo->query("SELECT * FROM family_info WHERE aadhar_num = '$aadhar_num' ");
+    $qry = $pdo->query("SELECT * FROM family_info WHERE cus_id = '$cus_id' ");
     if ($qry->rowCount() == 1 && $cus_profile_id != '') { //If Only one count of kyc for the customer then restrict to delete.
         $result = '0';
     } else {

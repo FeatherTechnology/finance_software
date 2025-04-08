@@ -3,7 +3,6 @@ require '../../ajaxconfig.php';
 
 if (isset($_POST['cus_id'])) {
     $cus_id =  $_POST['cus_id'];
-    // $cus_id = $_POST['cus_id'];
 }
 
 $cp_arr = array();

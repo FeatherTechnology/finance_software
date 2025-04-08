@@ -140,9 +140,9 @@ $(document).ready(function () {
     $(document).on('click', '.customer-profile', function () {
         $('#loan_entry_content').show();
         $('#customer_status, #custome_list, #search_form').hide();
-        let aadhar_num = $(this).attr('value');
-        $('#cus_profile_id').val(aadhar_num)
-        editCustmerProfile(aadhar_num)
+        let id = $(this).attr('value');
+        $('#cus_profile_id').val(id)
+        editCustmerProfile(id)
 
     });
 
@@ -441,8 +441,8 @@ function dueChartList(cp_id,cus_id){
 
 /////////////////////////////////////////////////////////////////////////customer profile//////////////////////////////////////////////
 function getFamilyInfoTable() {
-    let aadhar_num = $('#aadhar_num').val();
-    $.post('api/loan_entry/family_creation_list.php', { aadhar_num }, function (response) {
+    let cus_id = $('#cus_id').val();
+    $.post('api/loan_entry/family_creation_list.php', { cus_id }, function (response) {
         var columnMapping = [
             'sno',
             'fam_name',
@@ -459,9 +459,9 @@ function getFamilyInfoTable() {
     }, 'json')
 }
 function getPropertyInfoTable() {
-    let aadhar_num = $('#aadhar_num').val();
+    let cus_id = $('#cus_id').val();
     let cus_profile_id = $('#customer_profile_id').val();
-    $.post('api/loan_entry/property_creation_list.php', { aadhar_num, cus_profile_id }, function (response) {
+    $.post('api/loan_entry/property_creation_list.php', { cus_id, cus_profile_id }, function (response) {
         var columnMapping = [
             'sno',
             'property',
@@ -474,9 +474,9 @@ function getPropertyInfoTable() {
     }, 'json')
 }
 function getBankInfoTable() {
-    let aadhar_num = $('#aadhar_num').val();
+    let cus_id = $('#cus_id').val();
     let cus_profile_id = $('#customer_profile_id').val()
-    $.post('api/loan_entry/bank_creation_list.php', { aadhar_num, cus_profile_id }, function (response) {
+    $.post('api/loan_entry/bank_creation_list.php', { cus_id, cus_profile_id }, function (response) {
         var columnMapping = [
             'sno',
             'bank_name',
@@ -490,9 +490,9 @@ function getBankInfoTable() {
     }, 'json')
 }
 function getKycInfoTable() {
-    let aadhar_num = $('#aadhar_num').val();
+    let cus_id = $('#cus_id').val();
     let cus_profile_id = $('#customer_profile_id').val()
-    $.post('api/loan_entry/kyc_creation_list.php', { aadhar_num, cus_profile_id }, function (response) {
+    $.post('api/loan_entry/kyc_creation_list.php', { cus_id, cus_profile_id }, function (response) {
         var columnMapping = [
             'sno',
             'proof_of',
@@ -569,8 +569,8 @@ function dataCheckList(aadhar_num, cus_name, cus_mble_no) {
     }, 'json');
 }
 function getGuarantorName() {
-    let aadhar_num = $('#aadhar_num').val();
-    $.post('api/loan_entry/get_guarantor_name.php', { aadhar_num }, function (response) {
+    let cus_id = $('#cus_id').val();
+    $.post('api/loan_entry/get_guarantor_name.php', { cus_id }, function (response) {
         let appendGuarantorOption = '';
         appendGuarantorOption += "<option value='0'>Select Guarantor Name</option>";
         $.each(response, function (index, val) {
@@ -602,8 +602,8 @@ function getGrelationshipName(guarantorId) {
     });
 }
 
-function editCustmerProfile(aadhar_num) {
-    $.post('api/loan_entry/customer_profile_data.php', { aadhar_num: aadhar_num }, function (response) {
+function editCustmerProfile(id) {
+    $.post('api/loan_entry/customer_profile_data.php', { id: id }, function (response) {
         $('#customer_profile_id').val(response[0].id);
         $('#area_edit').val(response[0].area);
         $('#cus_id').val(response[0].cus_id);
@@ -1246,9 +1246,9 @@ function getGoldList(cp_id) {
 
 
 function getFamilyMember() {
-    let aadhar_num = $('#aadhar_num').val();
+    let cus_id = $('#cus_id').val();
     let cus_name = $('#cus_name').val();
-    $.post('api/loan_entry/get_guarantor_name.php', { aadhar_num }, function (response) {
+    $.post('api/loan_entry/get_guarantor_name.php', { cus_id }, function (response) {
         let appendOption = '';
         appendOption += "<option value=''>Select Member Name</option>";
         appendOption += "<option value='"+cus_name+"'>" + cus_name + "</option>";

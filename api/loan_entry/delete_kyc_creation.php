@@ -2,7 +2,6 @@
 require '../../ajaxconfig.php';
 
 $id = $_POST['id'];
-$aadhar_num = $_POST['aadhar_num'];
 $cus_profile_id = $_POST['cus_profile_id'];
 
 try {

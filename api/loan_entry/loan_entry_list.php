@@ -82,7 +82,7 @@ foreach ($result as $row) {
                 <button class='btn btn-outline-secondary'><i class='fa'>&#xf107;</i></button>
                <div class='dropdown-content'>";
     if ($row['c_sts'] == '1' || $row['c_sts'] == '2') {
-        $action .= "<a href='#' class='edit-loan-entry' value='" . $row['aadhar_num'] . "' data-id='" . $row['loan_calc_id'] . "' title='Edit details'>Edit</a>";
+        $action .= "<a href='#' class='edit-loan-entry' value='" . $row['id'] . "' data-id='" . $row['loan_calc_id'] . "' title='Edit details'>Edit</a>";
     }
     if ($row['c_sts'] == '2') {
         $action  .= "<a href='#' class='move-loan-entry' value='" . $row['cus_sts_id'] . "' title='Move'>Move</a>";

@@ -5,8 +5,8 @@
 require '../../ajaxconfig.php';
 
 $response =array();
-$aadhar_num = $_POST['aadhar_num'];
-$qry = $pdo->query("SELECT id, fam_name FROM  family_info WHERE aadhar_num = '$aadhar_num' ");
+$cus_id = $_POST['cus_id'];
+$qry = $pdo->query("SELECT id, fam_name FROM  family_info WHERE cus_id = '$cus_id' ");
 if ($qry->rowCount() > 0) {
     $response = $qry->fetchAll(PDO::FETCH_ASSOC);
 }
