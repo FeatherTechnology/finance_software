@@ -29,7 +29,7 @@ $(document).ready(function () {
             // $('#data_checking_div').hide();
             // $('#checking_hide').hide();
         }
-        dataCheckList('', '', '');
+        dataCheckList('', '', '','');
         $('#data_checking_table_div').hide();
     });
 
@@ -108,7 +108,7 @@ $(document).ready(function () {
         let cus_id = $('#auto_gen_cus_id').val();
         let mobileno = $('#mobile1').val();
         if (aadhar_num) {
-            dataCheckList(cus_id, cus_name, mobileno)
+            dataCheckList(cus_id, cus_name, mobileno,aadhar_num)
         } else {
             removeCustomerID();
         }
@@ -127,7 +127,7 @@ $(document).ready(function () {
         let cus_name = $('#cus_name').val();
         let customerMobile = $(this).val().trim();
         if (customerMobile) {
-            dataCheckList(cus_id, cus_name, customerMobile)
+            dataCheckList(cus_id, cus_name, customerMobile,aadhar_num)
         } else {
             removeCustomerMobile();
         }
@@ -788,7 +788,7 @@ $(document).ready(function () {
                     if (response.cus_data == 'Existing') {
                         $('.cus_status_div').show();
                         $('#loan_count_div').show();
-                        getLoanCount(cus_id);
+                        getLoanCount(cus_id,customer_profile_id);
                     }
                     else{
                         $('#loan_count_div').hide();
@@ -865,11 +865,11 @@ $(function () {
     getLoanEntryTable();
 });
  
-function getLoanCount(cus_id){
+function getLoanCount(cus_id,customer_profile_id){
     $.ajax({
         url: 'api/loan_entry/get_loan_count.php',
         type: 'POST',
-        data: { cus_id: cus_id },
+        data: { cus_id: cus_id  , customer_profile_id : customer_profile_id},
         dataType: 'json',
         cache: false,
         success: function (response) {
@@ -1301,7 +1301,7 @@ function getKycTable() {
 
 function getKycInfoTable() {
     let cus_id = $('#auto_gen_cus_id').val();
-    let cus_profile_id = $('#customer_profile_id').val()
+    let cus_profile_id = $('#customer_profile_id').val();
     $.post('api/loan_entry/kyc_creation_list.php', { cus_id, cus_profile_id }, function (response) {
         var columnMapping = [
             'sno',
@@ -1417,7 +1417,7 @@ function getAlineName(areaId) {
     });
 }
 
-function dataCheckList(cus_id, cus_name, cus_mble_no) {
+function dataCheckList(cus_id, cus_name, cus_mble_no,aadhar_num) {
     $.post('api/loan_entry/datacheck_name.php', { cus_id }, function (response) {
         //Name
         $('#name_check').empty();
@@ -1432,8 +1432,8 @@ function dataCheckList(cus_id, cus_name, cus_mble_no) {
         $('#aadhar_check').append("<option value=''>Select Aadhar Number</option>");
 
         // Append the provided Aadhar number with the customer name if both are present
-        if (cus_id && cus_name) {
-            $('#aadhar_check').append('<option value="' + cus_id + '">' + cus_id + ' - ' + cus_name + '</option>');
+        if (aadhar_num && cus_name) {
+            $('#aadhar_check').append('<option value="' + aadhar_num + '">' + aadhar_num + ' - ' + cus_name + '</option>');
         }
 
         // Loop through the response and append Aadhar numbers with family names
@@ -1519,7 +1519,7 @@ function editCustmerProfile(id) {
             $('#mobile2_radio').prop('checked', true);
             $('#selected_mobile_radio').val('mobile2');
         }
-        dataCheckList(response[0].cus_id, response[0].cus_name, response[0].mobile1)
+        dataCheckList(response[0].cus_id, response[0].cus_name, response[0].mobile1 ,response[0].aadhar_num)
         getGuarantorName()
         getAreaName()
         setTimeout(() => {
@@ -1632,7 +1632,7 @@ function existingCustmerProfile(aadhar_num) {
                 $('#selected_mobile_radio').val('mobile2');
             }
             // autoGenCusId(response[0].cus_id);
-            dataCheckList(response[0].cus_id, response[0].cus_name, response[0].mobile1)
+            dataCheckList(response[0].cus_id, response[0].cus_name, response[0].mobile1 ,response[0].aadhar_num)
             getGuarantorName()
             getAreaName()
             setTimeout(() => {
