@@ -1,15 +1,14 @@
 <?php
 require "../../ajaxconfig.php";
-@session_start();
-$user_id = $_SESSION['user_id'];
 
 $cp_id = $_POST['cp_id'];
-$sub_status = $_POST['sub_status'];
-
 $response = []; // Define response array
 
-// Run the update query
-$qry = $pdo->query("UPDATE `customer_status` SET `coll_status`='$sub_status', `updated_on`=CURRENT_TIMESTAMP WHERE cus_profile_id='$cp_id'");
+if (isset($_POST['sub_status']) && (!empty($_POST['sub_status']))) {
+    $sub_status = $_POST['sub_status'];
+    // Run the update query
+    $qry = $pdo->query("UPDATE `customer_status` SET `coll_status` = '$sub_status', `updated_on` = CURRENT_TIMESTAMP WHERE cus_profile_id = '$cp_id' ");
+}
 
 // Check if the update was successful
 if ($qry) {

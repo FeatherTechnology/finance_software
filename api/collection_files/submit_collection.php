@@ -73,7 +73,7 @@ $penalty_check = intval($penalty_track) + intval($penalty_waiver) - intval($pena
 $coll_charge_check = intval($coll_charge_track) + intval($coll_charge_waiver) - intval($coll_charge);
 
 if ($check == 0 && $penalty_check == 0 && $coll_charge_check == 0) {
-    $closedQry = $pdo->query("UPDATE `customer_status` SET `status`='8',`update_login_id`='$user_id',`updated_on`=now() WHERE `cus_profile_id`='$cp_id' "); //balance is zero change the customer status as 8, moved to closed.
+    $closedQry = $pdo->query("UPDATE `customer_status` SET `coll_status`='Closed', `status`='8',`update_login_id`='$user_id',`updated_on`=now() WHERE `cus_profile_id`='$cp_id' "); //balance is zero change the customer status as 8, moved to closed.
     if ($closedQry) {
         $result = '3';
     }

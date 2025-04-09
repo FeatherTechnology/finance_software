@@ -414,7 +414,7 @@ $(document).ready(function () {
         event.preventDefault();
         getCollectionCode();
         $(this).attr('disabled', true);
-    
+
         let collData = {
             'cp_id': $('#cp_id').val(),
             'cus_id': $('#cus_id').val(),
@@ -451,11 +451,11 @@ $(document).ready(function () {
             'trans_id': $('#trans_id').val(),
             'trans_date': $('#trans_date').val()
         };
-    
+
         if (isFormDataValid(collData)) {
             $.post('api/collection_files/submit_collection.php', collData, function (response) {
                 console.log("Response from submit_collection:", response);
-    
+
                 if (response.status == '1') {
                     swalSuccess('Success', 'Collection Added Successfully.');
                 } else if (response.status == '2') {
@@ -463,23 +463,23 @@ $(document).ready(function () {
                 } else if (response.status == '3') {
                     swalSuccess('Success', 'Moved to Closed Successfully.');
                 }
-    
+
                 $('#submit_collection').attr('disabled', false);
                 $('#back_to_loan_list').trigger('click');
-    
+
                 setTimeout(function () {
                     if (response.coll_id) {
                         printCollection(response.coll_id); // Ensure coll_id is passed correctly
                     }
                     getSubStatus(); // Call function AFTER ensuring data is updated
-                }, 5000);
-    
+                }, 1000);
+
             }, 'json')
         } else {
             $('#submit_collection').attr('disabled', false);
         }
     }); //submit END.
-    
+
 
 
     $(document).on('click', '.due-chart', function () {
@@ -562,7 +562,7 @@ function getSubStatus() {
     let sub_status = $('#loan_list_table tbody tr').find('td:nth-child(8)').text().trim(); // Corrected selector
     $.ajax({
         url: 'api/common_files/subStatus_list.php',
-        data: { cp_id , sub_status },
+        data: { cp_id, sub_status },
         dataType: 'json',
         type: 'post',
         cache: false,
@@ -635,7 +635,7 @@ function getChequeList() {
     })
 }
 
-function OnLoadFunctions(cus_id){
+function OnLoadFunctions(cus_id) {
     //To get loan sub Status
     var pending_arr = [];
     var od_arr = [];
@@ -643,14 +643,14 @@ function OnLoadFunctions(cus_id){
     var balAmnt = [];
     $.ajax({
         url: 'api/collection_files/resetCustomerStatus.php',
-        data: {'cus_id':cus_id},
-        dataType:'json',
-        type:'post',
+        data: { 'cus_id': cus_id },
+        dataType: 'json',
+        type: 'post',
         cache: false,
-        success: function(response){
-            if(response.length != 0){
-
-                for(var i=0;i< response['pending_customer'].length;i++){
+        success: function (response) {
+            if (response.length != 0) {
+                let pendingCount = (response['pending_customer']) ? response['pending_customer'].length : 0;
+                for (var i = 0; i < pendingCount; i++) {
                     pending_arr[i] = response['pending_customer'][i]
                     od_arr[i] = response['od_customer'][i]
                     due_nil_arr[i] = response['due_nil_customer'][i]
@@ -665,41 +665,41 @@ function OnLoadFunctions(cus_id){
                 balAmnt = balAmnt.join(',');
             }
         }
-    }).then(function(){
-            showOverlay();//loader start
-            var pending_sts = $('#pending_sts').val()
-            var od_sts = $('#od_sts').val()
-            var due_nil_sts = $('#due_nil_sts').val()
-            var bal_amt = balAmnt;
-            $.ajax({
-                //in this file, details gonna fetch by customer ID, Not by req id (Because we need all loans from customer)
-                url: 'api/collection_files/collection_loan_list.php',
-                data: {'cus_id':cus_id,'pending_sts':pending_sts,'od_sts':od_sts,'due_nil_sts':due_nil_sts,'bal_amt':bal_amt},
-                type:'post',
-                dataType: 'json',
-                cache: false,
-                success: function(response){
-                    $('.overlay').remove();
-                    var columnMapping = [
-                        'sno',
-                        'loan_id',
-                        'loan_category',
-                        'issue_date',
-                        'loan_amount',
-                        'bal_amount',
-                        'status',
-                        'sub_status',
-                        'charts',
-                        'action'
-                    ];
-                    appendDataToTable('#loan_list_table', response, columnMapping);
-                    setdtable('#loan_list_table');
-                    //Dropdown in List Screen
-                    setDropdownScripts();
-                }
-            });
-            hideOverlay();//loader stop
-        }); 
+    }).then(function () {
+        showOverlay();//loader start
+        var pending_sts = $('#pending_sts').val()
+        var od_sts = $('#od_sts').val()
+        var due_nil_sts = $('#due_nil_sts').val()
+        var bal_amt = balAmnt;
+        $.ajax({
+            //in this file, details gonna fetch by customer ID, Not by req id (Because we need all loans from customer)
+            url: 'api/collection_files/collection_loan_list.php',
+            data: { 'cus_id': cus_id, 'pending_sts': pending_sts, 'od_sts': od_sts, 'due_nil_sts': due_nil_sts, 'bal_amt': bal_amt },
+            type: 'post',
+            dataType: 'json',
+            cache: false,
+            success: function (response) {
+                $('.overlay').remove();
+                var columnMapping = [
+                    'sno',
+                    'loan_id',
+                    'loan_category',
+                    'issue_date',
+                    'loan_amount',
+                    'bal_amount',
+                    'status',
+                    'sub_status',
+                    'charts',
+                    'action'
+                ];
+                appendDataToTable('#loan_list_table', response, columnMapping);
+                setdtable('#loan_list_table');
+                //Dropdown in List Screen
+                setDropdownScripts();
+            }
+        });
+        hideOverlay();//loader stop
+    });
 }//Auto Load function END
 
 function getCollectionCode() {
