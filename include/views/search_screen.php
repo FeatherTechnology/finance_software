@@ -25,6 +25,12 @@
                                     </div>
                                     <div class="col-md-4 col-sm-6">
                                         <div class="form-group">
+                                            <label for="aadhar_nums"> Aadhar Number</label><span class="text-danger">*</span>
+                                            <input type="text" class="form-control personal_info_disble" name="aadhar_nums" id="aadhar_nums" tabindex="2" maxlength="14" data-type="adhaar-number" placeholder="Enter Aadhar Number">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4 col-sm-6">
+                                        <div class="form-group">
                                             <label for="cust_name">Customer Name</label><span class="text-danger">*</span>
                                             <input type="text" class="form-control" id="cust_name" name="cust_name" placeholder="Enter Customer Name" tabindex="2">
                                         </div>
@@ -63,6 +69,7 @@
                             <thead>
                                 <th width="20">S No.</th>
                                 <th>Customer ID</th>
+                                <th>Aadhar Number</th>
                                 <th>Customer Name</th>
                                 <th>Area</th>
                                 <th>Branch</th>
@@ -362,7 +369,7 @@
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-            <div class="modal-body">
+            <div class="modal-body" style="overflow-x: auto;">
                 <div class="container-fluid" id="fine_chart_table_div">
                     <div class="row">
                         <table class="table custom-table">
@@ -411,6 +418,12 @@
                                             <label for="cus_id"> Customer ID</label><span class="text-danger">*</span>
                                             <input type="text" class="form-control personal_info_disble" id="cus_id" name="cus_id" data-type="adhaar-number" placeholder="Enter Customer ID" tabindex="1" maxlength="14">
                                             <input type="hidden" id="cus_id_upd" name="cus_id_upd">
+                                        </div>
+                                    </div>
+                                    <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
+                                        <div class="form-group">
+                                            <label for="adhar_num"> Aadhar Number</label><span class="text-danger">*</span>
+                                            <input type="text" class="form-control personal_info_disble" name="adhar_num" id="adhar_num" tabindex="2" maxlength="14" data-type="adhaar-number" placeholder="Enter Aadhar Number">
                                         </div>
                                     </div>
                                     <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">

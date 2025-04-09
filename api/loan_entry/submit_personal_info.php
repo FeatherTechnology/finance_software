@@ -27,6 +27,10 @@ $mobile2 = $_POST['mobile2'];
 $whatsapp_no = $_POST['whatsapp_no'];
 $user_id = $_SESSION['user_id'];
 $customer_profile_id = $_POST['customer_profile_id']; 
+
+// Always initialize $cus_status
+$cus_status = '';  // Set a default value
+
 // Query to get customer profile along with customer status
 $qry = $pdo->query("SELECT cp.*, cs.status 
                     FROM customer_profile cp

@@ -43,8 +43,8 @@ if (!empty($name)) {
     $familyQuery .= " AND fi.fam_name LIKE '%$name%'";
 }
 
-if (!empty($cusid)) {
-    $familyQuery .= " AND fi.fam_aadhar = '$cusid'";
+if (!empty($aadhar_num)) {
+    $familyQuery .= " AND fi.fam_aadhar = '$aadhar_num'";
 }
 
 if (!empty($mobile)) {

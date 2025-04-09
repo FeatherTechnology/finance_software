@@ -12,7 +12,7 @@
                         <table id="loancategory_creation_table" class="table custom-table">
                             <thead>
                                 <tr>
-                                    <th>S.No.</th>
+                                    <th width="100">S.No.</th>
                                     <th>Loan Category</th>
                                     <th>Loan Limit</th>
                                     <th>Action</th>

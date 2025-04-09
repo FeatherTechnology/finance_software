@@ -1358,7 +1358,7 @@ function editCustmerProfile(id) {
             getKycInfoTable()
             $('#area').trigger('change');
             $('#guarantor_name').trigger('change');
-        }, 1000);
+        }, 5000);
         if (response[0].cus_data == 'Existing') {
             $('.cus_status_div').show();
             checkAdditionalRenewal(response[0].cus_id);
