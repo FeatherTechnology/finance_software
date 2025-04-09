@@ -115,9 +115,7 @@ $(document).ready(function () {
         }
 
         let aadhar_num_upd = $('#aadhar_num_upd').val();
-        console.log("upd", aadhar_num_upd);
         if (aadhar_num != '' && aadhar_num != aadhar_num_upd) {
-            console.log("ksdhf");
             existingCustmerProfile(aadhar_num)
             $('#aadhar_num_upd').val(aadhar_num);
         }
@@ -1439,7 +1437,6 @@ function dataCheckList(cus_id, cus_name, cus_mble_no,aadhar_num) {
 
         // Loop through the response and append Aadhar numbers with family names
         $.each(response, function (index, val) {
-            console.log("sfjdsjfaa",val.fam_aadhar)
             if (val.fam_aadhar && val.fam_name) {
                 $('#aadhar_check').append('<option value="' + val.fam_aadhar + '">' + val.fam_aadhar + ' - ' + val.fam_name + '</option>');
             }

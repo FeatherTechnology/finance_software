@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Mar 21, 2025 at 02:11 PM
+-- Generation Time: Apr 09, 2025 at 11:41 AM
 -- Server version: 10.4.28-MariaDB
 -- PHP Version: 8.2.4
 
@@ -435,9 +435,9 @@ CREATE TABLE `customer_profile` (
 CREATE TABLE `customer_status` (
   `id` int(11) NOT NULL,
   `cus_id` varchar(100) NOT NULL,
-  `aadhar_num` varchar(250) DEFAULT NULL,
   `cus_profile_id` int(11) NOT NULL,
   `loan_calculation_id` int(11) DEFAULT NULL,
+  `coll_status` varchar(250) DEFAULT NULL,
   `status` int(11) NOT NULL,
   `sub_status` int(11) DEFAULT NULL,
   `closed_date` date DEFAULT NULL,
@@ -609,6 +609,7 @@ CREATE TABLE `existing_customer` (
   `branch_name` varchar(100) NOT NULL,
   `c_sts` varchar(100) NOT NULL,
   `c_substs` varchar(100) NOT NULL,
+  `existing_detail` varchar(250) DEFAULT NULL,
   `insert_login_id` int(11) NOT NULL,
   `created_on` datetime DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
@@ -645,7 +646,6 @@ CREATE TABLE `expenses` (
 CREATE TABLE `family_info` (
   `id` int(11) NOT NULL,
   `cus_id` varchar(100) NOT NULL,
-  `aadhar_num` varchar(250) DEFAULT NULL,
   `fam_name` varchar(100) NOT NULL,
   `fam_relationship` varchar(100) NOT NULL,
   `remarks` varchar(250) DEFAULT NULL,
@@ -716,7 +716,6 @@ CREATE TABLE `guarantor_info` (
 CREATE TABLE `kyc_info` (
   `id` int(11) NOT NULL,
   `cus_id` varchar(100) NOT NULL,
-  `aadhar_num` varchar(250) DEFAULT NULL,
   `cus_profile_id` varchar(255) NOT NULL,
   `proof_of` varchar(100) NOT NULL,
   `fam_mem` int(11) DEFAULT NULL,
@@ -799,7 +798,6 @@ CREATE TABLE `loan_entry_loan_calculation` (
   `id` int(11) NOT NULL,
   `cus_profile_id` int(11) NOT NULL,
   `cus_id` varchar(100) NOT NULL,
-  `aadhar_num` varchar(255) DEFAULT NULL,
   `loan_id` varchar(50) NOT NULL,
   `loan_category` varchar(50) NOT NULL,
   `category_info` varchar(255) DEFAULT NULL,
@@ -1046,7 +1044,6 @@ CREATE TABLE `proof_info` (
 CREATE TABLE `property_info` (
   `id` int(11) NOT NULL,
   `cus_id` varchar(100) NOT NULL,
-  `aadhar_num` varchar(250) DEFAULT NULL,
   `cus_profile_id` varchar(255) NOT NULL,
   `property` varchar(100) NOT NULL,
   `property_detail` varchar(100) NOT NULL,
@@ -1072,6 +1069,7 @@ CREATE TABLE `repromotion_customer` (
   `linename` varchar(50) DEFAULT NULL,
   `branch_name` varchar(50) DEFAULT NULL,
   `c_sts` int(11) DEFAULT NULL,
+  `repromotion_detail` varchar(250) DEFAULT NULL,
   `insert_login_id` int(11) NOT NULL,
   `created_on` date DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
@@ -1090,6 +1088,13 @@ CREATE TABLE `role` (
   `created_on` date DEFAULT NULL,
   `updated_on` date DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `role`
+--
+
+INSERT INTO `role` (`id`, `role`, `insert_login_id`, `update_login_id`, `created_on`, `updated_on`) VALUES
+(1, 'superadmins', 1, NULL, '2025-03-18', NULL);
 
 -- --------------------------------------------------------
 
@@ -1558,7 +1563,7 @@ CREATE TABLE `users` (
 --
 
 INSERT INTO `users` (`id`, `name`, `user_code`, `role`, `designation`, `address`, `place`, `email`, `mobile`, `user_name`, `password`, `branch`, `loan_category`, `line`, `collection_access`, `download_access`, `screens`, `insert_login_id`, `update_login_id`, `created_on`, `updated_on`) VALUES
-(1, 'Super Admin', 'US-001', 1, 1, '', '', '', '', 'admin', '123', '1,2', '1,2,3,4,5,6,7,8,13', '1,2', 1, 1, '1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,26,25', '1', '1', '2024-06-13', '2025-03-21'),
+(1, 'Super Admin', 'US-001', 1, 1, '', '', '', '', 'admin', '123', '1,2', '1,2,3,4,5,6,7,8,13,10,12', '1,2', 1, 1, '1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,26,25', '1', '1', '2024-06-13', '2025-03-24'),
 (10, 'Test1', 'US-002', 1, 1, '', '', '', '', 'Test', '123', '1', '1', '1', 2, 2, '1,4,5,9,10,11,12,13,14,15,18,19,20,21,22,23,24,26', '1', NULL, '2025-01-29', NULL);
 
 --
@@ -2148,7 +2153,7 @@ ALTER TABLE `repromotion_customer`
 -- AUTO_INCREMENT for table `role`
 --
 ALTER TABLE `role`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `scheme`

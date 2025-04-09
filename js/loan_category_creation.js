@@ -281,11 +281,14 @@ $(document).ready(function () {
 
     function validateLoanSchemeCard() {
         let valid = true;
-        let value = $('#scheme_name').val();
-        if (value === '' || value === null || value === undefined) {
-            $('#scheme_name').closest('.choices').find('.choices__inner').css('border', '1px solid #ff0000');
-            valid = false;
-        } else {
+
+        let value=$('#scheme_name').val();
+        if(value === '' || value === null || value === undefined){
+                 $('#scheme_name').closest('.choices').find('.choices__inner').css('border', '1px solid #ff0000');
+                 valid = false;
+        }else{
+
+
             $('#scheme_name').closest('.choices').find('.choices__inner').css('border', '1px solid #cecece');
 
         }
