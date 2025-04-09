@@ -42,7 +42,6 @@
                         <input type="hidden" name="pending_sts" id="pending_sts" value="" />
                         <input type="hidden" name="od_sts" id="od_sts" value="" />
                         <input type="hidden" name="due_nil_sts" id="due_nil_sts" value="" />
-                        <input type="hidden"  id="aadhar_num"  />
                         <div class="card-body">
                             <div class="row">
                                 <div class="col-8">
