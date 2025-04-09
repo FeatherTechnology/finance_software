@@ -79,7 +79,8 @@ foreach ($result as $row) {
     <button class='btn btn-outline-secondary'><i class='fa'>&#xf107;</i></button>
    <div class='dropdown-content'>";
     if ($row['c_sts'] == '3') {
-        $action .= "<a href='#' class='approval-edit' value='" . $row['id'] . "' data-id='" . $row['loan_calc_id'] . "' pro-id='" . $row['id'] . "' title='Edit details'>Edit</a>";
+
+        $action .= "<a href='#' class='approval-edit' value='" . $row['id'] . "' data-id='" . $row['loan_calc_id'] . "'  title='Edit details'>Edit</a>";
         $action .= "<a href='#' class='approval-approve' value='" . $row['cus_sts_id'] . "' title='Approve'>Approve</a>";
         $action .= "<a href='#' class='approval-cancel' value='" . $row['cus_sts_id'] . "' title='Cancel'>Cancel</a>";
         $action .= "<a href='#' class='approval-revoke' value='" . $row['cus_sts_id'] . "' title='Revoke'>Revoke</a>";

@@ -266,7 +266,6 @@
         <div class="row gutters">
             <input type="hidden" id="aadhar_num">
             <div class="col-12">
-
                 <!--- -------------------------------------- Personal Info START ------------------------------- -->
                 <div class="card">
                     <div class="card-header">

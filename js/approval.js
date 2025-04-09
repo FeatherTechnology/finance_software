@@ -128,9 +128,10 @@ $(document).ready(function () {
     $('#aadhar_nums').on('blur', function () {
         let aadhar_num = $('#aadhar_nums').val().trim().replace(/\s/g, '');
         let cus_name = $('#cus_name').val();
+        let cus_id = $('#auto_gen_cus_id').val();
         let mobileno = $('#mobile1').val();
         if (aadhar_num) {
-            dataCheckList(aadhar_num, cus_name, mobileno)
+            dataCheckList(cus_id, cus_name, mobileno ,aadhar_num)
         } else {
             removeCustomerID();
         }
@@ -145,9 +146,10 @@ $(document).ready(function () {
     $('#mobile1').on('blur', function () {
         let aadhar_num = $('#aadhar_nums').val().trim().replace(/\s/g, '');
         let cus_name = $('#cus_name').val();
+        let cus_id = $('#auto_gen_cus_id').val();
         let customerMobile = $(this).val().trim();
         if (customerMobile) {
-            dataCheckList(aadhar_num, cus_name, customerMobile)
+            dataCheckList(cus_id, cus_name, customerMobile ,aadhar_num)
         } else {
             removeCustomerMobile();
         }
@@ -182,7 +184,6 @@ $(document).ready(function () {
         // Validation
         let cus_profile_id = $('#customer_profile_id').val();
         let cus_id = $('#auto_gen_cus_id').val();
-        let aadhar_num = $('#aadhar_nums').val().replace(/\s/g, ''); // Remove spaces from cus_id
         let fam_name = $('#fam_name').val();
         let remarks = $('#remarks').val();
         let fam_relationship = $('#fam_relationship').val();
@@ -208,7 +209,7 @@ $(document).ready(function () {
         });
 
         if (isValid) {
-            $.post('api/loan_entry/submit_family_info.php', { cus_id, aadhar_num, fam_name, fam_relationship, remarks, fam_age, fam_live, fam_occupation, fam_aadhar, fam_mobile, family_id }, function (response) {
+            $.post('api/loan_entry/submit_family_info.php', { cus_id, fam_name, fam_relationship,remarks, fam_age, fam_live, fam_occupation, fam_aadhar, fam_mobile, family_id }, function (response) {
                 if (response == '1') {
                     swalSuccess('Success', 'Family Info Added Successfully!');
                 } else {
@@ -246,7 +247,6 @@ $(document).ready(function () {
         //Validation
         let cus_profile_id = $('#customer_profile_id').val();
         let cus_id = $('#auto_gen_cus_id').val();
-        let aadhar_num = $('#aadhar_nums').val().replace(/\s/g, '');
         let property = $('#property').val(); let property_detail = $('#property_detail').val(); let property_holder = $('#property_holder').val(); let property_id = $('#property_id').val();
         if (cus_profile_id == '') {
             swalError('Warning', 'Kindly Fill the Personal Info');
@@ -261,7 +261,7 @@ $(document).ready(function () {
             }
         });
         if (isValid) {
-            $.post('api/loan_entry/submit_property.php', { cus_id, aadhar_num, property, property_detail, property_holder, property_id, cus_profile_id }, function (response) {
+            $.post('api/loan_entry/submit_property.php', { cus_id, property, property_detail, property_holder, property_id, cus_profile_id }, function (response) {
                 if (response == '1') {
                     swalSuccess('Success', 'Property Info Added Successfully!');
                 } else {
@@ -335,7 +335,6 @@ $(document).ready(function () {
         //Validation
         let cus_profile_id = $('#customer_profile_id').val();
         let cus_id = $('#auto_gen_cus_id').val();
-        let aadhar_num = $('#aadhar_nums').val().replace(/\s/g, '');
         let bank_name = $('#bank_name').val(); let branch_name = $('#branch_name').val(); let acc_holder_name = $('#acc_holder_name').val(); let acc_number = $('#acc_number').val(); let ifsc_code = $('#ifsc_code').val(); let bank_id = $('#bank_id').val();
         if (cus_profile_id == '') {
             swalError('Warning', 'Kindly Fill the Personal Info');
@@ -350,7 +349,7 @@ $(document).ready(function () {
             }
         });
         if (isValid) {
-            $.post('api/loan_entry/submit_bank.php', { cus_id, aadhar_num, bank_name, branch_name, acc_holder_name, acc_number, ifsc_code, bank_id, cus_profile_id }, function (response) {
+            $.post('api/loan_entry/submit_bank.php', { cus_id, bank_name, branch_name, acc_holder_name, acc_number, ifsc_code, bank_id, cus_profile_id }, function (response) {
                 if (response == '1') {
                     swalSuccess('Success', 'Bank Info Added Successfully!');
                 } else {
@@ -385,7 +384,6 @@ $(document).ready(function () {
         //Validation
         let cus_profile_id = $('#customer_profile_id').val();
         let cus_id = $('#auto_gen_cus_id').val();
-        let aadhar_num = $('#aadhar_nums').val().replace(/\s/g, '');
         let upload = $('#upload')[0].files[0]; let kyc_upload = $('#kyc_upload').val();
         let proof_of = $('#proof_of').val(); let fam_mem = $("#fam_mem").val(); let proof = $('#proof').val(); let proof_detail = $('#proof_detail').val(); let kyc_id = $('#kyc_id').val();
         if (cus_profile_id == '') {
@@ -408,7 +406,6 @@ $(document).ready(function () {
             }
             kycDetail.append('cus_profile_id', cus_profile_id)
             kycDetail.append('cus_id', cus_id)
-            kycDetail.append('aadhar_num', aadhar_num)
             kycDetail.append('proof', proof)
             kycDetail.append('proof_detail', proof_detail)
             kycDetail.append('upload', upload)
@@ -609,7 +606,6 @@ $(document).ready(function () {
         let mobile1 = $('#mobile1').val();
         let mobile2 = $('#mobile2').val();
         let whatsapp_no = $('#whatsapp_no').val();
-        // let aadhar_num = $('#aadhar_num').val().replace(/\s/g, '');
         let guarantor_name = $('#guarantor_name').val();
         let cus_data = $('#cus_data').val();
         let cus_status = $('#cus_status').val();
@@ -654,7 +650,7 @@ $(document).ready(function () {
                 isValid = false;
             }
         }
-        data = ['cus_name', 'gender', 'mobile1', 'guarantor_name', 'area_confirm', 'area', 'line'];
+        data = ['cus_name', 'gender', 'mobile1', 'guarantor_name', 'area_confirm', 'area', 'line', 'cus_limit'];
 
         //  var isValid = true;
         data.forEach(function (entry) {
@@ -1084,8 +1080,8 @@ function removeCustomerEntries() {
 }
 
 function getFamilyInfoTable() {
-    let aadhar_num = $('#aadhar_nums').val().replace(/\s/g, '');
-    $.post('api/loan_entry/family_creation_list.php', { aadhar_num }, function (response) {
+    let cus_id = $('#auto_gen_cus_id').val();
+    $.post('api/loan_entry/family_creation_list.php', { cus_id }, function (response) {
         var columnMapping = [
             'sno',
             'fam_name',
@@ -1103,8 +1099,8 @@ function getFamilyInfoTable() {
 }
 
 function getFamilyTable() {
-    let aadhar_num = $('#aadhar_nums').val().replace(/\s/g, '');
-    $.post('api/loan_entry/family_creation_list.php', { aadhar_num: aadhar_num }, function (response) {
+    let cus_id = $('#auto_gen_cus_id').val();
+    $.post('api/loan_entry/family_creation_list.php', { cus_id: cus_id }, function (response) {
         var columnMapping = [
             'sno',
             'fam_name',
@@ -1129,9 +1125,9 @@ function getFamilyTable() {
 }
 
 function getFamilyDelete(id) {
-    let aadhar_num = $('#aadhar_nums').val().replace(/\s/g, '');
+    let cus_id = $('#auto_gen_cus_id').val();
     let cus_profile_id = $('#customer_profile_id').val();
-    $.post('api/loan_entry/delete_family_creation.php', { id, aadhar_num, cus_profile_id }, function (response) {
+    $.post('api/loan_entry/delete_family_creation.php', { id, cus_id, cus_profile_id }, function (response) {
         if (response == '0') {
             swalError('Warning', 'Have to maintain atleast one Family Info');
         } else if (response == '1') {
@@ -1146,8 +1142,8 @@ function getFamilyDelete(id) {
 }
 
 function getGuarantorName() {
-    let aadhar_num = $('#aadhar_nums').val().replace(/\s/g, '');
-    $.post('api/loan_entry/get_guarantor_name.php', { aadhar_num }, function (response) {
+    let cus_id = $('#auto_gen_cus_id').val();
+    $.post('api/loan_entry/get_guarantor_name.php', { cus_id }, function (response) {
         let appendGuarantorOption = '';
         appendGuarantorOption += "<option value=''>Select Guarantor Name</option>";
         $.each(response, function (index, val) {
@@ -1196,9 +1192,9 @@ function resetValidate() {
     });
 }
 function getPropertyTable() {
-    let aadhar_num = $('#aadhar_nums').val().replace(/\s/g, '');
+    let cus_id = $('#auto_gen_cus_id').val();
     let cus_profile_id = $('#customer_profile_id').val()
-    $.post('api/loan_entry/property_creation_list.php', { aadhar_num, cus_profile_id }, function (response) {
+    $.post('api/loan_entry/property_creation_list.php', { cus_id, cus_profile_id }, function (response) {
         var columnMapping = [
             'sno',
             'property',
@@ -1219,9 +1215,9 @@ function getPropertyTable() {
 }
 
 function getPropertyInfoTable() {
-    let aadhar_num = $('#aadhar_nums').val().replace(/\s/g, '');
+    let cus_id = $('#auto_gen_cus_id').val();
     let cus_profile_id = $('#customer_profile_id').val();
-    $.post('api/loan_entry/property_creation_list.php', { aadhar_num, cus_profile_id }, function (response) {
+    $.post('api/loan_entry/property_creation_list.php', { cus_id, cus_profile_id }, function (response) {
         var columnMapping = [
             'sno',
             'property',
@@ -1235,9 +1231,9 @@ function getPropertyInfoTable() {
 }
 
 function getPropertyHolder() {
-    let aadhar_num = $('#aadhar_nums').val().replace(/\s/g, '');
+    let cus_id = $('#auto_gen_cus_id').val().replace(/\s/g, '');
     let cus_name = $('#cus_name').val();
-    $.post('api/loan_entry/get_guarantor_name.php', { aadhar_num }, function (response) {
+    $.post('api/loan_entry/get_guarantor_name.php', { cus_id }, function (response) {
         let appendHolderOption = '';
         appendHolderOption += "<option value=''>Select Property Holder</option>";
         appendHolderOption += "<option value='" + 0 + "'>" + cus_name + "</option>";
@@ -1284,9 +1280,9 @@ function getBankDelete(id) {
 }
 
 function getBankTable() {
-    let aadhar_num = $('#aadhar_nums').val().replace(/\s/g, '');
+    let cus_id = $('#auto_gen_cus_id').val();
     let cus_profile_id = $('#customer_profile_id').val();
-    $.post('api/loan_entry/bank_creation_list.php', { aadhar_num, cus_profile_id }, function (response) {
+    $.post('api/loan_entry/bank_creation_list.php', { cus_id, cus_profile_id }, function (response) {
         var columnMapping = [
             'sno',
             'bank_name',
@@ -1305,9 +1301,9 @@ function getBankTable() {
 }
 
 function getBankInfoTable() {
-    let aadhar_num = $('#aadhar_nums').val().replace(/\s/g, '');
+    let cus_id = $('#auto_gen_cus_id').val();
     let cus_profile_id = $('#customer_profile_id').val()
-    $.post('api/loan_entry/bank_creation_list.php', { aadhar_num, cus_profile_id }, function (response) {
+    $.post('api/loan_entry/bank_creation_list.php', { cus_id, cus_profile_id }, function (response) {
         var columnMapping = [
             'sno',
             'bank_name',
@@ -1322,9 +1318,9 @@ function getBankInfoTable() {
 }
 
 function getKycDelete(id) {
-    let aadhar_num = $('#aadhar_nums').val().replace(/\s/g, '');
+    let cus_id = $('#auto_gen_cus_id').val();
     let cus_profile_id = $('#customer_profile_id').val();
-    $.post('api/loan_entry/delete_kyc_creation.php', { id, aadhar_num, cus_profile_id }, function (response) {
+    $.post('api/loan_entry/delete_kyc_creation.php', { id, cus_id, cus_profile_id }, function (response) {
         if (response == '0') {
             swalError('Warning', 'Have to maintain atleast one Kyc Info');
         } else if (response == '1') {
@@ -1337,9 +1333,9 @@ function getKycDelete(id) {
 }
 
 function getKycTable() {
-    let aadhar_num = $('#aadhar_nums').val().replace(/\s/g, '');
+    let cus_id = $('#auto_gen_cus_id').val();
     let cus_profile_id = $('#customer_profile_id').val()
-    $.post('api/loan_entry/kyc_creation_list.php', { aadhar_num, cus_profile_id }, function (response) {
+    $.post('api/loan_entry/kyc_creation_list.php', { cus_id, cus_profile_id }, function (response) {
         var columnMapping = [
             'sno',
             'proof_of',
@@ -1363,9 +1359,9 @@ function getKycTable() {
 }
 
 function getKycInfoTable() {
-    let aadhar_num = $('#aadhar_nums').val().replace(/\s/g, '');
+    let cus_id = $('#auto_gen_cus_id').val();
     let cus_profile_id = $('#customer_profile_id').val()
-    $.post('api/loan_entry/kyc_creation_list.php', { aadhar_num, cus_profile_id }, function (response) {
+    $.post('api/loan_entry/kyc_creation_list.php', { cus_id, cus_profile_id }, function (response) {
         var columnMapping = [
             'sno',
             'proof_of',
@@ -1380,8 +1376,8 @@ function getKycInfoTable() {
 }
 
 function getFamilyMember() {
-    let aadhar_num = $('#aadhar_nums').val().replace(/\s/g, '');
-    $.post('api/loan_entry/get_guarantor_name.php', { aadhar_num }, function (response) {
+    let cus_id = $('#auto_gen_cus_id').val();
+    $.post('api/loan_entry/get_guarantor_name.php', { cus_id }, function (response) {
         let appendHolderOption = '';
         appendHolderOption += "<option value=''>Select Family Member</option>";
         $.each(response, function (index, val) {
@@ -1481,8 +1477,8 @@ function getAlineName(areaId) {
     });
 }
 
-function dataCheckList(aadhar_num, cus_name, cus_mble_no) {
-    $.post('api/loan_entry/datacheck_name.php', { aadhar_num }, function (response) {
+function dataCheckList(cus_id, cus_name, cus_mble_no,aadhar_num) {
+    $.post('api/loan_entry/datacheck_name.php', { cus_id }, function (response) {
         //Name
         $('#name_check').empty();
         $('#name_check').append("<option value=''>Select Name</option>");
@@ -1528,8 +1524,8 @@ function dataCheckList(aadhar_num, cus_name, cus_mble_no) {
     }, 'json');
 }
 
-function checkAdditionalRenewal(aadhar_num) {
-    $.post('api/loan_entry/check_additional_renewal.php', { aadhar_num }, function (response) {
+function checkAdditionalRenewal(cus_id) {
+    $.post('api/loan_entry/check_additional_renewal.php', { cus_id }, function (response) {
         $('#cus_status').val(response);
     }, 'json');
 }
@@ -1570,7 +1566,7 @@ function editCustmerProfile(id) {
             $('#mobile2_radio').prop('checked', true);
             $('#selected_mobile_radio').val('mobile2');
         }
-        dataCheckList(response[0].aadhar_num, response[0].cus_name, response[0].mobile1)
+        dataCheckList(response[0].cus_id, response[0].cus_name, response[0].mobile1 ,response[0].aadhar_num)
         getGuarantorName()
         getAreaName()
         setTimeout(() => {
@@ -1587,7 +1583,7 @@ function editCustmerProfile(id) {
             $('#loan_count_div').show();
             let cus_id = response[0].cus_id; // Add this line
             getLoanCount(cus_id);
-            checkAdditionalRenewal(response[0].aadhar_num);
+            checkAdditionalRenewal(response[0].cus_id);
         } else {
             $('.cus_status_div').hide();
             $('#loan_count_div').hide();

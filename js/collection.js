@@ -534,8 +534,9 @@ $(document).ready(function () {
 
 });
 /////////////////////////////////////////////////////////////////////////   Document END /////////////////////////////////////////////////////////////////////////
-$(function () {
-    getCollectionListTable("");
+
+$(function(){
+    getCollectionListTable('');
 });
 
 function getCollectionListTable(collection_status) {

@@ -1,13 +1,14 @@
 <?php
 require '../../ajaxconfig.php';
 
-$aadhar_num = $_POST['aadhar_num'];
+$cus_id = $_POST['cus_id'];
+
 $result = '';
-$qry = $pdo->query("SELECT * FROM `customer_status` WHERE aadhar_num='$aadhar_num' AND status = 7 AND status <= 8 ");
+$qry = $pdo->query("SELECT * FROM `customer_status` WHERE cus_id = '$cus_id' AND status = 7 AND status <= 8 ");
 if ($qry->rowCount() >0) {
     $result = "Additional"; //Additional
 }else{
-    $qry = $pdo->query("SELECT * FROM `customer_status` WHERE aadhar_num='$aadhar_num' AND status >= 9 ");
+    $qry = $pdo->query("SELECT * FROM `customer_status` WHERE cus_id = '$cus_id' AND status >= 9 ");
     if($qry->rowCount()>0){
         $result = "Renewal";
     }

@@ -1347,6 +1347,7 @@ function personalInfo() {
         $('#loan_date_calc').val(response[0].loan_date);
         $('#due_startdate_calc').val(response[0].due_startdate);
         $('#maturity_date_calc').val(response[0].maturity_date);
+        $('#aadhar_num').val(response[0].aadhar_num);
         getIssuePerson(response[0].cus_name);
         $('#due_startdate_calc').attr('min', response[0].loan_date);
 
@@ -1402,8 +1403,8 @@ function getLoanCount(cus_id) {
 }
 
 function getIssuePerson(cus_name) {
-    let aadhar_num = $('#aadhar_num').val();
-    $.post('api/loan_entry/get_guarantor_name.php', { aadhar_num }, function (response) {
+    let cus_id = $('#cus_id').val();
+    $.post('api/loan_entry/get_guarantor_name.php', { cus_id }, function (response) {
         let appendOption = '';
         appendOption += "<option value='' data-val=''>Select Issue Person</option>";
         appendOption += "<option value='" + cus_name + "' data-val='Customer'>" + cus_name + "</option>";
