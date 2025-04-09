@@ -40,7 +40,6 @@ $(document).ready(function () {
         $.post('api/loan_entry/cus_sts_check.php', { 'cus_id': cus_id, 'cus_profile_id': cus_profile_id }, function (response) {
             if (response.status == 0) {
                 // If status is 0, proceed with confirmation
-            } else {
                     swalConfirm('Warning', 'Are you sure you want to go back? Personal information will be lost because the customer profile is incomplete.', cusDeleteStatus, cus_id);
                     return;
                 
