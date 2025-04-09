@@ -42,7 +42,7 @@ JOIN loan_issue li ON lelc.cus_profile_id = li.cus_profile_id
 LEFT JOIN users us ON us.id = '$user_id'
 JOIN users u ON FIND_IN_SET(cp.line, u.line)
 JOIN users urs ON FIND_IN_SET(lelc.loan_category, urs.loan_category)
-WHERE lelc.cus_id = '$cus_id' AND cs.status = 7 AND u.id ='$user_id' AND urs.id ='$user_id' ORDER BY lelc.id DESC ");
+WHERE lelc.cus_id = '$cus_id' AND cs.status = 7 AND u.id ='$user_id' AND urs.id ='$user_id' AND li.balance_amount = 0 ORDER BY lelc.id DESC ");
 if ($qry->rowCount() > 0) {
     $curdate = date('Y-m-d');
     $i=1;

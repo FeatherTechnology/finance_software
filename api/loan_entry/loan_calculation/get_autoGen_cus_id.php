@@ -15,10 +15,10 @@ if ($id != '0' && $id != '') {
     $myStr = mb_substr($str, 0, 1);
 
 
-    $qry = $pdo->query("SELECT cus_id FROM customer_profile WHERE cus_id !='' ORDER BY id DESC LIMIT 1");
-    if ($qry->rowCount() > 0) {
+    $qry = $pdo->query("SELECT MAX(cus_id) as cus_id FROM customer_profile");
+    $row = $qry->fetch(PDO::FETCH_ASSOC);
+    if ($row["cus_id"] !='') {
         // If branch codes exist, generate a new branch code
-        $row = $qry->fetch(PDO::FETCH_ASSOC);
         $ac2 = $row["cus_id"];
         $appno2 = ltrim(strstr($ac2, '-'), '-');
         $appno2 = $appno2 + 1;

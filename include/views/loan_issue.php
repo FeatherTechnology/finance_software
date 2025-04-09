@@ -264,6 +264,7 @@
     <!-- -------------------------------------- Loan Issue START ------------------------------ -->
     <form id="loan_issue_form" name="loan_issue_form" style="display: none;">
         <div class="row gutters">
+            <input type="hidden" id="aadhar_num">
             <div class="col-12">
                 <!--- -------------------------------------- Personal Info START ------------------------------- -->
                 <div class="card">
@@ -671,6 +672,28 @@
                                 <div class="form-group">
                                     <label for="issue_relationship">Relationship</label><span class="text-danger">*</span>
                                     <input type="text" class="form-control" name="issue_relationship" id="issue_relationship" tabindex="45" placeholder="Relationship" readonly>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+                <div class="card" style="display:none;" id="loan_count_div">
+                    <div class="card-header">
+                        <div class="card-title">Customer Summary</div>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                                <div class="form-group">
+                                    <label for="loan_count"> Loan Count </label><span class="text-danger">*</span>
+                                    <input type="text" class="form-control" id="loan_count" name="loan_count" disabled placeholder="Loan Count" tabindex="34" readonly>
+                                </div>
+                            </div>
+                            <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                                <div class="form-group">
+                                    <label for="first_loan_date">First Loan Date </label><span class="text-danger">*</span>
+                                    <input type="text" class="form-control" id="first_loan_date" name="first_loan_date" disabled placeholder="First Loan Date" tabindex="35" readonly>
                                 </div>
                             </div>
                         </div>

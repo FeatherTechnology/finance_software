@@ -25,49 +25,6 @@
     </div>
 </div>
 <!--Approval List End-->
-<!--Cancel And Revoke Modal start-->
-
-<div class="modal fade" id="add_info_modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-    <div class="modal-dialog modal-lg " role="document">
-        <div class="modal-content" style="background-color: white">
-            <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLongTitle"></h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close" onclick="closeRemarkModal()">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                <div class="container-fluid">
-                    <form id="approve_form">
-                        <div class="row">
-                            <input type="hidden" name="customer_profile_id" id='customer_profile_id'>
-                            <input type="hidden" name="customer_status" id='customer_status'>
-                            <div class="col-sm-3 col-md-3 col-lg-3"></div>
-                            <div class="col-sm-4 col-md-4 col-lg-4">
-                                <div class="form-group">
-                                    <label for="remark">Remark</label><span class="text-danger">*</span>
-                                    <textarea class="form-control" name="remark" id="remark" placeholder="Enter Remark Detail" tabindex="1"></textarea>
-                                    <input type="hidden" id="addremark" value='0'>
-                                </div>
-                            </div>
-                            <div class="col-sm-4 col-md-4 col-lg-4">
-                                <div class="form-group">
-                                    <button name="submit_remark" id="submit_remark" class="btn btn-primary" tabindex="1" style="margin-top: 18px;"><span class="icon-check"></span>&nbsp;Submit</button>
-                                </div>
-                            </div>
-                        </div>
-                    </form>
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal" tabindex="1" onclick="closeRemarkModal()">Close</button>
-            </div>
-        </div>
-    </div>
-</div>
-
-<!--Cancel and Revoke Modal End-->
-
 
 <div id="loan_entry_content" style="display:none;">
     <div class="text-right">
@@ -98,11 +55,11 @@
                     <div class="card-body">
                         <div class="row">
                             <div class="col-8">
-                               <div class="row">
+                                <div class="row">
                                     <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
                                         <div class="form-group">
                                             <label for="auto_gen_cus_id"> Customer ID</label><span class="text-danger">*</span>
-                                            <input type="text" class="form-control personal_info_disble" id="auto_gen_cus_id" name="auto_gen_cus_id" tabindex="1"  data-type="adhaar-number" readonly>
+                                            <input type="text" class="form-control personal_info_disble" id="auto_gen_cus_id" name="auto_gen_cus_id" tabindex="1" data-type="adhaar-number" readonly>
                                         </div>
                                     </div>
                                     <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
@@ -280,9 +237,9 @@
                         </div>
                     </div>
                 </div>
-                <div id="checking_hide" >
-                        <div class="card">
-                            <div id="data_checking_div" >
+                <div id="checking_hide">
+                    <div class="card">
+                        <div id="data_checking_div">
                             <div class="card-header">
                                 <div class="card-title">Data Checking</div>
                             </div>
@@ -568,22 +525,22 @@
                         <div class="card-title">Customer Summary</div>
                     </div>
                     <div class="card-body" style="display:none;" id="loan_count_div">
-                            <div class="row">
+                        <div class="row">
                             <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
-                                    <div class="form-group">
-                                        <label for="loan_count"> Loan Count </label><span class="text-danger">*</span>
-                                        <input type="text" class="form-control" id="loan_count" name="loan_count" disabled placeholder="Loan Count" tabindex="34" readonly>
-                                    </div>
-                                </div>
-                            <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
-                                    <div class="form-group">
-                                        <label for="first_loan_date"> First Loan Date </label><span class="text-danger">*</span>
-                                        <input type="text" class="form-control" id="first_loan_date" name="first_loan_date" disabled placeholder="First Loan Date" tabindex="35" readonly>
-                                    </div>
+                                <div class="form-group">
+                                    <label for="loan_count"> Loan Count </label><span class="text-danger">*</span>
+                                    <input type="text" class="form-control" id="loan_count" name="loan_count" disabled placeholder="Loan Count" tabindex="34" readonly>
                                 </div>
                             </div>
-
+                            <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                                <div class="form-group">
+                                    <label for="first_loan_date">First Loan Date </label><span class="text-danger">*</span>
+                                    <input type="text" class="form-control" id="first_loan_date" name="first_loan_date" disabled placeholder="First Loan Date" tabindex="35" readonly>
+                                </div>
+                            </div>
                         </div>
+
+                    </div>
                     <div class="card-body">
                         <div class="row">
                             <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
@@ -689,7 +646,7 @@
                                     <input type="text" class="form-control" id="due_type_calc" name="due_type_calc" tabindex="7" readonly>
                                 </div>
                             </div>
-                            
+
 
                             <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12 scheme" style="display:none">
                                 <div class="form-group">
@@ -726,7 +683,7 @@
                                     </select>
                                 </div>
                             </div>
-                            <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12 calcs" >
+                            <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12 calcs">
                                 <div class="form-group">
                                     <label for="profit_method_calc">Profit Method</label><span class="text-danger">*</span>
                                     <input type="text" class="form-control" id="profit_method_calc" name="profit_method_calc" tabindex="8" value="After Benefit" readonly>
@@ -1402,3 +1359,45 @@
     </div>
 </div>
 <!--KYC Proof Modal End-->
+
+<!--Cancel And Revoke Modal start-->
+
+<div class="modal fade" id="add_info_modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-lg " role="document">
+        <div class="modal-content" style="background-color: white">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLongTitle"></h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close" onclick="closeRemarkModal()">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="container-fluid">
+                    <form id="approve_form">
+                        <div class="row">
+                            <input type="hidden" name="customer_status" id='customer_status'>
+                            <div class="col-sm-3 col-md-3 col-lg-3"></div>
+                            <div class="col-sm-4 col-md-4 col-lg-4">
+                                <div class="form-group">
+                                    <label for="remark">Remark</label><span class="text-danger">*</span>
+                                    <textarea class="form-control" name="remark" id="remark" placeholder="Enter Remark Detail" tabindex="1"></textarea>
+                                    <input type="hidden" id="addremark" value='0'>
+                                </div>
+                            </div>
+                            <div class="col-sm-4 col-md-4 col-lg-4">
+                                <div class="form-group">
+                                    <button name="submit_remark" id="submit_remark" class="btn btn-primary" tabindex="1" style="margin-top: 18px;"><span class="icon-check"></span>&nbsp;Submit</button>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal" tabindex="1" onclick="closeRemarkModal()">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--Cancel and Revoke Modal End-->

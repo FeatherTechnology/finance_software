@@ -1064,7 +1064,6 @@
                                     <label for="property_holder">Property Holder</label><span class="text-danger">*</span>
                                     <select type="text" class="form-control" id="property_holder" name="property_holder" tabindex="1">
                                         <option value="">Select Property Holder</option>
-
                                     </select>
                                     <input type="hidden" id="addholder_id" value='0'>
                                 </div>

@@ -2,6 +2,7 @@
 require '../../ajaxconfig.php';
 
 $cus_id = isset($_POST['cus_id']) ? $_POST['cus_id'] : null;
+$aadhar_num = isset($_POST['aadhar_num']) ? trim($_POST['aadhar_num']) : '';
 $cus_name = isset($_POST['cus_name']) ? trim($_POST['cus_name']) : '';
 $area = isset($_POST['area']) ? trim($_POST['area']) : '';
 $mobile = isset($_POST['mobile']) ? trim($_POST['mobile']) : '';
@@ -9,15 +10,28 @@ $mobile = isset($_POST['mobile']) ? trim($_POST['mobile']) : '';
 $cus_profile_id = isset($_POST['cus_profile_id']) ? $_POST['cus_profile_id'] : null;
 $loan_list_arr = array();
 $status = [
-    1 => 'Loan Entry', 2 => 'Loan Entry', 3 => 'Loan Approval',
-    4 => 'Loan Issued', 5 => 'Loan Approval', 6 => 'Loan Approval',
-    7 => 'Present', 8 => 'Closed', 9 => 'Closed', 10 => 'NOC',11=>'NOC',12 =>'NOC'
+    1 => 'Loan Entry',
+    2 => 'Loan Entry',
+    3 => 'Loan Approval',
+    4 => 'Loan Issued',
+    5 => 'Loan Approval',
+    6 => 'Loan Approval',
+    7 => 'Present',
+    8 => 'Closed',
+    9 => 'Closed',
+    10 => 'NOC',
+    11 => 'NOC',
+    12 => 'NOC',
+    13 => 'Loan Issue',
+    14 => 'Loan Issue'
 ];
 
 $whereClause = "WHERE 1"; // Initial WHERE clause
 
 if (!empty($cus_id)) {
     $whereClause .= " AND lelc.cus_id = '$cus_id'";
+} elseif (!empty($aadhar_num)) {
+    $whereClause .= " AND lelc.cus_id IN (SELECT cus_id FROM customer_profile WHERE aadhar_num LIKE '%$aadhar_num%')";
 } elseif (!empty($cus_name)) {
     $whereClause .= " AND lelc.cus_id IN (SELECT cus_id FROM customer_profile WHERE cus_name LIKE '%$cus_name%')";
 } elseif (!empty($area)) {
@@ -65,38 +79,37 @@ if ($qry->rowCount() > 0) {
         $response['info'] .=  "<a href='#' class='customer-profile' value='" . $row['cus_profile_id'] . "'>Customer Profile</a>";
         $response['info'] .=  "  <a href='#' class='loan-calculation' value='" . $row['id'] . "'>Loan Calculation</a>";
         $response['info'] .=  " <a href='#' class='documentation' value='" . $row['cus_profile_id'] . "'>Documentation</a>";
-        if ($row['status'] >='8'){
-        $response['info'] .=  " <a href='#' class='closed-remark' value='" . $row['cus_profile_id'] . "'>Remark View</a>";
+        if ($row['status'] >= '8') {
+            $response['info'] .=  " <a href='#' class='closed-remark' value='" . $row['cus_profile_id'] . "'>Remark View</a>";
         }
-        if ($row['status'] == '10' || $row['status'] == '11'){
-        $response['info'] .=  " <a href='#' class='noc-summary' value='" . $row['cus_profile_id'] . "'>Noc Summary</a>";
+        if ($row['status'] == '10' || $row['status'] == '11') {
+            $response['info'] .=  " <a href='#' class='noc-summary' value='" . $row['cus_profile_id'] . "'>Noc Summary</a>";
         }
         $response['info'] .=  "  </div> </div>";
 
-if($row['status'] =='5' || $row['status'] =='6'){
-    $response['charts'] = "<div class='dropdown'>
-    <button class='btn btn-outline-secondary' disabled>
-        <i class='fa'>&#xf107;</i>
-    </button>
-    <div class='dropdown-content'>
-        <a href='#' class='due-chart' value='" . $row['cus_profile_id'] . "'>Due Chart</a>
-        <a href='#' class='penalty-chart' value='" . $row['cus_profile_id'] . "'>Penalty Chart</a>
-        <a href='#' class='fine-chart' value='" . $row['cus_profile_id'] . "'>Fine Chart</a>
-    </div>
-</div>";
-}else{
-    $response['charts'] = "<div class='dropdown'>
-    <button class='btn btn-outline-secondary'>
-        <i class='fa'>&#xf107;</i>
-    </button>
-    <div class='dropdown-content'>
-        <a href='#' class='due-chart' value='" . $row['cus_profile_id'] . "'>Due Chart</a>
-        <a href='#' class='penalty-chart' value='" . $row['cus_profile_id'] . "'>Penalty Chart</a>
-        <a href='#' class='fine-chart' value='" . $row['cus_profile_id'] . "'>Fine Chart</a>
-    </div>
-</div>";
-}
-     
+        if ($row['status'] < 7) { // Condition: Less than 7
+            $response['charts'] = "<div class='dropdown'>
+                <button class='btn btn-outline-secondary' disabled>
+                    <i class='fa'>&#xf107;</i>
+                </button>
+                <div class='dropdown-content'>
+                    <a href='#' class='due-chart' value='" . $row['cus_profile_id'] . "' style='pointer-events: none; color: gray;'>Due Chart</a>
+                    <a href='#' class='penalty-chart' value='" . $row['cus_profile_id'] . "' style='pointer-events: none; color: gray;'>Penalty Chart</a>
+                    <a href='#' class='fine-chart' value='" . $row['cus_profile_id'] . "' style='pointer-events: none; color: gray;'>Fine Chart</a>
+                </div>
+            </div>";
+        } else {
+            $response['charts'] = "<div class='dropdown'>
+                <button class='btn btn-outline-secondary'>
+                    <i class='fa'>&#xf107;</i>
+                </button>
+                <div class='dropdown-content'>
+                    <a href='#' class='due-chart' value='" . $row['cus_profile_id'] . "'>Due Chart</a>
+                    <a href='#' class='penalty-chart' value='" . $row['cus_profile_id'] . "'>Penalty Chart</a>
+                    <a href='#' class='fine-chart' value='" . $row['cus_profile_id'] . "'>Fine Chart</a>
+                </div>
+            </div>";
+        }
 
         $loan_list_arr[] = $response;
     }
@@ -160,9 +173,12 @@ function loanCustomerStatus($pdo, $cus_profile_id)
             $status = 'Pending';
         } elseif ($cs_status == '11') {
             $status = 'Completed';
-        }
-        elseif ($cs_status == '12') {
+        } elseif ($cs_status == '12') {
             $status = 'Completed';
+        } elseif ($cs_status == '13') {
+            $status = 'Cancel';
+        } elseif ($cs_status == '14') {
+            $status = 'Revoke';
         }
 
         return $status;
