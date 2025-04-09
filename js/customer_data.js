@@ -202,7 +202,7 @@ function getExistingPromotionTable(existing_details) {
 
     $.post('api/customer_data_files/get_existing_promotion.php', {existing_details }, function (response) {
         var columnMapping = [
-            'id',
+            'sno',
             'cus_id',
             'cus_name',
             'mobile1',
@@ -223,7 +223,7 @@ function getExistingPromotionTable(existing_details) {
 function getRePromotionTable(repromotion_details) {
     $.post('api/customer_data_files/get_repromotion_list.php', { repromotion_details}, function (response) {
         var columnMapping = [
-            'id',
+            'sno',
             'cus_id',
             'cus_name',
             'mobile1',

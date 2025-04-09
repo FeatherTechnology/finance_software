@@ -262,7 +262,7 @@
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-            <div class="modal-body">
+            <div class="modal-body" style="overflow-x: auto;">
                 <div class="container-fluid" id="fine_chart_table_div"> 
                     <div class="row">
                         <table class="table custom-table">

@@ -4,12 +4,13 @@ require '../../ajaxconfig.php';
 $search_list_arr = array();
 
 $cus_id = isset($_POST['cus_id']) ? $_POST['cus_id'] : '';
+$aadhar_num = isset($_POST['aadhar_num']) ? $_POST['aadhar_num'] : '';
 $cus_name = isset($_POST['cus_name']) ? $_POST['cus_name'] : '';
 $area = isset($_POST['area']) ? $_POST['area'] : '';
 $mobile = isset($_POST['mobile']) ? $_POST['mobile'] : '';
 
 // Initialize the query with the common part
-$sql = "SELECT cp.cus_id, cp.cus_name, anc.areaname AS area, lnc.linename, bc.branch_name, cp.mobile1
+$sql = "SELECT cp.cus_id, cp.aadhar_num, cp.cus_name, anc.areaname AS area, lnc.linename, bc.branch_name, cp.mobile1
         FROM customer_profile cp 
         LEFT JOIN line_name_creation lnc ON cp.line = lnc.id
         LEFT JOIN area_name_creation anc ON cp.area = anc.id
@@ -26,6 +27,10 @@ $parameters = [];
 if (!empty($cus_id)) {
     $conditions[] = "cp.cus_id LIKE :cus_id";
     $parameters[':cus_id'] = '%' . $cus_id . '%';
+}
+if (!empty($aadhar_num)) {
+    $conditions[] = "cp.aadhar_num LIKE :aadhar_num";
+    $parameters[':aadhar_num'] = '%' . $aadhar_num . '%';
 }
 if (!empty($cus_name)) {
     $conditions[] = "cp.cus_name LIKE :cus_name";

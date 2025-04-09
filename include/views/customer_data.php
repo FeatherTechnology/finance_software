@@ -48,24 +48,26 @@
         <div class="card-header">
             <div class="card-title">Existing List </div>
         </div>
-        <br>
         <div class="card-body">
-            <div class="col-6" style="display: flex;">
-                <div>
-                    <label for="existing_details">Existing Details</label>
-                    <input type="hidden" id="existing_id">
-                    <select class="form-control" id="existing_details" name="existing_details" tabindex="16" multiple>
-                        <option value="">Select Existing Details</option>
-                        <option value="needed">Needed</option>
-                        <option value="later">Later</option>
-                        <option value="to_follow">To Follow</option>
-                    </select>
+            <div class="row">
+                <div class="col-4"></div>
+                <div class="col-4" style="display: flex;">
+                    <div>
+                        <!-- <label for="existing_details">Existing Details</label> -->
+                        <input type="hidden" id="existing_id">
+                        <select class="form-control" id="existing_details" name="existing_details" tabindex="16" multiple>
+                            <option value="">Select Existing Details</option>
+                            <option value="needed">Needed</option>
+                            <option value="later">Later</option>
+                            <option value="tofollow">To Follow</option>
+                        </select>
+                    </div>
+                    <div style="margin-top:3px ; margin-left:40px;">
+                        <button type="button" class="btn btn-primary" id="existing_detail_btn">Proceed</button>
+                    </div>
                 </div>
-                <div style="margin-top:23px ; margin-left:40px;">
-                    <button type="button" class="btn btn-primary" id="existing_detail_btn">Proceed</button>
-                </div>
+                <div class="col-4"></div>
             </div>
-
         </div>
         <div class="card-body">
             <div class="col-12">
@@ -95,24 +97,26 @@
         <div class="card-header">
             <div class="card-title">Repromotion List </div>
         </div>
-        <br>
         <div class="card-body">
-            <div class="col-6" style="display: flex;">
-                <div>
-                    <label for="repromotion_details">Repromotion Details</label>
-                    <input type="hidden" id="existing_id">
-                    <select class="form-control" id="repromotion_details" name="repromotion_details" tabindex="16" multiple>
-                        <option value="">Select Existing Details</option>
-                        <option value="needed">Needed</option>
-                        <option value="later">Later</option>
-                        <option value="to_follow">To Follow</option>
-                    </select>
+            <div class="row">
+                <div class="col-4"></div>
+                <div class="col-4" style="display: flex;">
+                    <div>
+                        <!-- <label for="repromotion_details">Repromotion Details</label> -->
+                        <input type="hidden" id="existing_id">
+                        <select class="form-control" id="repromotion_details" name="repromotion_details" tabindex="16" multiple>
+                            <option value="">Select Existing Details</option>
+                            <option value="needed">Needed</option>
+                            <option value="later">Later</option>
+                            <option value="tofollow">To Follow</option>
+                        </select>
+                    </div>
+                    <div style="margin-top:3px ; margin-left:40px;">
+                        <button type="button" class="btn btn-primary" id="repromotion_detail_btn">Proceed</button>
+                    </div>
                 </div>
-                <div style="margin-top:23px ; margin-left:40px;">
-                    <button type="button" class="btn btn-primary" id="repromotion_detail_btn">Proceed</button>
-                </div>
+                <div class="col-4"></div>
             </div>
-
         </div>
         <div class="card-body">
             <div class="col-12">

@@ -19,6 +19,7 @@
                                 <tr>
                                     <th width="50">S.No.</th>
                                     <th>Customer ID</th>
+                                    <th>Aadhar Number</th>
                                     <th>Customer Name</th>
                                     <th>Area</th>
                                     <th>Line</th>
@@ -62,36 +63,42 @@
                                             </div>
                                         </div>
                                         <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
+                                        <div class="form-group">
+                                            <label for="aadhar_num">Aadhar Number</label><span class="text-danger">*</span>
+                                            <input type="text" class="form-control personal_info_disble" name="aadhar_num" id="aadhar_num" tabindex="2" maxlength="14" data-type="adhaar-number" disabled>
+                                        </div>
+                                    </div>
+                                        <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
                                             <div class="form-group">
                                                 <label for="cus_name">Customer Name</label>
-                                                <input type="text" class="form-control" id="cus_name" name="cus_name" pattern="[a-zA-Z\s]+" tabindex="2" disabled>
+                                                <input type="text" class="form-control" id="cus_name" name="cus_name" pattern="[a-zA-Z\s]+" tabindex="3" disabled>
                                             </div>
                                         </div>
                                         <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
                                             <div class="form-group">
                                                 <label for="cus_area">Area</label>
-                                                <input type="text" class="form-control" id="cus_area" name="cus_area" tabindex="3" disabled>
+                                                <input type="text" class="form-control" id="cus_area" name="cus_area" tabindex="4" disabled>
                                                 <input type="hidden" id="area_id" name="area_id">
                                             </div>
                                         </div>
                                         <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
                                             <div class="form-group">
                                                 <label for="cus_branch">Branch</label>
-                                                <input type="text" class="form-control" id="cus_branch" name="cus_branch" tabindex="4" disabled>
+                                                <input type="text" class="form-control" id="cus_branch" name="cus_branch" tabindex="5" disabled>
                                                 <input type="hidden" id="branch_id" name="branch_id">
                                             </div>
                                         </div>
                                         <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
                                             <div class="form-group">
                                                 <label for="cus_line">Line</label>
-                                                <input type="text" class="form-control" id="cus_line" name="cus_line" tabindex="5" disabled>
+                                                <input type="text" class="form-control" id="cus_line" name="cus_line" tabindex="6" disabled>
                                                 <input type="hidden" id="line_id" name="line_id">
                                             </div>
                                         </div>
                                         <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
                                             <div class="form-group">
                                                 <label for="cus_mobile"> Mobile No</label>
-                                                <input type="number" class="form-control" id="cus_mobile" name="cus_mobile" tabindex="6" disabled>
+                                                <input type="number" class="form-control" id="cus_mobile" name="cus_mobile" tabindex="7" disabled>
                                             </div>
                                         </div>
                                     </div>
@@ -158,38 +165,38 @@
                                 <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
                                     <div class="form-group">
                                         <label for="disabledInput">Total Amount</label>&nbsp;<span class="text-danger totspan">*</span>
-                                        <input type="text" class="form-control" readonly id="tot_amt" name="tot_amt" value='' tabindex='7'>
+                                        <input type="text" class="form-control" readonly id="tot_amt" name="tot_amt" value='' tabindex='8'>
                                     </div>
                                 </div>
                                 <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
                                     <div class="form-group">
                                         <label for="disabledInput">Paid Amount</label>&nbsp;<span class="text-danger paidspan">*</span>
-                                        <input type="text" class="form-control" readonly id="paid_amt" name="paid_amt" value='' tabindex='8'>
+                                        <input type="text" class="form-control" readonly id="paid_amt" name="paid_amt" value='' tabindex='9'>
                                     </div>
                                 </div>
                                 <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
                                     <div class="form-group">
                                         <label for="disabledInput">Balance Amount</label>&nbsp;<span class="text-danger balspan">*</span>
-                                        <input type="text" class="form-control" readonly id="bal_amt" name="bal_amt" value='' tabindex='9'>
+                                        <input type="text" class="form-control" readonly id="bal_amt" name="bal_amt" value='' tabindex='10'>
                                     </div>
                                 </div>
                                 <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
                                     <div class="form-group">
                                         <label for="disabledInput">Due Amount</label>&nbsp;<span class="text-danger">*</span>
-                                        <input type="text" class="form-control" readonly id="due_amt" name="due_amt" value='' tabindex='10'>
+                                        <input type="text" class="form-control" readonly id="due_amt" name="due_amt" value='' tabindex='11'>
                                     </div>
                                 </div>
                                 <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
                                     <div class="form-group">
                                         <label for="disabledInput">Pending Amount</label>&nbsp;<span class="text-danger pendingspan">*</span>
-                                        <input type="text" class="form-control" readonly id="pending_amt" name="pending_amt" value='' tabindex='11'>
+                                        <input type="text" class="form-control" readonly id="pending_amt" name="pending_amt" value='' tabindex='12'>
                                         <input type="hidden" class="form-control" readonly id="pend_amt" name="pend_amt">
                                     </div>
                                 </div>
                                 <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
                                     <div class="form-group">
                                         <label for="disabledInput">Payable Amount</label>&nbsp;<span class="text-danger payablespan">*</span>
-                                        <input type="text" class="form-control" readonly id="payable_amt" name="payable_amt" value='' tabindex='12'>
+                                        <input type="text" class="form-control" readonly id="payable_amt" name="payable_amt" value='' tabindex='13'>
                                         <input type="hidden" class="form-control" readonly id="payableAmount" name="payableAmount">
                                     </div>
                                 </div>

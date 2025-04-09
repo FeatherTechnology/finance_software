@@ -7,6 +7,7 @@
                     <tr>
                         <th>S.NO</th>
                         <th>Customer ID</th>
+                        <th>Aadhar Number</th>
                         <th>Customer Name</th>
                         <th>Area</th>
                         <th>Line</th>
@@ -62,7 +63,6 @@
                                         <div class="form-group">
                                             <label for="aadhar_nums"> Aadhar Number</label><span class="text-danger">*</span>
                                             <input type="text" class="form-control personal_info_disble" name="aadhar_nums" id="aadhar_nums" tabindex="2" maxlength="14" data-type="adhaar-number" placeholder="Enter Aadhar Number">
-                                            <input type="hidden" id="aadhar_num_upd" name="aadhar_num_upd">
                                         </div>
                                     </div>
                                     <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
