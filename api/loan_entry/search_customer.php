@@ -36,7 +36,7 @@ if ($result) {
 // Fetch related family info
 $familyQuery = "SELECT DISTINCT fi.*, cp.cus_name AS under_customer_name, cp.cus_id AS under_customer_id 
                 FROM family_info fi 
-                LEFT JOIN customer_profile cp ON fi.aadhar_num = cp.aadhar_num 
+                LEFT JOIN customer_profile cp ON fi.cus_id = cp.cus_id 
                 WHERE cp.id != '$cus_profile_id'";
 
 if (!empty($name)) {

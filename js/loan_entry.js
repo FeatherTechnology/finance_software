@@ -124,6 +124,7 @@ $(document).ready(function () {
         let aadhar_num = $('#aadhar_nums').val().trim().replace(/\s/g, '');
         let cus_name = $('#cus_name').val();
         let customerMobile = $(this).val().trim();
+        let cus_id = $('#auto_gen_cus_id').val();
         if (customerMobile) {
             dataCheckList(cus_id, cus_name, customerMobile,aadhar_num)
         } else {
@@ -786,7 +787,7 @@ $(document).ready(function () {
                     if (response.cus_data == 'Existing') {
                         $('.cus_status_div').show();
                         $('#loan_count_div').show();
-                        getLoanCount(cus_id,customer_profile_id);
+                        getLoanCount(cus_id);
                     }
                     else {
                         $('#loan_count_div').hide();
@@ -863,11 +864,11 @@ $(function () {
     getLoanEntryTable();
 });
 
-function getLoanCount(cus_id,customer_profile_id){
+function getLoanCount(cus_id){
     $.ajax({
         url: 'api/loan_entry/get_loan_count.php',
         type: 'POST',
-        data: { cus_id: cus_id  , customer_profile_id : customer_profile_id},
+        data: { cus_id: cus_id },
         dataType: 'json',
         cache: false,
         success: function (response) {
@@ -972,7 +973,7 @@ function fetchCustomerData(name, aadhar_num, mobile, cus_profile_id) {
         var familyData = response.family.map(function (member, index) {
             return {
                 index: index + 1,
-                aadhar_num: member.aadhar_num,
+                aadhar_num: member.fam_aadhar,
                 fam_name: member.fam_name,
                 fam_relationship: member.fam_relationship,
                 under_customer_name: member.under_customer_name,
@@ -2216,7 +2217,7 @@ function getLoanAfterInterest(loan_amt, int_rate, due_period, doc_charge, proc_f
         roundeprocfee += 5;
     }
     $('.proc-diff').text('* (Difference: +' + parseInt(roundeprocfee - proc_fee) + ')'); //To show the difference amount from old to new
-    $('#processing_fees_calculate').val(parseInt(moneyFormatIndia(roundeprocfee)));
+    $('#processing_fees_calculate').val(moneyFormatIndia(parseInt(roundeprocfee)));
 
     var net_cash = parseInt(loan_amt) - parseFloat(roundeddoccharge) - parseFloat(roundeprocfee); //Net cash will be calculated by subracting other charges
     $('#net_cash_calc').val(moneyFormatIndia(parseInt(net_cash).toFixed(0)));
@@ -2322,7 +2323,7 @@ function getLoanAfterBenifit(loan_amt, int_rate, due_period, doc_charge, proc_fe
         roundeprocfee += 5;
     }
     $('.proc-diff').text('* (Difference: +' + parseInt(roundeprocfee - proc_fee) + ')'); //To show the difference amount from old to new
-    $('#processing_fees_calculate').val(parseInt(moneyFormatIndia(roundeprocfee)));
+    $('#processing_fees_calculate').val(moneyFormatIndia(parseInt(roundeprocfee)));
     var net_cash = parseInt(loan_amt) - parseInt(doc_charge) - parseInt(proc_fee); //Net cash will be calculated by subracting other charges
     $('#net_cash_calc').val(moneyFormatIndia(parseInt(net_cash).toFixed(0)));
 

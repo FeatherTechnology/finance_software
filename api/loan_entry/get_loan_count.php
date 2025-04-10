@@ -3,13 +3,12 @@ require '../../ajaxconfig.php';
 
 $response = array();
 
-if (isset($_POST['cus_id']) && isset($_POST['customer_profile_id'])) {
+if (isset($_POST['cus_id'])) {
     $cus_id = $_POST['cus_id'];
-    $customer_profile_id = $_POST['customer_profile_id'];
 
     // Prepare and execute the query to fetch the relationship based on the property holder ID
    
-    $stmt = $pdo->prepare("SELECT COUNT(*) AS loan_count, MIN(lelc.loan_date) AS first_loan_date  FROM loan_entry_loan_calculation lelc  left join customer_status cs on cs.cus_id = lelc.cus_id WHERE lelc.cus_id = ? and cs.status >=7 ;");
+    $stmt = $pdo->prepare("SELECT COUNT(cs.cus_id) AS loan_count, MIN(lelc.loan_date) AS first_loan_date  FROM customer_status cs  left join loan_entry_loan_calculation lelc on cs.cus_profile_id = lelc.cus_profile_id WHERE cs.cus_id = ? and cs.status >=7 ;");
 
   
     $stmt->execute([$cus_id]);
