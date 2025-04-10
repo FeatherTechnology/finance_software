@@ -34,6 +34,7 @@ $query = "SELECT  cp.id, cp.cus_id, cp.cus_name, anc.areaname AS area, lnc.linen
     LEFT JOIN customer_status cs ON cp.id = cs.cus_profile_id
     LEFT JOIN existing_customer ec ON cp.cus_id = ec.cus_id
     WHERE cs.status >= 9 AND cs.status NOT IN (13, 14) $whereCondition
+    GROUP BY cp.cus_id
     ORDER BY cp.id DESC";
 
 $customerQry = $pdo->query($query);
