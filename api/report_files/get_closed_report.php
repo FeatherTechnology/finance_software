@@ -36,7 +36,7 @@ JOIN loan_category_creation lcc ON lelc.loan_category = lcc.id
 JOIN loan_category lc ON lcc.loan_category = lc.id
 JOIN users u ON FIND_IN_SET(cp.line, u.line)
 JOIN users us ON FIND_IN_SET(lelc.loan_category, us.loan_category)
-WHERE cs.status > 8 AND u.id ='$user_id' AND us.id ='$user_id' AND cs.closed_date BETWEEN '$from_date' AND '$to_date'";
+WHERE cs.status > 8 AND u.id ='$user_id' AND us.id ='$user_id' AND li.balance_amount = 0 AND cs.closed_date BETWEEN '$from_date' AND '$to_date'";
 
 
 if (isset($_POST['search'])) {

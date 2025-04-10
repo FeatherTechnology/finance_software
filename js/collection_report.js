@@ -11,13 +11,13 @@ $(document).ready(function () {
 
     $('#collection_report_btn').click(function () {
         // Get user access for download
-        getUserAccess(function(downloadAccess) {
+        getUserAccess(function (downloadAccess) {
             // Destroy existing DataTable instance
             $('#collection_report_table').DataTable().destroy();
-            
+
             // Initialize an empty array for buttons
             let buttons = [];
-    
+
             // Add Excel button only if download access is granted
             if (downloadAccess === 1) {
                 buttons.push({
@@ -25,13 +25,13 @@ $(document).ready(function () {
                     title: "Collection Report List"
                 });
             }
-    
+
             // Add column visibility button
             buttons.push({
                 extend: 'colvis',
                 collectionLayout: 'fixed four-column',
             });
-    
+
             // Initialize DataTable with dynamic buttons
             $('#collection_report_table').DataTable({
                 "order": [
@@ -57,34 +57,45 @@ $(document).ready(function () {
                 ],
                 "footerCallback": function (row, data, start, end, display) {
                     var api = this.api();
-    
-                    // Remove formatting to get integer data for summation
+
+                    // Convert number to Indian money format
+                    function moneyFormatIndia(num) {
+                        let x = num.toString();
+                        let afterPoint = '';
+                        if (x.indexOf('.') > 0)
+                            afterPoint = x.substring(x.indexOf('.'), x.length);
+                        x = Math.floor(num).toString();
+                        let lastThree = x.substring(x.length - 3);
+                        let otherNumbers = x.substring(0, x.length - 3);
+                        if (otherNumbers != '')
+                            lastThree = otherNumbers.replace(/\B(?=(\d{2})+(?!\d))/g, ",") + ',' + lastThree;
+                        return lastThree + afterPoint;
+                    }
+
                     var intVal = function (i) {
-                        return typeof i === 'string' ?
-                            i.replace(/[\$,]/g, '') * 1 :
-                            typeof i === 'number' ?
-                                i : 0;
+                        return typeof i === 'string'
+                            ? i.replace(/[\₹,]/g, '') * 1
+                            : typeof i === 'number'
+                                ? i
+                                : 0;
                     };
-    
-                    // Array of column indices to sum
+
                     var columnsToSum = [14, 15, 16, 17, 18, 19];
-    
-                    // Loop through each column index
+
                     columnsToSum.forEach(function (colIndex) {
-                        // Total over all pages for the current column
                         var total = api
                             .column(colIndex)
                             .data()
                             .reduce(function (a, b) {
                                 return intVal(a) + intVal(b);
                             }, 0);
-                        // Update footer for the current column
-                        $(api.column(colIndex).footer()).html(`<b>` + total.toLocaleString() + `</b>`);
+
+                        $(api.column(colIndex).footer()).html(`<b>${moneyFormatIndia(total)}</b>`);
                     });
                 }
             });
         });
     });
-    
+
 });
 
