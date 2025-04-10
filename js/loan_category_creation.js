@@ -156,6 +156,7 @@ $(document).ready(function () {
             $('#add_scheme_id').val(id);
             $('#add_scheme_name').val(response[0].scheme_name);
             $('#scheme_due_method').val(response[0].due_method);
+            $('#profit_method').val(response[0].profit_method.trim());
             $('#scheme_interest_rate').val(response[0].interest_rate_percent);
             $('#scheme_due_period').val(response[0].due_period_percent);
             $('#scheme_overdue_penalty').val(response[0].overdue_penalty_percent);
@@ -485,8 +486,9 @@ function deleteLoanCategory(id) {
             swalError('Access Denied', 'Used in Loan Category Creation');
         } else {
             swalError('Error', 'Loan Category Delete Failed.');
-
         }
+        $('#addloan_category_name').val('');
+        $('#addloan_category_id').val('');
     }, 'json');
 }
 

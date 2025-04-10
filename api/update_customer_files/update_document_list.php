@@ -12,7 +12,9 @@ $status = [
     9 => 'Closed',
     10 => 'NOC',
     11 => 'NOC',
-    12 => 'NOC'
+    12 => 'NOC',
+    13 => 'Loan Issue',
+    14 => 'Loan Issue'
 ];
 //$sub_status = [''=>'',1 => 'Consider', 2 => 'Reject'];
 $update_doc_list_arr = array();
@@ -34,9 +36,9 @@ if ($qry->rowCount() > 0) {
         // $updateDocInfo['c_sts'] = $status[$updateDocInfo['c_sts']];
         $loanCustomerStatus = loanCustomerStatus($pdo, $updateDocInfo['cus_profile_id']);
         $updateDocInfo['sub_status']  = $loanCustomerStatus;
-        $updateDocInfo['action'] = "<div class='dropdown'>
-            <button class='btn btn-outline-secondary'><i class='fa'>&#xf107;</i></button>
-            <div class='dropdown-content'>";
+        $updateDocInfo['action'] = '<div class="dropdown">
+        <button type="button" class="btn btn-outline-secondary"><i class="fa">&#xf107;</i></button>
+        <div class="dropdown-content">';
         if ($originalStatus <= 10) {
             $updateDocInfo['action'] .= "<a href='#' class='doc-update' value='" . $updateDocInfo['cus_profile_id'] . "' data-id='" . $updateDocInfo['cus_id'] . "' title='update details'>Update</a>";
         }
@@ -107,6 +109,10 @@ function loanCustomerStatus($pdo, $cus_profile_id)
             $status = 'Completed';
         } elseif ($cs_status == '12') {
             $status = 'Completed';
+        }elseif ($cs_status == '13') {
+            $status = 'Cancel';
+        } elseif ($cs_status == '14') {
+            $status = 'Revoke';
         }
 
         return $status;

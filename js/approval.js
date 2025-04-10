@@ -1016,7 +1016,7 @@ function fetchCustomerData(name, aadhar_num, mobile, cus_profile_id) {
         var familyData = response.family.map(function (member, index) {
             return {
                 index: index + 1,
-                aadhar_num: member.aadhar_num,
+                aadhar_num: member.fam_aadhar,
                 fam_name: member.fam_name,
                 fam_relationship: member.fam_relationship,
                 under_customer_name: member.under_customer_name,
@@ -1581,7 +1581,7 @@ function editCustmerProfile(id) {
         if (response[0].cus_data == 'Existing') {
             $('.cus_status_div').show();
             $('#loan_count_div').show();
-            let cus_id = response[0].cus_id; // Add this line
+            let cus_id = $('#auto_gen_cus_id').val(); // Add this line
             getLoanCount(cus_id);
             checkAdditionalRenewal(response[0].cus_id);
         } else {
