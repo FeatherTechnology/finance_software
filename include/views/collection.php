@@ -5,12 +5,12 @@
                 <h5 class="card-title">Collection List</h5>
             </div>
             <div class="col-12 sub_status" style="display: flex; align-items: center; justify-content: center; margin-top:13px">
-			<h4>Customer Status</h4>
-		</div>
+                <h4>Customer Status</h4>
+            </div>
             <div class="col-12 sub_status" style="display: flex; align-items: center; justify-content: center; margin-top: 13px;">
-			<button type="button" class="btn btn-primary" id="due_nill_btn" value="Due Nil">Due Nill</button>
-			<button type="button" class="btn btn-primary" id="all_btn" value="All" style="display: none;">All</button>
-			</div>
+                <button type="button" class="btn btn-primary" id="due_nill_btn" value="Due Nil">Due Nill</button>
+                <button type="button" class="btn btn-primary" id="all_btn" value="All" style="display: none;">All</button>
+            </div>
             <div class="card-body">
                 <div class="row">
                     <div class="col-12">
@@ -50,7 +50,7 @@
                         <input type="hidden" name="pending_sts" id="pending_sts" value="" />
                         <input type="hidden" name="od_sts" id="od_sts" value="" />
                         <input type="hidden" name="due_nil_sts" id="due_nil_sts" value="" />
-                        <input type="hidden" name="coll_sts" id="coll_sts"  />
+                        <input type="hidden" name="coll_sts" id="coll_sts" />
 
                         <div class="card-body">
                             <div class="row">
@@ -58,16 +58,16 @@
                                     <div class="row">
                                         <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
                                             <div class="form-group">
+                                                <label for="aadhar_num">Aadhar Number</label><span class="text-danger">*</span>
+                                                <input type="text" class="form-control personal_info_disble" name="aadhar_num" id="aadhar_num" tabindex="2" disabled>
+                                            </div>
+                                        </div>
+                                        <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
+                                            <div class="form-group">
                                                 <label for="cus_id">Customer ID</label>
                                                 <input type="text" class="form-control" id="cus_id" name="cus_id" tabindex="1" disabled>
                                             </div>
                                         </div>
-                                        <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
-                                        <div class="form-group">
-                                            <label for="aadhar_num">Aadhar Number</label><span class="text-danger">*</span>
-                                            <input type="text" class="form-control personal_info_disble" name="aadhar_num" id="aadhar_num" tabindex="2" maxlength="14" data-type="adhaar-number" disabled>
-                                        </div>
-                                    </div>
                                         <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
                                             <div class="form-group">
                                                 <label for="cus_name">Customer Name</label>

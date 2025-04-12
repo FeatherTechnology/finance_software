@@ -7,6 +7,7 @@ $(document).ready(function () {
         let cus_id = $(this).attr('value');
         $.post('api/common_files/personal_info.php', { cus_id }, function (response) {
             if (response.length > 0) {
+                $('#aadhar_num').val(response[0].aadhar_num);
                 $('#cus_id').val(response[0].cus_id);
                 $('#cus_name').val(response[0].cus_name);
                 $('#area').val(response[0].area);

@@ -76,6 +76,7 @@
                         <tr>
                             <th width="20">S.NO</th>
                             <th>Customer ID</th>
+                            <th>Aadhar Number</th>
                             <th>Customer Name</th>
                             <th>Mobile</th>
                             <th>Area</th>
@@ -125,6 +126,7 @@
                         <tr>
                             <th width="20">S.NO</th>
                             <th>Customer ID</th>
+                            <th>Aadhar Number</th>
                             <th>Customer Name</th>
                             <th>Mobile</th>
                             <th>Area</th>

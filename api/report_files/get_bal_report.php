@@ -9,13 +9,13 @@ $status = [2 => 'aa', 3 => 'Move', 4 => 'Approved', 5 => 'Cancel', 6 => 'Revoke'
 
 $column = [
     'li.id', 'lnc.linename', 'lelc.loan_id', 'li.issue_date', 'lelc.maturity_date',
-    'cp.cus_id', 'cp.cus_name', 'anc.areaname', 'bc.branch_name', 'cp.mobile1',
+    'cp.cus_id', 'cp.aadhar_num', 'cp.cus_name', 'anc.areaname', 'bc.branch_name', 'cp.mobile1',
     'lc.loan_category', 'li.id', 'li.id', 'li.id', 'li.id',
     'li.id', 'li.id', 'li.id', 'li.id', 'li.id',
     'li.id', 'li.id',
 ];
 
-$query = "SELECT li.id, lnc.linename, lelc.loan_id, li.issue_date, lelc.maturity_date, cp.cus_id, cp.cus_name, anc.areaname, bc.branch_name, cp.mobile1, lc.loan_category, ac.agent_name, lelc.loan_amnt, lelc.due_amnt, lelc.due_period, lelc.total_amnt, lelc.principal_amnt, lelc.interest_amnt,lelc.due_type, cs.status, c.due_amt_track, c.princ_amt_track, c.int_amt_track
+$query = "SELECT li.id, lnc.linename, lelc.loan_id, li.issue_date, lelc.maturity_date, cp.cus_id, cp.aadhar_num, cp.cus_name, anc.areaname, bc.branch_name, cp.mobile1, lc.loan_category, ac.agent_name, lelc.loan_amnt, lelc.due_amnt, lelc.due_period, lelc.total_amnt, lelc.principal_amnt, lelc.interest_amnt,lelc.due_type, cs.status, c.due_amt_track, c.princ_amt_track, c.int_amt_track
 FROM loan_issue li  
 JOIN customer_profile cp ON li.cus_profile_id = cp.id
 JOIN loan_entry_loan_calculation lelc ON li.cus_profile_id = lelc.cus_profile_id
@@ -47,6 +47,7 @@ if (isset($_POST['search']) && $_POST['search'] != "") {
         li.issue_date LIKE '%$search%' OR
         lelc.maturity_date LIKE '%$search%' OR
         cp.cus_id LIKE '%$search%' OR
+        cp.aadhar_num LIKE '%$search%' OR
         cp.cus_name LIKE '%$search%' OR
         anc.areaname LIKE '%$search%' OR
         bc.branch_name LIKE '%$search%' OR
@@ -102,6 +103,7 @@ foreach ($result as $row) {
     $sub_array[] = date('d-m-Y', strtotime($row['issue_date']));
     $sub_array[] = date('d-m-Y', strtotime($row['maturity_date']));
     $sub_array[] = $row['cus_id'];
+    $sub_array[] = $row['aadhar_num'];
     $sub_array[] = $row['cus_name'];
     $sub_array[] = $row['areaname'];
     $sub_array[] = $row['branch_name'];

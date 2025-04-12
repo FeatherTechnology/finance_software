@@ -53,7 +53,7 @@ $(document).ready(function () {
                     };
     
                     // Array of column indices to sum
-                    var columnsToSum = [12, 13, 15, 16, 17, 18];
+                    var columnsToSum = [13, 14, 16, 17, 18, 19];
     
                     // Loop through each column index
                     columnsToSum.forEach(function (colIndex) {

@@ -19,14 +19,14 @@
                                     <!-- Fields -->
                                     <div class="col-md-4 col-sm-6">
                                         <div class="form-group">
-                                            <label for="cust_id">Customer ID</label><span class="text-danger">*</span>
-                                            <input type="text" class="form-control" id="cust_id" name="cust_id" placeholder="Enter Customer ID" tabindex="1" >
+                                            <label for="aadhar_nums"> Aadhar Number</label><span class="text-danger">*</span>
+                                            <input type="text" class="form-control personal_info_disble" name="aadhar_nums" id="aadhar_nums" tabindex="2" maxlength="14" data-type="adhaar-number" placeholder="Enter Aadhar Number">
                                         </div>
                                     </div>
                                     <div class="col-md-4 col-sm-6">
                                         <div class="form-group">
-                                            <label for="aadhar_nums"> Aadhar Number</label><span class="text-danger">*</span>
-                                            <input type="text" class="form-control personal_info_disble" name="aadhar_nums" id="aadhar_nums" tabindex="2" maxlength="14" data-type="adhaar-number" placeholder="Enter Aadhar Number">
+                                            <label for="cust_id">Customer ID</label><span class="text-danger">*</span>
+                                            <input type="text" class="form-control" id="cust_id" name="cust_id" placeholder="Enter Customer ID" tabindex="1">
                                         </div>
                                     </div>
                                     <div class="col-md-4 col-sm-6">
@@ -117,7 +117,7 @@
             <div class="row gutters" id="noc_summary" style="display:none">
                 <input type="hidden" id="cp_id">
                 <div class="col-12">
-                    <div class="card" >
+                    <div class="card">
                         <!-- style="box-shadow: none;background-color: transparent;" -->
                         <div class="card-header">
                             <h5 class="card-title">NOC Summary&nbsp;<button type="button" id="back_to_cus_status" style="float:right" class="btn btn-primary "><span class="icon-arrow-left"></span>&nbsp;Back</button></h5>

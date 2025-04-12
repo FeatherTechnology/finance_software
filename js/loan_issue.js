@@ -1317,6 +1317,7 @@ function callLoanCaculationFunctions() {
 function personalInfo() {
     let id = $('#customer_profile_id').val();
     $.post('api/loan_issue_files/loan_issue_data.php', { id }, function (response) {
+        $('#aadhar_nums').val(response[0].aadhar_num);
         $('#cus_id').val(response[0].cus_id);
         $('#cus_name').val(response[0].cus_name);
         $('#cus_data').val(response[0].cus_data);

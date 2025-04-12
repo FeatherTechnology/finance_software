@@ -438,7 +438,7 @@ $(document).ready(function () {
                     getFamilyMember();
                     setTimeout(() => {
                         $("#fam_mem").val(response[0].fam_mem);
-                    }, 100);
+                    }, 1000);
                     $('.fam_mem_div').show();
                 }
                 if (response[0].proof_of == 1) {
@@ -1057,6 +1057,9 @@ function getFamilyInfoTable() {
 
 function getFamilyTable() {
     let cus_id = $('#auto_gen_cus_id').val();
+    let aadhar_num = $('#aadhar_nums').val().trim().replace(/\s/g, '');
+    let cus_name = $('#cus_name').val();
+    let customerMobile = $('#mobile1').val();
     $.post('api/loan_entry/family_creation_list.php', { cus_id: cus_id }, function (response) {
         var columnMapping = [
             'sno',
@@ -1078,6 +1081,7 @@ function getFamilyTable() {
         $('#fam_relationship').val('');
         $('#remarks').val('');
         $('#fam_live').val('');
+        dataCheckList(cus_id, cus_name, customerMobile,aadhar_num)
     }, 'json')
 }
 

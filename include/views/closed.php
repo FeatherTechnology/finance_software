@@ -12,6 +12,7 @@
                                 <tr>
                                     <th width="50">S.No.</th>
                                     <th>Customer ID</th>
+                                    <th>Aadhar Number</th>
                                     <th>Customer Name</th>
                                     <th>Area</th>
                                     <th>Line</th>
@@ -21,7 +22,7 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                
+
                             </tbody>
                         </table>
                     </div>
@@ -43,7 +44,12 @@
                             <div class="row">
                                 <div class="col-8">
                                     <div class="row">
-
+                                        <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
+                                            <div class="form-group">
+                                                <label for="aadhar_num">Aadhar Number</label><span class="text-danger">*</span>
+                                                <input type="text" class="form-control personal_info_disble" name="aadhar_num" id="aadhar_num" tabindex="2" disabled>
+                                            </div>
+                                        </div>
                                         <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
                                             <div class="form-group">
                                                 <label for="cus_id">Customer ID</label>
@@ -136,7 +142,7 @@
         <div class="modal-content" style="background-color: white">
             <div class="modal-header">
                 <h5 class="modal-title" id="exampleModalLongTitle">Closed Remark</h5>
-                <button type="button" class="close" data-dismiss="modal" tabindex="1" aria-label="Close"onclick="closeChartsModal()">
+                <button type="button" class="close" data-dismiss="modal" tabindex="1" aria-label="Close" onclick="closeChartsModal()">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
@@ -246,7 +252,7 @@
 
             </div>
             <div class="modal-footer">
-                <button class="btn btn-secondary" data-dismiss="modal"  onclick="closeChartsModal()" tabindex="4">Close</button>
+                <button class="btn btn-secondary" data-dismiss="modal" onclick="closeChartsModal()" tabindex="4">Close</button>
             </div>
         </div>
     </div>
@@ -258,12 +264,12 @@
         <div class="modal-content" style="background-color: white">
             <div class="modal-header">
                 <h5 class="modal-title" id="exampleModalLongTitle">Fine Chart</h5>
-                <button type="button" class="close" data-dismiss="modal" tabindex="1" aria-label="Close"  onclick="closeChartsModal()">
+                <button type="button" class="close" data-dismiss="modal" tabindex="1" aria-label="Close" onclick="closeChartsModal()">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
             <div class="modal-body" style="overflow-x: auto;">
-                <div class="container-fluid" id="fine_chart_table_div"> 
+                <div class="container-fluid" id="fine_chart_table_div">
                     <div class="row">
                         <table class="table custom-table">
                             <thead>
@@ -282,7 +288,7 @@
 
             </div>
             <div class="modal-footer">
-                <button class="btn btn-secondary" data-dismiss="modal"  onclick="closeChartsModal()" tabindex="4">Close</button>
+                <button class="btn btn-secondary" data-dismiss="modal" onclick="closeChartsModal()" tabindex="4">Close</button>
             </div>
         </div>
     </div>

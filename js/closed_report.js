@@ -81,7 +81,7 @@ $(document).ready(function () {
                                 : 0;
                     };
 
-                    var columnsToSum = [10];
+                    var columnsToSum = [11];
 
                     columnsToSum.forEach(function (colIndex) {
                         var total = api
