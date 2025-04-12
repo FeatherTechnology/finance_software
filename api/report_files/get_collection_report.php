@@ -15,6 +15,7 @@ $column = array(
     'lelc.loan_id',
     'li.issue_date',
     'c.cus_id',
+    'cp.aadhar_num',
     'cp.cus_name',
     'anc.areaname',
     'bc.branch_name',
@@ -25,12 +26,16 @@ $column = array(
     'u.name',
     'c.coll_date',
     'SUM(c.due_amt_track)',
+    'SUM(c.princ_amt_track)',
+    'SUM(c.int_amt_track)',
     'SUM(c.penalty_track)',
     'SUM(c.coll_charge_track)',
-    'SUM(c.total_paid_track)'
+    'SUM(c.total_paid_track)',
+    'cs.status',
+    'cs.sub_status'
 );
 
-$query = "SELECT c.id, lnc.linename, lelc.loan_id, li.issue_date, c.cus_id, cp.cus_name, anc.areaname, bc.branch_name , cp.mobile1, lc.loan_category, agc.agent_name, r.role, u.name, c.trans_date, c.coll_date, lelc.due_type, lelc.due_period, lelc.principal_amnt, lelc.interest_amnt, SUM(c.due_amt_track) as due_amt_track, SUM(c.princ_amt_track) as princ_amt_track, SUM(c.int_amt_track) as int_amt_track, SUM(c.penalty_track) as penalty_track, SUM(c.coll_charge_track) as coll_charge_track, SUM(c.total_paid_track) as total_paid_track, cs.status, cs.sub_status 
+$query = "SELECT c.id, lnc.linename, lelc.loan_id, li.issue_date, c.cus_id, cp.aadhar_num, cp.cus_name, anc.areaname, bc.branch_name , cp.mobile1, lc.loan_category, agc.agent_name, r.role, u.name, c.trans_date, c.coll_date, lelc.due_type, lelc.due_period, lelc.principal_amnt, lelc.interest_amnt, SUM(c.due_amt_track) as due_amt_track, SUM(c.princ_amt_track) as princ_amt_track, SUM(c.int_amt_track) as int_amt_track, SUM(c.penalty_track) as penalty_track, SUM(c.coll_charge_track) as coll_charge_track, SUM(c.total_paid_track) as total_paid_track, cs.status, cs.sub_status 
 FROM collection c
 JOIN loan_issue li ON c.cus_profile_id = li.cus_profile_id 
 JOIN customer_profile cp ON c.cus_profile_id = cp.id
@@ -53,6 +58,7 @@ if (isset($_POST['search'])) {
         $query .= " and (lelc.loan_id LIKE '%" . $_POST['search'] . "%'
                     OR li.issue_date LIKE '%" . $_POST['search'] . "%'
                     OR c.cus_id LIKE '%" . $_POST['search'] . "%'
+                    OR cp.aadhar_num LIKE '%" . $search . "%'
                     OR cp.cus_name LIKE '%" . $_POST['search'] . "%'
                     OR lnc.linename LIKE '%" . $_POST['search'] . "%'
                     OR anc.areaname LIKE '%" . $_POST['search'] . "%'
@@ -98,6 +104,7 @@ foreach ($result as $row) {
     $sub_array[] = $row['loan_id'];
     $sub_array[] = date('d-m-Y', strtotime($row['issue_date']));
     $sub_array[] = $row['cus_id'];
+    $sub_array[] = $row['aadhar_num'];
     $sub_array[] = $row['cus_name'];
     $sub_array[] = $row['areaname'];
     $sub_array[] = $row['branch_name'];

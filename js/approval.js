@@ -1,20 +1,13 @@
 $(document).ready(function () {
     $(document).on('click', '.approval-approve', function () {
-        // Get the cus_limit field value and trim it to avoid any extra spaces
-        let cus_limit = $('#cus_limit').val().trim().replace(/,/g, '');
-
-        // Check if cus_limit is empty
-        if (!cus_limit) {
-            // Prevent approval and show an alert or message
-            swalError('Warning', 'Kindly Enter the Customer Limit');
-            return; // Stop further execution
-        }
-
-        // If cus_limit is not empty, proceed with approval
+        let loan_calc_id = $(this).attr('data-id');
         let cus_sts_id = $(this).attr('value');
         let cus_sts = 4;
-        moveToNext(cus_sts_id, cus_sts);
+    
+        // Call check Customer Limit and only proceed when response is valid
+        checkCustomerLimit(loan_calc_id, cus_sts_id, cus_sts);
     });
+    
 
     $(document).on('click', '.approval-cancel', function () {
         let cus_sts_id = $(this).attr('value');
@@ -87,7 +80,7 @@ $(document).ready(function () {
         $('#loan_calculation_id').val(loanCalcId);
         swapTableAndCreation();
         editCustmerProfile(id)
-        //  loanCalculationEdit(loanCalcId);
+        // loanCalculationEdit(loanCalcId);
     });
 
     $('input[name=loan_entry_type]').click(function () {
@@ -131,7 +124,7 @@ $(document).ready(function () {
         let cus_id = $('#auto_gen_cus_id').val();
         let mobileno = $('#mobile1').val();
         if (aadhar_num) {
-            dataCheckList(cus_id, cus_name, mobileno ,aadhar_num)
+            dataCheckList(cus_id, cus_name, mobileno, aadhar_num)
         } else {
             removeCustomerID();
         }
@@ -149,7 +142,7 @@ $(document).ready(function () {
         let cus_id = $('#auto_gen_cus_id').val();
         let customerMobile = $(this).val().trim();
         if (customerMobile) {
-            dataCheckList(cus_id, cus_name, customerMobile ,aadhar_num)
+            dataCheckList(cus_id, cus_name, customerMobile, aadhar_num)
         } else {
             removeCustomerMobile();
         }
@@ -209,7 +202,7 @@ $(document).ready(function () {
         });
 
         if (isValid) {
-            $.post('api/loan_entry/submit_family_info.php', { cus_id, fam_name, fam_relationship,remarks, fam_age, fam_live, fam_occupation, fam_aadhar, fam_mobile, family_id }, function (response) {
+            $.post('api/loan_entry/submit_family_info.php', { cus_id, fam_name, fam_relationship, remarks, fam_age, fam_live, fam_occupation, fam_aadhar, fam_mobile, family_id }, function (response) {
                 if (response == '1') {
                     swalSuccess('Success', 'Family Info Added Successfully!');
                 } else {
@@ -458,7 +451,7 @@ $(document).ready(function () {
                     getFamilyMember();
                     setTimeout(() => {
                         $("#fam_mem").val(response[0].fam_mem);
-                    }, 100);
+                    }, 1000);
                     $('.fam_mem_div').show();
                 }
                 if (response[0].proof_of == 1) {
@@ -921,6 +914,21 @@ function moveToNext(cus_sts_id, cus_sts) {
         }
     }, 'json');
 }
+
+function checkCustomerLimit(loan_calc_id, cus_sts_id, cus_sts) {
+    $.post('api/common_files/check_customer_limit.php', { loan_calc_id }, function (response) {
+        if (response == '1') {
+            swalError('Warning', 'Kindly Enter The Customer Limit');
+        } else if (response == '2') {
+            swalError('Warning', 'Customer limit is less than the loan amount. Please update either the customer limit or the loan amount.');
+        } else if (response == '3') {
+            moveToNext(cus_sts_id, cus_sts);
+        } else {
+            swalError('Alert', 'Failed To Approved');
+        }
+    }, 'json');
+}
+
 function submitForm(action, cus_sts_id, cus_sts, remark) {
     $.post('api/common_files/update_status.php', { cus_sts_id, remark, cus_sts }, function (response) {
         if (response == '0') {
@@ -1477,7 +1485,7 @@ function getAlineName(areaId) {
     });
 }
 
-function dataCheckList(cus_id, cus_name, cus_mble_no,aadhar_num) {
+function dataCheckList(cus_id, cus_name, cus_mble_no, aadhar_num) {
     $.post('api/loan_entry/datacheck_name.php', { cus_id }, function (response) {
         //Name
         $('#name_check').empty();
@@ -1566,7 +1574,7 @@ function editCustmerProfile(id) {
             $('#mobile2_radio').prop('checked', true);
             $('#selected_mobile_radio').val('mobile2');
         }
-        dataCheckList(response[0].cus_id, response[0].cus_name, response[0].mobile1 ,response[0].aadhar_num)
+        dataCheckList(response[0].cus_id, response[0].cus_name, response[0].mobile1, response[0].aadhar_num)
         getGuarantorName()
         getAreaName()
         setTimeout(() => {

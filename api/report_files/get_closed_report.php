@@ -14,16 +14,21 @@ $column = array(
     'lelc.loan_id',
     'li.issue_date',
     'cp.cus_id',
+    'cp.aadhar_num',
     'cp.cus_name',
     'anc.areaname',
     'bc.branch_name',
     'cp.mobile1',
     'lc.loan_category',
-    'agc.agent_name'
+    'lelc.loan_amnt',
+    'lelc.maturity_date', 
+    'cs.closed_date', 
+    'cs.status',
+    'cs.sub_status'
 );
 
 
-$query = "SELECT cs.id, lnc.linename, lelc.loan_id, li.issue_date, cp.cus_id, cp.cus_name, anc.areaname, bc.branch_name , cp.mobile1, lc.loan_category, lelc.loan_amnt, lelc.maturity_date, cs.closed_date, cs.status, cs.sub_status 
+$query = "SELECT cs.id, lnc.linename, lelc.loan_id, li.issue_date, cp.cus_id, cp.aadhar_num, cp.cus_name, anc.areaname, bc.branch_name , cp.mobile1, lc.loan_category, lelc.loan_amnt, lelc.maturity_date, cs.closed_date, cs.status, cs.sub_status 
 FROM customer_status cs
 JOIN loan_issue li ON cs.cus_profile_id = li.cus_profile_id 
 JOIN customer_profile cp ON cs.cus_profile_id = cp.id
@@ -45,6 +50,7 @@ if (isset($_POST['search'])) {
             lelc.loan_id LIKE '%" . $_POST['search'] . "%' OR
             li.issue_date LIKE '%" . $_POST['search'] . "%' OR
             cp.cus_id LIKE '%" . $_POST['search'] . "%' OR
+            OR cp.aadhar_num LIKE '%" . $search . "%'
             cp.cus_name LIKE '%" . $_POST['search'] . "%' OR
             lnc.linename LIKE '%" . $_POST['search'] . "%' OR
             lc.loan_category LIKE '%" . $_POST['search'] . "%' OR
@@ -85,6 +91,7 @@ foreach ($result as $row) {
     $sub_array[] = $row['loan_id'];
     $sub_array[] = date('d-m-Y', strtotime($row['issue_date']));
     $sub_array[] = $row['cus_id'];
+    $sub_array[] = $row['aadhar_num'];
     $sub_array[] = $row['cus_name'];
     $sub_array[] = $row['areaname'];
     $sub_array[] = $row['branch_name'];

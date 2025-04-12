@@ -204,6 +204,7 @@ function getExistingPromotionTable(existing_details) {
         var columnMapping = [
             'sno',
             'cus_id',
+            'aadhar_num',
             'cus_name',
             'mobile1',
             'area',
@@ -225,6 +226,7 @@ function getRePromotionTable(repromotion_details) {
         var columnMapping = [
             'sno',
             'cus_id',
+            'aadhar_num',
             'cus_name',
             'mobile1',
             'area',

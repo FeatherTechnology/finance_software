@@ -80,7 +80,7 @@ $(document).ready(function () {
                                 : 0;
                     };
 
-                    var columnsToSum = [14, 15, 16, 17, 18, 19];
+                    var columnsToSum = [15, 16, 17, 18, 19,20];
 
                     columnsToSum.forEach(function (colIndex) {
                         var total = api

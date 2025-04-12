@@ -8,6 +8,7 @@ $to_date = $_POST['toDate'];
         <tr>
             <th>S.No</th>
             <th>Cus ID</th>
+            <th>Aadhar Number</th>
             <th>Loan ID</th>
             <th>Loan Date</th>
             <th>Maturity Date</th>
@@ -39,6 +40,7 @@ $to_date = $_POST['toDate'];
        $query = "SELECT
        cp.id,
        cp.cus_id,
+       cp.aadhar_num,
        lelc.loan_id,
        li.issue_date,
        lelc.maturity_date,
@@ -106,6 +108,7 @@ $to_date = $_POST['toDate'];
             <tr>
                 <td><?php echo $i++; ?></td>
                 <td><?php echo $dailyInfo['cus_id']; ?></td>
+                <td><?php echo $dailyInfo['aadhar_num']; ?></td>
                 <td><?php echo $dailyInfo['loan_id']; ?></td>
                 <td><?php echo date('d-m-Y', strtotime($dailyInfo['issue_date'])); ?></td>
                 <td><?php echo date('d-m-Y', strtotime($dailyInfo['maturity_date'])); ?></td>
@@ -138,7 +141,7 @@ $to_date = $_POST['toDate'];
     </tbody>
     <tfoot>
         <?php
-        $tfoot = "<tr><td colspan='5'><b>Total</b></td><td><b>" . moneyFormatIndia($total_bal_sum) . "</b></td><td></td><td colspan=" . $total_weeks . "></td><td><b>" . moneyFormatIndia($total_paid_sum) . "</b></td></tr>";
+        $tfoot = "<tr><td colspan='6'><b>Total</b></td><td><b>" . moneyFormatIndia($total_bal_sum) . "</b></td><td></td><td colspan=" . $total_weeks . "></td><td><b>" . moneyFormatIndia($total_paid_sum) . "</b></td></tr>";
         echo $tfoot;
         ?>
     </tfoot>
