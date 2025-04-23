@@ -17,6 +17,7 @@
                                 <th>Loan ID</th>
                                 <th>Loan Date</th>
                                 <th>Customer ID</th>
+                                <th>Aadhar Number</th>
                                 <th>Customer Name</th>
                                 <th>Area</th>
                                 <th>Branch</th>
@@ -39,7 +40,7 @@
                         <tbody></tbody>
                         <tfoot>
                             <tr>
-                                <td colspan="14"></td>
+                                <td colspan="15"></td>
                                 <td></td>
                                 <td></td>
                                 <td></td>

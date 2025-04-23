@@ -18,7 +18,7 @@ if (isset($_POST['repromotion_details']) && !empty($_POST['repromotion_details']
 }
 
 $customerQry = $pdo->query("SELECT 
-                cp.id, cp.cus_id, cp.cus_name, anc.areaname AS area, lnc.linename, 
+                cp.id, cp.cus_id, cp.aadhar_num, cp.cus_name, anc.areaname AS area, lnc.linename, 
                 bc.branch_name, cp.mobile1, cs.status as c_sts, cs.sub_status as c_substs, rc.repromotion_detail, rc.created_on as created,cp.created_on as cus_created
                 FROM customer_profile cp 
                 LEFT JOIN line_name_creation lnc ON cp.line = lnc.id 

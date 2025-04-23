@@ -6,6 +6,7 @@ $user_id = $_SESSION['user_id'];
 $column = array(
     'cp.id',
     'cp.cus_id',
+    'cp.aadhar_num',
     'cp.cus_name',
     'anc.areaname',
     'lnc.linename',
@@ -31,6 +32,7 @@ if (isset($_POST['search'])) {
     if ($_POST['search'] != "") {
         $search = $_POST['search'];
         $query .= " AND (cp.cus_id LIKE '" . $search . "%'
+                      OR cp.aadhar_num LIKE '%" . $search . "%'
                       OR cp.cus_name LIKE '%" . $search . "%'
                       OR anc.areaname LIKE '%" . $search . "%'
                       OR lnc.linename LIKE '%" . $search . "%'
@@ -67,6 +69,7 @@ foreach ($result as $row) {
     $sub_array[] = $sno++;
     $sub_array[] = isset($row['loan_date']) ? $row['loan_date'] : '';
     $sub_array[] = isset($row['cus_id']) ? $row['cus_id'] : '';
+    $sub_array[] = isset($row['aadhar_num']) ? $row['aadhar_num'] : '';
     $sub_array[] = isset($row['cus_name']) ? $row['cus_name'] : '';
     $sub_array[] = isset($row['areaname']) ? $row['areaname'] : '';
     $sub_array[] = isset($row['linename']) ? $row['linename'] : '';
@@ -81,7 +84,7 @@ foreach ($result as $row) {
     if ($row['c_sts'] == '3') {
 
         $action .= "<a href='#' class='approval-edit' value='" . $row['id'] . "' data-id='" . $row['loan_calc_id'] . "'  title='Edit details'>Edit</a>";
-        $action .= "<a href='#' class='approval-approve' value='" . $row['cus_sts_id'] . "' title='Approve'>Approve</a>";
+        $action .= "<a href='#' class='approval-approve' value='" . $row['cus_sts_id'] . "' data-id='" . $row['loan_calc_id'] . "' title='Approve'>Approve</a>";
         $action .= "<a href='#' class='approval-cancel' value='" . $row['cus_sts_id'] . "' title='Cancel'>Cancel</a>";
         $action .= "<a href='#' class='approval-revoke' value='" . $row['cus_sts_id'] . "' title='Revoke'>Revoke</a>";
     }

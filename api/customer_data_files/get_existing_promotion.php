@@ -23,7 +23,7 @@ if (isset($_POST['existing_details']) && !empty($_POST['existing_details'])) {
 }
 
 // Prepare the query to fetch customers with status >= 9
-$query = "SELECT  cp.id, cp.cus_id, cp.cus_name, anc.areaname AS area, lnc.linename, 
+$query = "SELECT  cp.id, cp.cus_id, cp.aadhar_num, cp.cus_name, anc.areaname AS area, lnc.linename, 
         bc.branch_name, cp.mobile1, cs.status as c_sts, cs.sub_status as c_substs,
         ec.created_on as created, ec.existing_detail, cp.created_on as cus_created
     FROM customer_profile cp

@@ -13,6 +13,7 @@
                                 <tr>
                                     <th width="50">S.No.</th>
                                     <th>Customer ID</th>
+                                    <th>Aadhar Number</th>
                                     <th>Customer Name</th>
                                     <th>Area</th>
                                     <th>Line</th>
@@ -46,7 +47,12 @@
                             <div class="row">
                                 <div class="col-8">
                                     <div class="row">
-
+                                        <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
+                                            <div class="form-group">
+                                                <label for="aadhar_num">Aadhar Number</label><span class="text-danger">*</span>
+                                                <input type="text" class="form-control personal_info_disble" name="aadhar_num" id="aadhar_num" tabindex="2" disabled>
+                                            </div>
+                                        </div>
                                         <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
                                             <div class="form-group">
                                                 <label for="cus_id">Customer ID</label>
@@ -177,7 +183,7 @@
                             </table>
                         </div>
                     </div>
-                    <div class="card endorsement-div"style="display:none">
+                    <div class="card endorsement-div" style="display:none">
                         <div class="card-header">
                             <h5 class="card-title">Endorsement List</h5>
                         </div>
@@ -200,7 +206,7 @@
                             </table>
                         </div>
                     </div>
-                    <div class="card doc_div"style="display:none">
+                    <div class="card doc_div" style="display:none">
                         <div class="card-header">
                             <h5 class="card-title">Other Document List</h5>
                         </div>
@@ -221,24 +227,24 @@
                             </table>
                         </div>
                     </div>
-                    <div class="card gold-div"style="display:none">
+                    <div class="card gold-div" style="display:none">
                         <div class="card-header">
                             <h5 class="card-title">Gold List</h5>
                         </div>
                         <div class="card-body">
-                                <table class="table custom-table" id="noc_gold_list_table">
-                                    <thead>
-                                        <th>S No.</th>
-                                        <th>Gold Type</th>
-                                        <th>Purity</th>
-                                        <th>Weight</th>
-                                        <th>Date of NOC</th>
-                                        <th>Handover Person</th>
-                                        <th>Relationship</th>
-                                        <th>Checklist</th>
-                                    </thead>
-                                    <tbody></tbody>
-                                </table>
+                            <table class="table custom-table" id="noc_gold_list_table">
+                                <thead>
+                                    <th>S No.</th>
+                                    <th>Gold Type</th>
+                                    <th>Purity</th>
+                                    <th>Weight</th>
+                                    <th>Date of NOC</th>
+                                    <th>Handover Person</th>
+                                    <th>Relationship</th>
+                                    <th>Checklist</th>
+                                </thead>
+                                <tbody></tbody>
+                            </table>
                         </div>
                     </div>
                     <div class="card">

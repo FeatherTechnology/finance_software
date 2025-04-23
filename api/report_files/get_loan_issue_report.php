@@ -7,8 +7,10 @@ $from_date = $_POST['params']['from_date'];
 $to_date = $_POST['params']['to_date'];
 
 $column = array(
+    'li.id',
     'lelc.loan_id',
     'cp.cus_id',
+    'cp.aadhar_num',
     'cp.cus_name',
     'gaurantor',
     'anc.areaname',
@@ -23,12 +25,12 @@ $column = array(
     'lelc.interest_amnt',
     'lelc.doc_charge_calculate',
     'lelc.processing_fees_calculate',
-    'tot_amnt',
+    'lelc.total_amnt',
     'li.net_cash',
     'li.issue_person',
     'li.relationship'
 );
-$query = "SELECT lelc.loan_id, cp.cus_id, cp.cus_name, fi.fam_name as gaurantor, anc.areaname, lnc.linename, bc.branch_name , cp.mobile1, lc.loan_category, agc.agent_name, li.issue_date, lelc.loan_amnt, lelc.principal_amnt, lelc.interest_amnt, lelc.doc_charge_calculate, lelc.processing_fees_calculate, li.loan_amnt as tot_amnt, li.net_cash, li.issue_person, li.relationship 
+$query = "SELECT lelc.loan_id, cp.cus_id, cp.aadhar_num, cp.cus_name, fi.fam_name as gaurantor, anc.areaname, lnc.linename, bc.branch_name , cp.mobile1, lc.loan_category, agc.agent_name, li.issue_date, lelc.loan_amnt, lelc.principal_amnt, lelc.interest_amnt, lelc.doc_charge_calculate, lelc.processing_fees_calculate, lelc.total_amnt, li.net_cash, li.issue_person, li.relationship 
 FROM loan_issue li 
 JOIN customer_profile cp ON li.cus_profile_id = cp.id
 JOIN loan_entry_loan_calculation lelc ON cp.id = lelc.cus_profile_id
@@ -48,6 +50,7 @@ if (isset($_POST['search'])) {
         $search = $_POST['search'];
         $query .=     " AND (lelc.loan_id LIKE '%" . $search . "%'
         OR cp.cus_id LIKE '%" . $search . "%'
+        OR cp.aadhar_num LIKE '%" . $search . "%'
         OR cp.cus_name LIKE '%" . $search . "%'
         OR fi.fam_name LIKE '%" . $search . "%'
         OR anc.areaname LIKE '%" . $search . "%'
@@ -62,7 +65,7 @@ if (isset($_POST['search'])) {
         OR lelc.interest_amnt LIKE '%" . $search . "%' 
         OR lelc.doc_charge_calculate LIKE '%" . $search . "%' 
         OR lelc.processing_fees_calculate LIKE '%" . $search . "%' 
-        OR li.loan_amnt LIKE '%" . $search . "%' 
+        OR lelc.total_amnt LIKE '%" . $search . "%' 
         OR li.net_cash LIKE '%" . $search . "%' 
         OR li.issue_person LIKE '%" . $search . "%' 
         OR li.relationship LIKE '%" . $search . "%' )";
@@ -97,6 +100,7 @@ foreach ($result as $row) {
     $sub_array[] = $sno++;
     $sub_array[] = isset($row['loan_id']) ? $row['loan_id'] : '';
     $sub_array[] = isset($row['cus_id']) ? $row['cus_id'] : '';
+    $sub_array[] = isset($row['aadhar_num']) ? $row['aadhar_num'] : ''; 
     $sub_array[] = isset($row['cus_name']) ? $row['cus_name'] : '';
     $sub_array[] = isset($row['gaurantor']) ? $row['gaurantor'] : '';
     $sub_array[] = isset($row['areaname']) ? $row['areaname'] : '';
@@ -105,13 +109,13 @@ foreach ($result as $row) {
     $sub_array[] = isset($row['mobile1']) ? $row['mobile1'] : '';
     $sub_array[] = isset($row['loan_category']) ? $row['loan_category'] : '';
     $sub_array[] = isset($row['agent_name']) ? $row['agent_name'] : '';
-    $sub_array[] = isset($row['issue_date']) ? $row['issue_date'] : '';
+    $sub_array[] = isset($row['issue_date']) ? date('d-m-Y', strtotime($row['issue_date'])) : '';
     $sub_array[] = isset($row['loan_amnt']) ? moneyFormatIndia($row['loan_amnt']) : '';
     $sub_array[] = isset($row['principal_amnt']) ? moneyFormatIndia($row['principal_amnt']) : '';
     $sub_array[] = isset($row['interest_amnt']) ? moneyFormatIndia($row['interest_amnt']) : '';
     $sub_array[] = isset($row['doc_charge_calculate']) ? moneyFormatIndia($row['doc_charge_calculate']) : '';
     $sub_array[] = isset($row['processing_fees_calculate']) ? moneyFormatIndia($row['processing_fees_calculate']) : '';
-    $sub_array[] = isset($row['tot_amnt']) ? moneyFormatIndia($row['tot_amnt']) : '';
+    $sub_array[] = isset($row['total_amnt']) ? moneyFormatIndia($row['total_amnt']) : '';
     $sub_array[] = isset($row['net_cash']) ? moneyFormatIndia($row['net_cash']) : '';
     $sub_array[] = isset($row['issue_person']) ? $row['issue_person'] : '';
     $sub_array[] = isset($row['relationship']) ? $row['relationship'] : '';
