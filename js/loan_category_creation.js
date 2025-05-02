@@ -454,10 +454,16 @@ function getSchemeDropdown() {
     $.post('api/loan_category_creation/get_scheme_list.php', function (response) {
         scheme_choices.clearStore();
         let selectedSchemeId = [];
+
+        // Clean and prepare the selected IDs
+        let schemename2 = ($('#scheme_name2').val() || '')
+            .split(',')
+            .map(s => s.trim()); // trim whitespace
+
         $.each(response, function (index, val) {
             let selected = '';
-            let schemename2 = $('#scheme_name2').val();
-            if (schemename2.includes(val.id)) {
+
+            if (schemename2.includes(val.id.toString())) {
                 selected = 'selected';
                 selectedSchemeId.push(val.id);
             }
