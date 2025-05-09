@@ -5,7 +5,8 @@ $status = [
     8 => 'Closed',
     9 => 'Closed',
     10 => 'NOC',
-    11 => 'NOC'
+    11 => 'NOC',
+    12 => 'NOC Completed'
 ];
 
 $sub_status = [
@@ -83,6 +84,8 @@ function loanCustomerStatus($pdo, $cus_id)
             return 'Pending';
         } elseif ($cs_status == '11') {
             return 'Completed';
+        }else if($cs_status == '12'){
+            return ($sub_sts == '1') ? 'Consider' : 'Rejected';
         }
     }
 
