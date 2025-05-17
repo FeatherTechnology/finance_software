@@ -245,20 +245,27 @@ class bulkUploadClass
         return $auto_cus_id;
     }
 
-    function checkCustomerData($pdo, $cus_id, $cus_profile_id)
+    function checkCustomerData($pdo, $cus_id,$aadhar_num)
     {
-        $cus_id = strip_tags($cus_id); // Sanitize input
-        // Query to check customer profile and status
+        
+    $check_query = "SELECT cus_id FROM customer_profile WHERE aadhar_num = '$aadhar_num'";
+        $result = $pdo->query($check_query);
+        if ($result->rowCount() > 0) {
+            $datacheck = $result->fetch(PDO::FETCH_ASSOC);
+              $cus_id =$datacheck ['cus_id'];
+        }
+        else{
+            $cus_id = strip_tags($cus_id); // Sanitize input
+        }
         $qry = $pdo->query("SELECT cp.*, cs.status 
                             FROM customer_profile cp
                             INNER JOIN customer_status cs ON cp.cus_id = cs.cus_id
-                            WHERE cp.cus_id = '$cus_id' 
-                            AND cp.id != '$cus_profile_id'");
+                            WHERE cp.cus_id = '$cus_id'order by cp.id desc limit 1");
     
         if ($qry && $qry->rowCount() > 0) {
             $result = $qry->fetch(PDO::FETCH_ASSOC);
             $status = $result['status'];  // Fetch the customer status
-    
+    echo $status;
             // Determine cus_status based on status value
             if ($status >= 1 && $status <= 6) {
                 $cus_status = '';  // For status between 1 and 6, cus_status is empty
@@ -267,15 +274,15 @@ class bulkUploadClass
             } elseif ($status >= 9) {
                 $cus_status = 'Renewal';  // For status 9 or above, cus_status is 'Renewal'
             }
-    
+            echo $cus_status;
             $response['cus_data'] = 'Existing';  // Customer is 'Existing'
-            $response['id'] = $result['id'];     // Return the customer ID
+            $response['cus_id'] = $cus_id ;     // Return the customer ID
             $response['cus_status'] = $cus_status;  // Include the determined cus_status
     
         } else {
             // If no result is found, it's a new customer
             $response['cus_data'] = 'New';   // Customer is 'New'
-            $response['id'] = '';            // No ID for new customers
+            $response['cus_id'] = $cus_id;            // No ID for new customers
             $response['cus_status'] = '';    // cus_status is empty for new customers
         }
     
@@ -393,10 +400,9 @@ class bulkUploadClass
         $check_query = "SELECT id FROM family_info WHERE cus_id = '" . $data['cus_id'] . "' AND fam_aadhar = '" . $data['guarantor_aadhar_no'] . "'";
         $result = $pdo->query($check_query);
         if ($result->rowCount() == 0) {
-            $insert_query = "INSERT INTO family_info (cus_id, aadhar_num ,fam_name, fam_relationship, fam_age, fam_live, fam_occupation,fam_aadhar, fam_mobile, insert_login_id, created_on, updated_on) 
+            $insert_query = "INSERT INTO family_info (cus_id,fam_name, fam_relationship, fam_age, fam_live, fam_occupation,fam_aadhar, fam_mobile, insert_login_id, created_on, updated_on) 
                 VALUES (
                     '" . $data['cus_id'] . "',
-                    '" . $data['aadhar_num'] . "',
                     '" . $data['guarantor_name'] . "',
                     '" . $data['guarantor_relationship'] . "',
                     '" . $data['guarantor_age'] . "',
@@ -432,21 +438,21 @@ class bulkUploadClass
         $pdo->query($insert_cp_query);
         $cus_profile_id = $pdo->lastInsertId(); 
 
-        $update_qry = "UPDATE customer_profile 
-        SET cus_data = 'Existing', 
-        cus_status = '" . strip_tags($data['cus_status']) . "' 
-        WHERE id =' $cus_profile_id'"; 
+        // $update_qry = "UPDATE customer_profile 
+        // SET cus_data = 'Existing', 
+        // cus_status = '" . strip_tags($data['cus_status']) . "' 
+        // WHERE id =' $cus_profile_id'"; 
     
-        $pdo->query($update_qry);
+        // $pdo->query($update_qry);
         // Get the last inserted ID
         
-        $cus_sts_insert_query = "INSERT INTO `customer_status` (`cus_profile_id`, `status`, `update_login_id`, `updated_on`, `cus_id`,aadhar_num)  VALUES (:cus_profile_id, 1, :user_id, NOW(), :cus_id ,:aadhar_num)";
+        $cus_sts_insert_query = "INSERT INTO `customer_status` (`cus_profile_id`, `status`, `update_login_id`, `updated_on`, `cus_id`)  VALUES (:cus_profile_id, 1, :user_id, NOW(), :cus_id )";
         $stmt = $pdo->prepare($cus_sts_insert_query);
         $stmt->execute([
             ':cus_profile_id' => $cus_profile_id,
             ':user_id' => $user_id,
-            ':cus_id' => strip_tags($data['cus_id']),
-            ':aadhar_num' => strip_tags($data['aadhar_num'])
+            ':cus_id' => strip_tags($data['cus_id'])
+            
         ]);
 
         // Insert into loan_entry_loan_calculation table
@@ -456,10 +462,10 @@ class bulkUploadClass
         }
 
         $insert_vlc = "INSERT INTO loan_entry_loan_calculation (
-            cus_profile_id, cus_id, aadhar_num , loan_id, loan_category, loan_amount, profit_type, due_method, due_type, profit_method, scheme_due_method, scheme_day, scheme_name, interest_rate, due_period, doc_charge, processing_fees,
+            cus_profile_id, cus_id,  loan_id, loan_category, loan_amount, profit_type, due_method, due_type, profit_method, scheme_due_method, scheme_day, scheme_name, interest_rate, due_period, doc_charge, processing_fees,
             loan_amnt, principal_amnt, interest_amnt, total_amnt, due_amnt, doc_charge_calculate, processing_fees_calculate, net_cash, loan_date, due_startdate, maturity_date, referred, agent_id, agent_name, insert_login_id, created_on, updated_on
         ) VALUES (
-            '" . strip_tags($cus_profile_id) . "', '" . strip_tags($data['cus_id']) . "','" . strip_tags($data['aadhar_num']) . "','" . strip_tags($data['loan_id']) . "', '" . strip_tags($data['loan_category_id']) . "','" . strip_tags($data['loan_amount']) . "', '" . strip_tags($data['profit_type']) . "', '" . $due_method . "', '" . strip_tags($data['due_type']) . "',
+            '" . strip_tags($cus_profile_id) . "', '" . strip_tags($data['cus_id']) . "','" . strip_tags($data['loan_id']) . "', '" . strip_tags($data['loan_category_id']) . "','" . strip_tags($data['loan_amount']) . "', '" . strip_tags($data['profit_type']) . "', '" . $due_method . "', '" . strip_tags($data['due_type']) . "',
             '" . strip_tags($data['profit_method']) . "','" . strip_tags($data['due_method_scheme']) . "','" . strip_tags($data['scheme_day']) . "','" . strip_tags($data['scheme_id']) . "',
             '" . strip_tags($data['interest_rate']) . "','" . strip_tags($data['due_period']) . "','" . strip_tags($data['doc_charge']) . "','" . strip_tags($data['processing_fees']) . "','" . strip_tags($data['loan_amount']) . "','" . strip_tags($data['principal_amnt']) . "',
             '" . strip_tags($data['interest_amnt']) . "', '" . strip_tags($data['total_amnt']) . "', '" . strip_tags($data['due_amnt']) . "', '" . strip_tags($data['doc_charge_calculate']) . "', '" . strip_tags($data['processing_fees_calculate']) . "',
@@ -505,8 +511,8 @@ class bulkUploadClass
     {
         $errcolumns = array();
 
-        if ($data['cus_id'] == 'Invalid') {
-            $errcolumns[] = 'Customer ID';
+        if ($data['aadhar_num'] == 'Invalid') {
+            $errcolumns[] = 'Aadhar Number';
         }
 
         if ($data['cus_data'] == 'Not Found') {
@@ -519,9 +525,9 @@ class bulkUploadClass
             $errcolumns[] = 'Customer Existence Type';
         }
 
-        if ($data['cus_name'] == '') {
-            $errcolumns[] = 'Customer Name';
-        }
+        // if ($data['cus_name'] == '') {
+        //     $errcolumns[] = 'Customer Name';
+        // }
         if ($data['dob'] == 'Invalid Date') {
             $errcolumns[] = 'Date Of Birth';
         }

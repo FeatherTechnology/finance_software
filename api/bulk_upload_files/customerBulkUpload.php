@@ -52,19 +52,16 @@ if (in_array($_FILES["excelFile"]["type"], $allowedFileType)) {
                 $err_columns = $obj->handleError($data);
                 if (empty($err_columns)) {
                     // Call LoanEntryTables function
+                    $cus_data_response = $obj->checkCustomerData($pdo, $data['cus_id'],$data['aadhar_num']);
+                    $data['cus_data'] = $cus_data_response['cus_data'];
+                    $data['cus_status'] = $cus_data_response['cus_status'];
+                    $data['cus_id'] = $cus_data_response['cus_id'];
+
                     $obj->FamilyTable($pdo, $data);
                     $gur_id = $obj->guarantorName($pdo, $data['cus_id']);
                     $data['gur_id'] = $gur_id;   
                     $cus_profile_id=$obj->LoanEntryTables($pdo, $data);
-                    $cus_data_response = $obj->checkCustomerData($pdo, $data['cus_id'], $cus_profile_id);
-                    $data['cus_data'] = $cus_data_response['cus_data'];
                     
-                    $data['id'] = $cus_data_response['id'];
-                    if ($cus_data_response['cus_data'] == 'Existing') {
-                        $data['cus_status'] = $cus_data_response['cus_status']; // 'Additional' or 'Renewal'
-                    } else {
-                        $data['cus_status'] = ''; // For new customers, status is empty
-                    }
                     
                 } else {
                     $errtxt = "Please Check the input given in Serial No: " . ($rowChange) . " on below. <br><br>";
