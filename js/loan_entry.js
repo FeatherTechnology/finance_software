@@ -1707,6 +1707,7 @@ $(document).ready(function () {
             $('.scheme_day').hide();
             getLoanCatDetails(id, 1);
             $('#scheme_due_method_calc').val('')
+            $('#profit_method_calc').val('After Benefit');
         } else if (profitType == '1') { //Scheme
             $('#scheme_due_method_calc').val('').trigger('change');
             $('.calc').hide();
