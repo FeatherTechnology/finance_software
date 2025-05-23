@@ -265,7 +265,7 @@ class bulkUploadClass
         if ($qry && $qry->rowCount() > 0) {
             $result = $qry->fetch(PDO::FETCH_ASSOC);
             $status = $result['status'];  // Fetch the customer status
-    echo $status;
+    
             // Determine cus_status based on status value
             if ($status >= 1 && $status <= 6) {
                 $cus_status = '';  // For status between 1 and 6, cus_status is empty
@@ -274,7 +274,7 @@ class bulkUploadClass
             } elseif ($status >= 9) {
                 $cus_status = 'Renewal';  // For status 9 or above, cus_status is 'Renewal'
             }
-            echo $cus_status;
+        
             $response['cus_data'] = 'Existing';  // Customer is 'Existing'
             $response['cus_id'] = $cus_id ;     // Return the customer ID
             $response['cus_status'] = $cus_status;  // Include the determined cus_status
@@ -438,12 +438,6 @@ class bulkUploadClass
         $pdo->query($insert_cp_query);
         $cus_profile_id = $pdo->lastInsertId(); 
 
-        // $update_qry = "UPDATE customer_profile 
-        // SET cus_data = 'Existing', 
-        // cus_status = '" . strip_tags($data['cus_status']) . "' 
-        // WHERE id =' $cus_profile_id'"; 
-    
-        // $pdo->query($update_qry);
         // Get the last inserted ID
         
         $cus_sts_insert_query = "INSERT INTO `customer_status` (`cus_profile_id`, `status`, `update_login_id`, `updated_on`, `cus_id`)  VALUES (:cus_profile_id, 1, :user_id, NOW(), :cus_id )";
