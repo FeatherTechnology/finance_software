@@ -265,7 +265,6 @@ class bulkUploadClass
         if ($qry && $qry->rowCount() > 0) {
             $result = $qry->fetch(PDO::FETCH_ASSOC);
             $status = $result['status'];  // Fetch the customer status
-    
             // Determine cus_status based on status value
             if ($status >= 1 && $status <= 6) {
                 $cus_status = '';  // For status between 1 and 6, cus_status is empty
@@ -274,7 +273,6 @@ class bulkUploadClass
             } elseif ($status >= 9) {
                 $cus_status = 'Renewal';  // For status 9 or above, cus_status is 'Renewal'
             }
-        
             $response['cus_data'] = 'Existing';  // Customer is 'Existing'
             $response['cus_id'] = $cus_id ;     // Return the customer ID
             $response['cus_status'] = $cus_status;  // Include the determined cus_status
