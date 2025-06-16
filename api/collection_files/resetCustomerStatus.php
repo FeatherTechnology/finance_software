@@ -6,12 +6,20 @@ if (isset($_POST['cus_id'])) {
 }
 
 $cp_arr = array();
+if (isset($cus_id)) {
 $qry = $pdo->query("SELECT li.cus_profile_id as cp_id FROM loan_issue li JOIN customer_status cs ON li.cus_profile_id = cs.cus_profile_id  where li.cus_id = '$cus_id' and cs.status =7  ORDER BY li.cus_profile_id DESC ");
 while ($row = $qry->fetch()) {
     $cp_arr[] = $row['cp_id'];
 }
+}
 
-
+if (isset($_POST['cpID'])) {
+    $cpid = $_POST['cpID'];
+    $cp_arr[] = $cpid;
+    $qry = $pdo->query("SELECT cus_id FROM loan_issue where cus_profile_id = $cpid ");
+    $row = $qry->fetch();
+    $cus_id = $row['cus_id'];
+}
 //get Total amt from ack loan calculation (For monthly interest total amount will not be there, so take principals)*
 //get Paid amt from collection table if nothing paid show 0*
 //balance amount is Total amt - paid amt*

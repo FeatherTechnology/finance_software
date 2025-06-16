@@ -42,7 +42,23 @@ if($profit_type_calc =='1'){
 }
 
 $status = 0;
+try {
+    // Begin transaction
+    $pdo->beginTransaction();
+    // Get the latest Branch code
+    $selectIC = $pdo->query("SELECT loan_id FROM loan_entry_loan_calculation WHERE loan_id != '' ORDER BY id DESC LIMIT 1 FOR UPDATE");
 if ($id == '') {
+     $myStr = "LID";
+        if ($selectIC->rowCount() > 0) {
+            $row = $selectIC->fetch();
+            $ac2 = $row["loan_id"];
+            $appno2 = ltrim(strstr($ac2, '-'), '-');
+            $appno2 = $appno2 + 1;
+            $loan_id_calc = $myStr . "-" . $appno2;
+        } else {
+            $initialapp = $myStr . "-101";
+            $loan_id_calc = $initialapp;
+        }
     $qry = $pdo->query("INSERT INTO `loan_entry_loan_calculation`(`cus_profile_id`, `cus_id`, `loan_id`, `loan_category`, `category_info`, `loan_amount`, `profit_type`, `due_method`, `due_type`, `profit_method`, `scheme_due_method`, `scheme_day`, `scheme_name`, `interest_rate`, `due_period`, `doc_charge`, `processing_fees`, `loan_amnt`, `principal_amnt`, `interest_amnt`, `total_amnt`, `due_amnt`, `doc_charge_calculate`, `processing_fees_calculate`, `net_cash`, `loan_date`, `due_startdate`, `maturity_date`, `referred`, `agent_id`, `agent_name`, `insert_login_id`, `created_on`) 
     VALUES ('$customer_profile_id', '$cus_id', '$loan_id_calc','$loan_category_calc','$category_info_calc','$loan_amount_calc','$profit_type_calc','$due_method_calc','$due_type_calc','$profit_method_calc','$scheme_due_method_calc','$scheme_day_calc','$scheme_name_calc','$interest_rate_calc','$due_period_calc','$doc_charge_calc','$processing_fees_calc','$loan_amnt_calc','$principal_amnt_calc','$interest_amnt_calc','$total_amnt_calc','$due_amnt_calc','$doc_charge_calculate','$processing_fees_calculate','$net_cash_calc','$loan_date_calc','$due_startdate_calc','$maturity_date_calc','$referred_calc','$agent_id_calc','$agent_name_calc','$user_id',now())");
     if ($qry) {
@@ -55,9 +71,16 @@ if ($id == '') {
         $status = 2;
         $last_id = $id;
     }
+}$pdo->commit();
+} catch (Exception $e) {
+    // Rollback the transaction on error
+    $pdo->rollBack();
+    echo "Error: " . $e->getMessage();
+    exit;
 }
 
 $qry = $pdo->query("UPDATE `customer_status` SET `loan_calculation_id`='$last_id', `status`='$cus_status', `update_login_id`='$user_id', `updated_on`=now() WHERE `cus_profile_id`='$customer_profile_id'  AND status=1 ");
+$pdo = null; // Close Connection
 
 $result = array('status'=>$status, 'last_id'=> $last_id);
 echo json_encode($result);
