@@ -1,55 +1,88 @@
 <?php
-include 'C:\xampp\htdocs\finance_software\ajaxconfig.php';
+//  1. Set the log file path
+$logFile = __DIR__ . '/monthly_update_log.txt';
 
-// 1. Get all req_ids
-$qry = $pdo->query("SELECT cs.cus_profile_id as cp_id FROM customer_status cs WHERE cs.status = 7 ORDER BY cs.id ASC");
-$customer_profile_id = array_column($qry->fetchAll(PDO::FETCH_ASSOC), 'cp_id');
+// 2. Define the logMessage() function
+function logMessage($message) {
+    global $logFile;
+    $timestamp = date('Y-m-d H:i:s');
+    file_put_contents($logFile, "[$timestamp] $message\n", FILE_APPEND);
+}
 
-// 2. Split req_ids into chunks of 2 (optional, for grouping only)
+// 3. Prevent script from running on non-1st days
+if (date('d') !== '1') {
+    logMessage("Not the 1st of the month. Script exited.");
+    exit;
+}
+logMessage(" Script started at " . date('h:i:s A'));
+
+include_once(__DIR__ . '/../../ajaxconfig.php');
+
+logMessage("Database connection loaded. Fetching customer profile IDs...");
+
+try {
+    $qry = $pdo->query("SELECT cs.cus_profile_id as cp_id FROM customer_status cs WHERE cs.status = 7 ORDER BY cs.id ASC");
+    $customer_profile_id = array_column($qry->fetchAll(PDO::FETCH_ASSOC), 'cp_id');
+} catch (Exception $e) {
+    logMessage(" Database error: " . $e->getMessage());
+    exit;
+}
+
+logMessage("Total cp_ids fetched: " . count($customer_profile_id));
+
 $chunks = array_chunk($customer_profile_id, 2);
-// $chunks = [
-//   [9735, 9766],
-//   [9831, 9840],
-//   [130, 132]
-
-// ];
 
 foreach ($chunks as $chunk) {
-    // Process each req_id individually inside the chunk
     foreach ($chunk as $cp_id) {
+        logMessage("Processing cp_id: $cp_id");
 
-        // Prepare POST data with single CpID (because resetCustomerStatus.php expects only one)
         $postData = ['cpID' => $cp_id];
-        // Call resetCustomerStatus.php for one req_id
-        $ch = curl_init('http://localhost/finance_software/api/collection_files/resetCustomerStatus.php');
+
+        $ch = curl_init('http://marudhamcapitals-001-site5.ntempurl.com/api/collection_files/resetCustomerStatus.php');
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($ch, CURLOPT_POSTFIELDS, $postData);
         $responseJSON = curl_exec($ch);
-        curl_close($ch);
 
-        $response = json_decode($responseJSON, true);
-        if (!empty($response) && isset($response['cp_id'])) {
-            $pending_sts = (isset($response['pending_customer'][0]) && $response['pending_customer'][0] === true) ? 'true' : 'false';
-            $od_sts = (isset($response['od_customer'][0]) && $response['od_customer'][0] === true) ? 'true' : 'false';
-            $due_nil_sts = (isset($response['due_nil_customer'][0]) && $response['due_nil_customer'][0] === true) ? 'true' : 'false';
-            $balAmnt = $response['balAmnt'][0] ?? 0;
-            // Call updateCustomerStatus.php for this cus_profile_id
-            $ch2 = curl_init('http://localhost/finance_software/api/collection_files/updateCustomerStatus.php');
-            curl_setopt($ch2, CURLOPT_RETURNTRANSFER, true);
-            curl_setopt($ch2, CURLOPT_POSTFIELDS, [
-                'cp_id' => $cp_id,
-                'pending_sts' => $pending_sts,
-                'od_sts' => $od_sts,
-                'due_nil_sts' =>  $due_nil_sts,
-                'bal_amt' => $balAmnt,
-                'userid' => '1'
-            ]);
-            $updateResponse = curl_exec($ch2);
-            curl_close($ch2);
-
-            echo "Updated cp_id $cp_id: $updateResponse <br>";
-        } else {
-            echo "No data found for cp_id $cp_id <br>";
+        if (curl_errno($ch)) {
+            logMessage(" CURL error for resetCustomerStatus: " . curl_error($ch));
+            curl_close($ch);
+            continue;
         }
+
+        curl_close($ch);
+        $response = json_decode($responseJSON, true);
+
+        if (empty($response) || !isset($response['cp_id'])) {
+            logMessage(" No response for cp_id $cp_id.");
+            continue;
+        }
+
+        $pending_sts = (!empty($response['pending_customer'][0]) && $response['pending_customer'][0] === true) ? 'true' : 'false';
+        $od_sts = (!empty($response['od_customer'][0]) && $response['od_customer'][0] === true) ? 'true' : 'false';
+        $due_nil_sts = (!empty($response['due_nil_customer'][0]) && $response['due_nil_customer'][0] === true) ? 'true' : 'false';
+        $balAmnt = $response['balAmnt'][0] ?? 0;
+
+        $ch2 = curl_init('http://marudhamcapitals-001-site5.ntempurl.com/api/collection_files/updateCustomerStatus.php');
+        curl_setopt($ch2, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch2, CURLOPT_POSTFIELDS, [
+            'cp_id' => $cp_id,
+            'pending_sts' => $pending_sts,
+            'od_sts' => $od_sts,
+            'due_nil_sts' => $due_nil_sts,
+            'bal_amt' => $balAmnt,
+            'userid' => '1'
+        ]);
+        $updateResponse = curl_exec($ch2);
+
+        if (curl_errno($ch2)) {
+            logMessage(" CURL error for updateCustomerStatus: " . curl_error($ch2));
+            curl_close($ch2);
+            continue;
+        }
+
+        curl_close($ch2);
+        logMessage(" Updated cp_id $cp_id: $updateResponse");
     }
 }
+
+logMessage("Script finished.");

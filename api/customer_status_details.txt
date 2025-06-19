@@ -13,3 +13,5 @@ Customer status Details:
 12 = Removed From NOC;
 13 = Cancel in Loan Issue;
 14 = Revoke in Loan Issue;
+
+http://marudhamcapitals-001-site5.ntempurl.com/include/views/monthly_customer_update.php
