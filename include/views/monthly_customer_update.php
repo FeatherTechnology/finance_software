@@ -57,19 +57,13 @@ foreach ($chunks as $chunk) {
             continue;
         }
 
-        $pending_sts = (!empty($response['pending_customer'][0]) && $response['pending_customer'][0] === true) ? 'true' : 'false';
-        $od_sts = (!empty($response['od_customer'][0]) && $response['od_customer'][0] === true) ? 'true' : 'false';
-        $due_nil_sts = (!empty($response['due_nil_customer'][0]) && $response['due_nil_customer'][0] === true) ? 'true' : 'false';
-        $balAmnt = $response['balAmnt'][0] ?? 0;
+        $follow_cus_sts = $response['follow_cus_sts'];
 
         $ch2 = curl_init('http://marudhamcapitals-001-site5.ntempurl.com/api/collection_files/updateCustomerStatus.php');
         curl_setopt($ch2, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($ch2, CURLOPT_POSTFIELDS, [
             'cp_id' => $cp_id,
-            'pending_sts' => $pending_sts,
-            'od_sts' => $od_sts,
-            'due_nil_sts' => $due_nil_sts,
-            'bal_amt' => $balAmnt,
+            'follow_cus_sts' => $follow_cus_sts,
             'userid' => '1'
         ]);
         $updateResponse = curl_exec($ch2);
