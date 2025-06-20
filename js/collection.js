@@ -412,11 +412,10 @@ $(document).ready(function () {
     });
     $('#submit_collection').click(function (event) {
         event.preventDefault();
-        getCollectionCode();
         $(this).attr('disabled', true);
-
+        let CusProfileId = $('#cp_id').val();
         let collData = {
-            'cp_id': $('#cp_id').val(),
+            'cp_id': CusProfileId,
             'cus_id': $('#cus_id').val(),
             'cus_name': $('#cus_name').val(),
             'area_id': $('#area_id').val(),
@@ -456,11 +455,11 @@ $(document).ready(function () {
             $.post('api/collection_files/submit_collection.php', collData, function (response) {
                 console.log("Response from submit_collection:", response);
 
-                if (response.status == '1') {
+                if (response.result == '1') {
                     swalSuccess('Success', 'Collection Added Successfully.');
-                } else if (response.status == '2') {
+                } else if (response.result == '2') {
                     swalError('Error', 'Failed to Insert Collection');
-                } else if (response.status == '3') {
+                } else if (response.result == '3') {
                     swalSuccess('Success', 'Moved to Closed Successfully.');
                 }
 
@@ -471,7 +470,7 @@ $(document).ready(function () {
                     if (response.coll_id) {
                         printCollection(response.coll_id); // Ensure coll_id is passed correctly
                     }
-                    getSubStatus(); // Call function AFTER ensuring data is updated
+                    getSubStatus(CusProfileId); // Call function AFTER ensuring data is updated
                 }, 1000);
 
             }, 'json')
@@ -535,7 +534,7 @@ $(document).ready(function () {
 });
 /////////////////////////////////////////////////////////////////////////   Document END /////////////////////////////////////////////////////////////////////////
 
-$(function(){
+$(function () {
     getCollectionListTable('');
 });
 
@@ -558,9 +557,15 @@ function swapTableAndCreation() {
     }
 }
 
-function getSubStatus() {
-    let cp_id = $('#cp_id').val();
-    let sub_status = $('#loan_list_table tbody tr').find('td:nth-child(8)').text().trim(); // Corrected selector
+function getSubStatus(cp_id) {
+    let sub_status = '';
+    $('#loan_list_table tbody tr').each(function () {
+        const row_cp_id = $(this).find('.pay-due').attr('value');
+        if (row_cp_id == cp_id) {
+            // Get Sub Status from 8th column (adjust index if needed)
+            sub_status = $(this).find('td:nth-child(8)').text().trim();
+        }
+    });
     $.ajax({
         url: 'api/common_files/subStatus_list.php',
         data: { cp_id, sub_status },
