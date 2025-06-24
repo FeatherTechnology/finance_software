@@ -1270,7 +1270,7 @@
                             <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
                                 <div class="form-group">
                                     <label for="upload"> Upload</label>
-                                    <input type="file" class="form-control" id="upload" name="upload" tabindex="1">
+                                    <input type="file" class="form-control" id="upload" name="upload" onchange="compressImage(this, 200)" tabindex="1">
                                     <input type="hidden" id="kyc_upload">
                                 </div>
                             </div>

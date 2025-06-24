@@ -781,7 +781,7 @@
                             <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
                                 <div class="form-group">
                                     <label for="cq_upload">Upload</label>
-                                    <input type="file" class="form-control cq_upload" name="cq_upload[]" id="cq_upload" tabindex="8" multiple>
+                                    <input type="file" class="form-control cq_upload" name="cq_upload[]" id="cq_upload" tabindex="8" onchange="compressImage(this, 200)" multiple>
                                     <input type="hidden" id="cq_upload_edit">
                                 </div>
                             </div>
@@ -876,7 +876,7 @@
                             <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
                                 <div class="form-group">
                                     <label for="doc_upload">Upload</label>
-                                    <input type="file" class="form-control" name="doc_upload" id="doc_upload" tabindex="5">
+                                    <input type="file" class="form-control" name="doc_upload" id="doc_upload" onchange="compressImage(this, 200)" tabindex="5">
                                     <input type="hidden" name="doc_upload_edit" id="doc_upload_edit">
                                 </div>
                             </div>
@@ -985,7 +985,7 @@
                             <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
                                 <div class="form-group">
                                     <label for="mort_upload">Upload</label>
-                                    <input type="file" class="form-control" name="mort_upload" id="mort_upload" tabindex="9">
+                                    <input type="file" class="form-control" name="mort_upload" id="mort_upload" onchange="compressImage(this, 200)" tabindex="9">
                                     <input type="hidden" name="mort_upload_edit" id="mort_upload_edit">
                                 </div>
                             </div>
@@ -1093,7 +1093,7 @@
                             <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
                                 <div class="form-group">
                                     <label for="endorsement_upload"> Upload</label>
-                                    <input type="file" class="form-control" id="endorsement_upload" name="endorsement_upload" tabindex="8">
+                                    <input type="file" class="form-control" id="endorsement_upload" name="endorsement_upload" onchange="compressImage(this, 200)" tabindex="8">
                                     <input type="hidden" id="endorsement_upload_edit">
                                 </div>
                             </div>

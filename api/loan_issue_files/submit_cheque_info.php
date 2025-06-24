@@ -11,6 +11,7 @@ $cq_bank_name = $_POST['cq_bank_name'];
 $cheque_count = $_POST['cheque_count'];
 $cheque_upd_no  = explode(',', $_POST['cheque_no']); //stored each numbers in an array
 $customer_profile_id = $_POST['customer_profile_id'];
+$cq_upload_edit = $_POST['cq_upload_edit'];
 $cus_id = $_POST['cus_id'];
 $id = $_POST['id'];
 
@@ -18,6 +19,15 @@ $status = 0;
 if ($id != '') {
     $pdo->query("DELETE FROM `cheque_upd` WHERE cheque_info_id = '$id'");
     $pdo->query("DELETE FROM `cheque_no_list` WHERE cheque_info_id = '$id'");
+    if (isset($_POST['cq_upload_edit']) && !empty($_POST['cq_upload_edit'])) {
+        $existingUploads = explode(',', $_POST['cq_upload_edit']);
+        foreach ($existingUploads as $file) {
+            $file = trim($file);
+            if ($file !== '') {
+                $pdo->query("INSERT INTO `cheque_upd`(`cus_id`, `cus_profile_id`, `cheque_info_id`, `uploads`) VALUES ('$cus_id','$customer_profile_id','$id','$file')");
+            }
+        }
+    }
     $qry = $pdo->query("UPDATE `cheque_info` SET `cus_id`='$cus_id',`cus_profile_id`='$customer_profile_id',`holder_type`='$cq_holder_type',`holder_name`='$cq_holder_name',`holder_id`='$cq_holder_id',`relationship`='$cq_relationship',`bank_name`='$cq_bank_name',`cheque_cnt`='$cheque_count',`update_login_id`='$user_id',`updated_on`=now() WHERE id = '$id' ");
     $status = 1; //update
     $last_id = $id;

@@ -222,6 +222,10 @@ $(document).ready(function () {
                 $('#cq_fam_mem').val('');
                 $('.cq_fam_member').hide();
             }
+            if (response.upd.length > 0) {
+                let uploadFiles = response.upd.map(fileObj => fileObj.uploads).filter(Boolean);
+                $('#cq_upload_edit').val(uploadFiles.join(','));
+            }
 
             $('#cheque_no').empty();
             for (let key in response.no) {
@@ -716,7 +720,7 @@ function getDocNeedTable(cusProfileId) {
 
 function getFamilyMember(optn, selector) {
     let cus_id = $('#cus_id').val();
-
+    let holderType = $('#cq_holder_type').val(); // Get current holder type
     $.post('api/loan_issue_files/get_guarantor.php', { cus_id }, function (response) {
         let appendOption = '';
         appendOption += "<option value=''>" + optn + "</option>"; // Default option 
@@ -724,7 +728,7 @@ function getFamilyMember(optn, selector) {
         // Dynamic options from the response
         $.each(response, function (index, val) {
             // Differentiating between customer and family member
-            if (val.type === 'Customer') {
+            if (val.type === 'Customer' && holderType !== '3') {
                 appendOption += "<option value='0'>" + val.name + "</option>";  // Customer
             } else if (val.type === 'Family') {
                 appendOption += "<option value='" + val.id + "'>" + val.name + " </option>";  // Family Member
@@ -1429,7 +1433,7 @@ function refreshIssueInfo() {
     $('.cash_issue').hide();
     $('.balance_remark_container').hide();
     $('#bank_container').hide();//hide bank id
-    resetFieldBorders(['payment_mode','payment_type','cash','transaction_value','chequeValue','issue_person']);
+    resetFieldBorders(['payment_mode', 'payment_type', 'cash', 'transaction_value', 'chequeValue', 'issue_person']);
 }
 
 function resetFieldBorders(fields) {
@@ -1500,9 +1504,9 @@ function isFormDataValid(formData) {
             isValid = false;
             $('#cash, #transaction_value , #chequeValue').css('border', '1px solid #ff0000');
         } else {
-            resetFieldBorders(['cash','transaction_value','chequeValue']);
+            resetFieldBorders(['cash', 'transaction_value', 'chequeValue']);
         }
-    } 
+    }
     else if (formData['payment_type'] == "2") { // Single Payment
         if (!validateField(formData['payment_mode'], 'payment_mode')) {
             isValid = false;
@@ -1516,7 +1520,7 @@ function isFormDataValid(formData) {
             if (!validateField(formData['transaction_id'], 'transaction_id')) {
                 isValid = false;
             }
-            if (!validateField(formData['transaction_value'], 'transaction_value') ) {
+            if (!validateField(formData['transaction_value'], 'transaction_value')) {
                 isValid = false;
             }
             if (!validateField(formData['bank_name'], 'bank_name')) {
