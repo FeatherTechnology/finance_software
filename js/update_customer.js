@@ -96,12 +96,14 @@ $(document).ready(function () {
     $('#pic').change(function () {
         let pic = $('#pic')[0];
         let img = $('#imgshow');
+        compressImage(this, 200)
         img.attr('src', URL.createObjectURL(pic.files[0]));
     })
 
     $('#gu_pic').change(function () {
         let pic = $('#gu_pic')[0];
         let img = $('#gur_imgshow');
+        compressImage(this, 200)
         img.attr('src', URL.createObjectURL(pic.files[0]));
     })
 
@@ -136,7 +138,7 @@ $(document).ready(function () {
         });
 
         if (isValid) {
-            $.post('api/loan_entry/submit_family_info.php', { cus_id, fam_name, fam_relationship,remarks, fam_age, fam_live, fam_occupation, fam_aadhar, fam_mobile, family_id }, function (response) {
+            $.post('api/loan_entry/submit_family_info.php', { cus_id, fam_name, fam_relationship, remarks, fam_age, fam_live, fam_occupation, fam_aadhar, fam_mobile, family_id }, function (response) {
                 if (response == '1') {
                     swalSuccess('Success', 'Family Info Added Successfully!');
                 } else {
