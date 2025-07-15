@@ -44,12 +44,6 @@ if (!empty($cus_id)) {
 } elseif (!empty($mobile)) {
     $whereClause .= " AND lelc.cus_id IN (SELECT cus_id FROM customer_profile WHERE mobile1 LIKE '%$mobile%')";
 }
-
-
-// if (!empty($cus_profile_id)) {
-//     $whereClause .= " AND lelc.cus_profile_id = '$cus_profile_id'";
-// }
-
 $qry = $pdo->query("SELECT lelc.id, lelc.cus_profile_id, lelc.cus_id, lelc.loan_date, lelc.loan_id, lc.loan_category, lelc.loan_amount, cs.status, cs.sub_status
     FROM loan_entry_loan_calculation lelc
     JOIN loan_category_creation lcc ON lelc.loan_category = lcc.id
@@ -64,7 +58,7 @@ if ($qry->rowCount() > 0) {
         $response['loan_date'] = $loanDate->format('d-m-Y');
         $response['loan_id'] = $row['loan_id'];
         $response['loan_category'] = $row['loan_category'];
-        $response['loan_amount'] = $row['loan_amount'];
+        $response['loan_amount'] = moneyFormatIndia($row['loan_amount']);
         $response['status'] = $status[$row['status']];
 
         // Calculate loan customer status and store in variable
@@ -79,7 +73,7 @@ if ($qry->rowCount() > 0) {
         $response['info'] .=  "<a href='#' class='customer-profile' value='" . $row['cus_profile_id'] . "'>Customer Profile</a>";
         $response['info'] .=  "  <a href='#' class='loan-calculation' value='" . $row['id'] . "'>Loan Calculation</a>";
         $response['info'] .=  " <a href='#' class='documentation' value='" . $row['cus_profile_id'] . "'>Documentation</a>";
-        if ($row['status'] >= '8') {
+        if ($row['status'] >= '8' && $row['status'] != '13' && $row['status'] != '14') {
             $response['info'] .=  " <a href='#' class='closed-remark' value='" . $row['cus_profile_id'] . "'>Remark View</a>";
         }
         if ($row['status'] == '10' || $row['status'] == '11') {
@@ -87,7 +81,7 @@ if ($qry->rowCount() > 0) {
         }
         $response['info'] .=  "  </div> </div>";
 
-        if ($row['status'] < 7) { // Condition: Less than 7
+        if ($row['status'] < 7 || $row['status'] == 13 || $row['status'] == 14) { // Condition: Less than 7 and 13 and 14 
             $response['charts'] = "<div class='dropdown'>
                 <button class='btn btn-outline-secondary' disabled>
                     <i class='fa'>&#xf107;</i>
@@ -185,4 +179,35 @@ function loanCustomerStatus($pdo, $cus_profile_id)
     }
 
     return ''; // Default return value if no conditions match
+}
+function moneyFormatIndia($num1)
+{
+    if ($num1 < 0) {
+        $num = str_replace("-", "", $num1);
+    } else {
+        $num = $num1;
+    }
+    $explrestunits = "";
+    if (strlen($num) > 3) {
+        $lastthree = substr($num, strlen($num) - 3, strlen($num));
+        $restunits = substr($num, 0, strlen($num) - 3);
+        $restunits = (strlen($restunits) % 2 == 1) ? "0" . $restunits : $restunits;
+        $expunit = str_split($restunits, 2);
+        for ($i = 0; $i < sizeof($expunit); $i++) {
+            if ($i == 0) {
+                $explrestunits .= (int)$expunit[$i] . ",";
+            } else {
+                $explrestunits .= $expunit[$i] . ",";
+            }
+        }
+        $thecash = $explrestunits . $lastthree;
+    } else {
+        $thecash = $num;
+    }
+
+    if ($num1 < 0 && $num1 != '') {
+        $thecash = "-" . $thecash;
+    }
+
+    return $thecash;
 }

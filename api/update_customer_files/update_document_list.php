@@ -28,9 +28,12 @@ WHERE cs.cus_id = '$cus_id'");
 if ($qry->rowCount() > 0) {
     while ($updateDocInfo = $qry->fetch(PDO::FETCH_ASSOC)) {
         $loanDate = new DateTime($updateDocInfo['loan_date']);
-        $loanInfo['loan_date'] = $loanDate->format('d-m-Y');
-        $closedDate = new DateTime($updateDocInfo['closed_date']);
-        $loanInfo['closed_date'] = $closedDate->format('d-m-Y');
+        $updateDocInfo['loan_date'] = $loanDate->format('d-m-Y');
+          $updateDocInfo['loan_amount'] = moneyFormatIndia($updateDocInfo['loan_amount']);
+        if (!empty($updateDocInfo['closed_date']) && $updateDocInfo['closed_date'] != '0000-00-00') {
+            $closedDate = new DateTime($updateDocInfo['closed_date']);
+            $updateDocInfo['closed_date'] = $closedDate->format('d-m-Y');        
+        }
         $originalStatus = $updateDocInfo['c_sts']; // Convert numeric status to its string representation for display 
         $updateDocInfo['c_sts'] = isset($status[$originalStatus]) ? $status[$originalStatus] : '';
         // $updateDocInfo['c_sts'] = $status[$updateDocInfo['c_sts']];
@@ -109,7 +112,7 @@ function loanCustomerStatus($pdo, $cus_profile_id)
             $status = 'Completed';
         } elseif ($cs_status == '12') {
             $status = 'Completed';
-        }elseif ($cs_status == '13') {
+        } elseif ($cs_status == '13') {
             $status = 'Cancel';
         } elseif ($cs_status == '14') {
             $status = 'Revoke';
@@ -119,4 +122,35 @@ function loanCustomerStatus($pdo, $cus_profile_id)
     }
 
     return ''; // Default return value if no conditions match
+}
+function moneyFormatIndia($num1)
+{
+    if ($num1 < 0) {
+        $num = str_replace("-", "", $num1);
+    } else {
+        $num = $num1;
+    }
+    $explrestunits = "";
+    if (strlen($num) > 3) {
+        $lastthree = substr($num, strlen($num) - 3, strlen($num));
+        $restunits = substr($num, 0, strlen($num) - 3);
+        $restunits = (strlen($restunits) % 2 == 1) ? "0" . $restunits : $restunits;
+        $expunit = str_split($restunits, 2);
+        for ($i = 0; $i < sizeof($expunit); $i++) {
+            if ($i == 0) {
+                $explrestunits .= (int)$expunit[$i] . ",";
+            } else {
+                $explrestunits .= $expunit[$i] . ",";
+            }
+        }
+        $thecash = $explrestunits . $lastthree;
+    } else {
+        $thecash = $num;
+    }
+
+    if ($num1 < 0 && $num1 != '') {
+        $thecash = "-" . $thecash;
+    }
+
+    return $thecash;
 }

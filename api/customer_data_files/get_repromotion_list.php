@@ -26,8 +26,9 @@ $customerQry = $pdo->query("SELECT
                 LEFT JOIN area_creation ac ON cp.line = ac.line_id 
                 LEFT JOIN branch_creation bc ON ac.branch_id = bc.id 
                 LEFT JOIN customer_status cs ON cp.id = cs.cus_profile_id  
-                LEFT JOIN repromotion_customer rc ON cp.cus_id = rc.cus_id
-                WHERE (cs.status = 5 || cs.status = 6 || cs.status = 13 || cs.status = 14) $whereCondition
+                INNER JOIN (SELECT MAX(id) as max_id FROM customer_profile GROUP BY cus_id) latest ON cp.id = latest.max_id
+                LEFT JOIN repromotion_customer rc ON cp.id = rc.cus_profile_id
+                WHERE cs.status IN (5, 6, 13, 14) $whereCondition
                 ORDER BY cp.id DESC");
 
 if ($customerQry->rowCount() > 0) {

@@ -579,6 +579,8 @@
     <!-- -------------------------------------- Loan Calculation START ------------------------------ -->
     <form id="loan_entry_loan_calculation" name="loan_entry_loan_calculation" style="display: none;">
         <input type="hidden" id="loan_calculation_id">
+        <input type="hidden" id="calc_val">
+        <input type="hidden" id="scheme_val">
         <input type="hidden" id="int_rate_upd">
         <input type="hidden" id="due_period_upd">
         <input type="hidden" id="doc_charge_upd">

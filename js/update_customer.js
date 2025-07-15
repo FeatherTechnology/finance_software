@@ -33,7 +33,12 @@ $(document).ready(function () {
 
         } else if (updateType == 'loan_doc') {
             $('#cus_update_customer_profile').hide(); $('#update_documentation').show();
-            //OnLoadFunctions(cus_id)
+            $('#document_type_div').hide();
+            $('#cheque_info_card').hide();
+            $('#document_info_card').hide();
+            $('#mortgage_info_card').hide();
+            $('#endorsement_info_card').hide();
+            $('#gold_info_card').hide();
 
         }
     })
