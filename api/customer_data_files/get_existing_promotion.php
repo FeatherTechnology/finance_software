@@ -32,8 +32,9 @@ $query = "SELECT  cp.id, cp.cus_id, cp.aadhar_num, cp.cus_name, anc.areaname AS 
     LEFT JOIN area_name_creation anc ON cp.area = anc.id
     LEFT JOIN area_creation ac ON cp.line = ac.line_id
     LEFT JOIN branch_creation bc ON ac.branch_id = bc.id
+    INNER JOIN (SELECT MAX(id) as max_id FROM customer_profile GROUP BY cus_id) latest ON cp.id = latest.max_id
     LEFT JOIN customer_status cs ON cp.id = cs.cus_profile_id
-    LEFT JOIN existing_customer ec ON cp.cus_id = ec.cus_id
+    LEFT JOIN existing_customer ec ON cp.id = ec.cus_profile_id
     WHERE cs.status >= 9 AND cs.status NOT IN (13, 14) $whereCondition
     GROUP BY cp.cus_id
     ORDER BY cp.id DESC";
@@ -62,8 +63,6 @@ if ($customerQry->rowCount() > 0) {
 }
 
 echo json_encode($existing_promo_arr);
-$pdo = null; // Close Connection
-
 // Function to fetch loan status of a customer
 function loanCustomerStatus($pdo, $cus_id)
 {
@@ -91,3 +90,4 @@ function loanCustomerStatus($pdo, $cus_id)
 
     return ''; // Default return value if no conditions match
 }
+$pdo = null; // Close Connection

@@ -22,7 +22,7 @@ $(document).ready(function () {
             $('.new_table_content').hide();
             $('.existing_table_content').show();
             $('.repromotion_table_content').hide();
-        }else if(customerDataType == 'repromotion_list'){
+        } else if (customerDataType == 'repromotion_list') {
             $('.new_table_content').hide();
             $('.existing_table_content').hide();
             $('.repromotion_table_content').show();
@@ -60,44 +60,28 @@ $(document).ready(function () {
             if (response.exists) {
                 // Show an alert with the customer status if the mobile number already exists
                 let statusMsg = "";
-                if (response.status == 1) {
-                    statusMsg = "Customer Profile Insert";
-                }
-                else if (response.status == 2) {
-                    statusMsg = "Loan Calculation Insert";
-                }
-                else if (response.status == 3) {
-                    statusMsg = "Moved To Approval";
-                }
-                else if (response.status == 4) {
-                    statusMsg = "Approved";
-                }
-                else if (response.status == 5) {
-                    statusMsg = "Cancel in Approval";
-                }
-                else if (response.status == 6) {
-                    statusMsg = "Revoke in Approval";
-                }
-                else if (response.status == 7) {
-                    statusMsg = "Loan Issue";
-                }
-                else if (response.status == 8) {
-                    statusMsg = "Closed";
-                }
-                else if (response.status == 9) {
-                    statusMsg = "Closed";
-                }
-                else if (response.status == 10) {
-                    statusMsg = "NOC";
-                }
-                else if (response.status == 11) {
-                    statusMsg = "NOC";
-                } else if (response.status == 12) {
-                    statusMsg = "NOC";
+
+                switch (parseInt(response.status)) {
+                    case 1: statusMsg = "Customer Profile Insert"; break;
+                    case 2: statusMsg = "Loan Calculation Insert"; break;
+                    case 3: statusMsg = "Moved To Approval"; break;
+                    case 4: statusMsg = "Approved"; break;
+                    case 5: statusMsg = "Cancel in Approval"; break;
+                    case 6: statusMsg = "Revoke in Approval"; break;
+                    case 7: statusMsg = "Loan Issue"; break;
+                    case 8: statusMsg = "In Close"; break;
+                    case 9: statusMsg = "Closed"; break;
+                    case 10: statusMsg = "In NOC"; break;
+                    case 11: statusMsg = "NOC Completed"; break;
+                    case 12: statusMsg = "NOC Removed"; break;
+                    case 13: statusMsg = "Cancel in Loan Issue"; break;
+                    case 14: statusMsg = "Revoke in Loan Issue"; break;
+                    default: statusMsg = " "; break;
                 }
                 swalError('Warning', 'Mobile number already exists. Customer status: ' + statusMsg);
-                return false;
-            } if (isValid) {
+                return;
+            }
+            if (isValid) {
                 // Proceed with form submission
                 $.post('api/customer_data_files/submit_new.php', { cus_name, area, mobile, loan_cat, loan_amount, new_promotion_id }, function (response) {
                     if (response == '1') {
@@ -141,12 +125,12 @@ $(document).ready(function () {
         var coll_data = $(this).attr('data');
         var datas = { cus_id: cus_id, coll_data: coll_data };
         // var checkbox = $(this); // Reference to the checkbox element
-        swalConfirm('Are You Sure', '', getExistingData,datas, function () {
+        swalConfirm('Are You Sure', '', getExistingData, datas, function () {
         });
         return;
     });
 
-    $(document).on('click', '.needed, .later, .to_follow',function () {
+    $(document).on('click', '.needed, .later, .to_follow', function () {
         var cus_id = $(this).attr('value');
         var coll_data = $(this).attr('data');
         var datas = { cus_id: cus_id, coll_data: coll_data };
@@ -200,7 +184,7 @@ function getNewPromoDelete(id) {
 }
 function getExistingPromotionTable(existing_details) {
 
-    $.post('api/customer_data_files/get_existing_promotion.php', {existing_details }, function (response) {
+    $.post('api/customer_data_files/get_existing_promotion.php', { existing_details }, function (response) {
         var columnMapping = [
             'sno',
             'cus_id',
@@ -222,7 +206,7 @@ function getExistingPromotionTable(existing_details) {
 }
 
 function getRePromotionTable(repromotion_details) {
-    $.post('api/customer_data_files/get_repromotion_list.php', { repromotion_details}, function (response) {
+    $.post('api/customer_data_files/get_repromotion_list.php', { repromotion_details }, function (response) {
         var columnMapping = [
             'sno',
             'cus_id',
@@ -242,9 +226,9 @@ function getRePromotionTable(repromotion_details) {
 }
 
 function getExistingData(datas) {
-    let cus_id=datas.cus_id;
-    let coll_data=datas.coll_data;
-    $.post('api/customer_data_files/get_existing_data.php', { cus_id,coll_data }, function (response) {
+    let cus_id = datas.cus_id;
+    let coll_data = datas.coll_data;
+    $.post('api/customer_data_files/get_existing_data.php', { cus_id, coll_data }, function (response) {
         if (response == '1') {
             swalSuccess("Success", "Existing Data Added Successfully!", "success");
             getExistingPromotionTable('');
@@ -255,10 +239,10 @@ function getExistingData(datas) {
 }
 
 function InsertRepromotionData(datas) {
-    
-    let cus_id=datas.cus_id;
-    let repro_data=datas.coll_data;
-    $.post('api/customer_data_files/submit_repromotion.php', { cus_id ,repro_data  }, function (response) {
+
+    let cus_id = datas.cus_id;
+    let repro_data = datas.coll_data;
+    $.post('api/customer_data_files/submit_repromotion.php', { cus_id, repro_data }, function (response) {
         if (response == '1') {
             swalSuccess("Success", "Repromotion Data Added Successfully!", "success");
             // Replace the checkbox with "Needed" text

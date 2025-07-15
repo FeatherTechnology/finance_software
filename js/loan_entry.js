@@ -29,7 +29,7 @@ $(document).ready(function () {
             // $('#data_checking_div').hide();
             // $('#checking_hide').hide();
         }
-        dataCheckList('', '', '','');
+        dataCheckList('', '', '', '');
         $('#data_checking_table_div').hide();
     });
 
@@ -40,10 +40,10 @@ $(document).ready(function () {
         $.post('api/loan_entry/cus_sts_check.php', { 'cus_id': cus_id, 'cus_profile_id': cus_profile_id }, function (response) {
             if (response.status == 0) {
                 // If status is 0, proceed with confirmation
-                    swalConfirm('Warning', 'Are you sure you want to go back? Personal information will be lost because the customer profile is incomplete.', cusDeleteStatus, cus_id);
-                    return;
-                
-            }else {
+                swalConfirm('Warning', 'Are you sure you want to go back? Personal information will be lost because the customer profile is incomplete.', cusDeleteStatus, cus_id);
+                return;
+
+            } else {
                 // Do nothing if cancelled
                 swapTableAndCreation();
                 getLoanEntryTable();
@@ -108,7 +108,7 @@ $(document).ready(function () {
         let cus_id = $('#auto_gen_cus_id').val();
         let mobileno = $('#mobile1').val();
         if (aadhar_num) {
-            dataCheckList(cus_id, cus_name, mobileno,aadhar_num)
+            dataCheckList(cus_id, cus_name, mobileno, aadhar_num)
         } else {
             removeCustomerID();
         }
@@ -126,7 +126,7 @@ $(document).ready(function () {
         let customerMobile = $(this).val().trim();
         let cus_id = $('#auto_gen_cus_id').val();
         if (customerMobile) {
-            dataCheckList(cus_id, cus_name, customerMobile,aadhar_num)
+            dataCheckList(cus_id, cus_name, customerMobile, aadhar_num)
         } else {
             removeCustomerMobile();
         }
@@ -187,7 +187,7 @@ $(document).ready(function () {
         });
 
         if (isValid) {
-            $.post('api/loan_entry/submit_family_info.php', { cus_id, fam_name, fam_relationship,remarks, fam_age, fam_live, fam_occupation, fam_aadhar, fam_mobile, family_id }, function (response) {
+            $.post('api/loan_entry/submit_family_info.php', { cus_id, fam_name, fam_relationship, remarks, fam_age, fam_live, fam_occupation, fam_aadhar, fam_mobile, family_id }, function (response) {
                 if (response == '1') {
                     swalSuccess('Success', 'Family Info Added Successfully!');
                 } else {
@@ -226,7 +226,7 @@ $(document).ready(function () {
         //Validation
         let cus_profile_id = $('#customer_profile_id').val();
         let cus_id = $('#auto_gen_cus_id').val();
-       
+
         let property = $('#property').val(); let property_detail = $('#property_detail').val(); let property_holder = $('#property_holder').val(); let property_id = $('#property_id').val();
         if (cus_profile_id == '') {
             swalError('Warning', 'Kindly Fill the Personal Info');
@@ -864,7 +864,7 @@ $(function () {
     getLoanEntryTable();
 });
 
-function getLoanCount(cus_id){
+function getLoanCount(cus_id) {
     $.ajax({
         url: 'api/loan_entry/get_loan_count.php',
         type: 'POST',
@@ -1081,7 +1081,7 @@ function getFamilyTable() {
         $('#fam_relationship').val('');
         $('#remarks').val('');
         $('#fam_live').val('');
-        dataCheckList(cus_id, cus_name, customerMobile,aadhar_num)
+        dataCheckList(cus_id, cus_name, customerMobile, aadhar_num)
     }, 'json')
 }
 
@@ -1420,7 +1420,7 @@ function getAlineName(areaId) {
     });
 }
 
-function dataCheckList(cus_id, cus_name, cus_mble_no,aadhar_num) {
+function dataCheckList(cus_id, cus_name, cus_mble_no, aadhar_num) {
     $.post('api/loan_entry/datacheck_name.php', { cus_id }, function (response) {
         //Name
         $('#name_check').empty();
@@ -1521,7 +1521,7 @@ function editCustmerProfile(id) {
             $('#mobile2_radio').prop('checked', true);
             $('#selected_mobile_radio').val('mobile2');
         }
-        dataCheckList(response[0].cus_id, response[0].cus_name, response[0].mobile1 ,response[0].aadhar_num)
+        dataCheckList(response[0].cus_id, response[0].cus_name, response[0].mobile1, response[0].aadhar_num)
         getGuarantorName()
         getAreaName()
         setTimeout(() => {
@@ -1634,7 +1634,7 @@ function existingCustmerProfile(aadhar_num) {
                 $('#selected_mobile_radio').val('mobile2');
             }
             // autoGenCusId(response[0].cus_id);
-            dataCheckList(response[0].cus_id, response[0].cus_name, response[0].mobile1 ,response[0].aadhar_num)
+            dataCheckList(response[0].cus_id, response[0].cus_name, response[0].mobile1, response[0].aadhar_num)
             getGuarantorName()
             getAreaName()
             setTimeout(() => {
@@ -1653,7 +1653,7 @@ function existingCustmerProfile(aadhar_num) {
             $('#gur_pic').val(response[0].gu_pic);
             var img = $('#gur_imgshow');
             img.attr('src', paths + response[0].gu_pic);
-            
+
 
         }
     }, 'json');
@@ -1699,7 +1699,26 @@ $(document).ready(function () {
             return;
         }
         clearCalcSchemeFields(profitType);
-        $('#profit_type_calc_scheme').show();
+        $('#due_startdate_calc').val('');
+        $('#maturity_date_calc').val('');
+        $('.int-diff').text('*'); $('.due-diff').text('*'); $('.doc-diff').text('*'); $('.proc-diff').text('*'); $('.refresh_loan_calc').val('');
+        let calc = $('#calc_val').val().trim();
+        let scheme = $('#scheme_val').val().trim();
+        if ((calc == '' || calc == null) && scheme != '' && profitType == '0') {
+            swalError('Warning', 'No Calculation is found.');
+            $(this).val('');
+            $('#profit_type_calc_scheme').hide();
+            return;
+        }
+
+        // Rule: Only calculation exists, but user chose scheme
+        if ((scheme == '' || scheme == null) && calc != '' && profitType == '1') {
+            swalError('Warning', 'No Scheme is found.');
+            $(this).val('');
+            $('#profit_type_calc_scheme').hide();
+
+            return;
+        }
         $('.calc_scheme_title').text((profitType == '0') ? 'Calculation' : 'Scheme');
         if (profitType == '0') {//Loan Calculation
             $('.calc').show();
@@ -1708,19 +1727,18 @@ $(document).ready(function () {
             getLoanCatDetails(id, 1);
             $('#scheme_due_method_calc').val('')
             $('#profit_method_calc').val('After Benefit');
+            $('#profit_type_calc_scheme').show();
         } else if (profitType == '1') { //Scheme
             $('#scheme_due_method_calc').val('').trigger('change');
             $('.calc').hide();
             $('.scheme').show();
             $('#due_type_calc').val('');
             $('#profit_method_calc').val('');
+            $('#profit_type_calc_scheme').show();
         } else {
             $('#profit_type_calc_scheme').hide();
         }
 
-        $('#due_startdate_calc').val('');
-        $('#maturity_date_calc').val('');
-        $('.int-diff').text('*'); $('.due-diff').text('*'); $('.doc-diff').text('*'); $('.proc-diff').text('*'); $('.refresh_loan_calc').val('');
     });
 
     $('#scheme_due_method_calc').change(function () {
@@ -2051,7 +2069,8 @@ function getLoanCatDetails(id, edittype) {
         } else if (response[0].due_type === 'interest') {
             $('#due_type_calc').val('Interest');
         }
-
+        $('#calc_val').val(response[0].interest_rate_min);
+        $('#scheme_val').val(response[0].scheme_name);
         // Retrieve customer and loan limits
         let cus_limit = parseInt($('#cus_limit').val().replace(/,/g, ''));
         let loan_limit = parseInt(response[0].loan_limit);

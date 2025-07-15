@@ -71,17 +71,18 @@ try {
         $existing = $checkAadhar->fetch();
         $cus_id = $existing['cus_id'];
     } else {
-        $selectIC = $pdo->query("SELECT cus_id FROM customer_profile WHERE cus_id != '' ORDER BY id DESC LIMIT 1 FOR UPDATE");
+        $selectIC = $pdo->query("SELECT MAX(cus_id) as cus_id FROM customer_profile");
         $qry1 = $pdo->query("SELECT `company_name` FROM `company_creation` WHERE 1 ");
         $qry_info = $qry1->fetch();
         $company_name = $qry_info["company_name"];
         $str = preg_replace('/\s+/', '', $company_name);
         $myStr = mb_substr($str, 0, 1);
-        if ($selectIC->rowCount() > 0) {
-            $row = $selectIC->fetch();
-            $ac2 = $row["cus_id"];
+        $row = $selectIC->fetch();
+        $ac2 = $row["cus_id"];
+
+        if (!empty($ac2)) {
             $appno2 = ltrim(strstr($ac2, '-'), '-');
-            $appno2 = $appno2 + 1;
+            $appno2 = (int)$appno2 + 1;
             $cus_id = $myStr . "-" . $appno2;
         } else {
             $initialapp = $myStr . "-101";
