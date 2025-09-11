@@ -24,8 +24,9 @@ $qry = $pdo->query("SELECT lelc.cus_id,lelc.cus_profile_id, lelc.id, lelc.loan_i
 LEFT JOIN loan_category_creation lcc ON lelc.loan_category = lcc.id 
 LEFT JOIN loan_category lc ON lcc.loan_category = lc.id 
 LEFT JOIN customer_status cs ON lelc.id = cs.loan_calculation_id 
-WHERE cs.cus_id = '$cus_id'");
+WHERE cs.cus_id = '$cus_id' ORDER BY lelc.id DESC");
 if ($qry->rowCount() > 0) {
+     $i = 1;
     while ($updateDocInfo = $qry->fetch(PDO::FETCH_ASSOC)) {
         $loanDate = new DateTime($updateDocInfo['loan_date']);
         $updateDocInfo['loan_date'] = $loanDate->format('d-m-Y');
@@ -37,7 +38,7 @@ if ($qry->rowCount() > 0) {
         $originalStatus = $updateDocInfo['c_sts']; // Convert numeric status to its string representation for display 
         $updateDocInfo['c_sts'] = isset($status[$originalStatus]) ? $status[$originalStatus] : '';
         // $updateDocInfo['c_sts'] = $status[$updateDocInfo['c_sts']];
-        $loanCustomerStatus = loanCustomerStatus($pdo, $updateDocInfo['cus_profile_id']);
+        $loanCustomerStatus = loanCustomerStatus($pdo, $updateDocInfo['cus_profile_id'],$i);
         $updateDocInfo['sub_status']  = $loanCustomerStatus;
         $updateDocInfo['action'] = '<div class="dropdown">
         <button type="button" class="btn btn-outline-secondary"><i class="fa">&#xf107;</i></button>
@@ -51,11 +52,12 @@ if ($qry->rowCount() > 0) {
         $updateDocInfo['action'] .= "</div></div>";
 
         $update_doc_list_arr[] = $updateDocInfo; // Append to the array
+         $i++; // move to next element for next profile
     }
 }
 $pdo = null; //Close Connection.
 echo json_encode($update_doc_list_arr);
-function loanCustomerStatus($pdo, $cus_profile_id)
+function loanCustomerStatus($pdo, $cus_profile_id,$i)
 {
     $qry1 = $pdo->query("SELECT lelc.loan_date, cs.status as cs_status, cs.sub_status as sub_sts
     FROM loan_entry_loan_calculation lelc
@@ -71,7 +73,7 @@ function loanCustomerStatus($pdo, $cus_profile_id)
         $od_sts = isset($_POST["od_sts"]) ? explode(',', $_POST["od_sts"]) : [];
         $due_nil_sts = isset($_POST["due_nil_sts"]) ? explode(',', $_POST["due_nil_sts"]) : [];
         $bal_amt = isset($_POST["bal_amt"]) ? explode(',', $_POST["bal_amt"]) : [];
-        $i = 1;
+       
         $status = '';
         if ($cs_status == '1' || $cs_status == '2') {
             $status = 'Loan Entry';

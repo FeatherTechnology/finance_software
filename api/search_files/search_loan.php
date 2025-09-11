@@ -51,6 +51,7 @@ $qry = $pdo->query("SELECT lelc.id, lelc.cus_profile_id, lelc.cus_id, lelc.loan_
     JOIN customer_status cs ON lelc.id = cs.loan_calculation_id
     $whereClause ORDER BY lelc.id DESC");
 if ($qry->rowCount() > 0) {
+    $i=1;
     while ($row = $qry->fetch(PDO::FETCH_ASSOC)) {
         $response = array();
         $loanDate = new DateTime($row['loan_date']);
@@ -62,7 +63,7 @@ if ($qry->rowCount() > 0) {
         $response['status'] = $status[$row['status']];
 
         // Calculate loan customer status and store in variable
-        $loanCustomerStatus = loanCustomerStatus($pdo, $row['cus_profile_id']);
+        $loanCustomerStatus = loanCustomerStatus($pdo, $row['cus_profile_id'], $i);
         $response['sub_status'] = $loanCustomerStatus;
 
         $response['info'] = "<div class='dropdown'>
@@ -106,13 +107,14 @@ if ($qry->rowCount() > 0) {
         }
 
         $loan_list_arr[] = $response;
+         $i++; // move to next element for next profile
     }
 }
 
 $pdo = null; // Close Connection
 echo json_encode($loan_list_arr);
 
-function loanCustomerStatus($pdo, $cus_profile_id)
+function loanCustomerStatus($pdo, $cus_profile_id ,$i)
 {
     $qry1 = $pdo->query("SELECT lelc.loan_date, cs.status as cs_status, cs.sub_status as sub_sts
     FROM loan_entry_loan_calculation lelc
@@ -128,8 +130,7 @@ function loanCustomerStatus($pdo, $cus_profile_id)
         $od_sts = isset($_POST["od_sts"]) ? explode(',', $_POST["od_sts"]) : [];
         $due_nil_sts = isset($_POST["due_nil_sts"]) ? explode(',', $_POST["due_nil_sts"]) : [];
         $bal_amt = isset($_POST["bal_amt"]) ? explode(',', $_POST["bal_amt"]) : [];
-        $i = 1;
-
+        
         if ($cs_status == '1' || $cs_status == '2') {
             $status = 'Loan Entry';
         } elseif ($cs_status == '3') {

@@ -51,6 +51,7 @@
                         <input type="hidden" name="od_sts" id="od_sts" value="" />
                         <input type="hidden" name="due_nil_sts" id="due_nil_sts" value="" />
                         <input type="hidden" name="coll_sts" id="coll_sts" />
+                       
 
                         <div class="card-body">
                             <div class="row">
@@ -157,6 +158,7 @@
                 <input type="hidden" name="cp_id" id="cp_id">
                 <input type="hidden" name="status" id="status">
                 <input type="hidden" name="sub_status" id="sub_status">
+                 <input type="hidden" name="loan_type" id="loan_type" >
 
                 <div class="card-body">
                     <div class="row">
@@ -200,7 +202,12 @@
                                         <input type="hidden" class="form-control" readonly id="payableAmount" name="payableAmount">
                                     </div>
                                 </div>
-
+                                <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12 till-date-int">
+                                    <div class="form-group">
+                                        <label for="disabledInput">Till Date Interest</label>&nbsp;<span class="text-danger ">*</span>
+                                        <input type="text" class="form-control" readonly id="till_date_int" name="till_date_int" value='' tabindex='19'>
+                                    </div>
+                                </div>
                                 <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
                                     <div class="form-group">
                                         <label for="disabledInput">Penalty</label>&nbsp;<span class="text-danger ">*</span>
@@ -271,10 +278,22 @@
 
                             <!-- Waiver Access if the user have collection access. -->
                             <div class="row collection_access_div">
-                                <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                                <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12 emiLoanDiv">
                                     <div class="form-group">
                                         <label for="disabledInput">Pre Closure</label>
                                         <input type="number" class="form-control clearFields" id="pre_close_waiver" name="pre_close_waiver" value='' placeholder='Enter Pre Closure Amount' tabindex='22'>
+                                    </div>
+                                </div>
+                                <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12 intLoanDiv" style="display: none;">
+                                    <div class="form-group">
+                                        <label for="disabledInput">Principle Waiver</label>
+                                        <input type="text" class="form-control" id="principal_waiver" name="principal_waiver" value='' placeholder='Enter Principle Waiver' tabindex='28'>
+                                    </div>
+                                </div>
+                                <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12 intLoanDiv" style="display: none;">
+                                    <div class="form-group">
+                                        <label for="disabledInput">Interest Waiver</label>
+                                        <input type="text" class="form-control" id="interest_waiver" name="interest_waiver" value='' placeholder='Enter Interest Waiver' tabindex='28'>
                                     </div>
                                 </div>
                                 <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">

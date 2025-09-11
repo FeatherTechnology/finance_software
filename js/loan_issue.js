@@ -1371,7 +1371,17 @@ function personalInfo() {
 
         $('.calc_scheme_title').text((response[0].profit_type == '0') ? 'Calculation' : 'Scheme');
         $('#profit_type_calc_scheme').show();
-
+        if (response[0].due_type === 'EMI') {
+            $('#due_type_calc').val('EMI');
+            $('.interest_type').hide();
+            $('.interest_cal').show();
+        } else if (response[0].due_type === 'Interest') {
+            $('#due_type_calc').val('Interest');
+            $('.interest_type').show();
+            $('.interest_cal').hide();
+            $('#interest_calculate').val(response[0].interest_calculate);
+            $('#profit_type_calc').val(0);
+        }
         if (response[0].profit_type == '0') { // Loan Calculation
             $('.calc').show();
             $('.scheme').hide();

@@ -969,7 +969,7 @@ function getLoanCatDetails(id) {
     $.post('api/loan_entry/loan_calculation/getLoanCatDetails.php', { id }, function (response) {
         $('#due_method_calc').val(response[0].due_method);
 
-        if (response[0].due_type == 'EMI') {
+        if (response[0].due_type == 'emi') {
             $('#due_type_calc').val('EMI');
         } else if (response[0].due_type == 'interest') {
             $('#due_type_calc').val('Interest');
@@ -999,14 +999,16 @@ function getLoanCatDetails(id) {
                             if( parseInt($(this).val()) < '`+ response[0].due_period_min + `' && parseInt($(this).val()) != '' ){ alert("Enter Higher Value"); $(this).val(""); } `); //To check value between range
         $('#due_period_calc').val(due_period_upd);
 
-        $('.min-max-doc').text('* (' + response[0].doc_charge_min + '% - ' + response[0].doc_charge_max + '%) ');
-        $('#doc_charge_calc').attr('onChange', `if( parseFloat($(this).val()) > '` + response[0].doc_charge_max + `' ){ alert("Enter Lesser Value"); $(this).val(""); }else
-                            if( parseFloat($(this).val()) < '`+ response[0].doc_charge_min + `' && parseFloat($(this).val()) != '' ){ alert("Enter Higher Value"); $(this).val(""); } `); //To check value between range
+         let docType = (response[0].document_charge_type == 'percentage') ? '%' : '₹';
+        $('.min-max-doc').text('* (' + response[0].doc_charge_min + ' ' + docType + ' - ' + response[0].doc_charge_max + ' ' + docType + ') ');
+
+        $('#doc_charge_calc').attr('onChange', `if( parseFloat($(this).val()) > '${response[0].doc_charge_max}' ){ alert("Enter Lesser Value"); $(this).val(""); }else if( parseFloat($(this).val()) < '${response[0].doc_charge_min}' && $(this).val() != '' ){ alert("Enter Higher Value"); $(this).val(""); }`);
         $('#doc_charge_calc').val(doc_charge_upd);
 
-        $('.min-max-proc').text('* (' + response[0].processing_fee_min + '% - ' + response[0].processing_fee_max + '%) ');
-        $('#processing_fees_calc').attr('onChange', `if( parseFloat($(this).val()) > '` + response[0].processing_fee_max + `' ){ alert("Enter Lesser Value"); $(this).val(""); }else
-                            if( parseFloat($(this).val()) < '`+ response[0].processing_fee_min + `' && parseInt($(this).val()) != '' ){ alert("Enter Higher Value"); $(this).val(""); } `); //To check value between range
+        let procType = (response[0].processing_fees_type == 'percentage') ? '%' : '₹';
+        $('.min-max-proc').text('* (' + response[0].processing_fee_min + ' ' + procType + ' - ' + response[0].processing_fee_max + ' ' + procType + ')');
+
+        $('#processing_fees_calc').attr('onChange', `if( parseFloat($(this).val()) > '${response[0].processing_fee_max}' ){ alert("Enter Lesser Value"); $(this).val(""); }else if( parseFloat($(this).val()) < '${response[0].processing_fee_min}' && $(this).val() != '' ){ alert("Enter Higher Value"); $(this).val(""); }`);
         $('#processing_fees_calc').val(proc_fee_upd);
 
     }, 'json');
@@ -1108,6 +1110,21 @@ function loanCalculationEdit(id) {
         $('#referred_calc').trigger('change');
 
         $('#profit_type_calc_scheme').show();
+          if (response[0].due_type === 'EMI') {
+                $('#due_type_calc').val('EMI');
+                $('#profit_type_calc').prop('disabled', false)
+                $('.interest_type').hide();
+                $('.interest_cal').show();
+                $('#calc_val').val(response[0].interest_rate_min);
+                $('#scheme_val').val(response[0].scheme_name);
+            } else if (response[0].due_type === 'Interest') {
+                $('#due_type_calc').val('Interest');
+                $('.interest_type').show();
+                $('.interest_cal').hide();
+                $('#interest_calculate').val(response[0].interest_calculate);
+                $('#profit_type_calc').val(0);
+                $('#profit_type_calc').prop('disabled', true)
+            }
         if (response[0].profit_type == '0') {//Loan Calculation
             $('.calc').show();
             $('.scheme').hide();

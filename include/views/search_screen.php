@@ -964,6 +964,12 @@
                                     <input type="text" class="form-control" id="due_type_calc" name="due_type_calc" disabled tabindex="7" readonly>
                                 </div>
                             </div>
+                             <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12 interest_type" style="display:none">
+                                <div class="form-group">
+                                    <label for="interest_calculate">Interest Calculate</label><span class="text-danger">*</span>
+                                    <input type="text" class="form-control" id="interest_calculate" name="interest_calculate" tabindex="7" readonly>
+                                </div>
+                            </div>
                             <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12 calc" style="display:none">
                                 <div class="form-group">
                                     <label for="profit_method_calc">Profit Method</label><span class="text-danger">*</span>
@@ -1061,16 +1067,16 @@
                                     <input type="number" class="form-control refresh_loan_calc" id="interest_amnt_calc" name="interest_amnt_calc" tabindex="16" readonly>
                                 </div>
                             </div>
-                            <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                              <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12 interest_cal" >
                                 <div class="form-group">
                                     <label for="total_amnt_calc">Total Amount</label><span class="text-danger">*</span>
-                                    <input type="number" class="form-control refresh_loan_calc" id="total_amnt_calc" name="total_amnt_calc" tabindex="17" readonly>
+                                    <input type="text" class="form-control refresh_loan_calc" id="total_amnt_calc" name="total_amnt_calc" tabindex="17" readonly>
                                 </div>
                             </div>
-                            <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                            <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12 interest_cal">
                                 <div class="form-group">
                                     <label for="due_amnt_calc">Due Amount</label><span class="text-danger due-diff">*</span>
-                                    <input type="number" class="form-control refresh_loan_calc" id="due_amnt_calc" name="due_amnt_calc" tabindex="18" readonly>
+                                    <input type="text" class="form-control refresh_loan_calc" id="due_amnt_calc" name="due_amnt_calc" tabindex="18" readonly>
                                 </div>
                             </div>
                             <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
