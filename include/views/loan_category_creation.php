@@ -84,7 +84,21 @@
                                     <div class="col-md-3 col-sm-4">
                                         <div class="form-group">
                                             <label for="due_type">Due Type</label><span class="text-danger">*</span>
-                                            <input type="text" class="form-control" id="due_type" name="due_type" tabindex="5" value="EMI" readonly>
+                                            <select class="form-control" id="due_type" name="due_type" tabindex="1">
+                                                <option value="">Select Due Type</option>
+                                                <option value="emi">EMI</option>
+                                                <option value="interest">Interest</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3 col-sm-4 interest_type" style="display: none;">
+                                        <div class="form-group">
+                                            <label for="interest_calculate">Interest Calculate</label><span class="text-danger">*</span>
+                                            <select class="form-control" id="interest_calculate" name="interest_calculate" tabindex="9">
+                                                <option value="">Select Interest Calculate</option>
+                                                <option value="1">Month</option>
+                                                <option value="2">Days</option>
+                                            </select>
                                         </div>
                                     </div>
                                 </div>
@@ -139,11 +153,20 @@
                                 <div class="row">
                                     <div class="col-md-3 col-sm-4">
                                         <div class="form-group">
-                                            <label for="doc_charge_min">Document Charge</label><span class="text-danger">*</span>
+                                            <label for="doc_charge_min">Document Charge</label><span class="text-danger">*</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                            <div class="interest_type_options" style="margin-top:-25px; margin-left:140px; display: none;">
+                                                <input type="hidden" id="document_charge" value="percentage">
+                                                <input type="radio" name="doc_charge_type" id="docpercentage" value="percentage" tabindex="13" checked>
+                                                <label for="docpercentage">&nbsp;&nbsp;<b>%</b></label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+
+                                                <input type="radio" name="doc_charge_type" value="rupee" id="docamt" tabindex="14">
+                                                <label for="docamt">&nbsp;&nbsp;₹</label>
+                                            </div>
+
                                             <div class="input-group">
                                                 <input type="number" class="form-control doc_charge_minmax" id="doc_charge_min" name="doc_charge_min" tabindex="10" placeholder="Enter Min Document Charge">
                                                 <div class="input-group-append">
-                                                    <span class="input-group-text">%</span>
+                                                    <span class="input-group-text document-span-val">%</span>
                                                 </div>
                                             </div>
                                         </div>
@@ -154,7 +177,7 @@
                                             <div class="input-group">
                                                 <input type="number" class="form-control form-group-label-emptywith-input doc_charge_minmax" id="doc_charge_max" name="doc_charge_max" tabindex="11" placeholder="Enter Max Document Charge">
                                                 <div class="input-group-append form-group-label-emptywith-input">
-                                                    <span class="input-group-text">%</span>
+                                                    <span class="input-group-text document-span-val">%</span>
                                                 </div>
                                             </div>
                                         </div>
@@ -163,11 +186,20 @@
                                 <div class="row">
                                     <div class="col-md-3 col-sm-4">
                                         <div class="form-group">
-                                            <label for="processing_fee_min">Processing Fee</label><span class="text-danger">*</span>
+                                            <label for="processing_fee_min">Processing Fee</label><span class="text-danger">*</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                            <div class="interest_type_options" style="margin-top:-25px; margin-left:120px; display: none;">
+                                                <input type="hidden" id="processing_type" value="percentage">
+                                                <input type="radio" name="process_fee_type" id="propercentage" value="percentage" tabindex="17" checked style="margin-left:15px;">
+                                                <label for="propercentage">&nbsp;&nbsp;<b>%</b></label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+
+                                                <input type="radio" name="process_fee_type" value="rupee" id="procamt" tabindex="18">
+                                                <label for="procamt">&nbsp;&nbsp;₹</label>
+                                            </div>
+
                                             <div class="input-group">
                                                 <input type="number" class="form-control processing_minmax" id="processing_fee_min" name="processing_fee_min" tabindex="12" placeholder="Enter Min Processing Fee">
                                                 <div class="input-group-append">
-                                                    <span class="input-group-text">%</span>
+                                                    <span class="input-group-text process-span-val">%</span>
                                                 </div>
                                             </div>
                                         </div>
@@ -178,7 +210,7 @@
                                             <div class="input-group">
                                                 <input type="number" class="form-control form-group-label-emptywith-input processing_minmax" id="processing_fee_max" name="processing_fee_max" tabindex="13" placeholder="Enter Max Processing Fee">
                                                 <div class="input-group-append form-group-label-emptywith-input">
-                                                    <span class="input-group-text">%</span>
+                                                    <span class="input-group-text process-span-val">%</span>
                                                 </div>
                                             </div>
                                         </div>
@@ -187,11 +219,20 @@
                                 <div class="row">
                                     <div class="col-md-3 col-sm-4">
                                         <div class="form-group">
-                                            <label for="overdue_penalty">Overdue Penalty</label><span class="text-danger">*</span>
+                                            <label for="overdue_penalty">Overdue Penalty</label><span class="text-danger">*</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                            <div class="interest_type_options" style="margin-top:-25px; margin-left:120px; display: none;">
+                                                <input type="hidden" id="overdue_type" value="percentage">
+                                                <input type="radio" name="over_due_type" id="overpercentage" value="percentage" tabindex="21" checked style="margin-left:10px;">
+                                                <label for="overpercentage">&nbsp;&nbsp;<b>%</b></label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+
+                                                <input type="radio" name="over_due_type" value="rupee" id="overamt">
+                                                <label for="overamt">&nbsp;&nbsp;₹</label>
+                                            </div>
+
                                             <div class="input-group">
                                                 <input type="number" class="form-control" id="overdue_penalty" name="overdue_penalty" tabindex="14" placeholder="Enter Overdue Penalty">
                                                 <div class="input-group-append">
-                                                    <span class="input-group-text">%</span>
+                                                    <span class="input-group-text  overdue-span-val">%</span>
                                                 </div>
                                             </div>
                                         </div>
@@ -202,7 +243,7 @@
                         <!--- ---------------------- Loan Calculation END  ----------------------------- -->
 
                         <!--- ---------------------- Loan scheme  START----------------------------- -->
-                        <div class="card">
+                        <div class="card interest_scheme">
                             <div class="card-header d-flex align-items-center justify-content-between">
                                 <h5 class="card-title mb-0">Loan Scheme</h5>
                                 <button type="button" class="btn btn-primary modalBtnCss card-head-btn" data-toggle="modal" data-target="#add_loan_scheme_modal" tabindex="15" onclick="getSchemeTable()"><span class="icon-add"></span></button>
@@ -350,9 +391,9 @@
                                 <div class="form-group">
                                     <label for="profit_method">Profit Method</label><span class="text-danger">*</span>
                                     <select class="form-control" id="profit_method" name="profit_method" tabindex="4">
-                                                <option value="">Select Profit Method</option>
-                                                <option value="Pre Benefit">Pre Benefit</option>
-                                                <option value="After Benefit">After Benefit</option>
+                                        <option value="">Select Profit Method</option>
+                                        <option value="Pre Benefit">Pre Benefit</option>
+                                        <option value="After Benefit">After Benefit</option>
                                     </select>
                                 </div>
                             </div>

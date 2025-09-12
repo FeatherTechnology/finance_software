@@ -10,7 +10,37 @@ $(document).ready(function () {
         clearLoanCategoryCreationForm();
         swapTableAndCreation();
     });
+    $("#due_type").change(function () {
+        let dueType = $(this).val();
+        $(".doc_charge_minmax").val(" ");
+        $(".processing_minmax").val(" ");
+        $("#overdue_penalty").val(" ");
+        $(".overdue-span-val").text("%");
+        $(".process-span-val").text("%");
+        $(".document-span-val").text("%");
+        if (dueType === "interest") {
+            // Show penalty with radio options  
+            $(".interest_type_options").show();
+            $(".interest_type").show();
+            $(".interest_scheme").hide();
+        }
+        else if (dueType === "emi") {
+            // Show penalty but force percentage only
+            $(".interest_type_options").hide();
+            $(".interest_type").hide();
+            $(".interest_scheme").show();
+            $("input[name='over_due_type'][value='percentage']").prop("checked", true);
+            $("input[name='doc_charge_type'][value='percentage']").prop("checked", true);
+            $("input[name='process_fee_type'][value='percentage']").prop("checked", true);
+        }
 
+    });
+
+    // Change penalty unit on radio select
+    // $("input[name='over_due_type']").change(function () {
+    //     let type = $(this).val();
+    //     $("#penalty_unit").text(type === "percentage" ? "%" : "₹");
+    // });
     $('.interest_minmax').change(function () {
         checkMinMaxValue('#interest_rate_min', '#interest_rate_max');
     });
@@ -40,7 +70,27 @@ $(document).ready(function () {
         $('.processing-span-val').text(processingType);
         $('#processing_fee_type').val(processingTypeValue);
     });
+    $('input[name=doc_charge_type]').click(function () {
 
+        let Value = $(this).val();
+        let type = (Value === 'percentage') ? '%' : '₹';
+        $('.document-span-val').text(type);
+        $('#document_charge').val(Value);
+    });
+
+    $('input[name=process_fee_type]').click(function () {
+        let Value = $(this).val();
+        let type = (Value === 'percentage') ? '%' : '₹';
+        $('.process-span-val').text(type);
+        $('#processing_type').val(Value);
+    });
+
+    $('input[name=over_due_type]').click(function () {
+        let Value = $(this).val();
+        let type = (Value === 'percentage') ? '%' : '₹';
+        $('.overdue-span-val').text(type);
+        $('#overdue_type').val(Value);
+    });
     $('.scheme_doc_minmax').change(function () {
         checkMinMaxValue('#scheme_doc_charge_min', '#scheme_doc_charge_max');
     });
@@ -226,14 +276,18 @@ $(document).ready(function () {
                 loan_limit: loan_limit_value,
                 due_method: $('#due_method').val(),
                 due_type: $('#due_type').val(),
+                interest_calculate: $('#interest_calculate').val(),
                 interest_rate_min: $('#interest_rate_min').val(),
                 interest_rate_max: $('#interest_rate_max').val(),
                 due_period_min: $('#due_period_min').val(),
                 due_period_max: $('#due_period_max').val(),
+                document_charge_type: $('#document_charge').val(),
                 doc_charge_min: $('#doc_charge_min').val(),
                 doc_charge_max: $('#doc_charge_max').val(),
+                processing_fee_type: $('#processing_type').val(),
                 processing_fee_min: $('#processing_fee_min').val(),
                 processing_fee_max: $('#processing_fee_max').val(),
+                overdue_type: $('#overdue_type').val(),
                 overdue_penalty: $('#overdue_penalty').val(),
                 scheme_name: $('#scheme_name').val(),
                 id: $('#loan_cat_creation_id').val()
@@ -258,35 +312,44 @@ $(document).ready(function () {
             });
         }
     });
+
+
     function validateLoanCalculationCard() {
         let valid = true;
         let due_type = $("#due_type").val();
+
         if (due_type == "") {
-            valid = false;
-            return valid;
+            return false;
         }
-        else {
-            valid &= validateField($('#due_type').val(), 'due_type');
-            valid &= validateField($('#interest_rate_min').val(), 'interest_rate_min');
-            valid &= validateField($('#interest_rate_max').val(), 'interest_rate_max');
-            valid &= validateField($('#due_period_min').val(), 'due_period_min');
-            valid &= validateField($('#due_period_max').val(), 'due_period_max');
-            valid &= validateField($('#doc_charge_min').val(), 'doc_charge_min');
-            valid &= validateField($('#doc_charge_max').val(), 'doc_charge_max');
-            valid &= validateField($('#processing_fee_min').val(), 'processing_fee_min');
-            valid &= validateField($('#processing_fee_max').val(), 'processing_fee_max');
-            valid &= validateField($('#overdue_penalty').val(), 'overdue_penalty');
-            return valid;
+
+        // If due_type = interest → check interest_calculate also
+        if (due_type === "interest") {
+            valid = validateField($('#interest_calculate').val(), 'interest_calculate') && valid;
         }
+
+        // Common validations for both EMI and Interest
+        valid = validateField($('#due_type').val(), 'due_type') && valid;
+        valid = validateField($('#interest_rate_min').val(), 'interest_rate_min') && valid;
+        valid = validateField($('#interest_rate_max').val(), 'interest_rate_max') && valid;
+        valid = validateField($('#due_period_min').val(), 'due_period_min') && valid;
+        valid = validateField($('#due_period_max').val(), 'due_period_max') && valid;
+        valid = validateField($('#doc_charge_min').val(), 'doc_charge_min') && valid;
+        valid = validateField($('#doc_charge_max').val(), 'doc_charge_max') && valid;
+        valid = validateField($('#processing_fee_min').val(), 'processing_fee_min') && valid;
+        valid = validateField($('#processing_fee_max').val(), 'processing_fee_max') && valid;
+        valid = validateField($('#overdue_penalty').val(), 'overdue_penalty') && valid;
+
+        return valid;
     }
+
 
     function validateLoanSchemeCard() {
         let valid = true;
-        let value=$('#scheme_name').val();
-        if(value === '' || value === null || value === undefined){
-                 $('#scheme_name').closest('.choices').find('.choices__inner').css('border', '1px solid #ff0000');
-                 valid = false;
-        }else{
+        let value = $('#scheme_name').val();
+        if (value === '' || value === null || value === undefined) {
+            $('#scheme_name').closest('.choices').find('.choices__inner').css('border', '1px solid #ff0000');
+            valid = false;
+        } else {
 
             $('#scheme_name').closest('.choices').find('.choices__inner').css('border', '1px solid #cecece');
 
@@ -307,20 +370,43 @@ $(document).ready(function () {
             $('#interest_rate_max').val(response[0].interest_rate_max);
             $('#due_period_min').val(response[0].due_period_min);
             $('#due_period_max').val(response[0].due_period_max);
+            $('#document_charge').val(response[0].document_charge_type);
             $('#doc_charge_min').val(response[0].doc_charge_min);
             $('#doc_charge_max').val(response[0].doc_charge_max);
+            $('#processing_type').val(response[0].processing_fees_type);
             $('#processing_fee_min').val(response[0].processing_fee_min);
             $('#processing_fee_max').val(response[0].processing_fee_max);
+            $('#overdue_type').val(response[0].penalty_type);
             $('#overdue_penalty').val(response[0].overdue_penalty);
             $('#scheme_name2').val(response[0].scheme_name);
+
+            if (response[0].due_type == 'interest') {
+                $(".interest_type_options").show();
+                $('#interest_calculate').val(response[0].interest_calculate);
+                $(".interest_type").show();
+                $(".interest_scheme").hide();
+
+                handleTypeChange($('#document_charge').val(), 'docpercentage', 'docamt', 'document-span-val');
+                handleTypeChange($('#processing_type').val(), 'propercentage', 'procamt', 'process-span-val');
+                handleTypeChange($('#overdue_type').val(), 'overpercentage', 'overamt', 'overdue-span-val');
+            } else {
+                $(".interest_type_options").hide();
+                $(".interest_type").hide();
+                $(".interest_scheme").show();
+                $("input[name='over_due_type'][value='percentage']").prop("checked", true);
+                $("input[name='doc_charge_type'][value='percentage']").prop("checked", true);
+                $("input[name='process_fee_type'][value='percentage']").prop("checked", true);
+            }
+
             setTimeout(() => {
                 getLoanCategoryDropdown();
-                getSchemeDropdown()
+                getSchemeDropdown();
             }, 1000);
 
-            swapTableAndCreation();//to change to div to table content.
+            swapTableAndCreation(); //to change to div to table content.
         }, 'json');
-    })
+    });
+
     ///////////////////////////////////// EDIT Screen END  /////////////////////////////////////
     ///////////////////////////////////// Delete Screen START  /////////////////////////////////////
     $(document).on('click', '.loanCatCreationDeleteBtn', function () {
@@ -553,11 +639,23 @@ function clearLoanCategory() {
 
 function clearLoanCategoryCreationForm() {
     // Reset all input fields except the ones specified
-    $('input:not(#due_method, #profit_method, #doc_charge_type, #processing_fee_type, #doc_charge_type_percent, #doc_charge_type_rupee, #processing_fee_type_percent, #processing_fee_type_rupee , #due_type)').val('');
+    $('input:not(#due_method, #profit_method, #doc_charge_type, #processing_fee_type, #doc_charge_type_percent, #doc_charge_type_rupee, #processing_fee_type_percent, #processing_fee_type_rupee ,#overpercentage,#propercentage,#docpercentage,#docamt,#procamt,#overamt,#document_charge,#overdue_type,#processing_type)').val('');
     // Reset all select fields to their first option
     $('select').each(function () {
         $(this).val($(this).find('option:first').val());
     });
+    $(".interest_type").hide();
+    $(".overdue-span-val").text("%");
+    $(".process-span-val").text("%");
+    $(".document-span-val").text("%");
+     $('#overdue_type').val('percentage');
+     $('#document_charge').val('percentage');
+     $('#processing_type').val('percentage');
+    $(".interest_type_options").hide();
+    $(".interest_scheme").show();
+    $("input[name='over_due_type'][value='percentage']").prop("checked", true);
+    $("input[name='doc_charge_type'][value='percentage']").prop("checked", true);
+    $("input[name='process_fee_type'][value='percentage']").prop("checked", true);
     $('#loan_limit, #interest_rate_min, #interest_rate_max, #due_period_min, #due_period_max, #doc_charge_min, #doc_charge_max, #processing_fee_min, #processing_fee_max, #overdue_penalty').css('border', '1px solid #cecece');
     // Reset all select fields to their first option
     $('#loan_category_creation select').css('border', '1px solid #cecece');
@@ -575,5 +673,16 @@ function checkMinMaxValue(minSelector, maxSelector) {
             $(minSelector).val('');
             $(maxSelector).val('');
         }
+    }
+}
+function handleTypeChange(type, percentId, rupeeId, spanClass) {
+    if (type === 'percentage') {
+        $(`#${percentId}`).prop('checked', true);
+        $(`#${rupeeId}`).prop('checked', false);
+        $(`.${spanClass}`).text('%');
+    } else if (type === 'rupee') {
+        $(`#${rupeeId}`).prop('checked', true);
+        $(`#${percentId}`).prop('checked', false);
+        $(`.${spanClass}`).text('₹');
     }
 }

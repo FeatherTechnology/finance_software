@@ -135,10 +135,11 @@ $(document).ready(function () {
                 $('#payableAmount').val(moneyFormatIndia(response['payable']))
                 $('#penalty').val(moneyFormatIndia(response['penalty']))
                 $('#coll_charge').val(moneyFormatIndia(response['coll_charge']));
+                $('#loan_type').val(response['loan_type']);
 
                 if (response['loan_type'] == "interest") {
                     $('.till-date-int').show();
-                    $('#till_date_int').val(response['till_date_int'].toFixed(0))
+                    $('#till_date_int').val(response['till_date_int'])
                     $('#tot_amt').prev().prev().text('Principal Amount')
                     $('#due_amt').prev().prev().text('Interest Amount')
 
@@ -241,9 +242,22 @@ $(document).ready(function () {
                             $(this).val("");
                             $('#total_waiver').val("");
                         }
-                    } else if (response['loan_type'] == 'interest') {
+                    }
+                });
+                //To set Limitation that should not cross its limit with considering track values and previous readonly values
+                $('#principal_waiver').on('blur', function () {
+                    if (response['loan_type'] == 'interest') {
                         var princ_track = $('#princ_amt_track').val();
                         if (parseFloat($(this).val()) > response['balance'] - princ_track) {
+                            alert("Enter a Lesser Value");
+                            $(this).val("");
+                            $('#total_waiver').val("");
+                        }
+                    }
+                });
+                $('#interest_waiver').on('blur', function () {
+                    if (response['loan_type'] == 'interest') {
+                        if (parseFloat($(this).val()) > response['till_date_int']) {
                             alert("Enter a Lesser Value");
                             $(this).val("");
                             $('#total_waiver').val("");
@@ -334,13 +348,14 @@ $(document).ready(function () {
         $('#total_paid_track').val(moneyFormatIndia(total_paid_track));
     });
 
-    $('#pre_close_waiver , #penalty_waiver , #coll_charge_waiver').blur(function () {
+    $('#principal_waiver , #penalty_waiver , #coll_charge_waiver,#interest_waiver').blur(function () {
 
-        var pre_close_waiver = ($('#pre_close_waiver').val() != '') ? $('#pre_close_waiver').val().replace(/,/g, '') : 0;
+        var principal_waiver = ($('#principal_waiver').val() != '') ? $('#principal_waiver').val().replace(/,/g, '') : 0;
+        var interest_waiver = ($('#interest_waiver').val() != '') ? $('#interest_waiver').val().replace(/,/g, '') : 0;
         var penalty_waiver = ($('#penalty_waiver').val() != '') ? $('#penalty_waiver').val().replace(/,/g, '') : 0;
         var coll_charge_waiver = ($('#coll_charge_waiver').val() != '') ? $('#coll_charge_waiver').val().replace(/,/g, '') : 0;
 
-        var total_waiver = parseInt(pre_close_waiver) + parseInt(penalty_waiver) + parseInt(coll_charge_waiver);
+        var total_waiver = parseInt(principal_waiver) + parseInt(interest_waiver) + parseInt(penalty_waiver) + parseInt(coll_charge_waiver);
         $('#total_waiver').val(moneyFormatIndia(total_waiver));
     });
 
@@ -430,6 +445,7 @@ $(document).ready(function () {
             'due_amt': $('#due_amt').val().replace(/,/g, ''),
             'pending_amt': $('#pending_amt').val().replace(/,/g, ''),
             'payable_amt': $('#payable_amt').val().replace(/,/g, ''),
+            'till_date_int': $('#till_date_int').val().replace(/,/g, ''),
             'penalty': $('#penalty').val().replace(/,/g, ''),
             'coll_charge': $('#coll_charge').val().replace(/,/g, ''),
             'due_amt_track': $('#due_amt_track').val().replace(/,/g, ''),
@@ -439,6 +455,8 @@ $(document).ready(function () {
             'coll_charge_track': $('#coll_charge_track').val().replace(/,/g, ''),
             'total_paid_track': $('#total_paid_track').val().replace(/,/g, ''),
             'pre_close_waiver': $('#pre_close_waiver').val().replace(/,/g, ''),
+            'principal_waiver': $('#principal_waiver').val().replace(/,/g, ''),
+            'interest_waiver': $('#interest_waiver').val().replace(/,/g, ''),
             'penalty_waiver': $('#penalty_waiver').val().replace(/,/g, ''),
             'coll_charge_waiver': $('#coll_charge_waiver').val().replace(/,/g, ''),
             'total_waiver': $('#total_waiver').val().replace(/,/g, ''),
@@ -731,27 +749,48 @@ function resetValidation() {
 }
 //validation
 function isFormDataValid(collData) {
+
     let isValid = true;
+    let loan_type = $('#loan_type').val();
 
-    // Check if all three fields are empty
-    const allThreeFieldsEmpty = !collData['due_amt_track'] && !collData['penalty_track'] && !collData['coll_charge_track'];
+    if (loan_type === 'interest') {
+        // Interest loan → check principal, interest, penalty, fine
+        let allEmpty = !collData['princ_amt_track'] &&
+            !collData['int_amt_track'] &&
+            !collData['penalty_track'] &&
+            !collData['coll_charge_track'];
 
-    if (allThreeFieldsEmpty) {
-        if (!validateField(collData['due_amt_track'], 'due_amt_track')) {
-            isValid = false;
+        if (allEmpty) {
+            if (!validateField(collData['princ_amt_track'], 'princ_amt_track')) isValid = false;
+            if (!validateField(collData['int_amt_track'], 'int_amt_track')) isValid = false;
+            if (!validateField(collData['penalty_track'], 'penalty_track')) isValid = false;
+            if (!validateField(collData['coll_charge_track'], 'coll_charge_track')) isValid = false;
         }
-        if (!validateField(collData['penalty_track'], 'penalty_track')) {
-            isValid = false;
+
+    } else {
+        // Other loan types → check due, penalty, fine
+        let allEmpty = !collData['due_amt_track'] &&
+            !collData['penalty_track'] &&
+            !collData['coll_charge_track'];
+
+        if (allEmpty) {
+            if (!validateField(collData['due_amt_track'], 'due_amt_track')) isValid = false;
+            if (!validateField(collData['penalty_track'], 'penalty_track')) isValid = false;
+            if (!validateField(collData['coll_charge_track'], 'coll_charge_track')) isValid = false;
         }
-        if (!validateField(collData['coll_charge_track'], 'coll_charge_track')) {
-            isValid = false;
+    }
+
+    // Reset borders if any one is filled
+    if (loan_type === 'interest') {
+        if (collData['princ_amt_track'] || collData['int_amt_track'] || collData['penalty_track'] || collData['coll_charge_track']) {
+            $('#princ_amt_track, #int_amt_track, #penalty_track, #coll_charge_track').css('border', '1px solid #cecece');
         }
     } else {
-        // Reset border color for the fields if any one of them is filled
-        $('#due_amt_track').css('border', '1px solid #cecece');
-        $('#penalty_track').css('border', '1px solid #cecece');
-        $('#coll_charge_track').css('border', '1px solid #cecece');
+        if (collData['due_amt_track'] || collData['penalty_track'] || collData['coll_charge_track']) {
+            $('#due_amt_track, #penalty_track, #coll_charge_track').css('border', '1px solid #cecece');
+        }
     }
+
 
     // Validate collection_mode
     if (!validateField(collData['collection_mode'], 'collection_mode')) {

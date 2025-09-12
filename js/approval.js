@@ -1621,9 +1621,10 @@ $(document).ready(function () {
     $('#loan_category_calc').change(function () {
         if ($(this).val() != '') {
             $('#loan_amount_calc').val('')
-            getLoanCatDetails($(this).val(), 1);
-            $('#profit_type_calc').val('').trigger('change');
+            // getLoanCatDetails($(this).val(), 1);
+            // $('#profit_type_calc').val('').trigger('change');
             $('#loan_category_calc2').val($(this).val())
+            getLoanDetails($(this).val())
         }
     });
 
@@ -1870,6 +1871,7 @@ $(document).ready(function () {
                 'profit_type_calc': $('#profit_type_calc').val(),
                 'due_method_calc': $('#due_method_calc').val(),
                 'due_type_calc': $('#due_type_calc').val(),
+                'interest_calculate': $('#interest_calculate').val(),
                 'profit_method_calc': $('#profit_method_calc').val(),
                 'scheme_due_method_calc': $('#scheme_due_method_calc').val(),
                 'scheme_day_calc': $('#scheme_day_calc').val(),
@@ -1979,12 +1981,39 @@ function getAgentID() {
         $('#agent_id_calc').empty().append(appendAgentIdOption);
     }, 'json');
 }
+function getLoanDetails(id) {
+    $.post('api/loan_entry/loan_calculation/getLoanCatDetails.php', { id }, function (response) {
 
+        if (response[0].due_type === 'emi') {
+            $('#due_type_calc').val('EMI');
+            $('#profit_type_calc').val('').trigger('change');
+            $('#profit_type_calc').prop('disabled', false)
+            $('.interest_type').hide();
+            $('.interest_cal').show();
+            $('#calc_val').val(response[0].interest_rate_min);
+            $('#scheme_val').val(response[0].scheme_name);
+        } else if (response[0].due_type === 'interest') {
+            $('#due_type_calc').val('Interest');
+            $('.interest_type').show();
+            $('.interest_cal').hide();
+            if (response[0].interest_calculate == 1) {
+                $('#interest_calculate').val('Month');
+            } else {
+                $('#interest_calculate').val('Days');
+            }
+            $('#calc_val').val(response[0].interest_rate_min);
+            $('#scheme_val').val(response[0].scheme_name);
+            $('#profit_type_calc').val(0).trigger('change');
+            $('#profit_type_calc').prop('disabled', true)
+        }
+    }, 'json');
+}
 function getLoanCatDetails(id, edittype) {
     $.post('api/loan_entry/loan_calculation/getLoanCatDetails.php', { id }, function (response) {
         $('#due_method_calc').val(response[0].due_method);
 
-        if (response[0].due_type === 'EMI') {
+
+        if (response[0].due_type === 'emi') {
             $('#due_type_calc').val('EMI');
         } else if (response[0].due_type === 'interest') {
             $('#due_type_calc').val('Interest');
@@ -2020,13 +2049,16 @@ function getLoanCatDetails(id, edittype) {
         $('.min-max-due').text('* (' + response[0].due_period_min + ' - ' + response[0].due_period_max + ') ');
         $('#due_period_calc').attr('onChange', `if( parseInt($(this).val()) > '` + response[0].due_period_max + `' ){ alert("Enter Lesser Value"); $(this).val(""); }else if( parseInt($(this).val()) < '` + response[0].due_period_min + `' && parseInt($(this).val()) != '' ){ alert("Enter Higher Value"); $(this).val(""); } `); //To check value between range
         $('#due_period_calc').val(due_period_upd);
+        let docType = (response[0].document_charge_type == 'percentage') ? '%' : '₹';
+        $('.min-max-doc').text('* (' + response[0].doc_charge_min + ' ' + docType + ' - ' + response[0].doc_charge_max + ' ' + docType + ') ');
 
-        $('.min-max-doc').text('* (' + response[0].doc_charge_min + '% - ' + response[0].doc_charge_max + '%) ');
-        $('#doc_charge_calc').attr('onChange', `if( parseFloat($(this).val()) > '` + response[0].doc_charge_max + `' ){ alert("Enter Lesser Value"); $(this).val(""); }else if( parseFloat($(this).val()) < '` + response[0].doc_charge_min + `' && parseFloat($(this).val()) != '' ){ alert("Enter Higher Value"); $(this).val(""); } `); //To check value between range
+        $('#doc_charge_calc').attr('onChange', `if( parseFloat($(this).val()) > '${response[0].doc_charge_max}' ){ alert("Enter Lesser Value"); $(this).val(""); }else if( parseFloat($(this).val()) < '${response[0].doc_charge_min}' && $(this).val() != '' ){ alert("Enter Higher Value"); $(this).val(""); }`);
         $('#doc_charge_calc').val(doc_charge_upd);
 
-        $('.min-max-proc').text('* (' + response[0].processing_fee_min + '% - ' + response[0].processing_fee_max + '%) ');
-        $('#processing_fees_calc').attr('onChange', `if( parseFloat($(this).val()) > '` + response[0].processing_fee_max + `' ){ alert("Enter Lesser Value"); $(this).val(""); }else if( parseFloat($(this).val()) < '` + response[0].processing_fee_min + `' && parseInt($(this).val()) != '' ){ alert("Enter Higher Value"); $(this).val(""); } `); //To check value between range
+        let procType = (response[0].processing_fees_type == 'percentage') ? '%' : '₹';
+        $('.min-max-proc').text('* (' + response[0].processing_fee_min + ' ' + procType + ' - ' + response[0].processing_fee_max + ' ' + procType + ')');
+
+        $('#processing_fees_calc').attr('onChange', `if( parseFloat($(this).val()) > '${response[0].processing_fee_max}' ){ alert("Enter Lesser Value"); $(this).val(""); }else if( parseFloat($(this).val()) < '${response[0].processing_fee_min}' && $(this).val() != '' ){ alert("Enter Higher Value"); $(this).val(""); }`);
         $('#processing_fees_calc').val(proc_fee_upd);
 
         if (edittype == 1) {
@@ -2170,39 +2202,56 @@ function getLoanAfterInterest(loan_amt, int_rate, due_period, doc_charge, proc_f
 //To Get Loan Calculation for Interest due type
 function getLoanInterest(loan_amt, int_rate, doc_charge, proc_fee) {
 
-    $('#loan_amnt_calc').val(parseInt(loan_amt).toFixed(0)); //get loan amt from loan info card
-    $('#principal_amnt_calc').val(parseInt(loan_amt).toFixed(0));
+    $('#loan_amnt_calc').val(moneyFormatIndia(parseInt(loan_amt).toFixed(0)));
+    $('#principal_amnt_calc').val(moneyFormatIndia(parseInt(loan_amt).toFixed(0)));
 
     $('#total_amnt_calc').val('');
     $('#due_amnt_calc').val('');//Due period will be monthly by default so no need of due amt
-
-    var int_amt = (parseInt(loan_amt) * (parseFloat(int_rate) / 100)).toFixed(0); //Calculate interest rate 
+    let interestType = $('#interest_calculate').val();
+    let int_amt;
+    if (interestType === 'Month') {
+        int_amt = (loan_amt * (int_rate / 100)).toFixed(0);
+    } else if (interestType === 'Days') {
+        int_amt = (loan_amt * (int_rate / 100) / 30).toFixed(0);
+    }
 
     var roundedInterest = Math.ceil(int_amt / 5) * 5;
     if (roundedInterest < int_amt) {
         roundedInterest += 5;
     }
     $('.int-diff').text('* (Difference: +' + parseInt(roundedInterest - int_amt) + ')'); //To show the difference amount
-    $('#interest_amnt_calc').val(parseInt(roundedInterest));
+    $('#interest_amnt_calc').val(moneyFormatIndia(parseInt(roundedInterest)));
 
-    var doc_charge = parseInt(loan_amt) * (parseFloat(doc_charge) / 100); //Get document charge from loan info and multiply with loan amt to get actual doc charge
+
+    let doc_type = $('.min-max-doc').text();
+    if (doc_type.includes('₹')) {
+        doc_charge = parseInt(doc_charge);
+    } else if (doc_type.includes('%')) {
+        doc_charge = parseInt(loan_amt) * (parseFloat(doc_charge) / 100);
+    } //Get document charge from loan info and multiply with loan amt to get actual doc charge
     var roundeddoccharge = Math.ceil(doc_charge / 5) * 5; //to increase document charge to nearest multiple of 5
     if (roundeddoccharge < doc_charge) {
         roundeddoccharge += 5;
     }
     $('.doc-diff').text('* (Difference: +' + parseInt(roundeddoccharge - doc_charge) + ')'); //To show the difference amount from old to new
-    $('#doc_charge_calculate').val(parseInt(roundeddoccharge));
+    $('#doc_charge_calculate').val(moneyFormatIndia(parseInt(roundeddoccharge)));
 
-    var proc_fee = parseInt(loan_amt) * (parseFloat(proc_fee) / 100);//Get processing fee from loan info and multiply with loan amt to get actual proc fee
+    let proc_type = $('.min-max-proc').text();
+    if (proc_type.includes('₹')) {
+        proc_fee = parseInt(proc_fee);
+    } else if (proc_type.includes('%')) {
+        proc_fee = parseInt(loan_amt) * (parseFloat(proc_fee) / 100);
+    }
+    //Get processing fee from loan info and multiply with loan amt to get actual proc fee
     var roundeprocfee = Math.ceil(proc_fee / 5) * 5; //to increase Processing fee to nearest multiple of 5
     if (roundeprocfee < proc_fee) {
         roundeprocfee += 5;
     }
     $('.proc-diff').text('* (Difference: +' + parseInt(roundeprocfee - proc_fee) + ')'); //To show the difference amount from old to new
-    $('#processing_fees_calculate').val(parseInt(roundeprocfee));
+    $('#processing_fees_calculate').val(moneyFormatIndia(parseInt(roundeprocfee)));
 
     var net_cash = parseInt(loan_amt) - parseInt(doc_charge) - parseInt(proc_fee); //Net cash will be calculated by subracting other charges
-    $('#net_cash_calc').val(parseInt(net_cash).toFixed(0));
+    $('#net_cash_calc').val(moneyFormatIndia(parseInt(net_cash).toFixed(0)));
 }
 
 function getLoanAfterBenifit(loan_amt, int_rate, due_period, doc_charge, proc_fee) {
@@ -2210,7 +2259,7 @@ function getLoanAfterBenifit(loan_amt, int_rate, due_period, doc_charge, proc_fe
     $('#loan_amnt_calc').val(parseInt(loan_amt).toFixed(0)); //get loan amt from loan info card
     $('#principal_amnt_calc').val(parseInt(loan_amt).toFixed(0)); // principal amt as same as loan amt for after interest
 
-    var interest_rate = (parseInt(loan_amt) * (parseFloat(int_rate) / 100) * parseInt(due_period)).toFixed(0); //Calculate interest rate 
+    var interest_rate = (parseInt(loan_amt) * (parseFloat(int_rate) / 100)); //Calculate interest rate 
     $('#interest_amnt_calc').val(parseInt(interest_rate));
 
     var tot_amt = parseInt(loan_amt) + parseFloat(interest_rate); //Calculate total amount from principal/loan amt and interest rate
@@ -2584,7 +2633,7 @@ function isFormDataValid(formData) {
     let isValid = true;
     const excludedFields = [
         'loan_amnt_calc', 'principal_amnt_calc', 'interest_amnt_calc', 'total_amnt_calc',
-        'processing_fees_calculate', 'net_cash_calc',
+        'processing_fees_calculate', 'net_cash_calc', 'interest_calculate',
         'due_amnt_calc', 'doc_charge_calculate',
         'id', 'category_info_calc', 'due_method_calc', 'due_type_calc', 'profit_method_calc',
         'scheme_due_method_calc', 'scheme_day_calc', 'scheme_name_calc', 'agent_id_calc', 'due_period_calc', 'interest_rate_calc', 'processing_fees_calc', 'doc_charge_calc',
@@ -2729,6 +2778,21 @@ function loanCalculationEdit(id) {
         $('#referred_calc').trigger('change');
 
         $('#profit_type_calc_scheme').show();
+        if (response[0].due_type === 'EMI') {
+            $('#due_type_calc').val('EMI');
+            $('#profit_type_calc').prop('disabled', false)
+            $('.interest_type').hide();
+            $('.interest_cal').show();
+            $('#calc_val').val(response[0].interest_rate_min);
+            $('#scheme_val').val(response[0].scheme_name);
+        } else if (response[0].due_type === 'Interest') {
+            $('#due_type_calc').val('Interest');
+            $('.interest_type').show();
+            $('.interest_cal').hide();
+            $('#interest_calculate').val(response[0].interest_calculate);
+            $('#profit_type_calc').val(0);
+            $('#profit_type_calc').prop('disabled', true)
+        }
         if (response[0].profit_type == '0') {//Loan Calculation
             $('.calc').show();
             $('.scheme').hide();

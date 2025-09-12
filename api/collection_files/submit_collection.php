@@ -27,8 +27,15 @@ $penalty_track = $_POST['penalty_track'];
 $coll_charge_track = $_POST['coll_charge_track'];
 $total_paid_track = $_POST['total_paid_track'];
 $pre_close_waiver = $_POST['pre_close_waiver'];
+if (isset($_POST['interest_waiver'])) {
+    $interest_waiver = $_POST['interest_waiver'];
+}
+if (isset($_POST['principal_waiver'])) {
+    $principal_waiver = $_POST['principal_waiver'];
+}
 $penalty_waiver = $_POST['penalty_waiver'];
 $coll_charge_waiver = $_POST['coll_charge_waiver'];
+$till_date_int = $_POST['till_date_int'];
 $total_waiver = $_POST['total_waiver'];
 $collection_date = date('Y-m-d', strtotime($_POST['collection_date']));
 $collection_id = $_POST['collection_id'];
@@ -55,7 +62,7 @@ try {
         $collection_id = $myStr . "-101";
     }
 
-$qry = $pdo->query("INSERT INTO `collection`( `coll_code`, `cus_profile_id`, `cus_id`, `cus_name`, `branch`, `area`, `line`, `loan_category`, `coll_status`, `coll_sub_status`, `tot_amt`, `paid_amt`, `bal_amt`, `due_amt`, `pending_amt`, `payable_amt`, `penalty`, `coll_charge`, `coll_mode`, `bank_id`, `cheque_no`, `trans_id`, `trans_date`, `coll_date`, `due_amt_track`, `princ_amt_track`, `int_amt_track`, `penalty_track`, `coll_charge_track`, `total_paid_track`, `pre_close_waiver`, `penalty_waiver`, `coll_charge_waiver`, `total_waiver`, `insert_login_id`, `created_date`) VALUES ('$collection_id','$cp_id','$cus_id','$cus_name','$branch_id','$area_id','$line_id','$loan_category_id','$status','$sub_status','$tot_amt','$paid_amt','$bal_amt','$due_amt','$pending_amt','$payable_amt','$penalty','$coll_charge','$collection_mode','$bank_id','$cheque_no','$trans_id','$trans_date','".$collection_date.' '.date('H:i:s')."','$due_amt_track','$princ_amt_track','$int_amt_track','$penalty_track','$coll_charge_track','$total_paid_track','$pre_close_waiver','$penalty_waiver','$coll_charge_waiver','$total_waiver','$user_id',current_timestamp )");
+$qry = $pdo->query("INSERT INTO `collection`( `coll_code`, `cus_profile_id`, `cus_id`, `cus_name`, `branch`, `area`, `line`, `loan_category`, `coll_status`, `coll_sub_status`, `tot_amt`, `paid_amt`, `bal_amt`, `due_amt`, `pending_amt`, `payable_amt`, `till_date_int`,`penalty`, `coll_charge`, `coll_mode`, `bank_id`, `cheque_no`, `trans_id`, `trans_date`, `coll_date`, `due_amt_track`, `princ_amt_track`, `int_amt_track`, `penalty_track`, `coll_charge_track`, `total_paid_track`, `pre_close_waiver`,`principal_waiver`,`interest_waiver`, `penalty_waiver`, `coll_charge_waiver`, `total_waiver`, `insert_login_id`, `created_date`) VALUES ('$collection_id','$cp_id','$cus_id','$cus_name','$branch_id','$area_id','$line_id','$loan_category_id','$status','$sub_status','$tot_amt','$paid_amt','$bal_amt','$due_amt','$pending_amt','$payable_amt','$till_date_int','$penalty','$coll_charge','$collection_mode','$bank_id','$cheque_no','$trans_id','$trans_date','".$collection_date.' '.date('H:i:s')."','$due_amt_track','$princ_amt_track','$int_amt_track','$penalty_track','$coll_charge_track','$total_paid_track','$pre_close_waiver','$principal_waiver','$interest_waiver','$penalty_waiver','$coll_charge_waiver','$total_waiver','$user_id',current_timestamp )");
 
 // $qry = $pdo->query("UPDATE `customer_status` SET `coll_status`='$sub_status',`updated_on`='current_timestamp' WHERE cus_profile_id='$cp_id' ");
 
@@ -79,17 +86,19 @@ if($cheque_no != ''){
 }
 
 $check = intval($due_amt_track) + intval($pre_close_waiver) - intval($bal_amt);
-
+ $till_now_interest_check = 0;
 if (($princ_amt_track != '' or $int_amt_track != '') and ($due_amt_track == '' or $due_amt_track == 0 or $due_amt_track == null)) {
     // if this condition is true then it will be the interest based loan. coz thats where we able to give princ/int amt track and not able to give due amt track
     //if yes then $check variable should check with principal amt
-    $check = intVal($princ_amt_track) + intVal($pre_close_waiver) - intval($bal_amt);
+    $check = intVal($princ_amt_track)  + intVal($principal_waiver) - intval($bal_amt);
+    $till_now_interest_check = intval($int_amt_track) + intval($interest_waiver) - intval($till_date_int);
 }
+
 
 $penalty_check = intval($penalty_track) + intval($penalty_waiver) - intval($penalty);
 $coll_charge_check = intval($coll_charge_track) + intval($coll_charge_waiver) - intval($coll_charge);
 
-if ($check == 0 && $penalty_check == 0 && $coll_charge_check == 0) {
+if ($check == 0 && $penalty_check == 0 && $coll_charge_check == 0 && $till_now_interest_check == 0) {
     $closedQry = $pdo->query("UPDATE `customer_status` SET `coll_status`='Closed', `status`='8',`update_login_id`='$user_id',`updated_on`=now() WHERE `cus_profile_id`='$cp_id' "); //balance is zero change the customer status as 8, moved to closed.
     if ($closedQry) {
         $result = '3';
