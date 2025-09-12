@@ -287,13 +287,13 @@
                                 <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12 intLoanDiv" style="display: none;">
                                     <div class="form-group">
                                         <label for="disabledInput">Principle Waiver</label>
-                                        <input type="text" class="form-control" id="principal_waiver" name="principal_waiver" value='' placeholder='Enter Principle Waiver' tabindex='28'>
+                                        <input type="text" class="form-control clearFields" id="principal_waiver" name="principal_waiver" value='' placeholder='Enter Principle Waiver' tabindex='28'>
                                     </div>
                                 </div>
                                 <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12 intLoanDiv" style="display: none;">
                                     <div class="form-group">
                                         <label for="disabledInput">Interest Waiver</label>
-                                        <input type="text" class="form-control" id="interest_waiver" name="interest_waiver" value='' placeholder='Enter Interest Waiver' tabindex='28'>
+                                        <input type="text" class="form-control clearFields" id="interest_waiver" name="interest_waiver" value='' placeholder='Enter Interest Waiver' tabindex='28'>
                                     </div>
                                 </div>
                                 <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">

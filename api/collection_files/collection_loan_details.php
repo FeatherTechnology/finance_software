@@ -50,14 +50,13 @@ if ($result->rowCount() > 0) {
     $total_paid_princ = 0;
     $total_paid_int = 0;
     $pre_closure = 0;
-   $principal_waiver = 0;
+    $principal_waiver = 0;
     foreach ($coll_arr as $tot) {
         $total_paid += intVal($tot['due_amt_track']); //only calculate due amount not total paid value, because it will have penalty and coll charge also
         $pre_closure += intVal($tot['pre_close_waiver']); //get pre closure value to subract to get balance amount
         $total_paid_princ += intVal($tot['princ_amt_track']);
         $total_paid_int += intVal($tot['int_amt_track']);
         $principal_waiver += intVal($tot['principal_waiver']);
-
     }
     //total paid amount will be all records again request id should be summed
     $response['total_paid'] = ($loan_arr['loan_type'] == 'emi') ? $total_paid : $total_paid_princ;
@@ -189,7 +188,7 @@ function calculateOthers($loan_arr, $response, $pdo)
                 if ($loan_arr['loan_type'] == 'interest' and $count == 0) {
                     // if loan type is interest and when this loop for first month crossed then we need to calculate toPaytilldate again
                     // coz for first month interest amount may vary depending on start date of due, so reduce one due amt from it and add the calculated first month interest to it
-                    $toPaytilldate = $toPaytilldate - $response['due_amt'] + getTillDateInterest($loan_arr, $response, $pdo, 'fullstartmonth', $cp_id  );
+                    $toPaytilldate = $toPaytilldate - $response['due_amt'] + getTillDateInterest($loan_arr, $response, $pdo, 'fullstartmonth', $cp_id);
                 }
                 if ($loan_arr['loan_type'] == 'interest') {
                     $loan_arr[$count]['all_due_amt'] = getTillDateInterest($loan_arr, $start_date_obj, $pdo, 'foreachmonth', $count);
@@ -567,8 +566,9 @@ function calculateInterestLoan($pdo, $loan_arr, $response)
 
         $res['penalty'] = getPenaltyCharges($pdo, $cp_id);
     } else {
+        $interest_paid = getPaidInterest($pdo, $cp_id);
         //in this calculate till date Interest when month are not crossed for due starting month
-        $res['till_date_int'] = getTillDateInterest($loan_arr, $response, $pdo, 'forstartmonth', $cp_id);
+        $res['till_date_int'] = getTillDateInterest($loan_arr, $response, $pdo, 'forstartmonth', $cp_id) - $interest_paid;
         $res['pending'] = 0;
         $res['payable'] =  0;
         $res['penalty'] = 0;
@@ -593,8 +593,8 @@ function dueAmtCalculation($pdo, $start_date, $end_date, $due_amt, $loan_arr, $s
     $loanRow = $pdo->query("SELECT loan_amnt FROM loan_entry_loan_calculation WHERE cus_profile_id = '" . $cp_id . "'")->fetch(PDO::FETCH_ASSOC);
     $default_balance = $loanRow['loan_amnt'];
 
-    $collections = $pdo->query("SELECT princ_amt_track, coll_date FROM collection 
-        WHERE cus_profile_id = '" . $cp_id . "' AND princ_amt_track != '' ORDER BY coll_date ASC")->fetchAll();
+    $collections = $pdo->query("SELECT princ_amt_track,principal_waiver, coll_date FROM collection 
+        WHERE cus_profile_id = '" . $cp_id . "' AND (princ_amt_track != '' OR principal_waiver != '')ORDER BY coll_date ASC")->fetchAll();
 
     if (!empty($collections)) {
 
@@ -607,19 +607,22 @@ function dueAmtCalculation($pdo, $start_date, $end_date, $due_amt, $loan_arr, $s
             $today_str = $start->format('Y-m-d');
             $month_key = $start->format('Y-m-01');
             $paid_principal_today = 0;
+            $paid_principal_waiver = 0;
 
             while ($collection_index < count($collections)) {
                 $collection = $collections[$collection_index];
                 $coll_date = (new DateTime($collection['coll_date']))->format('Y-m-d');
                 if ($coll_date == $today_str) {
                     $paid_principal_today += (float)$collection['princ_amt_track'];
+                    $paid_principal_waiver += (float)$collection['principal_waiver'];
                     $collection_index++;
                 } else {
                     break;
                 }
             }
 
-            $current_balance -= $paid_principal_today;
+            $current_balance = max(0, $current_balance - ($paid_principal_today + $paid_principal_waiver));
+
 
             $interest_today = calculateNewInterestAmt($int_rate, $current_balance, $interest_calculate);
 
@@ -677,21 +680,54 @@ function dueAmtCalculation($pdo, $start_date, $end_date, $due_amt, $loan_arr, $s
     // <------------------------------------------------------------------- Penalty Logic ----------------------------------------------------------------->
 
     if ($status === 'pending') {
-        $penaltyRow = $penaltyRow = $pdo->query("SELECT penalty_type, overdue_penalty FROM loan_category_creation WHERE `id` = '" . $loan_arr['loan_category'] . "' ")->fetch(PDO::FETCH_ASSOC);
+        $penaltyRow = $pdo->query("SELECT penalty_type, overdue_penalty 
+        FROM loan_category_creation 
+        WHERE id = '" . $loan_arr['loan_category'] . "' ")->fetch(PDO::FETCH_ASSOC);
 
-        $penalty_val = $penaltyRow['overdue_penalty'] ?? 0;
+        $penalty_val  = $penaltyRow['overdue_penalty'] ?? 0;
         $penalty_type = strtolower(trim($penaltyRow['penalty_type'] ?? 'percentage'));
 
+        $monthly_unpaid = [];
+        $monthly_first_date = [];
+
+        $current_month = date('Y-m'); // current month key
+
         foreach ($monthly_interest_data as $penalty_date => $cur_result) {
-            $paid_interest = getPaidInterest($pdo, $cp_id);
+            $month_key = date('Y-m', strtotime($penalty_date));
+            // ⛔ skip current month
+            if ($month_key === $current_month) {
+                continue;
+            }
+
+            $paid_interest   = getPaidInterest($pdo, $cp_id);
             $unpaid_interest = max(0, $cur_result - $paid_interest);
 
-            if ($unpaid_interest > 0 && $penalty_val > 0) {
-                $penalty = ($penalty_type === 'amt') ? round($penalty_val) : round(($unpaid_interest * $penalty_val) / 100);
+            if ($unpaid_interest > 0) {
+                if (!isset($monthly_unpaid[$month_key])) {
+                    $monthly_unpaid[$month_key] = 0;
+                    $monthly_first_date[$month_key] = $penalty_date;
+                }
+                $monthly_unpaid[$month_key] += $unpaid_interest;
+            }
+        }
 
-                $checkPenalty = $pdo->query("SELECT 1 FROM penalty_charges WHERE penalty_date = '$penalty_date' AND cus_profile_id = '" . $cp_id . "'");
+        // Step 2: Apply penalty only for past months
+        foreach ($monthly_unpaid as $month => $unpaid) {
+            if ($unpaid > 0 && $penalty_val > 0) {
+                $penalty = ($penalty_type === 'rupee')
+                    ? round($penalty_val)
+                    : round(($unpaid * $penalty_val) / 100);
+
+                $first_date = $monthly_first_date[$month];
+
+                $checkPenalty = $pdo->query("SELECT 1 FROM penalty_charges 
+                WHERE penalty_date = '$first_date' 
+                AND cus_profile_id = '" . $cp_id . "'");
+
                 if ($checkPenalty->rowCount() == 0) {
-                    $insertQry = $pdo->query("INSERT INTO penalty_charges (cus_profile_id, penalty_date, penalty, created_date) VALUES ('$cp_id', '$penalty_date',  $penalty, NOW())");
+                    $pdo->query("INSERT INTO penalty_charges 
+                    (cus_profile_id, penalty_date, penalty, created_date) 
+                    VALUES ('$cp_id', '$first_date', $penalty, NOW())");
                 }
             }
         }
@@ -798,7 +834,7 @@ function getTillDateInterest($loan_arr, $response, $pdo, $data, $cp_id)
 }
 function getPaidInterest($pdo, $cp_id)
 {
-    $qry = $pdo->query("SELECT COALESCE(SUM(int_amt_track), 0) + COALESCE(SUM(interest_waiver), 0) AS int_paid  FROM `collection` WHERE cus_profile_id = '$cp_id' and (int_amt_track != '' and int_amt_track IS NOT NULL) ");
+    $qry = $pdo->query("SELECT COALESCE(SUM(int_amt_track), 0) + COALESCE(SUM(interest_waiver), 0) AS int_paid  FROM `collection` WHERE cus_profile_id = '$cp_id' and (int_amt_track != '' and int_amt_track IS NOT NULL OR interest_waiver != '' and interest_waiver IS NOT NULL) ");
     $int_paid = $qry->fetch()['int_paid'];
     return intVal($int_paid);
 }

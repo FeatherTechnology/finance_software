@@ -7,7 +7,7 @@ $row = $qry->fetch();
 
 extract($row); // Extracts the array values into variables
 
-$qry = $pdo->query("SELECT lelc.loan_id, lc.loan_category, lnc.linename
+$qry = $pdo->query("SELECT lelc.loan_id, lc.loan_category, lnc.linename ,lelc.due_type
 FROM customer_profile cp 
 LEFT JOIN loan_entry_loan_calculation lelc ON cp.id = lelc.cus_profile_id
 LEFT JOIN loan_category_creation lcc ON lelc.loan_category = lcc.id
@@ -18,12 +18,16 @@ $row = $qry->fetch();
 $line_name = $row['linename'];
 $loan_category = $row['loan_category'];
 $loan_id = $row['loan_id'];
+$due_type = $row['due_type'];
 
 $due_amt_track = intVal($due_amt_track != '' ? $due_amt_track : 0);
 $penalty_track = intVal($penalty_track != '' ? $penalty_track : 0);
+$princ_amt_track = intVal($princ_amt_track != '' ? $princ_amt_track : 0);
+$int_amt_track = intVal($int_amt_track != '' ? $int_amt_track : 0);
 $coll_charge_track = intVal($coll_charge_track != '' ? $coll_charge_track : 0);
-$net_received = $due_amt_track + $penalty_track + $coll_charge_track;
+$net_received = $due_amt_track + $penalty_track + $coll_charge_track + $princ_amt_track;
 $due_balance = ($due_amt - $due_amt_track) < 0 ? 0 : $due_amt - $due_amt_track;
+$interest_balance = ($due_amt - $int_amt_track) < 0 ? 0 : $due_amt - $int_amt_track;
 $loan_balance = getBalance($pdo, $cus_profile_id, $coll_date);
 ?>
 
@@ -43,13 +47,30 @@ $loan_balance = getBalance($pdo, $cus_profile_id, $coll_date);
             </b>
             <div class="text-wrapper-6" style="text-align:right;">Loan Category :</div>
             <div class="text-wrapper-6" style="text-align:right;">Loan No :</div>
-            <div class="text-wrapper-7" style="text-align:right;">Due Receipt :</div>
+            <!-- Receipt Details -->
+            <div class="text-wrapper-7" style="text-align:right;">
+                <?php if ($due_type == 'EMI') { ?>
+                    Due Receipt :
+                <?php } else { ?>
+                    Principal Receipt :
+                <?php } ?>
+            </div>
+
+            <?php if ($due_type != 'EMI') { ?>
+                <div class="text-wrapper-7" style="text-align:right;">Interest Receipt :</div>
+            <?php } ?>
             <div class="text-wrapper-8" style="text-align:right;">Penalty :</div>
             <div class="text-wrapper-9" style="text-align:right;">Fine :</div><br>
             <b>
                 <div class="text-wrapper-10" style="text-align:right;">Net Received :</div>
             </b><br>
-            <div class="text-wrapper-11" style="text-align:right;">Due Balance :</div>
+            <div class="text-wrapper-11" style="text-align:right;">
+                <?php if ($due_type == 'EMI') { ?>
+                    Due Balance :
+                <?php } else { ?>
+                    Interest Balance :
+                <?php } ?>
+            </div>
             <div class="text-wrapper-12" style="text-align:right;">Loan Balance :</div>
         </div>
         <div class="data" style="position: absolute; width: 128px; height: 278px; top: 150px; left: 158px;font-size: 12px">
@@ -65,13 +86,31 @@ $loan_balance = getBalance($pdo, $cus_profile_id, $coll_date);
             </b>
             <div class="text-wrapper-18" style="margin-left: 5px;"><?php echo $loan_category; ?></div>
             <div class="text-wrapper-19" style="margin-left: 5px;"><?php echo $loan_id; ?></div>
-            <div class="text-wrapper-20" style="margin-left: 5px;"><?php echo moneyFormatIndia($due_amt_track); ?></div>
+            <div class="text-wrapper-20" style="margin-left: 5px;">
+                <?php if ($due_type == 'EMI') {
+                    echo moneyFormatIndia($due_amt_track);
+                } else {
+                    echo moneyFormatIndia($princ_amt_track);
+                } ?>
+            </div>
+
+            <?php if ($due_type != 'EMI') { ?>
+                <div class="text-wrapper-20" style="margin-left: 5px;">
+                    <?php echo moneyFormatIndia($int_amt_track); ?>
+                </div>
+            <?php } ?>
             <div class="text-wrapper-21" style="margin-left: 5px;"><?php echo moneyFormatIndia($penalty_track); ?></div>
             <div class="text-wrapper-22" style="margin-left: 5px;"><?php echo moneyFormatIndia($coll_charge_track); ?></div><br>
             <b>
                 <div class="text-wrapper-23" style="margin-left: 5px;"><?php echo moneyFormatIndia($net_received); ?></div>
             </b><br>
-            <div class="text-wrapper-24" style="margin-left: 5px;"><?php echo moneyFormatIndia($due_balance); ?></div>
+            <div class="text-wrapper-24" style="margin-left: 5px;">
+                <?php if ($due_type == 'EMI') {
+                    echo moneyFormatIndia($due_balance);
+                } else {
+                    echo moneyFormatIndia($interest_balance);
+                } ?>
+            </div>
             <div class="text-wrapper-25" style="margin-left: 5px;"><?php echo moneyFormatIndia($loan_balance); ?></div>
         </div>
     </div>
@@ -148,16 +187,19 @@ function getBalance($pdo, $cus_profile_id, $coll_date)
         $total_paid_princ = 0;
         $total_paid_int = 0;
         $pre_closure = 0;
+        $principal_waiver = 0;
         foreach ($coll_arr as $tot) {
             $total_paid += intVal($tot['due_amt_track']); //only calculate due amount not total paid value, because it will have penalty and coll charge also
             $total_paid_princ += intVal($tot['princ_amt_track']);
             $total_paid_int += intVal($tot['int_amt_track']);
             $pre_closure += intVal($tot['pre_close_waiver']); //get pre closure value to subract to get balance amount
+            $principal_waiver += intVal($tot['principal_waiver']);
         }
         //total paid amount will be all records again request id should be summed
         $response['total_paid'] = ($loan_arr['loan_type'] == 'emi') ? $total_paid : $total_paid_princ;
+        $response['total_waiver'] = ($loan_arr['loan_type'] == 'emi') ? $pre_closure : $principal_waiver;
         $response['total_paid_int'] = $total_paid_int;
-        $response['balance'] = $response['total_amt'] - $response['total_paid'] - $pre_closure;
+        $response['balance'] = $response['total_amt'] - $response['total_paid'] - $response['total_waiver'];
     } else {
         $response['balance'] = $response['total_amt'];
     }
