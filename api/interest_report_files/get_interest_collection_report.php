@@ -6,8 +6,8 @@ $user_id = $_SESSION['user_id'];
 $from_date = $_POST['from_date'];
 $to_date = $_POST['to_date'];
 
-$status = [2 => 'aa', 3 =>'Move',4 => 'Approved',5 => 'Cancel',6 => 'Revoke',7 => 'Current',8 => 'In Closed',9=>'Closed',10=>'NOC', 11 => 'NOC Completed', 12 => 'NOC Removed',13 => 'Cancel',14 => 'Revoke'];
-$sub_status = [''=>'',1=>'Consider',2=>'Reject'];
+$status = [2 => 'aa', 3 => 'Move', 4 => 'Approved', 5 => 'Cancel', 6 => 'Revoke', 7 => 'Current', 8 => 'In Closed', 9 => 'Closed', 10 => 'NOC', 11 => 'NOC Completed', 12 => 'NOC Removed', 13 => 'Cancel', 14 => 'Revoke'];
+$sub_status = ['' => '', 1 => 'Consider', 2 => 'Reject'];
 
 $column = array(
     'c.id',
@@ -25,7 +25,6 @@ $column = array(
     'r.role',
     'u.name',
     'c.coll_date',
-    'SUM(c.due_amt_track)',
     'SUM(c.princ_amt_track)',
     'SUM(c.int_amt_track)',
     'SUM(c.penalty_track)',
@@ -51,7 +50,7 @@ JOIN customer_status cs ON cp.id = cs.cus_profile_id
 JOIN users u ON FIND_IN_SET(cp.line, u.line)
 LEFT JOIN role r ON u.role = r.id
 JOIN users us ON FIND_IN_SET(lelc.loan_category, us.loan_category)
-WHERE li.balance_amount = 0 AND lcc.due_type = 'emi' AND u.id ='$user_id' AND us.id ='$user_id' AND DATE(c.coll_date) BETWEEN '$from_date' AND '$to_date' ";
+WHERE li.balance_amount = 0 AND lcc.due_type = 'interest' AND u.id ='$user_id' AND us.id ='$user_id' AND DATE(c.coll_date) BETWEEN '$from_date' AND '$to_date' ";
 
 if (isset($_POST['search'])) {
     if ($_POST['search'] != "") {
@@ -112,26 +111,15 @@ foreach ($result as $row) {
     $sub_array[] = $row['agent_name'];
     $sub_array[] = $row['role'];
     $sub_array[] = $row['name'];
+
     if ($row['trans_date'] != '0000-00-00') {
         $sub_array[] = date('d-m-Y', strtotime($row['trans_date']));
     } else {
         $sub_array[] = date('d-m-Y', strtotime($row['coll_date']));
     }
 
-    if ($row['due_type'] != 'Interest') {
-        //to get the principal and interest amt separate in due amt paid
-        $response = calculatePrincipalAndInterest(intVal($row['principal_amnt']) / $row['due_period'], intVal($row['interest_amnt']) / $row['due_period'], intVal($row['due_amt_track']));
-
-        $sub_array[] = moneyFormatIndia(intVal($row['due_amt_track']));
-        $sub_array[] = moneyFormatIndia(intVal($response['principal_paid']));
-        $rounderd_int = intVal($row['due_amt_track']) - $response['principal_paid'];
-        $sub_array[] = moneyFormatIndia(intVal($rounderd_int));
-    } else {
-        //else if its interest loan we can empty due amt coz it will not be paid on that loan, direclty show princ and int
-        $sub_array[] = '';
-        $sub_array[] = moneyFormatIndia(intval($row['princ_amt_track']));
-        $sub_array[] = moneyFormatIndia(intval($row['int_amt_track']));
-    }
+    $sub_array[] = moneyFormatIndia(intval($row['princ_amt_track']));
+    $sub_array[] = moneyFormatIndia(intval($row['int_amt_track']));
     $sub_array[] = moneyFormatIndia(intval($row['penalty_track']));
     $sub_array[] = moneyFormatIndia(intval($row['coll_charge_track']));
     $sub_array[] = moneyFormatIndia(intval($row['total_paid_track']));
@@ -139,7 +127,7 @@ foreach ($result as $row) {
     if ($row['status'] >= '8') {
         $sub_array[] = 'Closed';
 
-        if ($row['sub_status'] != ''){
+        if ($row['sub_status'] != '') {
             $sub_array[] = $sub_status[$row['sub_status']];
         } else {
             $sub_array[] = $status[$row['status']];
@@ -198,33 +186,4 @@ function moneyFormatIndia($num)
     $thecash = $isNegative ? "-" . $thecash : $thecash;
     $thecash = $thecash == 0 ? "" : $thecash;
     return $thecash;
-}
-
-function calculatePrincipalAndInterest($principal,  $interest,  $paidAmount): array
-{
-    $principal_paid = 0;
-    $interest_paid = 0;
-
-    while ($paidAmount > 0) {
-        if ($paidAmount >= $principal) {
-            $principal_paid += $principal;
-            $paidAmount -= $principal;
-        } else {
-            $principal_paid += $paidAmount;
-            break;
-        }
-
-        if ($paidAmount >= $interest) {
-            $interest_paid += $interest;
-            $paidAmount -= $interest;
-        } else {
-            $interest_paid += $paidAmount;
-            break;
-        }
-    }
-
-    return [
-        'principal_paid' => (int) $principal_paid,
-        'interest_paid' => (int) $interest_paid
-    ];
 }
