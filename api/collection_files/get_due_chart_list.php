@@ -36,7 +36,7 @@ function moneyFormatIndia($num)
     } else {
         $closed = 'false';
     }
-    $loanStart = $pdo->query("SELECT lelc.due_startdate, lelc.maturity_date, lelc.due_method, lelc.scheme_due_method FROM loan_entry_loan_calculation lelc WHERE lelc.cus_profile_id = '$cp_id' ");
+    $loanStart = $pdo->query("SELECT lelc.due_startdate, lelc.maturity_date, lelc.due_method, lelc.scheme_due_method,lelc.interest_calculate,lelc.interest_rate FROM loan_entry_loan_calculation lelc WHERE lelc.cus_profile_id = '$cp_id' ");
     $loanFrom = $loanStart->fetch();
     //If Due method is Monthly, Calculate penalty by checking the month has ended or not
     $due_start_from = $loanFrom['due_startdate'];
@@ -220,12 +220,13 @@ function moneyFormatIndia($num)
         $issued = date('Y-m-d', strtotime($issue_date));
         if ($loanFrom['due_method'] == 'Monthly' || $loanFrom['scheme_due_method'] == '1') {
             //Query for Monthly.
-            $run = $pdo->query("SELECT c.coll_code, c.due_amt,c.tot_amt, c.pending_amt, c.payable_amt, c.coll_date, c.trans_date, c.due_amt_track,c.princ_amt_track,c.int_amt_track, c.bal_amt, c.coll_charge_track, c.pre_close_waiver, lelc.due_startdate, lelc.maturity_date, lelc.due_method, u.name, r.role
+
+            $run = $pdo->query("SELECT c.coll_code, c.due_amt,c.tot_amt, c.pending_amt, c.payable_amt, c.coll_date, c.trans_date, c.due_amt_track,c.princ_amt_track,c.int_amt_track, c.bal_amt, c.coll_charge_track, c.pre_close_waiver, lelc.due_startdate, lelc.maturity_date, lelc.due_method, u.name, r.role,c.principal_waiver,c.interest_waiver
             FROM `collection` c
             LEFT JOIN loan_entry_loan_calculation lelc ON c.cus_profile_id = lelc.cus_profile_id
             LEFT JOIN users u ON c.insert_login_id = u.id
             LEFT JOIN role r ON u.role = r.id
-            WHERE c.cus_profile_id = '$cp_id' AND (c.due_amt_track != '' or c.pre_close_waiver!='')
+            WHERE c.cus_profile_id = '$cp_id' AND (c.due_amt_track != '' or c.princ_amt_track!='' or c.int_amt_track!='' or c.pre_close_waiver!='' or c.principal_waiver!='')
             AND(
                 (
                     ( MONTH(c.coll_date) >= MONTH('$issued') AND YEAR(c.coll_date) = YEAR('$issued') )
@@ -255,44 +256,22 @@ function moneyFormatIndia($num)
         } else
         if ($loanFrom['scheme_due_method'] == '2') {
             //Query For Weekly.
-            $run = $pdo->query("SELECT c.coll_code, c.due_amt, c.pending_amt, c.payable_amt, c.coll_date, c.trans_date, c.due_amt_track, c.bal_amt, c.coll_charge_track, c.pre_close_waiver, lelc.due_startdate, lelc.maturity_date, lelc.due_method, u.name, r.role
+
+            $run = $pdo->query("SELECT c.coll_code, c.due_amt, c.pending_amt, c.payable_amt, c.coll_date, c.trans_date, c.due_amt_track, c.bal_amt, c.coll_charge_track, c.pre_close_waiver, lelc.due_startdate, lelc.maturity_date, lelc.due_method, u.name, r.role,c.principal_waiver,c.interest_waiver
             FROM `collection` c
             LEFT JOIN loan_entry_loan_calculation lelc ON c.cus_profile_id = lelc.cus_profile_id
             LEFT JOIN users u ON c.insert_login_id = u.id
             LEFT JOIN role r ON u.role = r.id
-            WHERE c.`cus_profile_id` = '$cp_id' AND (c.due_amt_track != '' or c.pre_close_waiver!='' OR c.princ_amt_track != '')
+            WHERE c.`cus_profile_id` = '$cp_id' AND (c.due_amt_track != '' or c.pre_close_waiver!='' OR c.princ_amt_track != '' OR principal_waiver !='')
             AND (
-                    (
-                        (WEEK(c.coll_date) >= WEEK('$issued') AND YEAR(c.coll_date) = YEAR('$issued'))
-                        AND 
-                        (
-                            (
-                                YEAR(c.coll_date) = YEAR('$due_start_from') AND WEEK(c.coll_date) < WEEK('$due_start_from')
-                            ) OR (
-                                YEAR(c.coll_date) < YEAR('$due_start_from')
-                            )
-                        )
-                    ) 
-                    OR
-                    (
-                        (WEEK(c.trans_date) >= WEEK('$issued') AND YEAR(c.trans_date) = YEAR('$issued'))
-                        AND 
-                        (
-                            (
-                                YEAR(c.trans_date) = YEAR('$due_start_from') AND WEEK(c.trans_date) < WEEK('$due_start_from')
-                            ) OR (
-                                YEAR(c.trans_date) < YEAR('$due_start_from')
-                            )
-                            AND c.trans_date != '0000-00-00'
-
-                        )
-                    )
+                   (DATE(c.coll_date) >= DATE('$issued') AND DATE(c.coll_date) < DATE('$due_start_from') AND DATE(c.coll_date) != '0000-00-00' ) OR
+                (DATE(c.trans_date) >= DATE('$issued') AND DATE(c.trans_date) < DATE('$due_start_from') AND DATE(c.trans_date) != '0000-00-00' )
                 )
             ");
         } else
         if ($loanFrom['scheme_due_method'] == '3') {
             //Query For Day.
-            $run = $pdo->query("SELECT c.coll_code, c.due_amt, c.pending_amt, c.payable_amt, c.coll_date, c.trans_date, c.due_amt_track, c.bal_amt, c.coll_charge_track, c.pre_close_waiver, lelc.due_startdate, lelc.maturity_date, lelc.due_method, u.name, r.role
+            $run = $pdo->query("SELECT c.coll_code, c.due_amt, c.pending_amt, c.payable_amt, c.coll_date, c.trans_date, c.due_amt_track, c.bal_amt, c.coll_charge_track, c.pre_close_waiver, lelc.due_startdate, lelc.maturity_date, lelc.due_method, u.name, r.role,c.principal_waiver,c.interest_waiver
             FROM `collection` c
             LEFT JOIN loan_entry_loan_calculation lelc ON c.cus_profile_id = lelc.cus_profile_id
             LEFT JOIN users u ON c.insert_login_id = u.id
@@ -303,24 +282,28 @@ function moneyFormatIndia($num)
                 (DATE(c.trans_date) >= DATE('$issued') AND DATE(c.trans_date) < DATE('$due_start_from') AND DATE(c.trans_date) != '0000-00-00' )
             ) ");
         }
-
+        $totalPaid = 0;
+        $totalPreClose = 0;
+        $totalPaidPrinc = 0;
         //For showing data before due start date
         $due_amt_track = 0;
         $waiver = 0;
+        $principal_waiver = 0;
         $last_bal_amt = 0;
-        $bal_amt = 0;
+        $bal_amt = $loan_amt;
         if ($run->rowCount() > 0) {
             while ($row = $run->fetch()) {
                 $collectionAmnt = intVal($row['due_amt_track']);
                 $due_amt_track = $due_amt_track + intVal($row['due_amt_track']);
                 $waiver = $waiver + intVal($row['pre_close_waiver']);
+                $principal_waiver = $principal_waiver + intVal($row['principal_waiver']);
                 if ($loan_type == 'interest') {
                     $PcollectionAmnt = intVal($row['princ_amt_track']);
                     $IcollectionAmnt = intVal($row['int_amt_track']);
                     if ($last_bal_amt != 0) {
-                        $bal_amt = $last_bal_amt - $PcollectionAmnt - $waiver;
+                        $bal_amt = $last_bal_amt - $PcollectionAmnt - $principal_waiver;
                     } else {
-                        $bal_amt = $loan_amt - $PcollectionAmnt - $waiver;
+                        $bal_amt = $loan_amt - $PcollectionAmnt - $principal_waiver;
                     }
                 } else {
                     $bal_amt = $loan_amt - $due_amt_track - $waiver;
@@ -361,25 +344,49 @@ function moneyFormatIndia($num)
 
                     <?php if ($loan_type == 'interest') { ?>
                         <td>
-                            <?php if ($PcollectionAmnt > 0) {
-                                echo $PcollectionAmnt;
-                            } elseif ($row['pre_close_waiver'] > 0) {
-                                echo $row['pre_close_waiver'];
-                            } ?>
+                            <?php
+                            if ($PcollectionAmnt > 0) {
+                                $totalPaidPrinc += $PcollectionAmnt;
+                                echo moneyFormatIndia($PcollectionAmnt);
+                            } else {
+                                echo 0;
+                            }
+                            ?>
                         </td>
                         <td>
-                            <?php if ($IcollectionAmnt > 0) {
+                            <?php
+                            if ($IcollectionAmnt > 0) {
                                 echo moneyFormatIndia($IcollectionAmnt);
-                            } ?>
+                            } else {
+                                echo 0;
+                            }
+                            ?>
                         </td>
                     <?php } ?>
 
                     <td><?php echo moneyFormatIndia($bal_amt); ?></td>
-                    <td><?php if ($row['pre_close_waiver'] > 0) {
-                            echo moneyFormatIndia($row['pre_close_waiver']);
-                        } else {
-                            echo '0';
-                        } ?></td>
+                    <?php if ($loan_type != 'interest') { ?>
+                        <td>
+                            <?php
+                            if ($row['pre_close_waiver'] > 0) {
+                                echo moneyFormatIndia($row['pre_close_waiver']);
+                            } else {
+                                echo '0';
+                            }
+                            ?>
+                        </td>
+                    <?php } else { ?>
+                        <td>
+                            <?php
+                            if ($row['principal_waiver'] > 0) {
+                                echo moneyFormatIndia($row['principal_waiver']);
+                            } else {
+                                echo '0';
+                            }
+                            ?>
+                        </td>
+                    <?php } ?>
+
                     <td><?php echo $row['role']; ?>
                     </td>
                     <td><?php echo $row['name']; ?></td>
@@ -394,6 +401,10 @@ function moneyFormatIndia($num)
                 } else {
                 }
             }
+        } else {
+            if ($loan_type == 'interest') {
+                $last_bal_amt = $loan_amt;
+            }
         }
 
         //For showing collection after due start date
@@ -403,7 +414,6 @@ function moneyFormatIndia($num)
         $last_int_amt = $due_amt_1;
         if ($loan_type == 'interest') {
             $last_princ_amt = $last_bal_amt;
-            // $bal_amt = $last_bal_amt;
         } else {
             $bal_amt = 0;
         }
@@ -411,13 +421,22 @@ function moneyFormatIndia($num)
         foreach ($dueMonth as $cusDueMonth) {
             if ($loanFrom['due_method'] == 'Monthly' || $loanFrom['scheme_due_method'] == '1') {
                 //Query for Monthly.
-                $run = $pdo->query("SELECT c.coll_code, c.due_amt, c.tot_amt, c.pending_amt, c.payable_amt, c.coll_date, c.trans_date, c.due_amt_track, c.princ_amt_track, c.int_amt_track, c.bal_amt, c.coll_charge_track, c.pre_close_waiver, lelc.due_startdate, lelc.maturity_date, lelc.due_method, u.name, r.role FROM `collection` c LEFT JOIN loan_entry_loan_calculation lelc ON c.cus_profile_id = lelc.cus_profile_id LEFT JOIN users u ON c.insert_login_id = u.id LEFT JOIN role r ON u.role = r.id WHERE (c.`cus_profile_id` = $cp_id) and (c.due_amt_track != '' or c.princ_amt_track!='' or c.int_amt_track!='' or c.pre_close_waiver!='') && ((MONTH(coll_date)= MONTH('$cusDueMonth') || MONTH(trans_date)= MONTH('$cusDueMonth')) && (YEAR(coll_date)= YEAR('$cusDueMonth') || YEAR(trans_date)= YEAR('$cusDueMonth')) )");
+                $run = $pdo->query("SELECT c.coll_code, c.due_amt, c.tot_amt, c.pending_amt, c.payable_amt, c.coll_date, c.trans_date, c.due_amt_track, c.princ_amt_track, c.int_amt_track, c.bal_amt, c.coll_charge_track, c.pre_close_waiver, lelc.due_startdate, lelc.maturity_date, lelc.due_method, u.name, r.role ,c.principal_waiver,c.interest_waiver FROM `collection` c LEFT JOIN loan_entry_loan_calculation lelc ON c.cus_profile_id = lelc.cus_profile_id LEFT JOIN users u ON c.insert_login_id = u.id LEFT JOIN role r ON u.role = r.id WHERE (c.`cus_profile_id` = $cp_id) and (c.due_amt_track != '' or c.princ_amt_track!='' or c.int_amt_track!='' or c.pre_close_waiver!='') && ((MONTH(coll_date)= MONTH('$cusDueMonth') || MONTH(trans_date)= MONTH('$cusDueMonth')) && (YEAR(coll_date)= YEAR('$cusDueMonth') || YEAR(trans_date)= YEAR('$cusDueMonth')) )");
             } elseif ($loanFrom['scheme_due_method'] == '2') {
                 //Query For Weekly.
-                $run = $pdo->query("SELECT c.coll_code, c.due_amt, c.pending_amt, c.payable_amt, c.coll_date, c.trans_date, c.due_amt_track, c.bal_amt, c.coll_charge_track, c.pre_close_waiver, lelc.due_startdate, lelc.maturity_date, lelc.due_method, u.name, r.role FROM `collection` c LEFT JOIN loan_entry_loan_calculation lelc ON c.cus_profile_id = lelc.cus_profile_id LEFT JOIN users u ON c.insert_login_id = u.id LEFT JOIN role r ON u.role = r.id WHERE (c.`cus_profile_id` = $cp_id) and (c.due_amt_track != '' or c.pre_close_waiver!='') && ((WEEK(coll_date)= WEEK('$cusDueMonth') || WEEK(trans_date)= WEEK('$cusDueMonth')) && (YEAR(coll_date)= YEAR('$cusDueMonth') || YEAR(trans_date)= YEAR('$cusDueMonth')) )");
+                $run = $pdo->query("SELECT c.coll_code, c.due_amt, c.pending_amt, c.payable_amt, c.coll_date, c.trans_date, c.due_amt_track, c.bal_amt, c.coll_charge_track, c.pre_close_waiver,lelc.due_startdate, lelc.maturity_date, lelc.due_method,u.name, r.role ,c.principal_waiver,c.interest_waiver
+                    FROM collection c LEFT JOIN loan_entry_loan_calculation lelc ON c.cus_profile_id = lelc.cus_profile_id 
+LEFT JOIN users u ON c.insert_login_id = u.id LEFT JOIN role r ON u.role = r.id 
+WHERE c.cus_profile_id = $cp_id AND (c.due_amt_track != '' OR c.pre_close_waiver != '')
+  AND (
+        (c.coll_date BETWEEN '$cusDueMonth' AND DATE_ADD('$cusDueMonth', INTERVAL 6 DAY))
+        OR
+        (c.trans_date BETWEEN '$cusDueMonth' AND DATE_ADD('$cusDueMonth', INTERVAL 6 DAY))
+      )
+");
             } elseif ($loanFrom['scheme_due_method'] == '3') {
                 //Query For Day.
-                $run = $pdo->query("SELECT c.coll_code, c.due_amt, c.pending_amt, c.payable_amt, c.coll_date, c.trans_date, c.due_amt_track, c.bal_amt, c.coll_charge_track, c.pre_close_waiver, lelc.due_startdate, lelc.maturity_date, lelc.due_method, u.name, r.role FROM `collection` c LEFT JOIN loan_entry_loan_calculation lelc ON c.cus_profile_id = lelc.cus_profile_id LEFT JOIN users u ON c.insert_login_id = u.id LEFT JOIN role r ON u.role = r.id WHERE (c.`cus_profile_id` = $cp_id) and (c.due_amt_track != '' or c.pre_close_waiver!='') && 
+                $run = $pdo->query("SELECT c.coll_code, c.due_amt, c.pending_amt, c.payable_amt, c.coll_date, c.trans_date, c.due_amt_track, c.bal_amt, c.coll_charge_track, c.pre_close_waiver, lelc.due_startdate, lelc.maturity_date, lelc.due_method, u.name, r.role,c.principal_waiver,c.interest_waiver FROM `collection` c LEFT JOIN loan_entry_loan_calculation lelc ON c.cus_profile_id = lelc.cus_profile_id LEFT JOIN users u ON c.insert_login_id = u.id LEFT JOIN role r ON u.role = r.id WHERE (c.`cus_profile_id` = $cp_id) and (c.due_amt_track != '' or c.pre_close_waiver!='') && 
                 ( 
                     ( DAY(coll_date)= DAY('$cusDueMonth') || DAY(trans_date)= DAY('$cusDueMonth') ) && 
                     ( MONTH(coll_date)= MONTH('$cusDueMonth') || MONTH(trans_date)= MONTH('$cusDueMonth') ) && 
@@ -436,10 +455,11 @@ function moneyFormatIndia($num)
                     }
 
                     $waiver = intVal($row['pre_close_waiver']);
+                    $principal_waiver = intVal($row['principal_waiver']);
                     if ($loan_type == 'emi') {
                         $bal_amt = intVal($row['bal_amt']) - $due_amt_track - $waiver;
                     } else {
-                        $bal_amt = intVal($last_princ_amt) - $due_amt_track - $waiver;
+                        $bal_amt = intVal($last_princ_amt) - $princ_amt_track - $principal_waiver;
                     }
 
                 ?>
@@ -470,9 +490,32 @@ function moneyFormatIndia($num)
                                     <td><?php echo moneyFormatIndia($row['due_amt']); ?></td>
                                 <?php } ?>
                                 <?php if ($loan_type == 'interest') { ?>
-                                    <td><?php echo $last_princ_amt; ?></td>
-                                    <td><?php echo moneyFormatIndia($row['due_amt']);
-                                        $last_int_amt = moneyFormatIndia($row['due_amt']); ?></td>
+                                    <td><?php echo moneyFormatIndia($last_princ_amt); ?></td>
+                                    <td>
+                                        <?php
+                                        $interest_rate_calc = $loanFrom['interest_rate'];
+                                        $current_principal = $last_princ_amt;
+                                        $interest_calculate = $loanFrom['interest_calculate']; // 'Month' or 'Days'
+
+                                        // Interest calculation
+                                        if ($interest_calculate == 'Month') {
+                                            $int = $current_principal * ($interest_rate_calc / 100);
+                                        } else if ($interest_calculate == 'Days') {
+                                            $int = ($current_principal * ($interest_rate_calc / 100) / 30);
+                                        } else {
+                                            $int = 0; // default fallback
+                                        }
+
+                                        // Round up to next multiple of 5
+                                        $curInterest = ceil($int / 5) * 5;
+                                        if ($curInterest < $int) {
+                                            $curInterest += 5;
+                                        }
+
+                                        echo moneyFormatIndia($curInterest);
+                                        ?>
+                                    </td>
+
                                 <?php } ?>
 
 
@@ -481,9 +524,13 @@ function moneyFormatIndia($num)
                                 <td></td>
                                 <td></td>
                                 <td></td>
+                                <td></td>
                             <?php }
                         } else { //this is for weekly and daily loan to check lastcusduemonth comparision
-                            if (date('Y-m-d', strtotime($lastCusdueMonth)) != date('Y-m-d', strtotime($row['coll_date']))) {
+                            $weekStart = date('Y-m-d', strtotime($cusDueMonth));
+                            $weekEnd   = date('Y-m-d', strtotime($cusDueMonth . ' +6 days'));
+                            if (!isset($printedWeek) || $printedWeek != $weekStart) {
+                                $printedWeek = $weekStart;
                                 // this condition is to check whether the same month has collection again. if yes the no need to show month name and due amount and serial number
                             ?>
                                 <td><?php echo $i;
@@ -554,29 +601,42 @@ function moneyFormatIndia($num)
 
                         <?php if ($loan_type == 'interest') { ?>
                             <td>
-                                <?php if ($princ_amt_track > 0) {
-                                    echo $princ_amt_track;
-                                } elseif ($row['pre_close_waiver'] > 0) {
-                                    echo moneyFormatIndia($row['pre_close_waiver']);
-                                } ?>
+                                <?php
+                                if ($princ_amt_track > 0) {
+                                    echo moneyFormatIndia($princ_amt_track);
+                                } else {
+                                    echo 0;
+                                }
+                                ?>
                             </td>
                             <td>
-                                <?php if ($int_amt_track > 0) {
+                                <?php
+                                if ($int_amt_track > 0) {
                                     echo moneyFormatIndia($int_amt_track);
-                                } ?>
+                                } else {
+                                    echo 0;
+                                }
+                                ?>
                             </td>
                         <?php } ?>
-
 
                         <td><?php echo moneyFormatIndia($bal_amt);
                             if ($loan_type == 'interest') {
                                 $last_princ_amt = $bal_amt;
                             } ?></td>
-                        <td><?php if ($row['pre_close_waiver'] > 0) {
-                                echo moneyFormatIndia($row['pre_close_waiver']);
+                        <td>
+                            <?php
+                            if ($loan_type == 'emi') {
+                                echo ($row['pre_close_waiver'] > 0)
+                                    ? moneyFormatIndia($row['pre_close_waiver'])
+                                    : '0';
                             } else {
-                                echo '0';
-                            } ?></td>
+                                echo ($row['principal_waiver'] > 0)
+                                    ? moneyFormatIndia($row['principal_waiver'])
+                                    : '0';
+                            }
+                            ?>
+                        </td>
                         <td><?php echo $row['role']; ?></td>
                         <td><?php echo $row['name']; ?></td>
                         <!-- <td><?php #if ($row['coll_location'] == '1') {echo 'By Self';} elseif ($row['coll_location'] == '2') {echo 'On Spot';} elseif ($row['coll_location'] == '3') {echo 'Bank Transfer';} 
@@ -604,8 +664,32 @@ function moneyFormatIndia($num)
                         <td><?php echo moneyFormatIndia($due_amt_1); ?></td>
                     <?php } ?>
                     <?php if ($loan_type == 'interest') { ?>
-                        <td><?php echo $last_princ_amt; ?></td>
-                        <td><?php echo $last_int_amt; ?></td>
+                        <td><?php echo moneyFormatIndia($last_princ_amt); ?></td>
+                        <td>
+                            <?php
+                            $interest_rate_calc = $loanFrom['interest_rate'];
+                            $current_principal = $last_princ_amt;
+                            $interest_calculate = $loanFrom['interest_calculate']; // 'Month' or 'Days'
+
+                            // Interest calculation
+                            if ($interest_calculate == 'Month') {
+                                $int = $current_principal * ($interest_rate_calc / 100);
+                            } else if ($interest_calculate == 'Days') {
+                                $int = ($current_principal * ($interest_rate_calc / 100) / 30);
+                            } else {
+                                $int = 0; // default fallback
+                            }
+
+                            // Round up to next multiple of 5
+                            $curInterest = ceil($int / 5) * 5;
+                            if ($curInterest < $int) {
+                                $curInterest += 5;
+                            }
+
+                            echo moneyFormatIndia($curInterest);
+                            ?>
+                        </td>
+                        <!-- <td><?php echo $last_int_amt; ?></td> -->
                     <?php } ?>
 
                     <?php
@@ -639,6 +723,7 @@ function moneyFormatIndia($num)
                             <td>
                                 <?php $response = getNextLoanDetails($pdo, $cp_id, $cusDueMonth);
                                 echo moneyFormatIndia($response['pending']); ?>
+
                             </td>
                             <td>
                                 <?php $response = getNextLoanDetails($pdo, $cp_id, $cusDueMonth);
@@ -773,25 +858,44 @@ function moneyFormatIndia($num)
 
                     <?php if ($loan_type == 'interest') { ?>
                         <td>
-                            <?php if ($PcollectionAmnt > 0) {
-                                echo $PcollectionAmnt;
-                            } elseif ($row['pre_close_waiver'] > 0) {
-                                echo $row['pre_close_waiver'];
+                            <?php  if ($PcollectionAmnt > 0) {
+                                $totalPaidPrinc += $PcollectionAmnt;
+                                echo moneyFormatIndia($PcollectionAmnt);
+                            } else {
+                                echo 0;
                             } ?>
                         </td>
                         <td>
                             <?php if ($IcollectionAmnt > 0) {
                                 echo moneyFormatIndia($IcollectionAmnt);
+                            } else {
+                                echo 0;
                             } ?>
                         </td>
                     <?php } ?>
 
                     <td><?php echo moneyFormatIndia($bal_amt); ?></td>
-                    <td><?php if ($row['pre_close_waiver'] > 0) {
-                            echo moneyFormatIndia($row['pre_close_waiver']);
-                        } else {
-                            echo '0';
-                        } ?></td>
+                    <?php if ($loan_type != 'interest') { ?>
+                        <td>
+                            <?php
+                            if ($row['pre_close_waiver'] > 0) {
+                                echo moneyFormatIndia($row['pre_close_waiver']);
+                            } else {
+                                echo '0';
+                            }
+                            ?>
+                        </td>
+                    <?php } else { ?>
+                        <td>
+                            <?php
+                            if ($row['principal_waiver'] > 0) {
+                                echo moneyFormatIndia($row['principal_waiver']);
+                            } else {
+                                echo '0';
+                            }
+                            ?>
+                        </td>
+                    <?php } ?>
                     <td><?php echo $row['role']; ?></td>
                     <td><?php echo $row['name']; ?></td>
                     <!-- <td><?php #if ($row['coll_location'] == '1') {echo 'By Self';} elseif ($row['coll_location'] == '2') {echo 'On Spot';} elseif ($row['coll_location'] == '3') {echo 'Bank Transfer';} 
@@ -830,7 +934,7 @@ function getNextLoanDetails($pdo, $cp_id, $date)
             $response['loan_type'] = 'emi';
             $loan_arr['loan_type'] = 'emi';
         }
-
+        $response['interest_calculate'] = $loan_arr['interest_calculate'];
         if ($loan_arr['due_amnt'] == '' || $loan_arr['due_amnt'] == null) {
             //(For monthly interest Due amount will not be there, so take interest)
             $response['due_amt'] = $loan_arr['interest_amnt'];
@@ -864,10 +968,10 @@ function getNextLoanDetails($pdo, $cp_id, $date)
         $response['balance'] = $response['total_amt'] - $response['total_paid'] - $pre_closure;
 
         if ($loan_arr['loan_type'] == 'interest') {
-            $response['due_amt'] = calculateNewInterestAmt($loan_arr, $response);
+            $response['due_amt'] = calculateNewInterestAmt($loan_arr['interest_rate'], $response['balance'], $response['interest_calculate']);
         }
 
-        $response = calculateOthers($loan_arr, $response, $date, $pdo);
+        $response = calculateOthers($loan_arr, $response, $date, $pdo, $cp_id);
     } else {
         //If collection table dont have rows means there is no payment against that request, so total paid will be 0
         $response['total_paid'] = 0;
@@ -877,10 +981,10 @@ function getNextLoanDetails($pdo, $cp_id, $date)
         $response['balance'] = $response['total_amt'];
 
         if ($loan_arr['loan_type'] == 'interest') {
-            $response['due_amt'] = calculateNewInterestAmt($loan_arr, $response);
+            $response['due_amt'] = calculateNewInterestAmt($loan_arr['interest_rate'], $response['balance'], $response['interest_calculate']);
         }
 
-        $response = calculateOthers($loan_arr, $response, $date, $pdo);
+        $response = calculateOthers($loan_arr, $response, $date, $pdo, $cp_id);
     }
 
     //To get the collection charges
@@ -907,12 +1011,9 @@ function getNextLoanDetails($pdo, $cp_id, $date)
 
     return $response;
 }
-function calculateOthers($loan_arr, $response, $date, $pdo)
+function calculateOthers($loan_arr, $response, $date, $pdo, $cp_id)
 {
 
-    if (isset($_POST['cp_id'])) {
-        $cp_id = $_POST['cp_id'];
-    }
     //***************************************************************************************************************************************************
     $due_start_from = $loan_arr['due_startdate'];
     $maturity_month = $loan_arr['maturity_date'];
@@ -930,85 +1031,79 @@ function calculateOthers($loan_arr, $response, $date, $pdo)
     $due_amt = $checkAckrow['due_amnt'];
 
     if ($loan_arr['due_method'] == 'Monthly' || $loan_arr['scheme_due_method'] == '1') {
+        if ($loan_arr['loan_type'] != 'interest') {
 
-        //Convert Date to Year and month, because with date, it will use exact date to loop months, instead of taking end of month
-        $due_start_from = date('Y-m', strtotime($due_start_from));
-        $maturity_month = date('Y-m', strtotime($maturity_month));
+            //Convert Date to Year and month, because with date, it will use exact date to loop months, instead of taking end of month
+            $due_start_from = date('Y-m', strtotime($due_start_from));
+            $maturity_month = date('Y-m', strtotime($maturity_month));
 
-        // Create a DateTime object from the given date
-        $maturity_month = new DateTime($maturity_month);
-        // Subtract one month from the date
-        // $maturity_month->modify('-1 month');
-        // Format the date as a string
-        $maturity_month = $maturity_month->format('Y-m');
+            // Create a DateTime object from the given date
+            $maturity_month = new DateTime($maturity_month);
+            // Subtract one month from the date
+            // $maturity_month->modify('-1 month');
+            // Format the date as a string
+            $maturity_month = $maturity_month->format('Y-m');
 
-        //If Due method is Monthly, Calculate penalty by checking the month has ended or not
-        $current_date = date('Y-m', strtotime($date));
+            //If Due method is Monthly, Calculate penalty by checking the month has ended or not
+            $current_date = date('Y-m', strtotime($date));
 
-        $start_date_obj = DateTime::createFromFormat('Y-m', $due_start_from);
-        $end_date_obj = DateTime::createFromFormat('Y-m', $maturity_month);
-        $current_date_obj = DateTime::createFromFormat('Y-m', $current_date);
+            $start_date_obj = DateTime::createFromFormat('Y-m', $due_start_from);
+            $end_date_obj = DateTime::createFromFormat('Y-m', $maturity_month);
+            $current_date_obj = DateTime::createFromFormat('Y-m', $current_date);
 
-        $interval = new DateInterval('P1M'); // Create a one month interval
-        //condition start
-        $count = 0;
-        $loandate_tillnow = 0;
-        $countForPenalty = 0;
+            $interval = new DateInterval('P1M'); // Create a one month interval
+            //condition start
+            $count = 0;
+            $loandate_tillnow = 0;
+            $countForPenalty = 0;
 
-        $dueCharge = ($due_amt) ? $due_amt : $int_amt_cal;
-        $start = DateTime::createFromFormat('Y-m', $due_start_from);
-        $current = DateTime::createFromFormat('Y-m', $current_date);
-
-
-
-        for ($i = $start; $i < $current; $start->add($interval)) {
-            $loandate_tillnow += 1;
-            $toPaytilldate = intval($loandate_tillnow) * intval($dueCharge);
-        }
-
-        while ($start_date_obj < $end_date_obj && $start_date_obj < $current_date_obj) { // To find loan date count till now from start date.
-            $penalty_checking_date  = $start_date_obj->format('Y-m-d'); // This format is for query.. month , year function accept only if (Y-m-d).
-            $penalty_date  = $start_date_obj->format('Y-m');
-            $start_date_obj->add($interval);
-
-            $checkcollection = $pdo->query("SELECT * FROM `collection` WHERE `cus_profile_id` = '$cp_id' && ((MONTH(coll_date)= MONTH('$penalty_checking_date') || MONTH(trans_date)= MONTH('$penalty_checking_date')) && (YEAR(coll_date)= YEAR('$penalty_checking_date') || YEAR(trans_date)= YEAR('$penalty_checking_date')))");
-            $collectioncount = $checkcollection->rowCount(); // Checking whether the collection are inserted on date or not by using penalty_raised_date.
-
-            if ($loan_arr['scheme_name'] == '' || $loan_arr['scheme_name'] == null) {
-                $result = $pdo->query("SELECT  overdue_penalty as overdue FROM `loan_category_creation` WHERE `id` = '" . $loan_arr['loan_category'] . "'");
-            } else {
-                $result = $pdo->query("SELECT overdue_penalty_percent as overdue FROM `scheme` WHERE `id` = '" . $loan_arr['scheme_name'] . "' ");
-            }
-            $row = $result->fetch();
-            $penalty_per = $row['overdue']; //get penalty percentage to insert
-            $penalty = round(($response['due_amt'] * $penalty_per) / 100);
+            $dueCharge = ($due_amt) ? $due_amt : $int_amt_cal;
+            $start = DateTime::createFromFormat('Y-m', $due_start_from);
+            $current = DateTime::createFromFormat('Y-m', $current_date);
 
 
-            if ($loan_arr['loan_type'] == 'interest' and $count == 0) {
-                // if loan type is interest and when this loop for first month crossed then we need to calculate toPaytilldate again
-                // coz for first month interest amount may vary depending on start date of due, so reduce one due amt from it and add the calculated first month interest to it
-                $toPaytilldate = $toPaytilldate - $response['due_amt'] + getTillDateInterest($loan_arr, $response, $pdo, 'fullstartmonth', $date);
+
+            for ($i = $start; $i < $current; $start->add($interval)) {
+                $loandate_tillnow += 1;
+                $toPaytilldate = intval($loandate_tillnow) * intval($dueCharge);
             }
 
-            if ($totalPaidAmt < $toPaytilldate && $collectioncount == 0) {
-                $checkPenalty = $pdo->query("SELECT * from penalty_charges where penalty_date = '$penalty_date' and cus_profile_id = '$cp_id' ");
-                if ($checkPenalty->rowCount() == 0) {
-                    if ($loan_arr['loan_type'] == 'emi') {
-                        //if loan type is emi then directly apply penalty when month crossed and above conditions true
-                    } else if ($loan_arr['loan_type'] == 'interest' and  $count != 0) {
-                        // if loan type is interest then apply penalty if the loop month is not first
-                        // so penalty should not raise, coz a month interest is paid after the month end
-                    }
+            while ($start_date_obj < $end_date_obj && $start_date_obj < $current_date_obj) { // To find loan date count till now from start date.
+                $penalty_checking_date  = $start_date_obj->format('Y-m-d'); // This format is for query.. month , year function accept only if (Y-m-d).
+                $penalty_date  = $start_date_obj->format('Y-m');
+                $start_date_obj->add($interval);
+
+                $checkcollection = $pdo->query("SELECT * FROM `collection` WHERE `cus_profile_id` = '$cp_id' && ((MONTH(coll_date)= MONTH('$penalty_checking_date') || MONTH(trans_date)= MONTH('$penalty_checking_date')) && (YEAR(coll_date)= YEAR('$penalty_checking_date') || YEAR(trans_date)= YEAR('$penalty_checking_date')))");
+                $collectioncount = $checkcollection->rowCount(); // Checking whether the collection are inserted on date or not by using penalty_raised_date.
+
+                if ($loan_arr['scheme_name'] == '' || $loan_arr['scheme_name'] == null) {
+                    $result = $pdo->query("SELECT  overdue_penalty as overdue FROM `loan_category_creation` WHERE `id` = '" . $loan_arr['loan_category'] . "'");
+                } else {
+                    $result = $pdo->query("SELECT overdue_penalty_percent as overdue FROM `scheme` WHERE `id` = '" . $loan_arr['scheme_name'] . "' ");
                 }
-                $countForPenalty++;
+                $row = $result->fetch();
+                $penalty_per = $row['overdue']; //get penalty percentage to insert
+                $penalty = round(($response['due_amt'] * $penalty_per) / 100);
+
+                if ($totalPaidAmt < $toPaytilldate && $collectioncount == 0) {
+                    $checkPenalty = $pdo->query("SELECT * from penalty_charges where penalty_date = '$penalty_date' and cus_profile_id = '$cp_id' ");
+                    if ($checkPenalty->rowCount() == 0) {
+                        if ($loan_arr['loan_type'] == 'emi') {
+                            //if loan type is emi then directly apply penalty when month crossed and above conditions true
+                        } else if ($loan_arr['loan_type'] == 'interest' and  $count != 0) {
+                            // if loan type is interest then apply penalty if the loop month is not first
+                            // so penalty should not raise, coz a month interest is paid after the month end
+                        }
+                    }
+                    $countForPenalty++;
+                }
+
+                $count++; //Count represents how many months are exceeded
             }
+            //condition END
 
-            $count++; //Count represents how many months are exceeded
-        }
-        //condition END
-
-        //this collection query for taking the paid amount until the looping date ($current_date) , to calculate dynamically for due chart
-        $qry = $pdo->query("SELECT sum(due_amt_track) as due_amt_track, sum(pre_close_waiver) as pre_close_waiver from `collection` 
+            //this collection query for taking the paid amount until the looping date ($current_date) , to calculate dynamically for due chart
+            $qry = $pdo->query("SELECT sum(due_amt_track) as due_amt_track, sum(pre_close_waiver) as pre_close_waiver from `collection` 
         where cus_profile_id = $cp_id 
         AND 
         ( 
@@ -1016,102 +1111,67 @@ function calculateOthers($loan_arr, $response, $date, $pdo)
             OR 
             ( ( YEAR(coll_date) = YEAR('$date') AND MONTH(coll_date) <= MONTH('$date') ) OR ( YEAR(coll_date) < YEAR('$date') ) )
         ) ");
-        if ($qry->rowCount() > 0) {
-            $rowss = $qry->fetch();
-            $tot_paid_tilldate = intVal($rowss['due_amt_track']);
-            $preclose_tilldate = intVal($rowss['pre_close_waiver']);
-        }
-        if ($count > 0) {
-
-
-            if ($loan_arr['loan_type'] == 'interest') {
-
-                $response['pending'] = (($response['due_amt'] * ($count)) - $response['due_amt'] + getTillDateInterest($loan_arr, $response, $pdo, 'fullstartmonth', $date)) - $response['total_paid_int'];
-            } else {
+            if ($qry->rowCount() > 0) {
+                $rowss = $qry->fetch();
+                $tot_paid_tilldate = intVal($rowss['due_amt_track']);
+                $preclose_tilldate = intVal($rowss['pre_close_waiver']);
+            }
+            if ($count > 0) {
 
                 //if Due month exceeded due amount will be as pending with how many months are exceeded and subract pre closure amount if available
                 $response['pending'] = ($response['due_amt'] * ($count)) - $tot_paid_tilldate - $preclose_tilldate;
-            }
-
-            // If due month exceeded
-            if ($loan_arr['scheme_name'] == '' || $loan_arr['scheme_name'] == null) {
-                $result = $pdo->query("SELECT  overdue_penalty as overdue FROM `loan_category_creation` WHERE `id` = '" . $loan_arr['loan_category'] . "'");
-            } else {
-                $result = $pdo->query("SELECT overdue_penalty_percent as overdue FROM `scheme` WHERE `id` = '" . $loan_arr['scheme_name'] . "' ");
-            }
-            $row = $result->fetch();
-            $penalty_per = number_format($row['overdue'] * $countForPenalty); //Count represents how many months are exceeded//Number format if percentage exeeded decimals then pernalty may increase
-
-            // to get overall penalty paid till now to show pending penalty amount
-            $result = $pdo->query("SELECT SUM(penalty_track) as penalty,SUM(penalty_waiver) as penalty_waiver FROM `collection` WHERE cus_profile_id = '" . $cp_id . "' ");
-            $row = $result->fetch();
-            if ($row['penalty'] == null) {
-                $row['penalty'] = 0;
-            }
-            if ($row['penalty_waiver'] == null) {
-                $row['penalty_waiver'] = 0;
-            }
-            //to get overall penalty raised till now for this req id
-            $result1 = $pdo->query("SELECT SUM(penalty) as penalty FROM `penalty_charges` WHERE cus_profile_id = '" . $cp_id . "' ");
-            $row1 = $result1->fetch();
-            if ($row1['penalty'] == null) {
-                $penalty = 0;
-            } else {
-                $penalty = $row1['penalty'];
-            }
-
-            $response['penalty'] = $penalty - $row['penalty'] - $row['penalty_waiver'];
-
-
-            //Payable amount will be pending amount added with current month due amount
-            $response['payable'] = $response['due_amt'] + $response['pending'];
-
-
-            if ($loan_arr['loan_type'] == 'interest') { // if loan type is interest then we need to calculate pending and payable again
-
-                if ($count == 1) {
-                    // if this condition true then, first month of the start date only has been ended
-                    // so we need to calculate only the first month interest , not whole interest amount as payable
-                    $response['payable'] = $response['pending'];
-
-                    //pending amount will remain zero , coz usually we pay ended month's interest amount only in next month
-                    //so when only one month is exceeded, that not the pending 
-                    $response['pending'] =  0;
+                // If due month exceeded
+                if ($loan_arr['scheme_name'] == '' || $loan_arr['scheme_name'] == null) {
+                    $result = $pdo->query("SELECT  overdue_penalty as overdue FROM `loan_category_creation` WHERE `id` = '" . $loan_arr['loan_category'] . "'");
                 } else {
-                    //if this condition means, more than 1 month is crossed from start month
-                    //pending amount will be calculated above for all other loan types as usual
-                    //for interest type, we should not calculate due month multiplied by count of month crossed.
-                    //in interest loan we need to calculate interest amount of first month by how many days are used in first month only
-                    //so that, here subracted one month due amt and added first month's interest based on days spent there
-                    $response['payable'] =  $response['pending'];
-                    if ($count >= 2) {
-                        $response['pending'] =  $response['pending'] - $response['due_amt'];
-                    }
+                    $result = $pdo->query("SELECT overdue_penalty_percent as overdue FROM `scheme` WHERE `id` = '" . $loan_arr['scheme_name'] . "' ");
                 }
-            }
+                $row = $result->fetch();
+                $penalty_per = number_format($row['overdue'] * $countForPenalty); //Count represents how many months are exceeded//Number format if percentage exeeded decimals then pernalty may increase
 
-            if ($response['payable'] > $response['balance']) {
-                //if payable is greater than balance then change it as balance amt coz dont collect more than balance
-                //this case will occur when collection status becoms OD
-                $response['payable'] = $response['balance'];
-            }
+                // to get overall penalty paid till now to show pending penalty amount
+                $result = $pdo->query("SELECT SUM(penalty_track) as penalty,SUM(penalty_waiver) as penalty_waiver FROM `collection` WHERE cus_profile_id = '" . $cp_id . "' ");
+                $row = $result->fetch();
+                if ($row['penalty'] == null) {
+                    $row['penalty'] = 0;
+                }
+                if ($row['penalty_waiver'] == null) {
+                    $row['penalty_waiver'] = 0;
+                }
+                //to get overall penalty raised till now for this req id
+                $result1 = $pdo->query("SELECT SUM(penalty) as penalty FROM `penalty_charges` WHERE cus_profile_id = '" . $cp_id . "' ");
+                $row1 = $result1->fetch();
+                if ($row1['penalty'] == null) {
+                    $penalty = 0;
+                } else {
+                    $penalty = $row1['penalty'];
+                }
 
-            //in this calculate till date interest when month are crossed for current month
-            $response['till_date_int'] = getTillDateInterest($loan_arr, $response, $pdo, 'from01', $date);
+                $response['penalty'] = $penalty - $row['penalty'] - $row['penalty_waiver'];
+
+
+                //Payable amount will be pending amount added with current month due amount
+                $response['payable'] = $response['due_amt'] + $response['pending'];
+
+                if ($response['payable'] > $response['balance']) {
+                    //if payable is greater than balance then change it as balance amt coz dont collect more than balance
+                    //this case will occur when collection status becoms OD
+                    $response['payable'] = $response['balance'];
+                }
+
+            } else {
+                //If still current month is not ended, then pending will be same due amt // pending will be 0 if due date not exceeded
+                $response['pending'] = 0; // $response['due_amt'] - $response['total_paid'] - $response['pre_closure'] ;
+                //If still current month is not ended, then penalty will be 0
+                $response['penalty'] = 0;
+                //If still current month is not ended, then payable will be due amt
+                $response['payable'] = $response['due_amt'] - $tot_paid_tilldate - $preclose_tilldate;
+            }
         } else {
-            //If still current month is not ended, then pending will be same due amt // pending will be 0 if due date not exceeded
-            $response['pending'] = 0; // $response['due_amt'] - $response['total_paid'] - $response['pre_closure'] ;
-            //If still current month is not ended, then penalty will be 0
-            $response['penalty'] = 0;
-            //If still current month is not ended, then payable will be due amt
-            $response['payable'] = $response['due_amt'] - $tot_paid_tilldate - $preclose_tilldate;
 
-            if ($loan_arr['loan_type'] == 'interest') {
-                $response['payable'] =  0;
-            }
-
-            //in this calculate till date interest when month are not crossed for due starting month
-            $response['till_date_int'] = getTillDateInterest($loan_arr, $response, $pdo, 'forstartmonth', $date);
+            $interest_details = calculateInterestLoan($pdo, $loan_arr, $response, $cp_id,$date);
+            $all_data = array_merge($response, $interest_details);
+            $response = $all_data;
         }
     } else
     if ($loan_arr['scheme_due_method'] == '2') {
@@ -1166,14 +1226,14 @@ function calculateOthers($loan_arr, $response, $date, $pdo)
         //condition END
 
         //this collection query for taking the paid amount until the looping date ($current_date) , to calculate dynamically for due chart
-        $qry = $pdo->query("SELECT sum(due_amt_track) as due_amt_track, sum(pre_close_waiver) as pre_close_waiver from `collection` 
-            where cus_profile_id = '$cp_id' 
-            AND (
-                (YEAR(trans_date) = YEAR('$current_date') AND WEEK(trans_date) <= WEEK('$current_date'))
-                OR (YEAR(trans_date) < YEAR('$current_date'))
-                OR (YEAR(coll_date) = YEAR('$current_date') AND WEEK(coll_date) <= WEEK('$current_date'))
-                OR (YEAR(coll_date) < YEAR('$current_date'))
-            ) ");
+
+        $qry = $pdo->query("SELECT SUM(due_amt_track) AS due_amt_track, SUM(pre_close_waiver) AS pre_close_waiver FROM collection c
+WHERE c.cus_profile_id = '$cp_id'  AND (
+       (trans_date <= DATE_ADD('$current_date', INTERVAL 6 DAY) AND trans_date <> '0000-00-00')
+       OR
+       (coll_date <= DATE_ADD('$current_date', INTERVAL 6 DAY) AND coll_date <> '0000-00-00')
+  );
+");
         if ($qry->rowCount() > 0) {
             $rowss = $qry->fetch();
             $tot_paid_tilldate = intVal($rowss['due_amt_track']);
@@ -1182,7 +1242,6 @@ function calculateOthers($loan_arr, $response, $date, $pdo)
         if ($count > 0) {
             //if Due month exceeded due amount will be as pending with how many months are exceeded and subract pre closure amount if available
             $response['pending'] = ($response['due_amt'] * $count) - $tot_paid_tilldate - $preclose_tilldate;
-
             // If due month exceeded
             if ($loan_arr['scheme_name'] == '' || $loan_arr['scheme_name'] == null) {
                 $result = $pdo->query("SELECT  overdue_penalty as overdue FROM `loan_category_creation` WHERE `id` = '" . $loan_arr['loan_category'] . "' ");
@@ -1214,6 +1273,7 @@ function calculateOthers($loan_arr, $response, $date, $pdo)
 
             //Payable amount will be pending amount added with current month due amount
             $response['payable'] = $response['due_amt'] + $response['pending'];
+
             if ($response['payable'] > $response['balance']) {
                 //if payable is greater than balance then change it as balance amt coz dont collect more than balance
                 //this case will occur when collection status becoms OD
@@ -1275,7 +1335,6 @@ function calculateOthers($loan_arr, $response, $date, $pdo)
             }
         }
         //condition END
-
         //this collection query for taking the paid amount until the looping date ($current_date) , to calculate dynamically for due chart
         $qry = $pdo->query("SELECT sum(due_amt_track) as due_amt_track, sum(pre_close_waiver) as pre_close_waiver from `collection` where cus_profile_id = $cp_id and (date(coll_date) <= date('$current_date') or date(trans_date) <= date('$current_date')) ");
         if ($qry->rowCount() > 0) {
@@ -1344,10 +1403,14 @@ function calculateOthers($loan_arr, $response, $date, $pdo)
     return $response;
 }
 
-function calculateNewInterestAmt($loan_arr, $response)
+function calculateNewInterestAmt($int_rate, $balance, $calculate_method)
 {
-    //to calculate current interest amount based on current balance value//bcoz interest will be calculated based on current balance amt only for interest loan
-    $int = $response['balance'] * ($loan_arr['interest_rate'] / 100);
+    if ($calculate_method == 'Month') {
+        $int = $balance * ($int_rate / 100);
+    } else if ($calculate_method == 'Days') {
+        $int = ($balance * ($int_rate / 100) / 30);
+    }
+
     $curInterest = ceil($int / 5) * 5; //to increase Interest to nearest multiple of 5
     if ($curInterest < $int) {
         $curInterest += 5;
@@ -1357,91 +1420,266 @@ function calculateNewInterestAmt($loan_arr, $response)
     return $response;
 }
 
-function getTillDateInterest($loan_arr, $response, $pdo, $data, $date)
+function calculateInterestLoan($pdo, $loan_arr, $response, $cp_id, $date)
 {
+    $due_start_from = $loan_arr['loan_date'];
+    $maturity_month = $loan_arr['maturity_date'];
 
-    if ($data == 'from01') {
-        //in this calculate till date interest when month are crossed for current month
+    // Convert Date to Year and month
+    $due_start_from = date('Y-m', strtotime($due_start_from));
+    $maturity_month = date('Y-m', strtotime($maturity_month));
+    $calc_date = date('Y-m', strtotime($date)); // ✅ Use the passed date
 
-        //to calculate till date interest if loan is interst based
-        if ($loan_arr['loan_type'] == 'interest') {
+    // Create a DateTime object for maturity month
+    $maturity_month = new DateTime($maturity_month);
+    $maturity_month->modify('-1 month'); // maturity should include last month due
+    $maturity_month = $maturity_month->format('Y-m');
 
-            // Get the current month's count of days
-            $currentMonthCount = date('t', strtotime($date));
-            // divide current interest amt for one day of current month
-            $amtperDay = $response['due_amt'] / intVal($currentMonthCount);
+    $start_date_obj   = DateTime::createFromFormat('Y-m', $due_start_from);
+    $end_date_obj     = DateTime::createFromFormat('Y-m', $maturity_month);
+    $current_date_obj = DateTime::createFromFormat('Y-m', $calc_date); // ✅ use $date
 
-            $st_date = new DateTime(date('Y-m-01', strtotime($date))); // start date
-            $tdate = new DateTime(date('Y-m-d', strtotime($date . '+1 day'))); //current date
-            // Calculate the interval between the two dates
-            $date_diff = $st_date->diff($tdate);
-            // Get the number of days from the interval
-            $numberOfDays = $date_diff->days;
-            $response = $amtperDay * $numberOfDays;
-
-            //to increase till date Interest to nearest multiple of 5
-            $cur_amt = ceil($response / 5) * 5; //ceil will set the number to nearest upper integer//i.e ceil(121/5)*5 = 125
-            if ($cur_amt < $response) {
-                $cur_amt += 5;
-            }
-            $response = $cur_amt;
-        }
-    } else if ($data == 'forstartmonth') {
-        //if condition is true then this is , 2 months has been completed.
-        //so the pending amt will be only the first month's complete interest amount
-
-
-        //to calculate till date interest if loan is interst based
-        if ($loan_arr['loan_type'] == 'interest') {
-
-            // Get the current month's count of days
-            $currentMonthCount = date('t', strtotime($loan_arr['due_startdate']));
-            // divide current interest amt for one day of current month
-            $amtperDay = $response['due_amt'] / intVal($currentMonthCount);
-
-            $st_date = new DateTime(date('Y-m-d', strtotime($loan_arr['due_startdate']))); // start date
-            $tdate = new DateTime(date('Y-m-d', strtotime($date . '+1 day'))); //current date
-            // $tdate = $tdate->modify('+1 day');//current date +1
-            // Calculate the interval between the two dates
-            $date_diff = $st_date->diff($tdate);
-            // Get the number of days from the interval
-            $numberOfDays = $date_diff->days;
-            $response = $amtperDay * $numberOfDays;
-
-            //to increase till date Interest to nearest multiple of 5
-            $cur_amt = ceil($response / 5) * 5; //ceil will set the number to nearest upper integer//i.e ceil(121/5)*5 = 125
-            if ($cur_amt < $response) {
-                $cur_amt += 5;
-            }
-            $response = $cur_amt;
-
-            //if today date is less than start date means make till date interest as 0 else it will show some amount as the different shows
-            if ($tdate < $st_date) {
-                $response = 0;
-            }
-        }
-    } else if ($data == 'fullstartmonth') {
-        //in this calculate till date interest when month are not crossed for due starting month
-
-        //to calculate till date interest if loan is interst based
-        if ($loan_arr['loan_type'] == 'interest') {
-
-            // Get the current month's count of days
-            $currentMonthCount = date('t', strtotime($loan_arr['due_startdate']));
-            // divide current interest amt for one day of current month
-            $amtperDay = $response['due_amt'] / intVal($currentMonthCount);
-
-            $st_date = new DateTime(date('Y-m-d', strtotime($loan_arr['due_startdate']))); // start date
-            $tdate = new DateTime(date('Y-m-t', strtotime($loan_arr['due_startdate']))); //current date
-            // $tdate = $tdate->modify('+1 day');//current date +1
-            // Calculate the interval between the two dates
-            $date_diff = $st_date->diff($tdate);
-            // Get the number of days from the interval
-            $numberOfDays = $date_diff->days;
-            $response = ceil($amtperDay * $numberOfDays);
-        }
+    $interval = new DateInterval('P1M');
+    // Count how many months crossed
+    $count = 0;
+    while ($start_date_obj < $end_date_obj && $start_date_obj < $current_date_obj) {
+        $start_date_obj->add($interval);
+        $count++;
     }
+    if ($start_date_obj >= $end_date_obj) {
+        $count++; // include maturity month
+    }
+    $res['count_of_month'] = $count;
+
+    $interest_paid = getPaidInterest($pdo, $cp_id,$date);
+
+    if ($count > 0) {
+        $res['payable']      = payableCalculation($pdo, $loan_arr, $response, $cp_id, $date) - $interest_paid;
+        $res['till_date_int']= getTillDateInterest($loan_arr, $response, $pdo, 'curmonth', $cp_id, $date) - $interest_paid;
+        $res['pending']      = pendingCalculation($pdo, $loan_arr, $response, $cp_id, $date) - $interest_paid;
+
+        if ($res['pending'] < 0)  $res['pending'] = 0;
+        if ($res['payable'] < 0)  $res['payable'] = 0;
+
+    } else {
+        // Before due start month – only till-date interest
+        $res['till_date_int']= getTillDateInterest($loan_arr, $response, $pdo, 'forstartmonth', $cp_id, $date) - $interest_paid;
+        $res['pending'] = 0;
+        $res['payable'] = 0;
+        $res['penalty'] = 0;
+    }
+
+    // Round off
+    $res['payable']      = ceilAmount($res['payable']);
+    $res['pending']      = ceilAmount($res['pending']);
+    $res['till_date_int']= ceilAmount($res['till_date_int']);
+
+    return $res;
+}
+
+function getTillDateInterest($loan_arr, $response, $pdo, $data, $cp_id, $date)
+{ 
+    $result = 0; // default
+
+    if ($data == 'forstartmonth') {
+        // To calculate till date Interest if loan is interest based
+        if ($loan_arr['loan_type'] == 'interest') {
+
+            // Loan issued date
+            $issued_date = new DateTime(date('Y-m-d', strtotime($loan_arr['loan_date'])));
+
+            // Use passed date instead of today's date
+            $cur_date = new DateTime(date('Y-m-d', strtotime($date)));
+
+            $result = dueAmtCalculation($pdo, $issued_date, $cur_date, $response['due_amt'], $loan_arr, '', $cp_id);
+
+            // Round up till nearest multiple of 5
+            $cur_amt = ceil($result / 5) * 5;
+            if ($cur_amt < $result) {
+                $cur_amt += 5;
+            }
+            $result = $cur_amt;
+        }
+        return $result;
+    }
+
+    if ($data == 'curmonth') {
+        $cur_date = new DateTime(date('Y-m-d', strtotime($date))); // ✅ use passed date
+        $issued_date = new DateTime(date('Y-m-d', strtotime($loan_arr['loan_date'])));
+
+        $result = dueAmtCalculation($pdo, $issued_date, $cur_date, $response['due_amt'], $loan_arr, 'TDI', $cp_id);
+        return $result;
+    }
+
+    if ($data == 'pendingmonth') {
+        // for pending value check, goto 2 months before
+        $issued_date = new DateTime(date('Y-m-d', strtotime($loan_arr['loan_date'])));
+
+        // Take passed date, then go 2 months before and set to last day
+        $cur_date = new DateTime(date('Y-m-d', strtotime($date)));
+        $cur_date->modify('-2 months');
+        $cur_date->modify('last day of this month');
+
+        $result = 0;
+        if ($issued_date <= $cur_date) {
+            $result = dueAmtCalculation($pdo, $issued_date, $cur_date, $response['due_amt'], $loan_arr, 'pending', $cp_id);
+        }
+        return $result;
+    }
+
     return $response;
 }
 
+function payableCalculation($pdo, $loan_arr, $response, $cp_id, $date)
+{
+    $issued_date = new DateTime(date('Y-m-d', strtotime($loan_arr['loan_date'])));
+    $cur_date    = new DateTime(date('Y-m-d', strtotime($date))); // ✅ use passed date
+    $result = 0;
+
+    if ($response['interest_calculate'] == "Month") {
+        // last month based on given date
+        $last_month = clone $cur_date;
+        $last_month->modify('-1 month');
+
+        $st_date = clone $issued_date;
+
+        while ($st_date->format('Y-m') <= $last_month->format('Y-m')) {
+            $end_date = clone $st_date;
+            $end_date->modify('last day of this month');
+            $start = clone $st_date; // fresh copy
+
+            $result += dueAmtCalculation($pdo, $start, $end_date, $response['due_amt'], $loan_arr, 'payable', $cp_id);
+
+            $st_date->modify('+1 month')->modify('first day of this month');
+        }
+    } elseif ($response['interest_calculate'] == "Days") {
+        $last_date = clone $cur_date;
+        $last_date->modify('-1 month'); // go back one month from given date
+
+        $st_date = clone $issued_date;
+
+        while ($st_date->format('Y-m') <= $last_date->format('Y-m')) {
+            $end_date = clone $st_date;
+            $end_date->modify('last day of this month');
+            $start = clone $st_date;
+
+            $result += dueAmtCalculation($pdo, $start, $end_date, $response['due_amt'], $loan_arr, 'payable', $cp_id);
+
+            $st_date->modify('+1 month')->modify('first day of this month');
+        }
+    }
+
+    return $result;
+}
+
+// ----------------- Due Amount Calculation -----------------
+function dueAmtCalculation($pdo, $start_date, $end_date, $due_amt, $loan_arr, $status, $cp_id)
+{
+    $start = new DateTime($start_date->format('Y-m-d'));
+    $end = new DateTime($end_date->format('Y-m-d'));
+
+    $interest_calculate = $loan_arr['interest_calculate'];
+    $int_rate = $loan_arr['interest_rate'];
+    $result = 0;
+
+    $loanRow = $pdo->query("SELECT loan_amnt FROM loan_entry_loan_calculation WHERE cus_profile_id = '" . $cp_id . "'")->fetch(PDO::FETCH_ASSOC);
+    $current_balance = $loanRow['loan_amnt'];
+
+    $collections = $pdo->query("SELECT princ_amt_track, principal_waiver, coll_date 
+        FROM collection 
+        WHERE cus_profile_id = '" . $cp_id . "' 
+          AND (princ_amt_track != '' OR principal_waiver != '') 
+        ORDER BY coll_date ASC")->fetchAll(PDO::FETCH_ASSOC);
+
+    if (!empty($collections)) {
+        $collection_index = 0;
+
+        while ($start <= $end) {
+            $today_str = $start->format('Y-m-d');
+            $paid_principal_today = 0;
+            $paid_principal_waiver = 0;
+
+            while ($collection_index < count($collections)) {
+                $coll_date = (new DateTime($collections[$collection_index]['coll_date']))->format('Y-m-d');
+                if ($coll_date == $today_str) {
+                    $paid_principal_today += (float)$collections[$collection_index]['princ_amt_track'];
+                    $paid_principal_waiver += (float)$collections[$collection_index]['principal_waiver'];
+                    $collection_index++;
+                } else {
+                    break;
+                }
+            }
+
+            $current_balance = max(0, $current_balance - ($paid_principal_today + $paid_principal_waiver));
+
+            $interest_today = calculateNewInterestAmt($int_rate, $current_balance, $interest_calculate);
+
+            if ($interest_calculate === 'Days') {
+                $result += $interest_today;
+            } else {
+                $days_in_month = (int)$start->format('t');
+                $daily_interest = $interest_today / $days_in_month;
+                $result += $daily_interest;
+            }
+
+            $start->modify('+1 day');
+        }
+    } else {
+        // No collections
+        if ($interest_calculate == 'Month') {
+            while ($start->format('Y-m') <= $end->format('Y-m')) {
+                $dueperday = $due_amt / intval($start->format('t'));
+                $new_end = clone $start;
+                $new_end->modify('last day of this month');
+
+                $days_count = ($start->diff($new_end))->days + 1;
+                $result += $days_count * $dueperday;
+
+                $start->modify('+1 month')->modify('first day of this month');
+            }
+        } else { // Days
+            while ($start <= $end) {
+                $result += $due_amt;
+                $start->modify('+1 day');
+            }
+        }
+    }
+
+    return $result;
+}
+
+// ----------------- Pending Calculation -----------------
+function pendingCalculation($pdo, $loan_arr, $response, $cp_id, $date)
+{
+    $pending = getTillDateInterest($loan_arr, $response, $pdo, 'pendingmonth', $cp_id, $date);
+    return $pending;
+}
+
+// ----------------- Paid Interest Calculation -----------------
+function getPaidInterest($pdo, $cp_id, $date)
+{
+    // Only consider collections up to the given date
+    $qry = $pdo->prepare("SELECT COALESCE(SUM(int_amt_track),0) + COALESCE(SUM(interest_waiver),0) AS int_paid
+        FROM collection 
+        WHERE cus_profile_id = :cp_id 
+          AND (int_amt_track != '' AND int_amt_track IS NOT NULL OR interest_waiver != '' AND interest_waiver IS NOT NULL)
+          AND coll_date <= :date
+    ");
+    $qry->execute([
+        ':cp_id' => $cp_id,
+        ':date'  => date('Y-m-d', strtotime($date))
+    ]);
+
+    $int_paid = $qry->fetch(PDO::FETCH_ASSOC)['int_paid'] ?? 0;
+    return intval($int_paid);
+}
+
+function ceilAmount($amt)
+{
+    $cur_amt = ceil($amt / 5) * 5; //ceil will set the number to nearest upper integer//i.e ceil(121/5)*5 = 125
+    if ($cur_amt < $amt) {
+        $cur_amt += 5;
+    }
+    return $cur_amt;
+}
 ?>
