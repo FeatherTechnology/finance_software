@@ -841,25 +841,25 @@ function getPaidInterest($pdo, $cp_id)
 function getPenaltyCharges($pdo, $cp_id)
 {
     // to get overall penalty paid till now to show pending penalty amount
-    $result = $pdo->query("SELECT SUM(penalty_track) as penalty,SUM(penalty_waiver) as penalty_waiver FROM `collection` WHERE cus_profile_id = '$cp_id' ");
-    $row = $result->fetch();
-    if ($row['penalty'] == null) {
-        $row['penalty'] = 0;
-    }
-    if ($row['penalty_waiver'] == null) {
-        $row['penalty_waiver'] = 0;
-    }
-    //to get overall penalty raised till now for this req id
-    $result1 = $pdo->query("SELECT SUM(penalty) as penalty FROM `penalty_charges` WHERE cus_profile_id = '$cp_id' ");
-    $row1 = $result1->fetch();
-    if ($row1['penalty'] == null) {
-        $penalty = 0;
-    } else {
-        $penalty = $row1['penalty'];
-    }
+      $qry = $pdo->query("SELECT COALESCE(SUM(penalty_track),0) as penalty, COALESCE(SUM(penalty_waiver),0) as penalty_waiver 
+                        FROM `collection` 
+                        WHERE cus_profile_id = '$cp_id'");
+    $paid = $qry->fetch();
 
-    return $penalty - $row['penalty'] - $row['penalty_waiver'];
+    $paid_total = $paid['penalty'] + $paid['penalty_waiver'];
+    //to get overall penalty raised till now for this req id
+   // Total penalty charged till now
+    $qry2 = $pdo->query("SELECT COALESCE(SUM(penalty),0) as penalty 
+                         FROM `penalty_charges` 
+                         WHERE cus_profile_id = '$cp_id'");
+    $total_penalty = $qry2->fetch()['penalty'];
+
+    // Pending penalty
+    $pending_penalty = $total_penalty - $paid_total;
+    return max(0, $pending_penalty); // ensure non-negative
 }
+
+
 function ceilAmount($amt)
 {
     $cur_amt = ceil($amt / 5) * 5; //ceil will set the number to nearest upper integer//i.e ceil(121/5)*5 = 125
