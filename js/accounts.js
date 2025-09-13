@@ -462,7 +462,7 @@ function getCollectionList(){
 function submitCollect(values){
     $.post('api/accounts_files/accounts/submit_collect.php', values, function(response){
         if (response == '1') {
-            swalSuccess('Success', `Successfully collected ₹${moneyFormatIndia(values.collected_amnt)} for ${values.no_of_bills} bills from ${values.username}.`);
+            swalSuccess('Success', `Successfully collected ₹${(values.collected_amnt)} for ${values.no_of_bills} bills from ${values.username}.`);
             getCollectionList();
             getClosingBal();
         }else{
