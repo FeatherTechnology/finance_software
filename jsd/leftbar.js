@@ -27,6 +27,12 @@ $(document).ready(function () {
         'balance_report': 'reports',
         'closed_report': 'reports',
         'ledger_view_report': 'reports',
+        'other_transaction_report': 'reports',
+        'interest_loan_issue_report': 'reports_interest',
+        'interest_collection_report': 'reports_interest',
+        'interest_balance_report': 'reports_interest',
+        'interest_closed_report': 'reports_interest',
+        'interest_ledger_view_report': 'reports_interest',
         'bulk_upload': 'bulk_upload'
     };
 

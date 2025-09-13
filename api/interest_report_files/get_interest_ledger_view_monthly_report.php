@@ -37,65 +37,65 @@ $to_date = $_POST['toDate'];
     </thead>
     <tbody>
         <?php
-       $query = "SELECT
-       cp.id,
-       cp.cus_id,
-       cp.aadhar_num,
-       lelc.loan_id,
-       li.issue_date,
-       lelc.maturity_date,
-       c.coll_sub_status,
-       COALESCE(
-           (SELECT (bal_amt - due_amt_track) 
+        $query = "SELECT
+        cp.id,
+        cp.cus_id,
+        cp.aadhar_num,
+        lelc.loan_id,
+        li.issue_date,
+        lelc.maturity_date,
+        c.coll_sub_status,
+        COALESCE(
+        (SELECT (bal_amt - int_amt_track) 
             FROM collection 
             WHERE cus_profile_id = cp.id 
             ORDER BY id DESC 
             LIMIT 1),
-           loan_bal.total_bal
-       ) AS bal_amt
-   FROM
-       loan_issue li
-   JOIN customer_profile cp ON
-       li.cus_profile_id = cp.id
-   JOIN loan_entry_loan_calculation lelc ON
-       li.cus_profile_id = lelc.cus_profile_id
-   LEFT JOIN(
-       SELECT
-           cus_profile_id,
-           coll_sub_status
-       FROM
-           collection
-       GROUP BY
-           cus_profile_id
-   ) c ON
-       li.cus_profile_id = c.cus_profile_id
-   JOIN customer_status cs ON
-       li.cus_profile_id = cs.cus_profile_id
-   -- Subquery to calculate sum of cash, cheque_val, and transaction_val
-   LEFT JOIN (
-       SELECT 
-           cus_profile_id,
-           SUM(cash) + SUM(cheque_val) + SUM(transaction_val) AS total_bal
-       FROM 
-           loan_issue
-       GROUP BY 
-           cus_profile_id
-   ) loan_bal ON li.cus_profile_id = loan_bal.cus_profile_id
-   WHERE
-     COALESCE(
-       (SELECT (bal_amt - due_amt_track) 
+        loan_bal.total_bal
+        ) AS bal_amt
+    FROM
+        loan_issue li
+    JOIN customer_profile cp ON
+        li.cus_profile_id = cp.id
+    JOIN loan_entry_loan_calculation lelc ON
+        li.cus_profile_id = lelc.cus_profile_id
+    LEFT JOIN(
+        SELECT
+            cus_profile_id,
+            coll_sub_status
+        FROM
+            collection
+        GROUP BY
+            cus_profile_id
+    ) c ON
+        li.cus_profile_id = c.cus_profile_id
+    JOIN customer_status cs ON
+        li.cus_profile_id = cs.cus_profile_id
+    -- Subquery to calculate sum of cash, cheque_val, and transaction_val
+    LEFT JOIN (
+        SELECT 
+            cus_profile_id,
+            SUM(cash) + SUM(cheque_val) + SUM(transaction_val) AS total_bal
+        FROM 
+            loan_issue
+        GROUP BY 
+            cus_profile_id
+    ) loan_bal ON li.cus_profile_id = loan_bal.cus_profile_id
+    WHERE
+    COALESCE(
+        (SELECT (bal_amt - int_amt_track) 
         FROM collection 
         WHERE cus_profile_id = cp.id 
         ORDER BY id DESC 
         LIMIT 1),
-       loan_bal.total_bal
-     ) != 0
-   AND (lelc.profit_type = 0 OR (lelc.profit_type = 1 AND lelc.scheme_due_method = 1)) 
-   AND li.issue_date BETWEEN DATE_FORMAT('$to_date', '%Y-%m-01') AND '$to_date' AND lelc.due_type != 'interest'
-   GROUP BY li.cus_profile_id 
-   ORDER BY
-       li.id ASC";
-     //loan type 0 = calculation, 1 = Scheme and monthly loan =2. 
+        loan_bal.total_bal
+        ) != 0
+    AND lelc.profit_type = 0 AND lelc.due_type = 'Interest' AND lelc.interest_calculate = 'Month'
+    AND li.issue_date BETWEEN DATE_FORMAT('$to_date', '%Y-%m-01') AND '$to_date' 
+    GROUP BY li.cus_profile_id 
+    ORDER BY
+        li.id ASC";
+        //loan type 0 = calculation, 1 = Scheme and monthly loan =2. 
         $dailyData = $pdo->prepare($query);
         $dailyData->execute();
         $i = 1;
@@ -120,10 +120,10 @@ $to_date = $_POST['toDate'];
                     <td>
                         <?php
                         //this query will get the all paid amt from collection table between the month dated given
-                        $coll_qry = $pdo->query("SELECT COALESCE(sum(due_amt_track), 0) as due_amt_track FROM collection where cus_profile_id = '" . $dailyInfo['id'] . "' and month(coll_date) = month('" . $months[$j] . "') and year(coll_date) = year('" . $months[$j] . "') ");
+                        $coll_qry = $pdo->query("SELECT COALESCE(sum(int_amt_track), 0) as int_amt_track FROM collection where cus_profile_id = '" . $dailyInfo['id'] . "' and month(coll_date) = month('" . $months[$j] . "') and year(coll_date) = year('" . $months[$j] . "') ");
                         $coll_row = $coll_qry->fetch();
-                        echo moneyFormatIndia($coll_row['due_amt_track']);
-                        $total_paid += $coll_row['due_amt_track'];
+                        echo moneyFormatIndia($coll_row['int_amt_track']);
+                        $total_paid += $coll_row['int_amt_track'];
                         ?>
                     </td>
                 <?php

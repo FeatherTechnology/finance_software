@@ -25,12 +25,11 @@ $column = array(
     'lelc.interest_amnt',
     'lelc.doc_charge_calculate',
     'lelc.processing_fees_calculate',
-    'lelc.total_amnt',
     'li.net_cash',
     'li.issue_person',
     'li.relationship'
 );
-$query = "SELECT lelc.loan_id, cp.cus_id, cp.aadhar_num, cp.cus_name, fi.fam_name as gaurantor, anc.areaname, lnc.linename, bc.branch_name , cp.mobile1, lc.loan_category, agc.agent_name, li.issue_date, lelc.loan_amnt, lelc.principal_amnt, lelc.interest_amnt, lelc.doc_charge_calculate, lelc.processing_fees_calculate, lelc.total_amnt, li.net_cash, li.issue_person, li.relationship 
+$query = "SELECT lelc.loan_id, cp.cus_id, cp.aadhar_num, cp.cus_name, fi.fam_name as gaurantor, anc.areaname, lnc.linename, bc.branch_name , cp.mobile1, lc.loan_category, agc.agent_name, li.issue_date, lelc.loan_amnt, lelc.principal_amnt, lelc.interest_amnt, lelc.doc_charge_calculate, lelc.processing_fees_calculate, li.net_cash, li.issue_person, li.relationship 
 FROM loan_issue li 
 JOIN customer_profile cp ON li.cus_profile_id = cp.id
 JOIN loan_entry_loan_calculation lelc ON cp.id = lelc.cus_profile_id
@@ -44,7 +43,7 @@ JOIN loan_category lc ON lcc.loan_category = lc.id
 LEFT JOIN agent_creation agc ON lelc.agent_id = agc.id
 JOIN users u ON FIND_IN_SET(cp.line, u.line)
 JOIN users us ON FIND_IN_SET(lelc.loan_category, us.loan_category)
-WHERE u.id ='$user_id' AND us.id ='$user_id' AND lcc.due_type = 'emi' AND li.issue_date BETWEEN '$from_date' AND '$to_date' ";
+WHERE u.id ='$user_id' AND us.id ='$user_id' AND lcc.due_type = 'interest' AND li.issue_date BETWEEN '$from_date' AND '$to_date' ";
 
 if (isset($_POST['search'])) {
     if ($_POST['search'] != "") {
@@ -65,8 +64,7 @@ if (isset($_POST['search'])) {
         OR lelc.principal_amnt LIKE '%" . $search . "%' 
         OR lelc.interest_amnt LIKE '%" . $search . "%' 
         OR lelc.doc_charge_calculate LIKE '%" . $search . "%' 
-        OR lelc.processing_fees_calculate LIKE '%" . $search . "%' 
-        OR lelc.total_amnt LIKE '%" . $search . "%' 
+        OR lelc.processing_fees_calculate LIKE '%" . $search . "%'  
         OR li.net_cash LIKE '%" . $search . "%' 
         OR li.issue_person LIKE '%" . $search . "%' 
         OR li.relationship LIKE '%" . $search . "%' )";
@@ -103,7 +101,7 @@ foreach ($result as $row) {
     $sub_array[] = $sno++;
     $sub_array[] = isset($row['loan_id']) ? $row['loan_id'] : '';
     $sub_array[] = isset($row['cus_id']) ? $row['cus_id'] : '';
-    $sub_array[] = isset($row['aadhar_num']) ? $row['aadhar_num'] : ''; 
+    $sub_array[] = isset($row['aadhar_num']) ? $row['aadhar_num'] : '';
     $sub_array[] = isset($row['cus_name']) ? $row['cus_name'] : '';
     $sub_array[] = isset($row['gaurantor']) ? $row['gaurantor'] : '';
     $sub_array[] = isset($row['areaname']) ? $row['areaname'] : '';
@@ -118,7 +116,6 @@ foreach ($result as $row) {
     $sub_array[] = isset($row['interest_amnt']) ? moneyFormatIndia($row['interest_amnt']) : '';
     $sub_array[] = isset($row['doc_charge_calculate']) ? moneyFormatIndia($row['doc_charge_calculate']) : '';
     $sub_array[] = isset($row['processing_fees_calculate']) ? moneyFormatIndia($row['processing_fees_calculate']) : '';
-    $sub_array[] = isset($row['total_amnt']) ? moneyFormatIndia($row['total_amnt']) : '';
     $sub_array[] = isset($row['net_cash']) ? moneyFormatIndia($row['net_cash']) : '';
     $sub_array[] = isset($row['issue_person']) ? $row['issue_person'] : '';
     $sub_array[] = isset($row['relationship']) ? $row['relationship'] : '';
