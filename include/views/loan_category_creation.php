@@ -187,7 +187,7 @@
                                     <div class="col-md-3 col-sm-4">
                                         <div class="form-group">
                                             <label for="processing_fee_min">Processing Fee</label><span class="text-danger">*</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                                            <div class="interest_type_options" style="margin-top:-25px; margin-left:120px; display: none;">
+                                            <div class="interest_type_options" style="margin-top:-25px; margin-left:125px; display: none;">
                                                 <input type="hidden" id="processing_type" value="percentage">
                                                 <input type="radio" name="process_fee_type" id="propercentage" value="percentage" tabindex="17" checked style="margin-left:15px;">
                                                 <label for="propercentage">&nbsp;&nbsp;<b>%</b></label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
@@ -220,7 +220,7 @@
                                     <div class="col-md-3 col-sm-4">
                                         <div class="form-group">
                                             <label for="overdue_penalty">Overdue Penalty</label><span class="text-danger">*</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                                            <div class="interest_type_options" style="margin-top:-25px; margin-left:120px; display: none;">
+                                            <div class="interest_type_options" style="margin-top:-25px; margin-left:130px; display: none;">
                                                 <input type="hidden" id="overdue_type" value="percentage">
                                                 <input type="radio" name="over_due_type" id="overpercentage" value="percentage" tabindex="21" checked style="margin-left:10px;">
                                                 <label for="overpercentage">&nbsp;&nbsp;<b>%</b></label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
