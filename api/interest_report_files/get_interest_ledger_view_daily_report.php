@@ -40,43 +40,41 @@ $to_date = $_POST['toDate'];
         lelc.loan_id,
         li.issue_date,
         lelc.maturity_date,
-        c.coll_sub_status,
-        COALESCE((SELECT (bal_amt - int_amt_track) FROM collection
-        WHERE cus_profile_id = cp.id ORDER BY id DESC LIMIT 1),loan_bal.total_bal_amt) AS bal_amt
+        c.princ_amt_track, 
+        c.int_amt_track,
+        lelc.loan_amount,
+        c.coll_sub_status
     FROM
-    loan_issue li
+        loan_issue li
     JOIN customer_profile cp ON li.cus_profile_id = cp.id
     JOIN loan_entry_loan_calculation lelc ON li.cus_profile_id = lelc.cus_profile_id
-    LEFT JOIN( 
-    SELECT
-        cus_profile_id,coll_sub_status
-    FROM collection
-    GROUP BY cus_profile_id) c
-    ON li.cus_profile_id = c.cus_profile_id
-    JOIN customer_status cs ON li.cus_profile_id = cs.cus_profile_id
--- Subquery to calculate the sum of cash, cheque_val, and transaction_val
     LEFT JOIN (
-        SELECT
-        cus_profile_id,
-        COALESCE(SUM(cash) + SUM(cheque_val) + SUM(transaction_val), 0) AS total_bal_amt
-    FROM
-        loan_issue
-    GROUP BY
-        cus_profile_id
-    ) loan_bal ON li.cus_profile_id = loan_bal.cus_profile_id
+        SELECT 
+            cus_profile_id, 
+            SUM(princ_amt_track) AS princ_amt_track, 
+            SUM(int_amt_track) AS int_amt_track,
+            SUM(bal_amt) AS bal_amt,
+            coll_sub_status
+        FROM collection 
+        WHERE coll_date <= '$to_date'
+        GROUP BY cus_profile_id
+    ) c ON li.cus_profile_id = c.cus_profile_id
     WHERE
-    COALESCE(
-        (SELECT (bal_amt - int_amt_track)
-        FROM collection
-        WHERE cus_profile_id = cp.id
-        ORDER BY id DESC
-        LIMIT 1),
-        loan_bal.total_bal_amt
-    ) != 0
-    AND lelc.profit_type = 0 AND lelc.due_type = 'interest' AND lelc.interest_calculate = 'Days'
-    AND li.issue_date BETWEEN DATE_FORMAT('$to_date', '%Y-%m-01') AND '$to_date'
+    lelc.profit_type = 0 AND lelc.due_type = 'Interest' AND lelc.interest_calculate = 'Days'
+    AND li.issue_date <= '$to_date'
+    AND (
+        (IFNULL(c.princ_amt_track, 0) != lelc.loan_amount)
+        OR (
+            (IFNULL(c.princ_amt_track, 0) = lelc.loan_amount)
+            AND EXISTS (
+                SELECT 1 FROM collection col 
+                WHERE col.cus_profile_id = li.cus_profile_id 
+                AND DATE(col.coll_date) = DATE('" . date('Y-m-d', strtotime($to_date)) . "')
+            )
+        )
+    )
     GROUP BY li.cus_profile_id 
-    ORDER BY li.id ASC; ";
+    ORDER BY li.id ASC";
 
         //loan type Scheme = 1 and daily loan =3. 
         $dailyData = $pdo->prepare($query);
@@ -94,8 +92,12 @@ $to_date = $_POST['toDate'];
                 <td><?php echo $dailyInfo['loan_id']; ?></td>
                 <td><?php echo date('d-m-Y', strtotime($dailyInfo['issue_date'])); ?></td>
                 <td><?php echo date('d-m-Y', strtotime($dailyInfo['maturity_date'])); ?></td>
-                <td><?php echo moneyFormatIndia($dailyInfo['bal_amt']);
-                    $bal_amnt = $dailyInfo['bal_amt']; ?></td>
+                <td>
+                    <?php
+                    $balance_amount = intval($dailyInfo['loan_amount']) - (intval($dailyInfo['princ_amt_track']) + intval($dailyInfo['principal_waiver']));
+                    echo moneyFormatIndia($balance_amount);
+                    ?>
+                </td>
                 <td><?php echo ($dailyInfo['coll_sub_status']) ? $dailyInfo['coll_sub_status'] : 'Current'; ?></td>
                 <?php
                 $start = new DateTime($todate->format('Y-m-01'));
@@ -112,7 +114,7 @@ $to_date = $_POST['toDate'];
                 ?>
                 <td><?php echo moneyFormatIndia($total_paid); ?></td>
             <?php
-            $total_bal_sum += $bal_amnt;
+            $total_bal_sum += $balance_amount;
             $total_paid_sum += $total_paid;
         }
             ?>
