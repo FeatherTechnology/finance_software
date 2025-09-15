@@ -545,7 +545,9 @@ WHERE c.cus_profile_id = $cp_id AND (c.due_amt_track != '' OR c.pre_close_waiver
                                 <td></td>
                                 <td></td>
                                 <td></td>
-                                <td></td>
+                                <?php if ($loan_type != 'emi') { ?>
+                                    <td></td>
+                                <?php } ?>
                             <?php }
                         } else { //this is for weekly and daily loan to check lastcusduemonth comparision
                             $weekStart = date('Y-m-d', strtotime($cusDueMonth));
