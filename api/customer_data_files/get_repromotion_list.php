@@ -11,12 +11,30 @@ $status = [
 $re_promotion_arr = array();
 $i = 0;
 $whereCondition = "";
+// Build where condition for repromotion_details
 if (isset($_POST['repromotion_details']) && !empty($_POST['repromotion_details'])) {
-    $repromotion_details_str = "'" . implode("','", $_POST['repromotion_details']) . "'";
+    $details = $_POST['repromotion_details'];
 
-    $whereCondition = "AND replace(rc.repromotion_detail,' ','') IN ($repromotion_details_str)";
+    $conditions = [];
+
+    // If "Needed" or "Later" selected
+    $normalSelections = array_intersect($details, ['needed', 'later']);  // array_intersect cleanly extracts only the "needed"/"later" subset from whatever the user picked.
+    if (!empty($normalSelections)) {
+        // Make first letter uppercase to match DB values (Needed, Later)
+        $normalSelectionsStr = implode("','", array_map('ucfirst', $normalSelections));
+        $conditions[] = "replace(rc.repromotion_detail,' ','') IN ('$normalSelectionsStr')";
+    }
+
+    // If "To Follow" selected
+    if (in_array('tofollow', $details)) {
+        $conditions[] = "(rc.repromotion_detail IS NULL OR rc.repromotion_detail NOT IN ('Needed','Later'))";
+    }
+
+    // Combine conditions with OR
+    if (!empty($conditions)) {
+        $whereCondition = "AND (" . implode(" OR ", $conditions) . ")";  
+    }
 }
-
 $customerQry = $pdo->query("SELECT 
                 cp.id, cp.cus_id, cp.aadhar_num, cp.cus_name, anc.areaname AS area, lnc.linename, 
                 bc.branch_name, cp.mobile1, cs.status as c_sts, cs.sub_status as c_substs, rc.repromotion_detail, rc.created_on as created,cp.created_on as cus_created
@@ -37,7 +55,7 @@ if ($customerQry->rowCount() > 0) {
         if ($customerRow['repromotion_detail'] != '') {
             $customerRow['action'] = $customerRow['repromotion_detail'];
         } else {
-            $customerRow['action'] = "<div class='dropdown'><button class='btn btn-outline-secondary'><i class='fa'>&#xf107;</i></button><div class='dropdown-content'><a href='#' class='needed' value='" . $customerRow['cus_id'] . "' data='Needed'>Needed</a><a href='#' class='later' value='" . $customerRow['cus_id'] . "' data='Later'>Later</a><a href='#' class='to_follow' value='" . $customerRow['cus_id'] . "' data='To Follow'>To Follow</a></div></div>";
+            $customerRow['action'] = "<div class='dropdown'><button class='btn btn-outline-secondary'><i class='fa'>&#xf107;</i></button><div class='dropdown-content'><a href='#' class='needed' value='" . $customerRow['cus_id'] . "' data='Needed'>Needed</a><a href='#' class='later' value='" . $customerRow['cus_id'] . "' data='Later'>Later</a></div></div>";
         }
         $re_promotion_arr[$i] = $customerRow;
         $i++;

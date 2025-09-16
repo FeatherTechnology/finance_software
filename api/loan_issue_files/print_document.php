@@ -123,102 +123,111 @@ if ($qry->rowCount() > 0) {
 
 
 <!-- /////////////////////////////////////////////////////////////////////////// Cheque Info START //////////////////////////////////////////////////////// -->
-<table class="table custom-table">
-    <thead>
-        <tr>
-            <th colspan="6">Cheque Info</th>
-        </tr>
-        <tr>
-            <th width="20">S.NO</th>
-            <th>Holder Type</th>
-            <th>Holder Name</th>
-            <th>Relationship</th>
-            <th>Bank Name</th>
-            <th>Cheque Count</th>
-        </tr>
-    </thead>
-    <tbody>
 <?php
-$qry = $pdo->query("SELECT * FROM `cheque_info` WHERE cus_profile_id = '$cus_profile_id' ");
-if ($qry->rowCount() > 0) {
-    $b=1;
-    while ($cheque_info = $qry->fetchObject()) {
-        if($cheque_info->holder_type =='1'){
-            $holder_type = 'Customer';
-            
-        }else if($cheque_info->holder_type =='2'){
-            $holder_type = 'Guarantor';
-            
-        }else if($cheque_info->holder_type =='3'){
-            $holder_type = 'Family Member';
-        }
-        $cheque_info->holder_type = $holder_type;
-        ?>
-        <tr>
-            <td><?php echo $b++; ?></td>
-            <td><?php echo $cheque_info->holder_type; ?></td>
-            <td><?php echo $cheque_info->holder_name; ?></td>
-            <td><?php echo $cheque_info->relationship; ?></td>
-            <td><?php echo $cheque_info->bank_name; ?></td>
-            <td><?php echo $cheque_info->cheque_cnt; ?></td>
-        </tr>
-        <?php
-    }
-}else{
-    ?>
-    <tr>
-        <td colspan="6"><center>No data available in table</center></td>
-    </tr>
-    <?php
-}
+$qry = $pdo->query("SELECT ci.* FROM cheque_info ci WHERE ci.cus_profile_id = $cus_profile_id GROUP BY ci.id  ");
+if ($qry->rowCount() > 0) { // show table only if more than 1 row
 ?>
-</tbody>
-</table> </br></br>
+    <table class="table custom-table">
+        <thead>
+            <tr>
+                <th colspan="6">Cheque Info</th>
+            </tr>
+            <tr>
+                <th width="20">S.NO</th>
+                <th>Holder Type</th>
+                <th>Holder Name</th>
+                <th>Relationship</th>
+                <th>Bank Name</th>
+                <th>Cheque Count</th>
+            </tr>
+        </thead>
+        <tbody>
+            <?php
+            $b = 1;
+            while ($cheque_info = $qry->fetchObject()) {
+                if ($cheque_info->holder_type == '1') {
+                    $holder_type = 'Customer';
+                } else if ($cheque_info->holder_type == '2') {
+                    $holder_type = 'Guarantor';
+                } else if ($cheque_info->holder_type == '3') {
+                    $holder_type = 'Family Member';
+                }
+            ?>
+                <tr>
+                    <td><?php echo $b++; ?></td>
+                    <td><?php echo $holder_type; ?></td>
+                    <td><?php echo $cheque_info->holder_name; ?></td>
+                    <td><?php echo $cheque_info->relationship; ?></td>
+                    <td><?php echo $cheque_info->bank_name; ?></td>
+                    <td><?php echo $cheque_info->cheque_cnt; ?></td>
+                </tr>
+            <?php
+            }
+            ?>
+        </tbody>
+    </table>
+    </br></br>
+<?php
+}
+// if rows <= 1 -> do not show anything
+?>
+
 <!-- /////////////////////////////////////////////////////////////////////////// Cheque Info END //////////////////////////////////////////////////////// -->
 
 <!-- /////////////////////////////////////////////////////////////////////////// Document Info START //////////////////////////////////////////////////////// -->
-<table class="table custom-table">
-    <thead>
-        <tr>
-            <th colspan="5">Document Info</th>
-        </tr>
-        <tr>
-            <th width="20">S.NO</th>
-            <th>Document Name</th>
-            <th>Document Type</th>
-            <th>Holder Name</th>
-            <th>Relationship</th>
-        </tr>
-    </thead>
-    <tbody>
 <?php
-$qry = $pdo->query("SELECT di.doc_name, di.doc_type, di.relationship, fi.fam_name FROM document_info di LEFT JOIN family_info fi ON di.holder_name = fi.id WHERE di.cus_profile_id = '$cus_profile_id' ");
+$qry = $pdo->query("SELECT di.doc_name, di.doc_type, di.relationship,  CASE 
+            WHEN di.holder_name = 0 THEN cp.cus_name 
+            ELSE fi.fam_name 
+        END as holder_name FROM document_info di LEFT JOIN family_info fi ON di.holder_name = fi.id  LEFT JOIN customer_profile cp ON di.cus_profile_id= cp.id WHERE di.cus_profile_id = '$cus_profile_id'  ");
+
 if ($qry->rowCount() > 0) {
-    $c=1;
-    while ($doc_info = $qry->fetchObject()) {
-        ?>
-        <tr>
-            <td><?php echo $c++; ?></td>
-            <td><?php echo $doc_info->doc_name; ?></td>
-            <td><?php echo $doc_info->doc_type; ?></td>
-            <td><?php echo $doc_info->fam_name; ?></td>
-            <td><?php echo $doc_info->relationship; ?></td>
-        </tr>
-        <?php
-    }
-}else{
-    ?>
-    <tr>
-        <td colspan="5"><center>No data available in table</center></td>
-    </tr>
-    <?php
-}
 ?>
-</tbody>
-</table> </br></br>
+    <table class="table custom-table">
+        <thead>
+            <tr>
+                <th colspan="5">Document Info</th>
+            </tr>
+            <tr>
+                <th width="20">S.NO</th>
+                <th>Document Name</th>
+                <th>Document Type</th>
+                <th>Holder Name</th>
+                <th>Relationship</th>
+            </tr>
+        </thead>
+        <tbody>
+
+            <?php
+            $c = 1;
+            while ($doc_info = $qry->fetchObject()) {
+            ?>
+                <tr>
+                    <td><?php echo $c++; ?></td>
+                    <td><?php echo $doc_info->doc_name; ?></td>
+                    <td><?php echo ($doc_info->doc_type == '1') ? 'Original' : 'Xerox'; ?></td>
+                    <td><?php echo $doc_info->holder_name; ?></td>
+                    <td><?php echo $doc_info->relationship; ?></td>
+                </tr>
+            <?php
+            }
+            ?>
+        </tbody>
+    </table> </br></br>
+<?php
+}
+// if rows <= 1 -> do not show anything
+?>
 <!-- /////////////////////////////////////////////////////////////////////////// Document Info END //////////////////////////////////////////////////////// -->
 
 <!-- /////////////////////////////////////////////////////////////////////////// Mortgage Info START //////////////////////////////////////////////////////// -->
+<?php
+        $qry = $pdo->query("SELECT mi.relationship, mi.property_details, mi.mortgage_name, mi.designation, mi.mortgage_number, mi.reg_office, mi.mortgage_value, CASE 
+            WHEN mi.property_holder_name = 0 THEN cp.cus_name 
+            ELSE fi.fam_name 
+        END as holder_name FROM mortgage_info mi LEFT JOIN family_info fi ON mi.property_holder_name = fi.id LEFT JOIN customer_profile cp ON mi.cus_profile_id= cp.id WHERE mi.cus_profile_id = '$cus_profile_id' ");
+        if ($qry->rowCount() > 0) {
+            ?>
 <table class="table custom-table">
     <thead>
         <tr>
@@ -237,38 +246,40 @@ if ($qry->rowCount() > 0) {
         </tr>
     </thead>
     <tbody>
-<?php
-$qry = $pdo->query("SELECT mi.relationship, mi.property_details, mi.mortgage_name, mi.designation, mi.mortgage_number, mi.reg_office, mi.mortgage_value, fi.fam_name FROM mortgage_info mi LEFT JOIN family_info fi ON mi.property_holder_name = fi.id WHERE mi.cus_profile_id = '$cus_profile_id' ");
-if ($qry->rowCount() > 0) {
-    $d=1;
-    while ($mortgage_info = $qry->fetchObject()) {
-        ?>
-        <tr>
-            <td><?php echo $d++; ?></td>
-            <td><?php echo $mortgage_info->fam_name; ?></td>
-            <td><?php echo $mortgage_info->relationship; ?></td>
-            <td><?php echo $mortgage_info->property_details; ?></td>
-            <td><?php echo $mortgage_info->mortgage_name; ?></td>
-            <td><?php echo $mortgage_info->designation; ?></td>
-            <td><?php echo $mortgage_info->mortgage_number; ?></td>
-            <td><?php echo $mortgage_info->reg_office; ?></td>
-            <td><?php echo $mortgage_info->mortgage_value; ?></td>
-        </tr>
         <?php
-    }
-}else{
-    ?>
-    <tr>
-        <td colspan="9"><center>No data available in table</center></td>
-    </tr>
-    <?php
-}
-?>
-</tbody>
+            $d = 1;
+            while ($mortgage_info = $qry->fetchObject()) {
+        ?>
+                <tr>
+                    <td><?php echo $d++; ?></td>
+                    <td><?php echo $mortgage_info->holder_name; ?></td>
+                    <td><?php echo $mortgage_info->relationship; ?></td>
+                    <td><?php echo $mortgage_info->property_details; ?></td>
+                    <td><?php echo $mortgage_info->mortgage_name; ?></td>
+                    <td><?php echo $mortgage_info->designation; ?></td>
+                    <td><?php echo $mortgage_info->mortgage_number; ?></td>
+                    <td><?php echo $mortgage_info->reg_office; ?></td>
+                    <td><?php echo $mortgage_info->mortgage_value; ?></td>
+                </tr>
+            <?php
+            }
+            ?>
+    </tbody>
 </table> </br></br>
+<?php
+}
+// if rows <= 1 -> do not show anything
+?>
 <!-- /////////////////////////////////////////////////////////////////////////// Mortgage Info END //////////////////////////////////////////////////////// -->
 
 <!-- /////////////////////////////////////////////////////////////////////////// Endorsement Info START //////////////////////////////////////////////////////// -->
+<?php
+        $qry = $pdo->query("SELECT ei.relationship, ei.vehicle_details, ei.endorsement_name, ei.key_original, ei.rc_original,  CASE 
+            WHEN ei.owner_name = 0 THEN cp.cus_name 
+            ELSE fi.fam_name 
+        END as holder_name FROM endorsement_info ei LEFT JOIN family_info fi ON ei.owner_name = fi.id LEFT JOIN customer_profile cp ON ei.cus_profile_id= cp.id WHERE ei.cus_profile_id = '$cus_profile_id'");
+        if ($qry->rowCount() > 0) {
+            ?>
 <table class="table custom-table">
     <thead>
         <tr>
@@ -285,36 +296,35 @@ if ($qry->rowCount() > 0) {
         </tr>
     </thead>
     <tbody>
-<?php
-$qry = $pdo->query("SELECT ei.relationship, ei.vehicle_details, ei.endorsement_name, ei.key_original, ei.rc_original, fi.fam_name FROM endorsement_info ei LEFT JOIN family_info fi ON ei.owner_name = fi.id WHERE ei.cus_profile_id = '$cus_profile_id' ");
-if ($qry->rowCount() > 0) {
-    $e=1;
-    while ($endorsement_info = $qry->fetchObject()) {
-        ?>
-        <tr>
-            <td><?php echo $e++; ?></td>
-            <td><?php echo $endorsement_info->fam_name; ?></td>
-            <td><?php echo $endorsement_info->relationship; ?></td>
-            <td><?php echo $endorsement_info->vehicle_details; ?></td>
-            <td><?php echo $endorsement_info->endorsement_name; ?></td>
-            <td><?php echo $endorsement_info->key_original; ?></td>
-            <td><?php echo $endorsement_info->rc_original; ?></td>
-        </tr>
         <?php
-    }
-}else{
-    ?>
-    <tr>
-        <td colspan="7"><center>No data available in table</center></td>
-    </tr>
-    <?php
-}
-?>
-</tbody>
+            $e = 1;
+            while ($endorsement_info = $qry->fetchObject()) {
+        ?>
+                <tr>
+                    <td><?php echo $e++; ?></td>
+                    <td><?php echo $endorsement_info->holder_name; ?></td>
+                    <td><?php echo $endorsement_info->relationship; ?></td>
+                    <td><?php echo $endorsement_info->vehicle_details; ?></td>
+                    <td><?php echo $endorsement_info->endorsement_name; ?></td>
+                    <td><?php echo $endorsement_info->key_original; ?></td>
+                    <td><?php echo $endorsement_info->rc_original; ?></td>
+                </tr>
+            <?php
+            }
+        ?>
+    </tbody>
 </table> </br></br>
+<?php
+}
+// if rows <= 1 -> do not show anything
+?>
 <!-- /////////////////////////////////////////////////////////////////////////// Endorsement Info END //////////////////////////////////////////////////////// -->
 
 <!-- /////////////////////////////////////////////////////////////////////////// Gold Info START //////////////////////////////////////////////////////// -->
+<?php
+        $qry = $pdo->query("SELECT * FROM gold_info WHERE cus_profile_id = '$cus_profile_id' ");
+        if ($qry->rowCount() > 0) {
+            ?>
 <table class="table custom-table">
     <thead>
         <tr>
@@ -329,31 +339,26 @@ if ($qry->rowCount() > 0) {
         </tr>
     </thead>
     <tbody>
-<?php
-$qry = $pdo->query("SELECT * FROM gold_info WHERE cus_profile_id = '$cus_profile_id' ");
-if ($qry->rowCount() > 0) {
-    $f=1;
-    while ($gold_info = $qry->fetchObject()) {
+ <?php
+            $f = 1;
+            while ($gold_info = $qry->fetchObject()) {
         ?>
-        <tr>
-            <td><?php echo $f++; ?></td>
-            <td><?php echo $gold_info->gold_type; ?></td>
-            <td><?php echo $gold_info->purity; ?></td>
-            <td><?php echo $gold_info->weight; ?></td>
-            <td><?php echo $gold_info->value; ?></td>
-        </tr>
-        <?php
-    }
-}else{
-    ?>
-    <tr>
-        <td colspan="5"><center>No data available in table</center></td>
-    </tr>
-    <?php
-}
-?>
-</tbody>
+                <tr>
+                    <td><?php echo $f++; ?></td>
+                    <td><?php echo $gold_info->gold_type; ?></td>
+                    <td><?php echo $gold_info->purity; ?></td>
+                    <td><?php echo $gold_info->weight; ?></td>
+                    <td><?php echo $gold_info->value; ?></td>
+                </tr>
+            <?php
+            }
+            ?>
+    </tbody>
 </table> </br></br>
+<?php
+}
+// if rows <= 1 -> do not show anything
+?>
 <!-- /////////////////////////////////////////////////////////////////////////// Gold Info END //////////////////////////////////////////////////////// -->
 
 

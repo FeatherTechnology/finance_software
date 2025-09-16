@@ -2019,7 +2019,7 @@ $(document).ready(function () {
         if (printWindow) {
             // Load the content into the popup window
             $.ajax({
-                url: 'api/update_customer_files/print_update_document.php',
+                url: 'api/loan_issue_files/print_document.php',
                 data: { cus_profile_id },
                 cache: false,
                 type: "post",
