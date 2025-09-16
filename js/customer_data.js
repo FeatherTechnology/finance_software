@@ -120,7 +120,7 @@ $(document).ready(function () {
         }
     });
 
-    $(document).on('click', '.exs_needed, .exs_later, .exs_to_follow', function () {
+    $(document).on('click', '.exs_needed, .exs_later', function () {
         var cus_id = $(this).attr('value');
         var coll_data = $(this).attr('data');
         var datas = { cus_id: cus_id, coll_data: coll_data };
@@ -130,7 +130,7 @@ $(document).ready(function () {
         return;
     });
 
-    $(document).on('click', '.needed, .later, .to_follow', function () {
+    $(document).on('click', '.needed, .later', function () {
         var cus_id = $(this).attr('value');
         var coll_data = $(this).attr('data');
         var datas = { cus_id: cus_id, coll_data: coll_data };
