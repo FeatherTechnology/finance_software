@@ -2,10 +2,10 @@
 -- version 5.2.1
 -- https://www.phpmyadmin.net/
 --
--- Host: mysql5049.site4now.net
--- Generation Time: Sep 14, 2025 at 09:30 PM
--- Server version: 8.0.34
--- PHP Version: 8.3.8
+-- Host: 127.0.0.1
+-- Generation Time: Sep 16, 2025 at 01:30 PM
+-- Server version: 10.4.32-MariaDB
+-- PHP Version: 8.2.12
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -18,7 +18,7 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- Database: `db_a86e03_emiint`
+-- Database: `finance`
 --
 
 -- --------------------------------------------------------
@@ -28,15 +28,15 @@ SET time_zone = "+00:00";
 --
 
 CREATE TABLE `accounts_collect_entry` (
-  `id` int NOT NULL,
-  `user_id` int NOT NULL,
-  `line` varchar(50) COLLATE utf8mb4_general_ci NOT NULL,
-  `branch` varchar(50) COLLATE utf8mb4_general_ci NOT NULL,
-  `coll_mode` int NOT NULL,
-  `bank_id` varchar(50) COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `no_of_bills` int NOT NULL,
-  `collection_amnt` varchar(150) COLLATE utf8mb4_general_ci NOT NULL,
-  `insert_login_id` int NOT NULL,
+  `id` int(11) NOT NULL,
+  `user_id` int(11) NOT NULL,
+  `line` varchar(50) NOT NULL,
+  `branch` varchar(50) NOT NULL,
+  `coll_mode` int(11) NOT NULL,
+  `bank_id` varchar(50) DEFAULT NULL,
+  `no_of_bills` int(11) NOT NULL,
+  `collection_amnt` varchar(150) NOT NULL,
+  `insert_login_id` int(11) NOT NULL,
   `created_on` datetime DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
@@ -47,16 +47,16 @@ CREATE TABLE `accounts_collect_entry` (
 --
 
 CREATE TABLE `agent_creation` (
-  `id` int NOT NULL,
-  `agent_code` varchar(100) COLLATE utf8mb4_general_ci NOT NULL,
-  `agent_name` varchar(100) COLLATE utf8mb4_general_ci NOT NULL,
-  `mobile1` varchar(100) COLLATE utf8mb4_general_ci NOT NULL,
-  `mobile2` varchar(100) COLLATE utf8mb4_general_ci NOT NULL,
-  `area` varchar(100) COLLATE utf8mb4_general_ci NOT NULL,
-  `occupation` varchar(100) COLLATE utf8mb4_general_ci NOT NULL,
-  `insert_login_id` varchar(100) COLLATE utf8mb4_general_ci NOT NULL,
-  `update_login_id` varchar(100) COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `created_date` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `id` int(11) NOT NULL,
+  `agent_code` varchar(100) NOT NULL,
+  `agent_name` varchar(100) NOT NULL,
+  `mobile1` varchar(100) NOT NULL,
+  `mobile2` varchar(100) NOT NULL,
+  `area` varchar(100) NOT NULL,
+  `occupation` varchar(100) NOT NULL,
+  `insert_login_id` varchar(100) NOT NULL,
+  `update_login_id` varchar(100) DEFAULT NULL,
+  `created_date` datetime NOT NULL DEFAULT current_timestamp(),
   `updated_date` date DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
@@ -67,15 +67,26 @@ CREATE TABLE `agent_creation` (
 --
 
 CREATE TABLE `area_creation` (
-  `id` int NOT NULL,
-  `branch_id` int NOT NULL,
-  `line_id` int NOT NULL,
-  `area_id` varchar(255) COLLATE utf8mb4_general_ci NOT NULL,
-  `status` int NOT NULL DEFAULT '1',
-  `insert_login_id` int NOT NULL,
-  `update_login_id` int DEFAULT NULL,
-  `created_on` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `id` int(11) NOT NULL,
+  `branch_id` int(11) NOT NULL,
+  `line_id` int(11) NOT NULL,
+  `status` int(11) NOT NULL DEFAULT 1,
+  `insert_login_id` int(11) NOT NULL,
+  `update_login_id` int(11) DEFAULT NULL,
+  `created_on` datetime NOT NULL DEFAULT current_timestamp(),
   `update_on` date DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `area_creation_area_name`
+--
+
+CREATE TABLE `area_creation_area_name` (
+  `id` int(11) NOT NULL,
+  `area_creation_id` int(25) NOT NULL,
+  `area_id` int(25) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -85,13 +96,13 @@ CREATE TABLE `area_creation` (
 --
 
 CREATE TABLE `area_name_creation` (
-  `id` int NOT NULL,
-  `areaname` varchar(200) COLLATE utf8mb4_general_ci NOT NULL,
-  `branch_id` int NOT NULL,
-  `status` int NOT NULL DEFAULT '1',
-  `insert_login_id` int NOT NULL,
-  `update_login_id` int DEFAULT NULL,
-  `created_on` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `id` int(11) NOT NULL,
+  `areaname` varchar(200) NOT NULL,
+  `branch_id` int(11) NOT NULL,
+  `status` int(11) NOT NULL DEFAULT 1,
+  `insert_login_id` int(11) NOT NULL,
+  `update_login_id` int(11) DEFAULT NULL,
+  `created_on` datetime NOT NULL DEFAULT current_timestamp(),
   `updated_on` date DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
@@ -102,7 +113,7 @@ CREATE TABLE `area_name_creation` (
 --
 
 CREATE TABLE `bank_clearance` (
-  `id` int NOT NULL COMMENT 'Primary Key',
+  `id` int(11) NOT NULL COMMENT 'Primary Key',
   `bank_id` varchar(255) DEFAULT NULL,
   `trans_date` date DEFAULT NULL,
   `narration` varchar(255) NOT NULL,
@@ -114,8 +125,8 @@ CREATE TABLE `bank_clearance` (
   `insert_login_id` varchar(255) DEFAULT NULL,
   `update_login_id` varchar(255) DEFAULT NULL,
   `created_date` datetime DEFAULT NULL,
-  `updated_date` datetime DEFAULT CURRENT_TIMESTAMP
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+  `updated_date` datetime DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 
 -- --------------------------------------------------------
 
@@ -124,19 +135,19 @@ CREATE TABLE `bank_clearance` (
 --
 
 CREATE TABLE `bank_creation` (
-  `id` int NOT NULL,
-  `bank_name` varchar(100) COLLATE utf8mb4_general_ci NOT NULL,
-  `bank_short_name` varchar(100) COLLATE utf8mb4_general_ci NOT NULL,
-  `account_number` varchar(100) COLLATE utf8mb4_general_ci NOT NULL,
-  `ifsc_code` varchar(100) COLLATE utf8mb4_general_ci NOT NULL,
-  `branch_name` varchar(100) COLLATE utf8mb4_general_ci NOT NULL,
-  `qr_code` varchar(100) COLLATE utf8mb4_general_ci NOT NULL,
-  `gpay` varchar(100) COLLATE utf8mb4_general_ci NOT NULL,
-  `under_branch` varchar(255) COLLATE utf8mb4_general_ci NOT NULL,
-  `status` varchar(100) COLLATE utf8mb4_general_ci NOT NULL DEFAULT '1',
-  `insert_login_id` varchar(100) COLLATE utf8mb4_general_ci NOT NULL,
-  `update_login_id` varchar(100) COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `delete_login_id` varchar(100) COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `id` int(11) NOT NULL,
+  `bank_name` varchar(100) NOT NULL,
+  `bank_short_name` varchar(100) NOT NULL,
+  `account_number` varchar(100) NOT NULL,
+  `ifsc_code` varchar(100) NOT NULL,
+  `branch_name` varchar(100) NOT NULL,
+  `qr_code` varchar(100) NOT NULL,
+  `gpay` varchar(100) NOT NULL,
+  `under_branch` varchar(255) NOT NULL,
+  `status` varchar(100) NOT NULL DEFAULT '1',
+  `insert_login_id` varchar(100) NOT NULL,
+  `update_login_id` varchar(100) DEFAULT NULL,
+  `delete_login_id` varchar(100) DEFAULT NULL,
   `created_date` datetime NOT NULL,
   `updated_date` date DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
@@ -148,17 +159,17 @@ CREATE TABLE `bank_creation` (
 --
 
 CREATE TABLE `bank_info` (
-  `id` int NOT NULL,
-  `cus_id` varchar(100) COLLATE utf8mb4_general_ci NOT NULL,
-  `aadhar_num` varchar(250) COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `cus_profile_id` varchar(255) COLLATE utf8mb4_general_ci NOT NULL,
-  `bank_name` varchar(100) COLLATE utf8mb4_general_ci NOT NULL,
-  `branch_name` varchar(100) COLLATE utf8mb4_general_ci NOT NULL,
-  `acc_holder_name` varchar(100) COLLATE utf8mb4_general_ci NOT NULL,
-  `acc_number` varchar(100) COLLATE utf8mb4_general_ci NOT NULL,
-  `ifsc_code` varchar(100) COLLATE utf8mb4_general_ci NOT NULL,
-  `insert_login_id` int NOT NULL,
-  `update_login_id` int DEFAULT NULL,
+  `id` int(11) NOT NULL,
+  `cus_id` varchar(100) NOT NULL,
+  `aadhar_num` varchar(250) DEFAULT NULL,
+  `cus_profile_id` varchar(255) NOT NULL,
+  `bank_name` varchar(100) NOT NULL,
+  `branch_name` varchar(100) NOT NULL,
+  `acc_holder_name` varchar(100) NOT NULL,
+  `acc_number` varchar(100) NOT NULL,
+  `ifsc_code` varchar(100) NOT NULL,
+  `insert_login_id` int(11) NOT NULL,
+  `update_login_id` int(11) DEFAULT NULL,
   `created_on` date DEFAULT NULL,
   `updated_on` date DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
@@ -170,24 +181,24 @@ CREATE TABLE `bank_info` (
 --
 
 CREATE TABLE `branch_creation` (
-  `id` int NOT NULL,
-  `company_name` varchar(255) COLLATE utf8mb4_general_ci NOT NULL,
-  `branch_code` varchar(50) COLLATE utf8mb4_general_ci NOT NULL,
-  `branch_name` varchar(100) COLLATE utf8mb4_general_ci NOT NULL,
-  `address` varchar(100) COLLATE utf8mb4_general_ci NOT NULL,
-  `state` int NOT NULL,
-  `district` int NOT NULL,
-  `taluk` int NOT NULL,
-  `place` varchar(100) COLLATE utf8mb4_general_ci NOT NULL,
-  `pincode` varchar(100) COLLATE utf8mb4_general_ci NOT NULL,
-  `email_id` varchar(100) COLLATE utf8mb4_general_ci NOT NULL,
-  `mobile_number` varchar(100) COLLATE utf8mb4_general_ci NOT NULL,
-  `whatsapp` varchar(100) COLLATE utf8mb4_general_ci NOT NULL,
-  `landline_code` varchar(50) COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `landline` varchar(100) COLLATE utf8mb4_general_ci NOT NULL,
-  `insert_login_id` int NOT NULL,
-  `update_login_id` int DEFAULT NULL,
-  `created_date` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `id` int(11) NOT NULL,
+  `company_name` varchar(255) NOT NULL,
+  `branch_code` varchar(50) NOT NULL,
+  `branch_name` varchar(100) NOT NULL,
+  `address` varchar(100) NOT NULL,
+  `state` int(11) NOT NULL,
+  `district` int(11) NOT NULL,
+  `taluk` int(11) NOT NULL,
+  `place` varchar(100) NOT NULL,
+  `pincode` varchar(100) NOT NULL,
+  `email_id` varchar(100) NOT NULL,
+  `mobile_number` varchar(100) NOT NULL,
+  `whatsapp` varchar(100) NOT NULL,
+  `landline_code` varchar(50) DEFAULT NULL,
+  `landline` varchar(100) NOT NULL,
+  `insert_login_id` int(11) NOT NULL,
+  `update_login_id` int(11) DEFAULT NULL,
+  `created_date` datetime NOT NULL DEFAULT current_timestamp(),
   `updated_date` date DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
@@ -198,11 +209,11 @@ CREATE TABLE `branch_creation` (
 --
 
 CREATE TABLE `cash_tally_modes` (
-  `id` int NOT NULL COMMENT 'Primary Key',
+  `id` int(11) NOT NULL COMMENT 'Primary Key',
   `modes` varchar(255) DEFAULT NULL,
   `bankcredit` varchar(10) NOT NULL DEFAULT '1',
   `bankdebit` varchar(10) NOT NULL DEFAULT '1'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 
 --
 -- Dumping data for table `cash_tally_modes`
@@ -226,18 +237,18 @@ INSERT INTO `cash_tally_modes` (`id`, `modes`, `bankcredit`, `bankdebit`) VALUES
 --
 
 CREATE TABLE `cheque_info` (
-  `id` int NOT NULL,
-  `cus_id` varchar(100) COLLATE utf8mb4_general_ci NOT NULL,
-  `cus_profile_id` int NOT NULL,
-  `holder_type` int NOT NULL,
-  `holder_name` varchar(150) COLLATE utf8mb4_general_ci NOT NULL,
-  `holder_id` varchar(25) COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `relationship` varchar(50) COLLATE utf8mb4_general_ci NOT NULL,
-  `bank_name` varchar(150) COLLATE utf8mb4_general_ci NOT NULL,
-  `cheque_cnt` int NOT NULL,
-  `upload` varchar(255) COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `insert_login_id` int NOT NULL,
-  `update_login_id` int DEFAULT NULL,
+  `id` int(11) NOT NULL,
+  `cus_id` varchar(100) NOT NULL,
+  `cus_profile_id` int(11) NOT NULL,
+  `holder_type` int(11) NOT NULL,
+  `holder_name` varchar(150) NOT NULL,
+  `holder_id` varchar(25) DEFAULT NULL,
+  `relationship` varchar(50) NOT NULL,
+  `bank_name` varchar(150) NOT NULL,
+  `cheque_cnt` int(11) NOT NULL,
+  `upload` varchar(255) DEFAULT NULL,
+  `insert_login_id` int(11) NOT NULL,
+  `update_login_id` int(11) DEFAULT NULL,
   `created_on` date DEFAULT NULL,
   `updated_on` date DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
@@ -249,18 +260,18 @@ CREATE TABLE `cheque_info` (
 --
 
 CREATE TABLE `cheque_no_list` (
-  `id` int NOT NULL,
-  `cus_id` varchar(250) COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `cus_profile_id` int DEFAULT NULL,
-  `cheque_info_id` int DEFAULT NULL,
-  `cheque_no` varchar(200) COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `used_status` int NOT NULL DEFAULT '0',
-  `noc_status` int NOT NULL DEFAULT '0',
+  `id` int(11) NOT NULL,
+  `cus_id` varchar(250) DEFAULT NULL,
+  `cus_profile_id` int(11) DEFAULT NULL,
+  `cheque_info_id` int(11) DEFAULT NULL,
+  `cheque_no` varchar(200) DEFAULT NULL,
+  `used_status` int(11) NOT NULL DEFAULT 0,
+  `noc_status` int(11) NOT NULL DEFAULT 0,
   `date_of_noc` date DEFAULT NULL,
-  `noc_member` varchar(150) COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `noc_relationship` varchar(150) COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `insert_login_id` int DEFAULT NULL,
-  `update_login_id` int DEFAULT NULL,
+  `noc_member` varchar(150) DEFAULT NULL,
+  `noc_relationship` varchar(150) DEFAULT NULL,
+  `insert_login_id` int(11) DEFAULT NULL,
+  `update_login_id` int(11) DEFAULT NULL,
   `created_on` date DEFAULT NULL,
   `updated_on` date DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
@@ -272,11 +283,11 @@ CREATE TABLE `cheque_no_list` (
 --
 
 CREATE TABLE `cheque_upd` (
-  `id` int NOT NULL,
-  `cus_id` varchar(250) COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `cus_profile_id` int DEFAULT NULL,
-  `cheque_info_id` int DEFAULT NULL,
-  `uploads` varchar(255) COLLATE utf8mb4_general_ci DEFAULT NULL
+  `id` int(11) NOT NULL,
+  `cus_id` varchar(250) DEFAULT NULL,
+  `cus_profile_id` int(11) DEFAULT NULL,
+  `cheque_info_id` int(11) DEFAULT NULL,
+  `uploads` varchar(255) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -286,9 +297,9 @@ CREATE TABLE `cheque_upd` (
 --
 
 CREATE TABLE `collection` (
-  `id` int NOT NULL COMMENT 'Primary Key',
+  `id` int(11) NOT NULL COMMENT 'Primary Key',
   `coll_code` varchar(255) DEFAULT NULL,
-  `cus_profile_id` int DEFAULT NULL,
+  `cus_profile_id` int(11) DEFAULT NULL,
   `cus_id` varchar(255) DEFAULT NULL,
   `cus_name` varchar(255) DEFAULT NULL,
   `branch` varchar(255) DEFAULT NULL,
@@ -311,7 +322,7 @@ CREATE TABLE `collection` (
   `cheque_no` varchar(255) DEFAULT NULL,
   `trans_id` varchar(255) DEFAULT NULL,
   `trans_date` date DEFAULT NULL,
-  `coll_date` datetime DEFAULT CURRENT_TIMESTAMP,
+  `coll_date` datetime DEFAULT current_timestamp(),
   `due_amt_track` varchar(255) NOT NULL DEFAULT '0',
   `princ_amt_track` varchar(255) DEFAULT '0',
   `int_amt_track` varchar(255) DEFAULT '0',
@@ -324,13 +335,13 @@ CREATE TABLE `collection` (
   `penalty_waiver` varchar(255) NOT NULL DEFAULT '0',
   `coll_charge_waiver` varchar(255) NOT NULL DEFAULT '0',
   `total_waiver` varchar(255) NOT NULL DEFAULT '0',
-  `collect_sts` int NOT NULL DEFAULT '0',
+  `collect_sts` int(11) NOT NULL DEFAULT 0,
   `insert_login_id` varchar(255) DEFAULT NULL,
   `update_login_id` varchar(255) DEFAULT NULL,
   `delete_login_id` varchar(255) DEFAULT NULL,
   `created_date` datetime DEFAULT NULL COMMENT 'Create Time',
-  `updated_date` datetime DEFAULT CURRENT_TIMESTAMP COMMENT 'Update Time'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+  `updated_date` datetime DEFAULT current_timestamp() COMMENT 'Update Time'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 
 -- --------------------------------------------------------
 
@@ -339,8 +350,8 @@ CREATE TABLE `collection` (
 --
 
 CREATE TABLE `collection_charges` (
-  `id` int NOT NULL COMMENT 'Primary Key',
-  `cus_profile_id` int DEFAULT NULL,
+  `id` int(11) NOT NULL COMMENT 'Primary Key',
+  `cus_profile_id` int(11) DEFAULT NULL,
   `cus_id` varchar(255) DEFAULT NULL,
   `coll_date` varchar(255) DEFAULT NULL,
   `coll_purpose` varchar(255) DEFAULT NULL,
@@ -348,12 +359,12 @@ CREATE TABLE `collection_charges` (
   `paid_date` varchar(255) DEFAULT NULL,
   `paid_amnt` varchar(255) DEFAULT '0',
   `waiver_amnt` varchar(255) DEFAULT '0',
-  `status` int DEFAULT NULL,
+  `status` int(11) DEFAULT NULL,
   `insert_login_id` varchar(255) DEFAULT NULL,
   `update_login_id` varchar(255) DEFAULT NULL,
   `created_date` datetime DEFAULT NULL COMMENT 'Create Time',
-  `updated_date` datetime DEFAULT CURRENT_TIMESTAMP COMMENT 'Update Time'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+  `updated_date` datetime DEFAULT current_timestamp() COMMENT 'Update Time'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 
 -- --------------------------------------------------------
 
@@ -362,24 +373,24 @@ CREATE TABLE `collection_charges` (
 --
 
 CREATE TABLE `company_creation` (
-  `id` int NOT NULL,
-  `company_name` varchar(255) COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `address` varchar(255) COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `state` int DEFAULT NULL,
-  `district` int DEFAULT NULL,
-  `taluk` int DEFAULT NULL,
-  `place` varchar(255) COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `pincode` varchar(255) COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `website` varchar(255) COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `mailid` varchar(255) COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `mobile` varchar(255) COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `whatsapp` varchar(255) COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `landline_code` varchar(100) COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `landline` varchar(255) COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `status` int NOT NULL DEFAULT '1',
-  `insert_user_id` int DEFAULT NULL,
-  `update_user_id` int DEFAULT NULL,
-  `created_date` datetime DEFAULT CURRENT_TIMESTAMP,
+  `id` int(11) NOT NULL,
+  `company_name` varchar(255) DEFAULT NULL,
+  `address` varchar(255) DEFAULT NULL,
+  `state` int(11) DEFAULT NULL,
+  `district` int(11) DEFAULT NULL,
+  `taluk` int(11) DEFAULT NULL,
+  `place` varchar(255) DEFAULT NULL,
+  `pincode` varchar(255) DEFAULT NULL,
+  `website` varchar(255) DEFAULT NULL,
+  `mailid` varchar(255) DEFAULT NULL,
+  `mobile` varchar(255) DEFAULT NULL,
+  `whatsapp` varchar(255) DEFAULT NULL,
+  `landline_code` varchar(100) DEFAULT NULL,
+  `landline` varchar(255) DEFAULT NULL,
+  `status` int(11) NOT NULL DEFAULT 1,
+  `insert_user_id` int(11) DEFAULT NULL,
+  `update_user_id` int(11) DEFAULT NULL,
+  `created_date` datetime DEFAULT current_timestamp(),
   `updated_date` date DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
@@ -390,14 +401,14 @@ CREATE TABLE `company_creation` (
 --
 
 CREATE TABLE `customer_data` (
-  `id` int NOT NULL,
-  `cus_name` varchar(100) COLLATE utf8mb4_general_ci NOT NULL,
-  `area` varchar(100) COLLATE utf8mb4_general_ci NOT NULL,
-  `mobile` varchar(100) COLLATE utf8mb4_general_ci NOT NULL,
-  `loan_cat` varchar(100) COLLATE utf8mb4_general_ci NOT NULL,
-  `loan_amount` varchar(100) COLLATE utf8mb4_general_ci NOT NULL,
-  `insert_login_id` int NOT NULL,
-  `update_login_id` int DEFAULT NULL,
+  `id` int(11) NOT NULL,
+  `cus_name` varchar(100) NOT NULL,
+  `area` varchar(100) NOT NULL,
+  `mobile` varchar(100) NOT NULL,
+  `loan_cat` varchar(100) NOT NULL,
+  `loan_amount` varchar(100) NOT NULL,
+  `insert_login_id` int(11) NOT NULL,
+  `update_login_id` int(11) DEFAULT NULL,
   `created_on` date DEFAULT NULL,
   `updated_on` date DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
@@ -409,37 +420,37 @@ CREATE TABLE `customer_data` (
 --
 
 CREATE TABLE `customer_profile` (
-  `id` int NOT NULL,
-  `cus_id` varchar(250) COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `aadhar_num` varchar(100) COLLATE utf8mb4_general_ci NOT NULL,
-  `cus_name` varchar(100) COLLATE utf8mb4_general_ci NOT NULL,
-  `gender` varchar(50) COLLATE utf8mb4_general_ci NOT NULL,
-  `dob` varchar(50) COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `age` varchar(100) COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `mobile1` varchar(100) COLLATE utf8mb4_general_ci NOT NULL,
-  `mobile2` varchar(100) COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `whatsapp_no` varchar(50) COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `pic` varchar(100) COLLATE utf8mb4_general_ci NOT NULL,
-  `guarantor_name` varchar(100) COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `gu_pic` varchar(100) COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `cus_data` varchar(100) COLLATE utf8mb4_general_ci NOT NULL,
-  `cus_status` varchar(100) COLLATE utf8mb4_general_ci NOT NULL,
-  `res_type` varchar(100) COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `res_detail` varchar(100) COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `res_address` varchar(100) COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `native_address` varchar(100) COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `occupation` varchar(100) COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `occ_detail` varchar(100) COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `occ_income` varchar(100) COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `occ_address` varchar(100) COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `area_confirm` varchar(100) COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `area` int DEFAULT NULL,
-  `line` varchar(100) COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `cus_limit` varchar(100) COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `about_cus` varchar(100) COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `remark` varchar(255) COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `insert_login_id` int NOT NULL,
-  `update_login_id` int DEFAULT NULL,
+  `id` int(11) NOT NULL,
+  `cus_id` varchar(250) DEFAULT NULL,
+  `aadhar_num` varchar(100) NOT NULL,
+  `cus_name` varchar(100) NOT NULL,
+  `gender` varchar(50) NOT NULL,
+  `dob` varchar(50) DEFAULT NULL,
+  `age` varchar(100) DEFAULT NULL,
+  `mobile1` varchar(100) NOT NULL,
+  `mobile2` varchar(100) DEFAULT NULL,
+  `whatsapp_no` varchar(50) DEFAULT NULL,
+  `pic` varchar(100) NOT NULL,
+  `guarantor_name` varchar(100) DEFAULT NULL,
+  `gu_pic` varchar(100) DEFAULT NULL,
+  `cus_data` varchar(100) NOT NULL,
+  `cus_status` varchar(100) NOT NULL,
+  `res_type` varchar(100) DEFAULT NULL,
+  `res_detail` varchar(100) DEFAULT NULL,
+  `res_address` varchar(100) DEFAULT NULL,
+  `native_address` varchar(100) DEFAULT NULL,
+  `occupation` varchar(100) DEFAULT NULL,
+  `occ_detail` varchar(100) DEFAULT NULL,
+  `occ_income` varchar(100) DEFAULT NULL,
+  `occ_address` varchar(100) DEFAULT NULL,
+  `area_confirm` varchar(100) DEFAULT NULL,
+  `area` int(11) DEFAULT NULL,
+  `line` varchar(100) DEFAULT NULL,
+  `cus_limit` varchar(100) DEFAULT NULL,
+  `about_cus` varchar(100) DEFAULT NULL,
+  `remark` varchar(255) DEFAULT NULL,
+  `insert_login_id` int(11) NOT NULL,
+  `update_login_id` int(11) DEFAULT NULL,
   `created_on` datetime DEFAULT NULL,
   `updated_on` date DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
@@ -451,17 +462,17 @@ CREATE TABLE `customer_profile` (
 --
 
 CREATE TABLE `customer_status` (
-  `id` int NOT NULL,
-  `cus_id` varchar(100) COLLATE utf8mb4_general_ci NOT NULL,
-  `cus_profile_id` int NOT NULL,
-  `loan_calculation_id` int DEFAULT NULL,
-  `coll_status` varchar(250) COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `status` int NOT NULL,
-  `sub_status` int DEFAULT NULL,
+  `id` int(11) NOT NULL,
+  `cus_id` varchar(100) NOT NULL,
+  `cus_profile_id` int(11) NOT NULL,
+  `loan_calculation_id` int(11) DEFAULT NULL,
+  `coll_status` varchar(250) DEFAULT NULL,
+  `status` int(11) NOT NULL,
+  `sub_status` int(11) DEFAULT NULL,
   `closed_date` date DEFAULT NULL,
-  `remark` varchar(255) COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `insert_login_id` int NOT NULL,
-  `update_login_id` int DEFAULT NULL,
+  `remark` varchar(255) DEFAULT NULL,
+  `insert_login_id` int(11) NOT NULL,
+  `update_login_id` int(11) DEFAULT NULL,
   `created_on` date NOT NULL,
   `updated_on` date DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
@@ -473,10 +484,10 @@ CREATE TABLE `customer_status` (
 --
 
 CREATE TABLE `designation` (
-  `id` int NOT NULL,
-  `designation` varchar(150) COLLATE utf8mb4_general_ci NOT NULL,
-  `insert_login_id` int NOT NULL,
-  `update_login_id` int DEFAULT NULL,
+  `id` int(11) NOT NULL,
+  `designation` varchar(150) NOT NULL,
+  `insert_login_id` int(11) NOT NULL,
+  `update_login_id` int(11) DEFAULT NULL,
   `created_on` date DEFAULT NULL,
   `updated_on` date DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
@@ -488,10 +499,10 @@ CREATE TABLE `designation` (
 --
 
 CREATE TABLE `districts` (
-  `id` int NOT NULL,
-  `state_id` int NOT NULL,
-  `district_name` varchar(50) COLLATE utf8mb4_general_ci NOT NULL,
-  `status` int NOT NULL DEFAULT '1'
+  `id` int(11) NOT NULL,
+  `state_id` int(11) NOT NULL,
+  `district_name` varchar(50) NOT NULL,
+  `status` int(11) NOT NULL DEFAULT 1
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -547,20 +558,20 @@ INSERT INTO `districts` (`id`, `state_id`, `district_name`, `status`) VALUES
 --
 
 CREATE TABLE `document_info` (
-  `id` int NOT NULL,
-  `cus_id` varchar(100) COLLATE utf8mb4_general_ci NOT NULL,
-  `cus_profile_id` int NOT NULL,
-  `doc_name` varchar(150) COLLATE utf8mb4_general_ci NOT NULL,
-  `doc_type` int NOT NULL,
-  `holder_name` int NOT NULL,
-  `relationship` varchar(50) COLLATE utf8mb4_general_ci NOT NULL,
-  `upload` varchar(100) COLLATE utf8mb4_general_ci NOT NULL,
-  `noc_status` int NOT NULL DEFAULT '0',
+  `id` int(11) NOT NULL,
+  `cus_id` varchar(100) NOT NULL,
+  `cus_profile_id` int(11) NOT NULL,
+  `doc_name` varchar(150) NOT NULL,
+  `doc_type` int(11) NOT NULL,
+  `holder_name` int(11) NOT NULL,
+  `relationship` varchar(50) NOT NULL,
+  `upload` varchar(100) NOT NULL,
+  `noc_status` int(11) NOT NULL DEFAULT 0,
   `date_of_noc` date DEFAULT NULL,
-  `noc_member` varchar(150) COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `noc_relationship` varchar(150) COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `insert_login_id` int NOT NULL,
-  `update_login_id` int DEFAULT NULL,
+  `noc_member` varchar(150) DEFAULT NULL,
+  `noc_relationship` varchar(150) DEFAULT NULL,
+  `insert_login_id` int(11) NOT NULL,
+  `update_login_id` int(11) DEFAULT NULL,
   `created_on` date DEFAULT NULL,
   `updated_on` date DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
@@ -572,10 +583,10 @@ CREATE TABLE `document_info` (
 --
 
 CREATE TABLE `document_need` (
-  `id` int NOT NULL,
-  `cus_profile_id` int NOT NULL,
-  `cus_id` varchar(100) COLLATE utf8mb4_general_ci NOT NULL,
-  `document_name` varchar(255) COLLATE utf8mb4_general_ci NOT NULL
+  `id` int(11) NOT NULL,
+  `cus_profile_id` int(11) NOT NULL,
+  `cus_id` varchar(100) NOT NULL,
+  `document_name` varchar(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -585,22 +596,22 @@ CREATE TABLE `document_need` (
 --
 
 CREATE TABLE `endorsement_info` (
-  `id` int NOT NULL,
-  `cus_id` varchar(100) COLLATE utf8mb4_general_ci NOT NULL,
-  `cus_profile_id` int NOT NULL,
-  `owner_name` int NOT NULL,
-  `relationship` varchar(50) COLLATE utf8mb4_general_ci NOT NULL,
-  `vehicle_details` varchar(255) COLLATE utf8mb4_general_ci NOT NULL,
-  `endorsement_name` varchar(250) COLLATE utf8mb4_general_ci NOT NULL,
-  `key_original` varchar(50) COLLATE utf8mb4_general_ci NOT NULL,
-  `rc_original` varchar(50) COLLATE utf8mb4_general_ci NOT NULL,
-  `upload` varchar(255) COLLATE utf8mb4_general_ci NOT NULL,
-  `noc_status` int NOT NULL DEFAULT '0',
+  `id` int(11) NOT NULL,
+  `cus_id` varchar(100) NOT NULL,
+  `cus_profile_id` int(11) NOT NULL,
+  `owner_name` int(11) NOT NULL,
+  `relationship` varchar(50) NOT NULL,
+  `vehicle_details` varchar(255) NOT NULL,
+  `endorsement_name` varchar(250) NOT NULL,
+  `key_original` varchar(50) NOT NULL,
+  `rc_original` varchar(50) NOT NULL,
+  `upload` varchar(255) NOT NULL,
+  `noc_status` int(11) NOT NULL DEFAULT 0,
   `date_of_noc` date DEFAULT NULL,
-  `noc_member` varchar(150) COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `noc_relationship` varchar(150) COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `insert_login_id` int NOT NULL,
-  `update_login_id` int DEFAULT NULL,
+  `noc_member` varchar(150) DEFAULT NULL,
+  `noc_relationship` varchar(150) DEFAULT NULL,
+  `insert_login_id` int(11) NOT NULL,
+  `update_login_id` int(11) DEFAULT NULL,
   `created_on` date DEFAULT NULL,
   `updated_on` date DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
@@ -612,18 +623,18 @@ CREATE TABLE `endorsement_info` (
 --
 
 CREATE TABLE `existing_customer` (
-  `id` int NOT NULL,
-  `cus_id` varchar(100) COLLATE utf8mb4_general_ci NOT NULL,
-  `cus_profile_id` int NOT NULL,
-  `cus_name` varchar(100) COLLATE utf8mb4_general_ci NOT NULL,
-  `area` varchar(100) COLLATE utf8mb4_general_ci NOT NULL,
-  `mobile1` varchar(100) COLLATE utf8mb4_general_ci NOT NULL,
-  `linename` varchar(100) COLLATE utf8mb4_general_ci NOT NULL,
-  `branch_name` varchar(100) COLLATE utf8mb4_general_ci NOT NULL,
-  `c_sts` varchar(100) COLLATE utf8mb4_general_ci NOT NULL,
-  `c_substs` varchar(100) COLLATE utf8mb4_general_ci NOT NULL,
-  `existing_detail` varchar(250) COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `insert_login_id` int NOT NULL,
+  `id` int(11) NOT NULL,
+  `cus_id` varchar(100) NOT NULL,
+  `cus_profile_id` int(11) NOT NULL,
+  `cus_name` varchar(100) NOT NULL,
+  `area` varchar(100) NOT NULL,
+  `mobile1` varchar(100) NOT NULL,
+  `linename` varchar(100) NOT NULL,
+  `branch_name` varchar(100) NOT NULL,
+  `c_sts` varchar(100) NOT NULL,
+  `c_substs` varchar(100) NOT NULL,
+  `existing_detail` varchar(250) DEFAULT NULL,
+  `insert_login_id` int(11) NOT NULL,
   `created_on` datetime DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
@@ -634,19 +645,19 @@ CREATE TABLE `existing_customer` (
 --
 
 CREATE TABLE `expenses` (
-  `id` int NOT NULL,
-  `coll_mode` int NOT NULL,
-  `bank_id` varchar(11) COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `invoice_id` varchar(100) COLLATE utf8mb4_general_ci NOT NULL,
-  `branch` int NOT NULL,
-  `expenses_category` varchar(50) COLLATE utf8mb4_general_ci NOT NULL,
-  `agent_id` varchar(50) COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `total_issued` varchar(50) COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `total_amount` varchar(100) COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `description` varchar(255) COLLATE utf8mb4_general_ci NOT NULL,
-  `amount` varchar(150) COLLATE utf8mb4_general_ci NOT NULL,
-  `trans_id` varchar(150) COLLATE utf8mb4_general_ci NOT NULL,
-  `insert_login_id` int NOT NULL,
+  `id` int(11) NOT NULL,
+  `coll_mode` int(11) NOT NULL,
+  `bank_id` varchar(11) DEFAULT NULL,
+  `invoice_id` varchar(100) NOT NULL,
+  `branch` int(11) NOT NULL,
+  `expenses_category` varchar(50) NOT NULL,
+  `agent_id` varchar(50) DEFAULT NULL,
+  `total_issued` varchar(50) DEFAULT NULL,
+  `total_amount` varchar(100) DEFAULT NULL,
+  `description` varchar(255) NOT NULL,
+  `amount` varchar(150) NOT NULL,
+  `trans_id` varchar(150) NOT NULL,
+  `insert_login_id` int(11) NOT NULL,
   `created_on` datetime DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
@@ -657,19 +668,19 @@ CREATE TABLE `expenses` (
 --
 
 CREATE TABLE `family_info` (
-  `id` int NOT NULL,
-  `cus_id` varchar(100) COLLATE utf8mb4_general_ci NOT NULL,
-  `fam_name` varchar(100) COLLATE utf8mb4_general_ci NOT NULL,
-  `fam_relationship` varchar(100) COLLATE utf8mb4_general_ci NOT NULL,
-  `remarks` varchar(250) COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `fam_age` varchar(100) COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `fam_live` varchar(100) COLLATE utf8mb4_general_ci NOT NULL,
-  `fam_occupation` varchar(100) COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `fam_aadhar` varchar(100) COLLATE utf8mb4_general_ci NOT NULL,
-  `fam_mobile` varchar(100) COLLATE utf8mb4_general_ci NOT NULL,
-  `other_details` varchar(255) COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `insert_login_id` int NOT NULL,
-  `update_login_id` int DEFAULT NULL,
+  `id` int(11) NOT NULL,
+  `cus_id` varchar(100) NOT NULL,
+  `fam_name` varchar(100) NOT NULL,
+  `fam_relationship` varchar(100) NOT NULL,
+  `remarks` varchar(250) DEFAULT NULL,
+  `fam_age` varchar(100) DEFAULT NULL,
+  `fam_live` varchar(100) NOT NULL,
+  `fam_occupation` varchar(100) DEFAULT NULL,
+  `fam_aadhar` varchar(100) NOT NULL,
+  `fam_mobile` varchar(100) NOT NULL,
+  `other_details` varchar(255) DEFAULT NULL,
+  `insert_login_id` int(11) NOT NULL,
+  `update_login_id` int(11) DEFAULT NULL,
   `created_on` date DEFAULT NULL,
   `updated_on` date DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
@@ -681,19 +692,19 @@ CREATE TABLE `family_info` (
 --
 
 CREATE TABLE `gold_info` (
-  `id` int NOT NULL,
-  `cus_id` varchar(100) COLLATE utf8mb4_general_ci NOT NULL,
-  `cus_profile_id` int NOT NULL,
-  `gold_type` varchar(150) COLLATE utf8mb4_general_ci NOT NULL,
-  `purity` varchar(150) COLLATE utf8mb4_general_ci NOT NULL,
-  `weight` varchar(150) COLLATE utf8mb4_general_ci NOT NULL,
-  `value` varchar(150) COLLATE utf8mb4_general_ci NOT NULL,
-  `noc_status` int NOT NULL DEFAULT '0',
+  `id` int(11) NOT NULL,
+  `cus_id` varchar(100) NOT NULL,
+  `cus_profile_id` int(11) NOT NULL,
+  `gold_type` varchar(150) NOT NULL,
+  `purity` varchar(150) NOT NULL,
+  `weight` varchar(150) NOT NULL,
+  `value` varchar(150) NOT NULL,
+  `noc_status` int(11) NOT NULL DEFAULT 0,
   `date_of_noc` date DEFAULT NULL,
-  `noc_member` varchar(150) COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `noc_relationship` varchar(150) COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `insert_login_id` int NOT NULL,
-  `update_login_id` int DEFAULT NULL,
+  `noc_member` varchar(150) DEFAULT NULL,
+  `noc_relationship` varchar(150) DEFAULT NULL,
+  `insert_login_id` int(11) NOT NULL,
+  `update_login_id` int(11) DEFAULT NULL,
   `created_on` date DEFAULT NULL,
   `updated_on` date DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
@@ -705,17 +716,17 @@ CREATE TABLE `gold_info` (
 --
 
 CREATE TABLE `guarantor_info` (
-  `id` int NOT NULL,
-  `cus_id` varchar(255) COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `relationship_type` varchar(250) COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `guarantor_name` varchar(255) COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `family_id` varchar(100) COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `other_mem_id` int DEFAULT NULL,
-  `guarantor_relationship` varchar(250) COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `details` varchar(100) COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `gu_pic` varchar(100) COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `insert_login_id` int DEFAULT NULL,
-  `update_login_id` int DEFAULT NULL,
+  `id` int(11) NOT NULL,
+  `cus_id` varchar(255) DEFAULT NULL,
+  `relationship_type` varchar(250) DEFAULT NULL,
+  `guarantor_name` varchar(255) DEFAULT NULL,
+  `family_id` varchar(100) DEFAULT NULL,
+  `other_mem_id` int(11) DEFAULT NULL,
+  `guarantor_relationship` varchar(250) DEFAULT NULL,
+  `details` varchar(100) DEFAULT NULL,
+  `gu_pic` varchar(100) DEFAULT NULL,
+  `insert_login_id` int(11) DEFAULT NULL,
+  `update_login_id` int(11) DEFAULT NULL,
   `updated_on` date DEFAULT NULL,
   `created_on` date DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
@@ -727,16 +738,16 @@ CREATE TABLE `guarantor_info` (
 --
 
 CREATE TABLE `kyc_info` (
-  `id` int NOT NULL,
-  `cus_id` varchar(100) COLLATE utf8mb4_general_ci NOT NULL,
-  `cus_profile_id` varchar(255) COLLATE utf8mb4_general_ci NOT NULL,
-  `proof_of` varchar(100) COLLATE utf8mb4_general_ci NOT NULL,
-  `fam_mem` int DEFAULT NULL,
-  `proof` int NOT NULL,
-  `proof_detail` varchar(100) COLLATE utf8mb4_general_ci NOT NULL,
-  `upload` varchar(100) COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `insert_login_id` int NOT NULL,
-  `update_login_id` int DEFAULT NULL,
+  `id` int(11) NOT NULL,
+  `cus_id` varchar(100) NOT NULL,
+  `cus_profile_id` varchar(255) NOT NULL,
+  `proof_of` varchar(100) NOT NULL,
+  `fam_mem` int(11) DEFAULT NULL,
+  `proof` int(11) NOT NULL,
+  `proof_detail` varchar(100) NOT NULL,
+  `upload` varchar(100) DEFAULT NULL,
+  `insert_login_id` int(11) NOT NULL,
+  `update_login_id` int(11) DEFAULT NULL,
   `created_on` date DEFAULT NULL,
   `updated_on` date DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
@@ -748,13 +759,13 @@ CREATE TABLE `kyc_info` (
 --
 
 CREATE TABLE `line_name_creation` (
-  `id` int NOT NULL,
-  `linename` varchar(150) COLLATE utf8mb4_general_ci NOT NULL,
-  `branch_id` int NOT NULL,
-  `status` int NOT NULL DEFAULT '1',
-  `insert_login_id` int NOT NULL,
-  `update_login_id` int DEFAULT NULL,
-  `created_on` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `id` int(11) NOT NULL,
+  `linename` varchar(150) NOT NULL,
+  `branch_id` int(11) NOT NULL,
+  `status` int(11) NOT NULL DEFAULT 1,
+  `insert_login_id` int(11) NOT NULL,
+  `update_login_id` int(11) DEFAULT NULL,
+  `created_on` datetime NOT NULL DEFAULT current_timestamp(),
   `updated_on` date DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
@@ -765,10 +776,10 @@ CREATE TABLE `line_name_creation` (
 --
 
 CREATE TABLE `loan_category` (
-  `id` int NOT NULL,
-  `loan_category` varchar(150) COLLATE utf8mb4_general_ci NOT NULL,
-  `insert_login_id` int NOT NULL,
-  `update_login_id` int DEFAULT NULL,
+  `id` int(11) NOT NULL,
+  `loan_category` varchar(150) NOT NULL,
+  `insert_login_id` int(11) NOT NULL,
+  `update_login_id` int(11) DEFAULT NULL,
   `created_on` date DEFAULT NULL,
   `updated_on` date DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
@@ -780,27 +791,27 @@ CREATE TABLE `loan_category` (
 --
 
 CREATE TABLE `loan_category_creation` (
-  `id` int NOT NULL,
-  `loan_category` int NOT NULL,
-  `loan_limit` varchar(100) COLLATE utf8mb4_general_ci NOT NULL,
-  `due_method` varchar(50) COLLATE utf8mb4_general_ci NOT NULL,
-  `due_type` varchar(50) COLLATE utf8mb4_general_ci NOT NULL,
-  `interest_calculate` varchar(11) COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `interest_rate_min` varchar(50) COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `interest_rate_max` varchar(50) COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `due_period_min` varchar(50) COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `due_period_max` varchar(50) COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `document_charge_type` varchar(100) COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `doc_charge_min` varchar(50) COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `doc_charge_max` varchar(50) COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `processing_fees_type` varchar(100) COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `processing_fee_min` varchar(50) COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `processing_fee_max` varchar(100) COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `penalty_type` varchar(100) COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `overdue_penalty` varchar(100) COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `scheme_name` varchar(150) COLLATE utf8mb4_general_ci NOT NULL,
-  `insert_login_id` int NOT NULL,
-  `update_login_id` int DEFAULT NULL,
+  `id` int(11) NOT NULL,
+  `loan_category` int(11) NOT NULL,
+  `loan_limit` varchar(100) NOT NULL,
+  `due_method` varchar(50) NOT NULL,
+  `due_type` varchar(50) NOT NULL,
+  `interest_calculate` varchar(11) DEFAULT NULL,
+  `interest_rate_min` varchar(50) DEFAULT NULL,
+  `interest_rate_max` varchar(50) DEFAULT NULL,
+  `due_period_min` varchar(50) DEFAULT NULL,
+  `due_period_max` varchar(50) DEFAULT NULL,
+  `document_charge_type` varchar(100) DEFAULT NULL,
+  `doc_charge_min` varchar(50) DEFAULT NULL,
+  `doc_charge_max` varchar(50) DEFAULT NULL,
+  `processing_fees_type` varchar(100) DEFAULT NULL,
+  `processing_fee_min` varchar(50) DEFAULT NULL,
+  `processing_fee_max` varchar(100) DEFAULT NULL,
+  `penalty_type` varchar(100) DEFAULT NULL,
+  `overdue_penalty` varchar(100) DEFAULT NULL,
+  `scheme_name` varchar(150) NOT NULL,
+  `insert_login_id` int(11) NOT NULL,
+  `update_login_id` int(11) DEFAULT NULL,
   `created_on` date DEFAULT NULL,
   `updated_on` date DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
@@ -812,42 +823,42 @@ CREATE TABLE `loan_category_creation` (
 --
 
 CREATE TABLE `loan_entry_loan_calculation` (
-  `id` int NOT NULL,
-  `cus_profile_id` int NOT NULL,
-  `cus_id` varchar(100) COLLATE utf8mb4_general_ci NOT NULL,
-  `loan_id` varchar(50) COLLATE utf8mb4_general_ci NOT NULL,
-  `loan_category` varchar(50) COLLATE utf8mb4_general_ci NOT NULL,
-  `category_info` varchar(255) COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `loan_amount` int NOT NULL,
-  `profit_type` int NOT NULL,
-  `due_method` varchar(50) COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `due_type` varchar(50) COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `interest_calculate` varchar(100) COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `profit_method` varchar(50) COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `scheme_due_method` varchar(50) COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `scheme_day` varchar(50) COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `scheme_name` varchar(100) COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `interest_rate` int NOT NULL,
-  `due_period` int NOT NULL,
-  `doc_charge` int NOT NULL,
-  `processing_fees` int NOT NULL,
-  `loan_amnt` int NOT NULL,
-  `principal_amnt` int NOT NULL,
-  `interest_amnt` int NOT NULL,
-  `total_amnt` varchar(11) COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `due_amnt` varchar(11) COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `doc_charge_calculate` int NOT NULL,
-  `processing_fees_calculate` int NOT NULL,
-  `net_cash` int NOT NULL,
+  `id` int(11) NOT NULL,
+  `cus_profile_id` int(11) NOT NULL,
+  `cus_id` varchar(100) NOT NULL,
+  `loan_id` varchar(50) NOT NULL,
+  `loan_category` varchar(50) NOT NULL,
+  `category_info` varchar(255) DEFAULT NULL,
+  `loan_amount` int(11) NOT NULL,
+  `profit_type` int(11) NOT NULL,
+  `due_method` varchar(50) DEFAULT NULL,
+  `due_type` varchar(50) DEFAULT NULL,
+  `interest_calculate` varchar(100) DEFAULT NULL,
+  `profit_method` varchar(50) DEFAULT NULL,
+  `scheme_due_method` varchar(50) DEFAULT NULL,
+  `scheme_day` varchar(50) DEFAULT NULL,
+  `scheme_name` varchar(100) DEFAULT NULL,
+  `interest_rate` int(11) NOT NULL,
+  `due_period` int(11) NOT NULL,
+  `doc_charge` int(11) NOT NULL,
+  `processing_fees` int(11) NOT NULL,
+  `loan_amnt` int(11) NOT NULL,
+  `principal_amnt` int(11) NOT NULL,
+  `interest_amnt` int(11) NOT NULL,
+  `total_amnt` varchar(11) DEFAULT NULL,
+  `due_amnt` varchar(11) DEFAULT NULL,
+  `doc_charge_calculate` int(11) NOT NULL,
+  `processing_fees_calculate` int(11) NOT NULL,
+  `net_cash` int(11) NOT NULL,
   `loan_date` date NOT NULL,
   `due_startdate` date NOT NULL,
   `maturity_date` date NOT NULL,
-  `referred` int NOT NULL,
-  `agent_id` varchar(100) COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `agent_name` varchar(150) COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `cus_status` int NOT NULL DEFAULT '0',
-  `insert_login_id` int NOT NULL,
-  `update_login_id` int DEFAULT NULL,
+  `referred` int(11) NOT NULL,
+  `agent_id` varchar(100) DEFAULT NULL,
+  `agent_name` varchar(150) DEFAULT NULL,
+  `cus_status` int(11) NOT NULL DEFAULT 0,
+  `insert_login_id` int(11) NOT NULL,
+  `update_login_id` int(11) DEFAULT NULL,
   `created_on` date DEFAULT NULL,
   `updated_on` date DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
@@ -859,28 +870,28 @@ CREATE TABLE `loan_entry_loan_calculation` (
 --
 
 CREATE TABLE `loan_issue` (
-  `id` int NOT NULL,
-  `cus_id` varchar(255) COLLATE utf8mb4_general_ci NOT NULL,
-  `cus_profile_id` int NOT NULL,
-  `loan_amnt` int NOT NULL,
-  `net_cash` int NOT NULL,
-  `net_bal_cash` varchar(100) COLLATE utf8mb4_general_ci NOT NULL,
-  `payment_type` int NOT NULL,
-  `payment_mode` varchar(11) COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `bank_name` varchar(11) COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `cash` varchar(100) COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `cheque_val` varchar(100) COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `transaction_val` varchar(100) COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `transaction_id` varchar(50) COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `cheque_no` varchar(50) COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `cheque_remark` varchar(100) COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `tran_remark` varchar(100) COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `balance_amount` varchar(100) COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `id` int(11) NOT NULL,
+  `cus_id` varchar(255) NOT NULL,
+  `cus_profile_id` int(11) NOT NULL,
+  `loan_amnt` int(11) NOT NULL,
+  `net_cash` int(11) NOT NULL,
+  `net_bal_cash` varchar(100) NOT NULL,
+  `payment_type` int(11) NOT NULL,
+  `payment_mode` varchar(11) DEFAULT NULL,
+  `bank_name` varchar(11) DEFAULT NULL,
+  `cash` varchar(100) DEFAULT NULL,
+  `cheque_val` varchar(100) DEFAULT NULL,
+  `transaction_val` varchar(100) DEFAULT NULL,
+  `transaction_id` varchar(50) DEFAULT NULL,
+  `cheque_no` varchar(50) DEFAULT NULL,
+  `cheque_remark` varchar(100) DEFAULT NULL,
+  `tran_remark` varchar(100) DEFAULT NULL,
+  `balance_amount` varchar(100) DEFAULT NULL,
   `issue_date` date NOT NULL,
-  `issue_person` varchar(50) COLLATE utf8mb4_general_ci NOT NULL,
-  `relationship` varchar(50) COLLATE utf8mb4_general_ci NOT NULL,
-  `insert_login_id` int NOT NULL,
-  `update_login_id` int DEFAULT NULL,
+  `issue_person` varchar(50) NOT NULL,
+  `relationship` varchar(50) NOT NULL,
+  `insert_login_id` int(11) NOT NULL,
+  `update_login_id` int(11) DEFAULT NULL,
   `created_on` datetime DEFAULT NULL,
   `updated_on` datetime DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
@@ -892,10 +903,10 @@ CREATE TABLE `loan_issue` (
 --
 
 CREATE TABLE `menu_list` (
-  `id` int NOT NULL,
-  `menu` varchar(100) COLLATE utf8mb4_general_ci NOT NULL,
-  `link` varchar(100) COLLATE utf8mb4_general_ci NOT NULL,
-  `icon` varchar(100) COLLATE utf8mb4_general_ci NOT NULL
+  `id` int(11) NOT NULL,
+  `menu` varchar(100) NOT NULL,
+  `link` varchar(100) NOT NULL,
+  `icon` varchar(100) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci COMMENT='All Main Menu''s will be placed here';
 
 --
@@ -927,24 +938,24 @@ INSERT INTO `menu_list` (`id`, `menu`, `link`, `icon`) VALUES
 --
 
 CREATE TABLE `mortgage_info` (
-  `id` int NOT NULL,
-  `cus_id` varchar(100) COLLATE utf8mb4_general_ci NOT NULL,
-  `cus_profile_id` int NOT NULL,
-  `property_holder_name` int NOT NULL,
-  `relationship` varchar(50) COLLATE utf8mb4_general_ci NOT NULL,
-  `property_details` varchar(255) COLLATE utf8mb4_general_ci NOT NULL,
-  `mortgage_name` varchar(100) COLLATE utf8mb4_general_ci NOT NULL,
-  `designation` varchar(100) COLLATE utf8mb4_general_ci NOT NULL,
-  `mortgage_number` varchar(100) COLLATE utf8mb4_general_ci NOT NULL,
-  `reg_office` varchar(100) COLLATE utf8mb4_general_ci NOT NULL,
-  `mortgage_value` varchar(100) COLLATE utf8mb4_general_ci NOT NULL,
-  `upload` varchar(100) COLLATE utf8mb4_general_ci NOT NULL,
-  `noc_status` int NOT NULL DEFAULT '0',
+  `id` int(11) NOT NULL,
+  `cus_id` varchar(100) NOT NULL,
+  `cus_profile_id` int(11) NOT NULL,
+  `property_holder_name` int(11) NOT NULL,
+  `relationship` varchar(50) NOT NULL,
+  `property_details` varchar(255) NOT NULL,
+  `mortgage_name` varchar(100) NOT NULL,
+  `designation` varchar(100) NOT NULL,
+  `mortgage_number` varchar(100) NOT NULL,
+  `reg_office` varchar(100) NOT NULL,
+  `mortgage_value` varchar(100) NOT NULL,
+  `upload` varchar(100) NOT NULL,
+  `noc_status` int(11) NOT NULL DEFAULT 0,
   `date_of_noc` date DEFAULT NULL,
-  `noc_member` varchar(150) COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `noc_relationship` varchar(150) COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `insert_login_id` int NOT NULL,
-  `update_login_id` int DEFAULT NULL,
+  `noc_member` varchar(150) DEFAULT NULL,
+  `noc_relationship` varchar(150) DEFAULT NULL,
+  `insert_login_id` int(11) NOT NULL,
+  `update_login_id` int(11) DEFAULT NULL,
   `created_on` date DEFAULT NULL,
   `updated_on` date DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
@@ -956,17 +967,17 @@ CREATE TABLE `mortgage_info` (
 --
 
 CREATE TABLE `noc` (
-  `id` int NOT NULL,
-  `cus_profile_id` int NOT NULL,
-  `cus_id` varchar(100) COLLATE utf8mb4_general_ci NOT NULL,
-  `cheque_list` int NOT NULL DEFAULT '0',
-  `mortgage_list` int NOT NULL DEFAULT '0',
-  `endorsement_list` int NOT NULL DEFAULT '0',
-  `document_list` int NOT NULL DEFAULT '0',
-  `gold_info` int NOT NULL DEFAULT '0',
-  `noc_status` int NOT NULL DEFAULT '0',
-  `insert_login_id` int NOT NULL,
-  `update_login_id` int DEFAULT NULL,
+  `id` int(11) NOT NULL,
+  `cus_profile_id` int(11) NOT NULL,
+  `cus_id` varchar(100) NOT NULL,
+  `cheque_list` int(11) NOT NULL DEFAULT 0,
+  `mortgage_list` int(11) NOT NULL DEFAULT 0,
+  `endorsement_list` int(11) NOT NULL DEFAULT 0,
+  `document_list` int(11) NOT NULL DEFAULT 0,
+  `gold_info` int(11) NOT NULL DEFAULT 0,
+  `noc_status` int(11) NOT NULL DEFAULT 0,
+  `insert_login_id` int(11) NOT NULL,
+  `update_login_id` int(11) DEFAULT NULL,
   `created_on` date DEFAULT NULL,
   `updated_on` date DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
@@ -978,11 +989,11 @@ CREATE TABLE `noc` (
 --
 
 CREATE TABLE `noc_ref` (
-  `id` int NOT NULL,
-  `noc_id` int NOT NULL,
+  `id` int(11) NOT NULL,
+  `noc_id` int(11) NOT NULL,
   `date_of_noc` date NOT NULL,
-  `noc_member` varchar(150) COLLATE utf8mb4_general_ci NOT NULL,
-  `noc_relationship` varchar(150) COLLATE utf8mb4_general_ci NOT NULL,
+  `noc_member` varchar(150) NOT NULL,
+  `noc_relationship` varchar(150) NOT NULL,
   `created_on` date DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
@@ -993,18 +1004,18 @@ CREATE TABLE `noc_ref` (
 --
 
 CREATE TABLE `other_transaction` (
-  `id` int NOT NULL,
-  `coll_mode` int NOT NULL,
-  `bank_id` varchar(11) COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `trans_cat` int NOT NULL,
-  `name` int NOT NULL,
-  `type` int NOT NULL,
-  `ref_id` varchar(100) COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `trans_id` varchar(100) COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `user_name` varchar(11) COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `amount` varchar(150) COLLATE utf8mb4_general_ci NOT NULL,
-  `remark` varchar(255) COLLATE utf8mb4_general_ci NOT NULL,
-  `insert_login_id` int NOT NULL,
+  `id` int(11) NOT NULL,
+  `coll_mode` int(11) NOT NULL,
+  `bank_id` varchar(11) DEFAULT NULL,
+  `trans_cat` int(11) NOT NULL,
+  `name` int(11) NOT NULL,
+  `type` int(11) NOT NULL,
+  `ref_id` varchar(100) DEFAULT NULL,
+  `trans_id` varchar(100) DEFAULT NULL,
+  `user_name` varchar(11) DEFAULT NULL,
+  `amount` varchar(150) NOT NULL,
+  `remark` varchar(255) NOT NULL,
+  `insert_login_id` int(11) NOT NULL,
   `created_on` datetime DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
@@ -1015,10 +1026,10 @@ CREATE TABLE `other_transaction` (
 --
 
 CREATE TABLE `other_trans_name` (
-  `id` int NOT NULL,
-  `trans_cat` int NOT NULL,
-  `name` varchar(150) COLLATE utf8mb4_general_ci NOT NULL,
-  `insert_login_id` int NOT NULL,
+  `id` int(11) NOT NULL,
+  `trans_cat` int(11) NOT NULL,
+  `name` varchar(150) NOT NULL,
+  `insert_login_id` int(11) NOT NULL,
   `created_on` date NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
@@ -1035,9 +1046,9 @@ CREATE TABLE `penalty_charges` (
   `paid_date` varchar(255) DEFAULT NULL,
   `paid_amnt` varchar(255) DEFAULT '0',
   `waiver_amnt` varchar(255) DEFAULT '0',
-  `created_date` datetime DEFAULT CURRENT_TIMESTAMP,
-  `updated_time` datetime DEFAULT CURRENT_TIMESTAMP
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+  `created_date` datetime DEFAULT current_timestamp(),
+  `updated_time` datetime DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 
 -- --------------------------------------------------------
 
@@ -1046,10 +1057,10 @@ CREATE TABLE `penalty_charges` (
 --
 
 CREATE TABLE `proof_info` (
-  `id` int NOT NULL,
-  `addProof_name` varchar(100) COLLATE utf8mb4_general_ci NOT NULL,
-  `insert_login_id` int NOT NULL,
-  `update_login_id` int DEFAULT NULL,
+  `id` int(11) NOT NULL,
+  `addProof_name` varchar(100) NOT NULL,
+  `insert_login_id` int(11) NOT NULL,
+  `update_login_id` int(11) DEFAULT NULL,
   `created_on` date DEFAULT NULL,
   `updated_on` date DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
@@ -1061,15 +1072,15 @@ CREATE TABLE `proof_info` (
 --
 
 CREATE TABLE `property_info` (
-  `id` int NOT NULL,
-  `cus_id` varchar(100) COLLATE utf8mb4_general_ci NOT NULL,
-  `aadhar_num` varchar(250) COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `cus_profile_id` varchar(255) COLLATE utf8mb4_general_ci NOT NULL,
-  `property` varchar(100) COLLATE utf8mb4_general_ci NOT NULL,
-  `property_detail` varchar(100) COLLATE utf8mb4_general_ci NOT NULL,
-  `property_holder` int NOT NULL,
-  `insert_login_id` int NOT NULL,
-  `update_login_id` int DEFAULT NULL,
+  `id` int(11) NOT NULL,
+  `cus_id` varchar(100) NOT NULL,
+  `aadhar_num` varchar(250) DEFAULT NULL,
+  `cus_profile_id` varchar(255) NOT NULL,
+  `property` varchar(100) NOT NULL,
+  `property_detail` varchar(100) NOT NULL,
+  `property_holder` int(11) NOT NULL,
+  `insert_login_id` int(11) NOT NULL,
+  `update_login_id` int(11) DEFAULT NULL,
   `created_on` date DEFAULT NULL,
   `updated_on` date DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
@@ -1081,19 +1092,19 @@ CREATE TABLE `property_info` (
 --
 
 CREATE TABLE `repromotion_customer` (
-  `id` int NOT NULL,
-  `cus_id` varchar(100) COLLATE utf8mb3_unicode_ci DEFAULT NULL,
-  `cus_profile_id` int NOT NULL,
-  `cus_name` varchar(100) COLLATE utf8mb3_unicode_ci DEFAULT NULL,
-  `mobile1` varchar(11) COLLATE utf8mb3_unicode_ci DEFAULT NULL,
-  `area` varchar(50) COLLATE utf8mb3_unicode_ci DEFAULT NULL,
-  `linename` varchar(50) COLLATE utf8mb3_unicode_ci DEFAULT NULL,
-  `branch_name` varchar(50) COLLATE utf8mb3_unicode_ci DEFAULT NULL,
-  `c_sts` int DEFAULT NULL,
-  `repromotion_detail` varchar(250) COLLATE utf8mb3_unicode_ci DEFAULT NULL,
-  `insert_login_id` int NOT NULL,
+  `id` int(11) NOT NULL,
+  `cus_id` varchar(100) DEFAULT NULL,
+  `cus_profile_id` int(11) NOT NULL,
+  `cus_name` varchar(100) DEFAULT NULL,
+  `mobile1` varchar(11) DEFAULT NULL,
+  `area` varchar(50) DEFAULT NULL,
+  `linename` varchar(50) DEFAULT NULL,
+  `branch_name` varchar(50) DEFAULT NULL,
+  `c_sts` int(11) DEFAULT NULL,
+  `repromotion_detail` varchar(250) DEFAULT NULL,
+  `insert_login_id` int(11) NOT NULL,
   `created_on` date DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 -- --------------------------------------------------------
 
@@ -1102,13 +1113,20 @@ CREATE TABLE `repromotion_customer` (
 --
 
 CREATE TABLE `role` (
-  `id` int NOT NULL,
-  `role` varchar(150) COLLATE utf8mb4_general_ci NOT NULL,
-  `insert_login_id` int NOT NULL,
-  `update_login_id` int DEFAULT NULL,
+  `id` int(11) NOT NULL,
+  `role` varchar(150) NOT NULL,
+  `insert_login_id` int(11) NOT NULL,
+  `update_login_id` int(11) DEFAULT NULL,
   `created_on` date DEFAULT NULL,
   `updated_on` date DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `role`
+--
+
+INSERT INTO `role` (`id`, `role`, `insert_login_id`, `update_login_id`, `created_on`, `updated_on`) VALUES
+(1, 'Staff', 1, NULL, '2025-05-08', NULL);
 
 -- --------------------------------------------------------
 
@@ -1117,21 +1135,21 @@ CREATE TABLE `role` (
 --
 
 CREATE TABLE `scheme` (
-  `id` int NOT NULL,
-  `scheme_name` varchar(150) COLLATE utf8mb4_general_ci NOT NULL,
-  `due_method` varchar(50) COLLATE utf8mb4_general_ci NOT NULL,
-  `profit_method` varchar(20) COLLATE utf8mb4_general_ci NOT NULL,
-  `interest_rate_percent` varchar(10) COLLATE utf8mb4_general_ci NOT NULL,
-  `due_period_percent` varchar(10) COLLATE utf8mb4_general_ci NOT NULL,
-  `overdue_penalty_percent` varchar(10) COLLATE utf8mb4_general_ci NOT NULL,
-  `doc_charge_type` varchar(10) COLLATE utf8mb4_general_ci NOT NULL,
-  `doc_charge_min` varchar(10) COLLATE utf8mb4_general_ci NOT NULL,
-  `doc_charge_max` varchar(10) COLLATE utf8mb4_general_ci NOT NULL,
-  `processing_fee_type` varchar(10) COLLATE utf8mb4_general_ci NOT NULL,
-  `processing_fee_min` varchar(10) COLLATE utf8mb4_general_ci NOT NULL,
-  `processing_fee_max` varchar(10) COLLATE utf8mb4_general_ci NOT NULL,
-  `insert_login_id` int NOT NULL,
-  `update_login_id` int DEFAULT NULL,
+  `id` int(11) NOT NULL,
+  `scheme_name` varchar(150) NOT NULL,
+  `due_method` varchar(50) NOT NULL,
+  `profit_method` varchar(20) NOT NULL,
+  `interest_rate_percent` varchar(10) NOT NULL,
+  `due_period_percent` varchar(10) NOT NULL,
+  `overdue_penalty_percent` varchar(10) NOT NULL,
+  `doc_charge_type` varchar(10) NOT NULL,
+  `doc_charge_min` varchar(10) NOT NULL,
+  `doc_charge_max` varchar(10) NOT NULL,
+  `processing_fee_type` varchar(10) NOT NULL,
+  `processing_fee_min` varchar(10) NOT NULL,
+  `processing_fee_max` varchar(10) NOT NULL,
+  `insert_login_id` int(11) NOT NULL,
+  `update_login_id` int(11) DEFAULT NULL,
   `created_on` date DEFAULT NULL,
   `updated_on` date DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
@@ -1143,9 +1161,9 @@ CREATE TABLE `scheme` (
 --
 
 CREATE TABLE `states` (
-  `id` int NOT NULL,
-  `state_name` varchar(50) COLLATE utf8mb4_general_ci NOT NULL,
-  `status` int NOT NULL DEFAULT '1'
+  `id` int(11) NOT NULL,
+  `state_name` varchar(50) NOT NULL,
+  `status` int(11) NOT NULL DEFAULT 1
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -1164,11 +1182,11 @@ INSERT INTO `states` (`id`, `state_name`, `status`) VALUES
 --
 
 CREATE TABLE `sub_menu_list` (
-  `id` int NOT NULL,
-  `main_menu` int NOT NULL,
-  `sub_menu` varchar(100) COLLATE utf8mb4_general_ci NOT NULL,
-  `link` varchar(100) COLLATE utf8mb4_general_ci NOT NULL,
-  `icon` varchar(100) COLLATE utf8mb4_general_ci NOT NULL
+  `id` int(11) NOT NULL,
+  `main_menu` int(11) NOT NULL,
+  `sub_menu` varchar(100) NOT NULL,
+  `link` varchar(100) NOT NULL,
+  `icon` varchar(100) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci COMMENT='All Sub menu of the project should be placed here';
 
 --
@@ -1207,7 +1225,7 @@ INSERT INTO `sub_menu_list` (`id`, `main_menu`, `sub_menu`, `link`, `icon`) VALU
 (29, 15, 'Interest Balance Report', 'interest_balance_report', 'event_available'),
 (30, 15, 'Interest Closed Report', 'interest_closed_report', 'erase'),
 (31, 15, 'Interest Ledger View Report', 'interest_ledger_view_report', 'terrain'),
-(32, 16, 'Bulk Upload Report', 'bulk_upload', 'cloud_done');
+(32, 16, 'Bulk Upload', 'bulk_upload', 'cloud_done');
 
 -- --------------------------------------------------------
 
@@ -1216,11 +1234,11 @@ INSERT INTO `sub_menu_list` (`id`, `main_menu`, `sub_menu`, `link`, `icon`) VALU
 --
 
 CREATE TABLE `taluks` (
-  `id` int NOT NULL,
-  `state_id` int NOT NULL,
-  `district_id` int NOT NULL,
-  `taluk_name` varchar(50) COLLATE utf8mb4_general_ci NOT NULL,
-  `status` int NOT NULL DEFAULT '1'
+  `id` int(11) NOT NULL,
+  `state_id` int(11) NOT NULL,
+  `district_id` int(11) NOT NULL,
+  `taluk_name` varchar(50) NOT NULL,
+  `status` int(11) NOT NULL DEFAULT 1
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -1557,25 +1575,25 @@ INSERT INTO `taluks` (`id`, `state_id`, `district_id`, `taluk_name`, `status`) V
 --
 
 CREATE TABLE `users` (
-  `id` int NOT NULL,
-  `name` varchar(100) COLLATE utf8mb4_general_ci NOT NULL,
-  `user_code` varchar(100) COLLATE utf8mb4_general_ci NOT NULL,
-  `role` int NOT NULL,
-  `designation` int NOT NULL,
-  `address` varchar(100) COLLATE utf8mb4_general_ci NOT NULL,
-  `place` varchar(100) COLLATE utf8mb4_general_ci NOT NULL,
-  `email` varchar(100) COLLATE utf8mb4_general_ci NOT NULL,
-  `mobile` varchar(100) COLLATE utf8mb4_general_ci NOT NULL,
-  `user_name` varchar(255) COLLATE utf8mb4_general_ci NOT NULL,
-  `password` varchar(255) COLLATE utf8mb4_general_ci NOT NULL,
-  `branch` varchar(255) COLLATE utf8mb4_general_ci NOT NULL,
-  `loan_category` varchar(255) COLLATE utf8mb4_general_ci NOT NULL,
-  `line` varchar(255) COLLATE utf8mb4_general_ci NOT NULL,
-  `collection_access` int NOT NULL,
-  `download_access` int NOT NULL,
-  `screens` varchar(255) COLLATE utf8mb4_general_ci NOT NULL,
-  `insert_login_id` varchar(100) COLLATE utf8mb4_general_ci NOT NULL,
-  `update_login_id` varchar(100) COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `id` int(11) NOT NULL,
+  `name` varchar(100) NOT NULL,
+  `user_code` varchar(100) NOT NULL,
+  `role` int(11) NOT NULL,
+  `designation` int(11) NOT NULL,
+  `address` varchar(100) NOT NULL,
+  `place` varchar(100) NOT NULL,
+  `email` varchar(100) NOT NULL,
+  `mobile` varchar(100) NOT NULL,
+  `user_name` varchar(255) NOT NULL,
+  `password` varchar(255) NOT NULL,
+  `branch` varchar(255) NOT NULL,
+  `loan_category` varchar(255) NOT NULL,
+  `line` varchar(255) NOT NULL,
+  `collection_access` int(11) NOT NULL,
+  `download_access` int(11) NOT NULL,
+  `screens` varchar(255) NOT NULL,
+  `insert_login_id` varchar(100) NOT NULL,
+  `update_login_id` varchar(100) DEFAULT NULL,
   `created_on` date NOT NULL,
   `updated_on` date DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci COMMENT='All the users will be stored here with screen access details';
@@ -1585,7 +1603,7 @@ CREATE TABLE `users` (
 --
 
 INSERT INTO `users` (`id`, `name`, `user_code`, `role`, `designation`, `address`, `place`, `email`, `mobile`, `user_name`, `password`, `branch`, `loan_category`, `line`, `collection_access`, `download_access`, `screens`, `insert_login_id`, `update_login_id`, `created_on`, `updated_on`) VALUES
-(1, 'Super Admin', 'US-001', 1, 1, '', '', '', '', 'admin', '123', '1,2', '1,2,3,4,10,11,12,13,14,16', '1', 1, 1, '1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31', '1', '1', '2024-06-13', '2025-09-13'),
+(1, 'Super Admin', 'US-001', 1, 1, '', '', '', '', 'admin', '123', '1,2', '1,2,3,10,11,12,13,14,16', '1,3,4', 1, 1, '1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32', '1', '1', '2024-06-13', '2025-09-16'),
 (10, 'Test1', 'US-002', 1, 1, '', '', '', '', 'Test', '123', '1', '1', '1', 2, 2, '1,4,5,9,10,11,12,13,14,15,18,19,20,21,22,23,24,26', '1', NULL, '2025-01-29', NULL);
 
 --
@@ -1611,6 +1629,12 @@ ALTER TABLE `area_creation`
   ADD PRIMARY KEY (`id`),
   ADD KEY `Line id` (`line_id`),
   ADD KEY `branch` (`branch_id`);
+
+--
+-- Indexes for table `area_creation_area_name`
+--
+ALTER TABLE `area_creation_area_name`
+  ADD PRIMARY KEY (`id`);
 
 --
 -- Indexes for table `area_name_creation`
@@ -1917,295 +1941,301 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT for table `accounts_collect_entry`
 --
 ALTER TABLE `accounts_collect_entry`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `agent_creation`
 --
 ALTER TABLE `agent_creation`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `area_creation`
 --
 ALTER TABLE `area_creation`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `area_creation_area_name`
+--
+ALTER TABLE `area_creation_area_name`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `area_name_creation`
 --
 ALTER TABLE `area_name_creation`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `bank_clearance`
 --
 ALTER TABLE `bank_clearance`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT COMMENT 'Primary Key';
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'Primary Key';
 
 --
 -- AUTO_INCREMENT for table `bank_creation`
 --
 ALTER TABLE `bank_creation`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `bank_info`
 --
 ALTER TABLE `bank_info`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `branch_creation`
 --
 ALTER TABLE `branch_creation`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `cash_tally_modes`
 --
 ALTER TABLE `cash_tally_modes`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT COMMENT 'Primary Key', AUTO_INCREMENT=10;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'Primary Key', AUTO_INCREMENT=10;
 
 --
 -- AUTO_INCREMENT for table `cheque_info`
 --
 ALTER TABLE `cheque_info`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `cheque_no_list`
 --
 ALTER TABLE `cheque_no_list`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `cheque_upd`
 --
 ALTER TABLE `cheque_upd`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `collection`
 --
 ALTER TABLE `collection`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT COMMENT 'Primary Key';
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'Primary Key';
 
 --
 -- AUTO_INCREMENT for table `collection_charges`
 --
 ALTER TABLE `collection_charges`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT COMMENT 'Primary Key';
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'Primary Key';
 
 --
 -- AUTO_INCREMENT for table `company_creation`
 --
 ALTER TABLE `company_creation`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `customer_data`
 --
 ALTER TABLE `customer_data`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `customer_profile`
 --
 ALTER TABLE `customer_profile`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `customer_status`
 --
 ALTER TABLE `customer_status`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `designation`
 --
 ALTER TABLE `designation`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `districts`
 --
 ALTER TABLE `districts`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=42;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=42;
 
 --
 -- AUTO_INCREMENT for table `document_info`
 --
 ALTER TABLE `document_info`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `document_need`
 --
 ALTER TABLE `document_need`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `endorsement_info`
 --
 ALTER TABLE `endorsement_info`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `existing_customer`
 --
 ALTER TABLE `existing_customer`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `expenses`
 --
 ALTER TABLE `expenses`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `family_info`
 --
 ALTER TABLE `family_info`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `gold_info`
 --
 ALTER TABLE `gold_info`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `guarantor_info`
 --
 ALTER TABLE `guarantor_info`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `kyc_info`
 --
 ALTER TABLE `kyc_info`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `line_name_creation`
 --
 ALTER TABLE `line_name_creation`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `loan_category`
 --
 ALTER TABLE `loan_category`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `loan_category_creation`
 --
 ALTER TABLE `loan_category_creation`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `loan_entry_loan_calculation`
 --
 ALTER TABLE `loan_entry_loan_calculation`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `loan_issue`
 --
 ALTER TABLE `loan_issue`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `menu_list`
 --
 ALTER TABLE `menu_list`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
 
 --
 -- AUTO_INCREMENT for table `mortgage_info`
 --
 ALTER TABLE `mortgage_info`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `noc`
 --
 ALTER TABLE `noc`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `noc_ref`
 --
 ALTER TABLE `noc_ref`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `other_transaction`
 --
 ALTER TABLE `other_transaction`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `other_trans_name`
 --
 ALTER TABLE `other_trans_name`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `proof_info`
 --
 ALTER TABLE `proof_info`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `property_info`
 --
 ALTER TABLE `property_info`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `repromotion_customer`
 --
 ALTER TABLE `repromotion_customer`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `role`
 --
 ALTER TABLE `role`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `scheme`
 --
 ALTER TABLE `scheme`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `states`
 --
 ALTER TABLE `states`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `sub_menu_list`
 --
 ALTER TABLE `sub_menu_list`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=33;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=33;
 
 --
 -- AUTO_INCREMENT for table `taluks`
 --
 ALTER TABLE `taluks`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=322;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=322;
 
 --
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
 
 --
 -- Constraints for dumped tables
@@ -2215,8 +2245,8 @@ ALTER TABLE `users`
 -- Constraints for table `area_creation`
 --
 ALTER TABLE `area_creation`
-  ADD CONSTRAINT `branch` FOREIGN KEY (`branch_id`) REFERENCES `branch_creation` (`id`),
-  ADD CONSTRAINT `Line id` FOREIGN KEY (`line_id`) REFERENCES `line_name_creation` (`id`);
+  ADD CONSTRAINT `Line id` FOREIGN KEY (`line_id`) REFERENCES `line_name_creation` (`id`),
+  ADD CONSTRAINT `branch` FOREIGN KEY (`branch_id`) REFERENCES `branch_creation` (`id`);
 
 --
 -- Constraints for table `area_name_creation`
