@@ -515,7 +515,8 @@ function getKycInfoTable() {
     }, 'json')
 }
 function getAreaName() {
-    $.post('api/loan_entry/get_area.php', function (response) {
+        let cus_profile_id = $('#customer_profile_id').val();
+    $.post('api/loan_entry/get_area.php',{cus_profile_id},function (response) {
         let appendAreaOption = '';
         appendAreaOption += "<option value='0'>Select Area Name</option>";
         $.each(response, function (index, val) {
@@ -531,10 +532,11 @@ function getAreaName() {
 }
 
 function getAlineName(areaId) {
+        let cus_profile_id = $('#customer_profile_id').val();
     $.ajax({
         url: 'api/loan_entry/getAlineName.php',
         type: 'POST',
-        data: { aline_id: areaId },
+        data: { aline_id: areaId ,cus_profile_id:cus_profile_id},
         dataType: 'json',
         cache: false,
         success: function (response) {
