@@ -197,7 +197,7 @@ $(document).ready(function () {
                 });
 
                 $('#int_amt_track').on('blur', function () {
-                    if (parseInt($(this).val()) > response['payable']) {
+                    if (parseInt($(this).val()) > response['till_date_int']) {
                         alert("Enter a Lesser Value");
                         $(this).val("");
                         $('#total_paid_track').val("");
@@ -348,14 +348,15 @@ $(document).ready(function () {
         $('#total_paid_track').val(moneyFormatIndia(total_paid_track));
     });
 
-    $('#principal_waiver , #penalty_waiver , #coll_charge_waiver,#interest_waiver').blur(function () {
+    $('#pre_close_waiver ,#principal_waiver , #penalty_waiver , #coll_charge_waiver,#interest_waiver').blur(function () {
 
         var principal_waiver = ($('#principal_waiver').val() != '') ? $('#principal_waiver').val().replace(/,/g, '') : 0;
+        var pre_close_waiver = ($('#pre_close_waiver').val() != '') ? $('#pre_close_waiver').val().replace(/,/g, '') : 0;
         var interest_waiver = ($('#interest_waiver').val() != '') ? $('#interest_waiver').val().replace(/,/g, '') : 0;
         var penalty_waiver = ($('#penalty_waiver').val() != '') ? $('#penalty_waiver').val().replace(/,/g, '') : 0;
         var coll_charge_waiver = ($('#coll_charge_waiver').val() != '') ? $('#coll_charge_waiver').val().replace(/,/g, '') : 0;
 
-        var total_waiver = parseInt(principal_waiver) + parseInt(interest_waiver) + parseInt(penalty_waiver) + parseInt(coll_charge_waiver);
+        var total_waiver = parseInt(pre_close_waiver) + parseInt(principal_waiver) + parseInt(interest_waiver) + parseInt(penalty_waiver) + parseInt(coll_charge_waiver);
         $('#total_waiver').val(moneyFormatIndia(total_waiver));
     });
 

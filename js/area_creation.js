@@ -412,7 +412,7 @@ function deleteLineName(id) {
 function deleteAreaName(id) {
     $.post('api/area_creation_files/delete_area_name.php', { id }, function (response) {
         if (response == '1') {
-            swalSuccess('Success', 'Area Name Deleted Successfully');
+            swalSuccess('Success', 'Area Name Disabled Successfully');
             getAreaNameTable();
         } else if (response == '0') {
             swalError('Access Denied', 'Used in Area Creation.');

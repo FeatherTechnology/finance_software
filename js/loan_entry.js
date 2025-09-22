@@ -1386,7 +1386,8 @@ function fetchProofList() {
 }
 
 function getAreaName() {
-    $.post('api/loan_entry/get_area.php', function (response) {
+        let cus_profile_id = $('#customer_profile_id').val();
+    $.post('api/loan_entry/get_area.php', {cus_profile_id},function (response) {
         let appendAreaOption = '';
         appendAreaOption += "<option value=''>Select Area Name</option>";
         $.each(response, function (index, val) {
@@ -1402,10 +1403,11 @@ function getAreaName() {
 }
 
 function getAlineName(areaId) {
+        let cus_profile_id = $('#customer_profile_id').val();
     $.ajax({
         url: 'api/loan_entry/getAlineName.php',
         type: 'POST',
-        data: { aline_id: areaId },
+        data: { aline_id: areaId,cus_profile_id:cus_profile_id },
         dataType: 'json',
         cache: false,
         success: function (response) {
@@ -1645,6 +1647,8 @@ function existingCustmerProfile(aadhar_num) {
 
 
             $('.cus_status_div').show();
+            checkAdditionalRenewal(response[0].cus_id);
+
             let path = "uploads/loan_entry/cus_pic/";
             $('#per_pic').val(response[0].pic);
             var img = $('#imgshow');
@@ -2138,7 +2142,6 @@ function getLoanCatDetails(id, edittype) {
         $('#processing_fees_calc').attr('onChange', `if( parseFloat($(this).val()) > '${response[0].processing_fee_max}' ){ alert("Enter Lesser Value"); $(this).val(""); }else if( parseFloat($(this).val()) < '${response[0].processing_fee_min}' && $(this).val() != '' ){ alert("Enter Higher Value"); $(this).val(""); }`);
         $('#processing_fees_calc').val(proc_fee_upd);
 
-console.log(edittype);
         if (edittype == 1) {
             $('#interest_rate_calc').val('');
             $('#due_period_calc').val('');

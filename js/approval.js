@@ -917,17 +917,22 @@ function moveToNext(cus_sts_id, cus_sts) {
 
 function checkCustomerLimit(loan_calc_id, cus_sts_id, cus_sts) {
     $.post('api/common_files/check_customer_limit.php', { loan_calc_id }, function (response) {
-        if (response == '1') {
+        if (response.status == '1') {
             swalError('Warning', 'Kindly Enter The Customer Limit');
-        } else if (response == '2') {
+        } else if (response.status == '2') {
             swalError('Warning', 'Customer limit is less than the loan amount. Please update either the customer limit or the loan amount.');
-        } else if (response == '3') {
-            moveToNext(cus_sts_id, cus_sts);
+        } else if (response.status == '3') {
+            swalConfirm(
+                "Customer Limit",
+                "Customer limit is set to " +  moneyFormatIndia(response.cus_limit) + ". Do you want to Approve?",
+                () => moveToNext(cus_sts_id, cus_sts)
+            );
         } else {
             swalError('Alert', 'Failed To Approved');
         }
     }, 'json');
 }
+
 
 function submitForm(action, cus_sts_id, cus_sts, remark) {
     $.post('api/common_files/update_status.php', { cus_sts_id, remark, cus_sts }, function (response) {
@@ -1451,7 +1456,8 @@ function fetchProofList() {
 }
 
 function getAreaName() {
-    $.post('api/loan_entry/get_area.php', function (response) {
+     let cus_profile_id = $('#customer_profile_id').val();
+    $.post('api/loan_entry/get_area.php',{cus_profile_id}, function (response) {
         let appendAreaOption = '';
         appendAreaOption += "<option value=''>Select Area Name</option>";
         $.each(response, function (index, val) {
@@ -1467,10 +1473,11 @@ function getAreaName() {
 }
 
 function getAlineName(areaId) {
+    let cus_profile_id = $('#customer_profile_id').val();
     $.ajax({
         url: 'api/loan_entry/getAlineName.php',
         type: 'POST',
-        data: { aline_id: areaId },
+        data: { aline_id: areaId,cus_profile_id:cus_profile_id },
         dataType: 'json',
         cache: false,
         success: function (response) {
