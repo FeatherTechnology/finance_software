@@ -149,7 +149,7 @@ function moneyFormatIndia($num)
 
     <thead>
         <tr><!-- Showing Collection Due Month Start and balance -->
-            <th width="15"> Due No </th>
+            <th width="5%"> Due No </th>
             <th width="8%"> Due Month </th>
             <th> Month </th>
             <?php if ($loan_type == 'emi') { ?>
