@@ -75,8 +75,8 @@ $to_date = date('Y-m-d', strtotime($inputDate)) . ' 23:59:59';
         le.loan_amount,
         c.principal_waiver
     FROM loan_issue li
-    JOIN loan_entry_loan_calculation le ON li.cus_profile_id = le.id
-    JOIN customer_profile cp ON le.cus_id = cp.cus_id
+    JOIN loan_entry_loan_calculation le ON li.cus_profile_id = le.cus_profile_id
+    JOIN customer_profile cp ON le.cus_profile_id = cp.id
     LEFT JOIN (
         SELECT 
             cus_profile_id, 
