@@ -10,8 +10,8 @@
             </select>
             <select type="text" class="toggle-button" id='sel_screen' name='sel_screen'>
                 <option value=''>Select Screen</option>
-                <option value='1' class="cancel-option">Approval</option>
-                <option value='2' class="cancel-option">Loan Issue</option>
+                <option value='1'>Approval</option>
+                <option value='2'>Loan Issue</option>
             </select>
             <input type="button" id='reset_btn' name='reset_btn' class="toggle-button" style="background-color: #7CA5B8;color:white" value='Reload'>
         </div> <br> <br> 
