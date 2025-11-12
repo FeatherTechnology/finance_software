@@ -174,7 +174,7 @@ foreach ($result as $row) {
 
 function count_all_data($pdo)
 {
-    $query = "SELECT id FROM customer_status csts WHERE csts.status >= 7 AND csts.status <=8 ";
+    $query = "SELECT csts.id FROM customer_status csts LEFT JOIN loan_entry_loan_calculation lelc ON csts.cus_profile_id = lelc.cus_profile_id WHERE csts.status >= 7 AND csts.status <=8 AND lelc.due_type = 'Interest' ";
     $statement = $pdo->prepare($query);
     $statement->execute();
     return $statement->rowCount();

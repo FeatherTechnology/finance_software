@@ -142,7 +142,7 @@ foreach ($result as $row) {
 }
 function count_all_data($pdo)
 {
-    $query = "SELECT id FROM collection c  GROUP BY c.cus_profile_id ";
+    $query = "SELECT c.id FROM collection c LEFT JOIN loan_entry_loan_calculation lelc ON c.cus_profile_id = lelc.cus_profile_id WHERE lelc.due_type = 'Interest' GROUP BY c.cus_profile_id ";
     $statement = $pdo->prepare($query);
     $statement->execute();
     return $statement->rowCount();
