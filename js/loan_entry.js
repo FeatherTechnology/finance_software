@@ -1481,7 +1481,8 @@ function cusDeleteStatus(cus_id) {
         if (deleteResponse.success) {
             swalSuccess('Success', 'Personal Info Deleted Successfully.');
             clearCusProfileForm('1');
-            swapTableAndCreation()
+            swapTableAndCreation();
+            getLoanEntryTable();
         } else {
             swalError('Error', 'Failed to delete personal info.');
         }
