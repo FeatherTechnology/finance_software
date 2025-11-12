@@ -124,7 +124,7 @@ foreach ($result as $row) {
 }
 function count_all_data($pdo)
 {
-    $query = "SELECT COUNT(*) FROM loan_issue";
+    $query = "SELECT li.id FROM loan_issue li LEFT JOIN loan_entry_loan_calculation lelc ON li.cus_profile_id = lelc.cus_profile_id WHERE lelc.due_type = 'Interest' ";
     $statement = $pdo->prepare($query);
     $statement->execute();
     return $statement->fetchColumn();

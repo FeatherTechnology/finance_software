@@ -102,7 +102,7 @@ foreach ($result as $row) {
 
 function count_all_data($pdo, $from_date, $to_date)
 {
-    $query = $pdo->query("SELECT count(cus_profile_id) as cus_profile_id FROM customer_status cs where cs.in_closed_date BETWEEN '$from_date' AND '$to_date' ");
+    $query = $pdo->query("SELECT count(cus_profile_id) as cus_profile_id FROM customer_status cs where cs.in_closed_date BETWEEN '$from_date' AND '$to_date' AND lelc.due_type = 'EMI'  ");
     $statement = $query->fetch();
     return $statement['cus_profile_id'];
 }

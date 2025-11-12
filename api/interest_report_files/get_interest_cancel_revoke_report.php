@@ -155,7 +155,7 @@ echo json_encode($output);
 
 function count_all_data($connect)
 {
-    $query     = "SELECT COUNT(*) FROM customer_profile";
+    $query = "SELECT cp.id FROM customer_profile cp LEFT JOIN loan_entry_loan_calculation lelc ON cp.id = lelc.cus_profile_id WHERE lelc.due_type = 'Interest' ";
     $statement = $connect->prepare($query);
     $statement->execute();
     return $statement->rowCount();

@@ -100,16 +100,16 @@ foreach ($result as $row) {
     $sno++;
 }
 
-function count_all_data($pdo, $from_date, $to_date)
+function count_all_data($pdo)
 {
-    $query = $pdo->query("SELECT count(cus_profile_id) as cus_profile_id FROM customer_status cs where cs.in_closed_date BETWEEN '$from_date' AND '$to_date' ");
+    $query = $pdo->query("SELECT count(cs.cus_profile_id) as cus_profile_id FROM customer_status cs LEFT JOIN loan_entry_loan_calculation lelc ON cs.cus_profile_id = lelc.cus_profile_id where lelc.due_type = 'Interest' ");
     $statement = $query->fetch();
     return $statement['cus_profile_id'];
 }
 
 $output = array(
     'draw' => intval($_POST['draw']),
-    'recordsTotal' => count_all_data($pdo, $from_date, $to_date),
+    'recordsTotal' => count_all_data($pdo),
     'recordsFiltered' => $number_filter_row,
     'data' => $data
 );
