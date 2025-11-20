@@ -3,23 +3,26 @@ $(document).ready(function () {
     //Closed Report Table
     $('#interest_balance_report_btn').click(function () {
         $('#interest_balance_report_table').DataTable().destroy();
-        getUserAccess(function(downloadAccess) {
+        getUserAccess(function (downloadAccess) {
             let buttons = [];
-    
-            // Add Excel button if download access is 1
+
+            // Add Excel button only if download access is granted
             if (downloadAccess === 1) {
+                excelTitle = "Interest Balance Report List";
                 buttons.push({
-                    extend: 'excel',
-                    title: "Balance Report List"
+                    extend: 'excelHtml5',
+                    action: function (e, dt, button, config) {
+                        excelExportAction(e, dt, button, config, excelTitle);
+                    }
                 });
             }
-    
+
             // Add column visibility button
             buttons.push({
                 extend: 'colvis',
                 collectionLayout: 'fixed four-column',
             });
-    
+
             $('#interest_balance_report_table').DataTable({
                 "order": [
                     [0, "desc"]
@@ -43,7 +46,7 @@ $(document).ready(function () {
                 ],
                 "footerCallback": function (row, data, start, end, display) {
                     var api = this.api();
-    
+
                     // Remove formatting to get integer data for summation
                     var intVal = function (i) {
                         return typeof i === 'string' ?
@@ -51,10 +54,10 @@ $(document).ready(function () {
                             typeof i === 'number' ?
                                 i : 0;
                     };
-    
+
                     // Array of column indices to sum
-                    var columnsToSum = [13 ,15 ,16 ,17 ];
-    
+                    var columnsToSum = [13, 15, 16, 17];
+
                     // Loop through each column index
                     columnsToSum.forEach(function (colIndex) {
                         // Total over all pages for the current column
@@ -71,5 +74,5 @@ $(document).ready(function () {
             });
         });
     });
-    
+
 });

@@ -19,11 +19,14 @@ $(document).ready(function () {
             // Initialize an empty array for buttons
             let buttons = [];
 
-            // Add Excel button only if download access is 1
+            // Add Excel button only if download access is granted
             if (downloadAccess === 1) {
+                excelTitle = "Interest Closed Report List";
                 buttons.push({
-                    extend: 'excel',
-                    title: "Closed Report List"
+                    extend: 'excelHtml5',
+                    action: function (e, dt, button, config) {
+                        excelExportAction(e, dt, button, config, excelTitle);
+                    }
                 });
             }
 

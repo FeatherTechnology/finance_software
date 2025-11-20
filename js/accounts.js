@@ -455,7 +455,7 @@ function getCollectionList(){
             'action'
         ];
         appendDataToTable('#accounts_collection_table', response, columnMapping);
-        setdtable('#accounts_collection_table');
+        setdtable('#accounts_collection_table',"Collection List");
     },'json');
 }
 
@@ -484,7 +484,7 @@ function getLoanIssueList(){
             // 'balance'
         ];
         appendDataToTable('#accounts_loanissue_table', response, columnMapping);
-        setdtable('#accounts_loanissue_table');
+        setdtable('#accounts_loanissue_table',"Loan Issue List");
     },'json');
 }
 
@@ -574,7 +574,7 @@ function expensesTable(tableId){
         ];
 
         appendDataToTable(tableId, response, expensesColumn);
-        setdtable(tableId);
+        setdtable(tableId,"Expenses List");
         clearExpForm();
     },'json');
 }
@@ -620,7 +620,7 @@ function getOtherTransNameTable(){
             'name'
         ];
         appendDataToTable('#other_trans_name_table',response,nameColumns);
-        setdtable('#other_trans_name_table');
+        setdtable('#other_trans_name_table',"Other Transaction List");
     },'json');
 }
 
@@ -689,7 +689,7 @@ function otherTransTable(tableId){
         ];
 
         appendDataToTable(tableId, response, expensesColumn);
-        setdtable(tableId);
+        setdtable(tableId,"Other Transaction List");
         clearTransForm();
     },'json');
 }

@@ -117,7 +117,7 @@ function getBankTable() {
             'action'
         ];
         appendDataToTable('#bank_create', response, columnMapping);
-        setdtable('#bank_create');
+        setdtable('#bank_create', "Bank Creation List");
     }, 'json')
 
 }

@@ -113,7 +113,7 @@ $(function () {
 
 
 function getBranchTable() {
-    serverSideTable('#branch_create', '', 'api/branch_creation/branch_creation_list.php');
+    serverSideTable('#branch_create', '', 'api/branch_creation/branch_creation_list.php',"Branch Creation List");
 }
 function swapTableAndCreation() {
     if ($('.branch_table_content').is(':visible')) {

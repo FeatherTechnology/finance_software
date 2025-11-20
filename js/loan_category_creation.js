@@ -439,7 +439,7 @@ function getLoanCategoryCreationTable() {
             'action'
         ];
         appendDataToTable('#loancategory_creation_table', response, columnMapping);
-        setdtable('#loancategory_creation_table');
+        setdtable('#loancategory_creation_table', "Loan Category Creation List");
     }, 'json');
 }
 
@@ -466,7 +466,7 @@ function getLoanCategoryTable() {
             "action"
         ]
         appendDataToTable('#loan_category_table', response, loanCategoryColumn);
-        setdtable('#loan_category_table');
+        setdtable('#loan_category_table', "Loan Category List");
     }, 'json');
 }
 
@@ -505,7 +505,7 @@ function getSchemeTable() {
             "action"
         ]
         appendDataToTable('#scheme_modal_table', response, schemeColumn);
-        setdtable('#scheme_modal_table');
+        setdtable('#scheme_modal_table', "Scheme List");
     }, 'json');
 }
 
@@ -531,7 +531,7 @@ function getSchemeListTable(scheme_id) {
 
         appendDataToTable('#loan_scheme_table', response, schemeColumn);
         setTimeout(function () {
-            setdtable('#loan_scheme_table');
+            setdtable('#loan_scheme_table', "Loan Scheme List");
         }, 0);
     }, 'json');
 }

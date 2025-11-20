@@ -262,7 +262,7 @@ function getUserAccess(callback) {
 }
 
 // Initialize DataTable with user access controls
-function setdtable(table_id) {
+function setdtable(table_id,excelTitle) {
 	// Fetch user access and initialize DataTable based on it
 	getUserAccess(function (downloadAccess) {
 		let buttons = [];
@@ -270,8 +270,25 @@ function setdtable(table_id) {
 		// Add Excel button if download access is 1
 		if (downloadAccess === 1) {
 			buttons.push({
-				extend: 'excel',
-				title: "Export Data"
+				extend: 'excelHtml5',
+
+				action: function (e, dt, button, config) {
+					// Default Excel export action
+					var defaultAction = $.fn.dataTable.ext.buttons.excelHtml5.action;
+
+					// Create dynamic timestamped title
+					let now = new Date();
+					let date = now.toLocaleDateString('en-GB').replace(/\//g, '-');
+					let time = now.toLocaleTimeString('en-US').replace(/:/g, '-');
+					let dynamic = `${excelTitle} - ${date} - ${time}`;
+
+					// Apply dynamic title & filename
+					config.title = dynamic;
+					config.filename = dynamic;
+
+					// Call original export action
+					defaultAction.call(this, e, dt, button, config);
+				}
 			});
 		}
 
@@ -336,7 +353,7 @@ function appendDataToTable(tableSelector, response, columnMapping) {
 /////////////////////////////////////////////////////
 
 // / Function to initialize DataTable with conditional Excel button
-function serverSideTable(tableSelector, params, apiUrl) {
+function serverSideTable(tableSelector, params, apiUrl, excelTitle) {
 	// Fetch user access and initialize DataTable based on it
 	getUserAccess(function (downloadAccess) {
 		let buttons = [];
@@ -344,8 +361,25 @@ function serverSideTable(tableSelector, params, apiUrl) {
 		// Add Excel button if download access is 1
 		if (downloadAccess === 1) {
 			buttons.push({
-				extend: 'excel',
-				title: "Branch List"
+				extend: 'excelHtml5',
+
+				action: function (e, dt, button, config) {
+					// Default Excel export action
+					var defaultAction = $.fn.dataTable.ext.buttons.excelHtml5.action;
+
+					// Create dynamic timestamped title
+					let now = new Date();
+					let date = now.toLocaleDateString('en-GB').replace(/\//g, '-');
+					let time = now.toLocaleTimeString('en-US').replace(/:/g, '-');
+					let dynamic = `${excelTitle} - ${date} - ${time}`;
+
+					// Apply dynamic title & filename
+					config.title = dynamic;
+					config.filename = dynamic;
+
+					// Call original export action
+					defaultAction.call(this, e, dt, button, config);
+				}
 			});
 		}
 
@@ -677,3 +711,24 @@ function handleKeyEvent(e) {
 });
 
 //////////////////////////////////////////////////////////// Session Logut Time End ////////////////////////////////////////////////////////////////////////////////////
+
+//////////////////////////////////////////////////////////// Generate Excel Title Start ////////////////////////////////////////////////////////////////////////////////
+
+function excelExportAction(e, dt, button, config, baseTitle) {
+	const defaultAction = $.fn.dataTable.ext.buttons.excelHtml5.action;
+
+	// Build dynamic title
+	const now = new Date();
+	const date = now.toLocaleDateString('en-GB').replace(/\//g, '-');
+	const time = now.toLocaleTimeString('en-US').replace(/:/g, '-');
+	const dynamicTitle = `${baseTitle} - ${date} - ${time}`;
+
+	// Set title + filename
+	config.title = dynamicTitle;
+	config.filename = dynamicTitle;
+
+	// Perform actual Excel export
+	defaultAction.call(this, e, dt, button, config);
+}
+
+//////////////////////////////////////////////////////////// Generate Excel Title End ////////////////////////////////////////////////////////////////////////////////////

@@ -6,16 +6,19 @@ $(document).ready(function () {
 
 });
 
-function requestReportTable(){
+function requestReportTable() {
     $('#due_list_report_table').DataTable().destroy();
     getUserAccess(function (downloadAccess) {
         let buttons = [];
 
-        // Add Excel button if download access is 1
+        // Add Excel button only if download access is granted
         if (downloadAccess === 1) {
+            excelTitle = "Interest Due List Report List";
             buttons.push({
-                extend: 'excel',
-                title: "Interest Due List Report List"
+                extend: 'excelHtml5',
+                action: function (e, dt, button, config) {
+                    excelExportAction(e, dt, button, config, excelTitle);
+                }
             });
         }
 

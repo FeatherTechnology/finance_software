@@ -331,7 +331,7 @@ function getSearchTable(data) {
         'action'
     ];
     appendDataToTable('#search_table', response, columnMapping);
-    setdtable('#search_table');
+    setdtable('#search_table', "Customer List");
     setDropdownScripts();
     // }
 }
@@ -349,7 +349,7 @@ function getLoanTable(cus_id, aadhar_num, cus_name, area, mobile, pending_sts, o
             'charts'
         ];
         appendDataToTable('#status_table', response, columnMapping);
-        setdtable('#status_table');
+        setdtable('#status_table', "Loan List");
         //Dropdown in List Screen
         setDropdownScripts();
     }, 'json');
@@ -464,7 +464,7 @@ function getFamilyInfoTable() {
             'fam_mobile',
         ];
         appendDataToTable('#fam_info_table', response, columnMapping);
-        setdtable('#fam_info_table');
+        setdtable('#fam_info_table', "Family Info List");
     }, 'json')
 }
 function getPropertyInfoTable() {
@@ -479,7 +479,7 @@ function getPropertyInfoTable() {
             'fam_relationship',
         ];
         appendDataToTable('#prop_info', response, columnMapping);
-        setdtable('#prop_info');
+        setdtable('#prop_info', "Property Info List");
     }, 'json')
 }
 function getBankInfoTable() {
@@ -495,7 +495,7 @@ function getBankInfoTable() {
             'ifsc_code',
         ];
         appendDataToTable('#bank_info', response, columnMapping);
-        setdtable('#bank_info');
+        setdtable('#bank_info', "Bank Info List");
     }, 'json')
 }
 function getKycInfoTable() {
@@ -511,7 +511,7 @@ function getKycInfoTable() {
             'upload',
         ];
         appendDataToTable('#kyc_info', response, columnMapping);
-        setdtable('#kyc_info');
+        setdtable('#kyc_info', "KYC Info List");
     }, 'json')
 }
 function getAreaName() {
@@ -698,7 +698,7 @@ function getChequeInfoTable() {
             "upload"
         ]
         appendDataToTable('#cheque_info_table', response, chequeColumn);
-        setdtable('#cheque_info_table');
+        setdtable('#cheque_info_table', 'Cheque Info List');
     }, 'json');
 }
 function getDocTable(cusProfileId) {
@@ -708,7 +708,7 @@ function getDocTable(cusProfileId) {
             "document_name"
         ]
         appendDataToTable('#doc_table', response, docColumn);
-        setdtable('#doc_table')
+        setdtable('#doc_table', 'Document List');
     }, 'json');
 }
 function getDocInfoTable() {
@@ -726,7 +726,7 @@ function getDocInfoTable() {
             "upload"
         ]
         appendDataToTable('#document_info', response, docColumn);
-        setdtable('#document_info')
+        setdtable('#document_info', 'Document Info List');
     }, 'json');
 }
 function getMortInfoTable() {
@@ -748,7 +748,7 @@ function getMortInfoTable() {
             "upload"
         ]
         appendDataToTable('#mortgage_info', response, mortgageColumn);
-        setdtable('#mortgage_info')
+        setdtable('#mortgage_info', "Mortgage Info List");
     }, 'json');
 }
 function getEndorsementInfoTable() {
@@ -768,7 +768,7 @@ function getEndorsementInfoTable() {
             "upload"
         ]
         appendDataToTable('#endorsement_info', response, endorsementColumn);
-        setdtable('#endorsement_info')
+        setdtable('#endorsement_info', "Endorsement Info List");
     }, 'json');
 }
 function getGoldInfoTable() {
@@ -785,7 +785,7 @@ function getGoldInfoTable() {
             "value"
         ]
         appendDataToTable('#gold_info', response, goldColumn);
-        setdtable('#gold_info')
+        setdtable('#gold_info', "Gold Info List");
     }, 'json');
 }
 
@@ -1075,7 +1075,7 @@ function getDocNeedTable(cusProfileId) {
             "document_name",
         ]
         appendDataToTable('#doc_need_table', response, loanCategoryColumn);
-        setdtable('#doc_need_table')
+        setdtable('#doc_need_table', "Document Need List");
     }, 'json');
 }
 
@@ -1187,7 +1187,7 @@ function getChequeList(cp_id) {
             'action'
         ];
         appendDataToTable('#noc_cheque_list_table', response, nocChequeColumns);
-        setdtable('#noc_cheque_list_table');
+        setdtable('#noc_cheque_list_table', "Cheque Info List");
 
     }, 'json');
 }
@@ -1211,7 +1211,7 @@ function getMortgageList(cp_id) {
             'action'
         ];
         appendDataToTable('#noc_mortgage_list_table', response, nocMortgageColumns);
-        setdtable('#noc_mortgage_list_table');
+        setdtable('#noc_mortgage_list_table', "Mortgage Info List");
     }, 'json');
 }
 
@@ -1234,7 +1234,7 @@ function getEndorsementList(cp_id) {
             'action'
         ];
         appendDataToTable('#noc_endorsement_list_table', response, nocEndorseColumns);
-        setdtable('#noc_endorsement_list_table');
+        setdtable('#noc_endorsement_list_table', "Endorsement Info List");
     }, 'json');
 }
 
@@ -1255,7 +1255,7 @@ function getOtherDocumentList(cp_id) {
             'action'
         ];
         appendDataToTable('#noc_document_list_table', response, nocDocInfoColumns);
-        setdtable('#noc_document_list_table');
+        setdtable('#noc_document_list_table', "Document Info List");
     }, 'json');
 }
 function getGoldList(cp_id) {
@@ -1268,7 +1268,7 @@ function getGoldList(cp_id) {
             'noc_member', 'noc_relationship', 'action'
         ];
         appendDataToTable('#noc_gold_list_table', response, nocGoldColumns);
-        setdtable('#noc_gold_list_table');
+        setdtable('#noc_gold_list_table', "Gold Info List");
     }, 'json');
 }
 

@@ -17,17 +17,18 @@ $column = array(
     'cp.mobile1',
     'cp.id'
 );
-$query = "SELECT cp.id, cp.cus_id, cp.cus_name, cp.aadhar_num, lelc.loan_id, lc.loan_category, lelc.loan_amount,lelc.loan_date, anc.areaname, lnc.linename, bc.branch_name , cp.mobile1,cp.cus_data, lelc.id as loan_calc_id, cs.id as cus_sts_id, cs.status as c_sts 
- FROM customer_profile cp 
- LEFT JOIN loan_entry_loan_calculation lelc ON cp.id = lelc.cus_profile_id 
- LEFT JOIN loan_category_creation lcc ON lelc.loan_category = lcc.id
- LEFT JOIN loan_category lc ON lcc.loan_category = lc.id
- LEFT JOIN line_name_creation lnc ON cp.line = lnc.id
- LEFT JOIN area_name_creation anc ON cp.area = anc.id
- LEFT JOIN area_creation ac ON cp.line = ac.line_id
+
+$query = "SELECT cp.id, cp.cus_id, cp.cus_name, cp.aadhar_num, lelc.loan_id, lc.loan_category, lelc.loan_amount,lelc.loan_date, anc.areaname, lnc.linename, bc.branch_name , cp.mobile1,cp.cus_data, lelc.id as loan_calc_id, cs.id as cus_sts_id, cs.status as c_sts
+FROM customer_profile cp
+LEFT JOIN loan_entry_loan_calculation lelc ON cp.id = lelc.cus_profile_id
+LEFT JOIN loan_category_creation lcc ON lelc.loan_category = lcc.id
+LEFT JOIN loan_category lc ON lcc.loan_category = lc.id
+LEFT JOIN line_name_creation lnc ON cp.line = lnc.id
+LEFT JOIN area_name_creation anc ON cp.area = anc.id
+LEFT JOIN area_creation ac ON cp.line = ac.line_id
 LEFT JOIN branch_creation bc ON ac.branch_id = bc.id
- LEFT JOIN customer_status cs ON cp.id = cs.cus_profile_id 
-WHERE cp.insert_login_id = '$user_id' AND (cs.status = '1' OR cs.status = '2') ";
+LEFT JOIN customer_status cs ON cp.id = cs.cus_profile_id
+WHERE cp.insert_login_id = '$user_id' AND cs.status <= 2 ";
 
 if (isset($_POST['search'])) {
     if ($_POST['search'] != "") {
@@ -81,13 +82,12 @@ foreach ($result as $row) {
     $sub_array[] = isset($row['loan_category']) ? $row['loan_category'] : '';
     $sub_array[] = isset($row['loan_amount']) ? moneyFormatIndia($row['loan_amount']) : '';
     $sub_array[] = isset($row['cus_data']) ? $row['cus_data'] : '';
+
     $action = "<div class='dropdown'>
                 <button class='btn btn-outline-secondary'><i class='fa'>&#xf107;</i></button>
                 <div class='dropdown-content'>";
 
-    if ($row['c_sts'] == '1' || $row['c_sts'] == '2') {
-        $action .= "<a href='#' class='edit-loan-entry' value='" . $row['id'] . "' data-id='" . $row['loan_calc_id'] . "' title='Edit details'>Edit</a>";
-    }
+    $action .= "<a href='#' class='edit-loan-entry' value='" . $row['id'] . "' data-id='" . $row['loan_calc_id'] . "' data-sts='" . $row['c_sts'] . "' title='Edit details'>Edit</a>";
 
     if ($row['c_sts'] == '2') {
         $action  .= "<a href='#' class='move-loan-entry' value='" . $row['cus_sts_id'] . "' title='Move'>Move</a>";

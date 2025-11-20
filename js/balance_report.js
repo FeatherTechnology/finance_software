@@ -5,12 +5,15 @@ $(document).ready(function () {
         $('#bal_report_table').DataTable().destroy();
         getUserAccess(function(downloadAccess) {
             let buttons = [];
-    
-            // Add Excel button if download access is 1
+
+            // Add Excel button only if download access is granted
             if (downloadAccess === 1) {
+                excelTitle = "Balance Report List";
                 buttons.push({
-                    extend: 'excel',
-                    title: "Balance Report List"
+                    extend: 'excelHtml5',
+                    action: function (e, dt, button, config) {
+                        excelExportAction(e, dt, button, config, excelTitle);
+                    }
                 });
             }
     
@@ -43,7 +46,7 @@ $(document).ready(function () {
                 ],
                 "footerCallback": function (row, data, start, end, display) {
                     var api = this.api();
-    
+
                     // Remove formatting to get integer data for summation
                     var intVal = function (i) {
                         return typeof i === 'string' ?
@@ -51,10 +54,10 @@ $(document).ready(function () {
                             typeof i === 'number' ?
                                 i : 0;
                     };
-    
+
                     // Array of column indices to sum
                     var columnsToSum = [13, 14, 16, 17, 18, 19];
-    
+
                     // Loop through each column index
                     columnsToSum.forEach(function (colIndex) {
                         // Total over all pages for the current column
@@ -71,5 +74,5 @@ $(document).ready(function () {
             });
         });
     });
-    
+
 });

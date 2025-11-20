@@ -9,11 +9,14 @@ function PrincipalInterestReportTable() {
     getUserAccess(function (downloadAccess) {
         let buttons = [];
 
-        // Add Excel button if download access is 1
+        // Add Excel button only if download access is granted
         if (downloadAccess === 1) {
+            excelTitle = "Principal Interest Report List";
             buttons.push({
-                extend: 'excel',
-                title: "Principal Interest Report List"
+                extend: 'excelHtml5',
+                action: function (e, dt, button, config) {
+                    excelExportAction(e, dt, button, config, excelTitle);
+                }
             });
         }
 
