@@ -32,6 +32,8 @@ $(document).ready(function () {
         'uncleared_report': 'reports',
         'in_closed_report': 'reports',
         'principal_interest_report': 'reports',
+        'due_list_report': 'reports',
+        'no_due_pay_report': 'reports',
         'interest_loan_issue_report': 'reports_interest',
         'interest_collection_report': 'reports_interest',
         'interest_balance_report': 'reports_interest',
@@ -39,6 +41,9 @@ $(document).ready(function () {
         'interest_ledger_view_report': 'reports_interest',
         'interest_cancel_revoke_report': 'reports_interest',
         'interest_in_closed_report': 'reports_interest',
+        'interest_principal_interest_report': 'reports_interest',
+        'interest_due_list_report': 'reports_interest',
+        'interest_no_due_pay_report': 'reports_interest',
         'bulk_upload': 'bulk_upload'
     };
 

@@ -28,7 +28,6 @@ $column = array(
     'r.role',
     'u.name',
     'coll.coll_date',
-    'SUM(coll.due_amt_track)',
     'cp.id',
     'cp.id',
     'SUM(coll.penalty_track)',
@@ -37,7 +36,7 @@ $column = array(
 );
 
 $query = "SELECT  cp.id, lnc.linename, lelc.loan_id, lelc.loan_date, cp.aadhar_num, cp.cus_id, cp.cus_name, anc.areaname, lc.loan_category, agc.agent_name, r.role, u.name, 
-coll.coll_date, SUM(coll.due_amt_track) AS due_amt_track, SUM(coll.princ_amt_track) AS princ_amt_track, SUM(coll.int_amt_track) AS int_amt_track, SUM(coll.penalty_track) AS penalty_track, SUM(coll.coll_charge_track) AS coll_charge_track, SUM(coll.total_paid_track) AS total_paid_track ,  lelc.principal_amnt, lelc.interest_amnt, lelc.total_amnt
+coll.coll_date, SUM(coll.princ_amt_track) AS princ_amt_track, SUM(coll.int_amt_track) AS int_amt_track, SUM(coll.penalty_track) AS penalty_track, SUM(coll.coll_charge_track) AS coll_charge_track, SUM(coll.total_paid_track) AS total_paid_track ,  lelc.principal_amnt, lelc.interest_amnt, lelc.total_amnt
 FROM 
     customer_profile cp
     LEFT JOIN collection coll ON cp.id = coll.cus_profile_id
@@ -50,7 +49,7 @@ FROM
     JOIN users u ON u.id = cs.update_login_id
     LEFT JOIN role r ON u.role = r.id
     LEFT JOIN agent_creation agc ON lelc.agent_id = agc.id
-    WHERE cs.status >= 7 AND $where AND lelc.due_type = 'EMI' ";
+    WHERE cs.status >= 7 AND $where AND lelc.due_type = 'Interest' ";
 
 if (isset($_POST['search'])) {
     if ($_POST['search'] != "") {
@@ -99,8 +98,6 @@ $data = array();
 $sno = 1;
 foreach ($result as $row) {
     $sub_array   = array();
-    $principal_calc = $row['principal_amnt'] / $row['total_amnt'];
-    $intrest_calc = $row['interest_amnt'] / $row['total_amnt'];
 
     $sub_array[] = $sno;
     $sub_array[] = $row['linename'];
@@ -115,12 +112,8 @@ foreach ($result as $row) {
     $sub_array[] = $row['role'];
     $sub_array[] = $row['name'];
     $sub_array[] = date('d-m-Y', strtotime($row['coll_date']));
-    $sub_array[] = moneyFormatIndia(intVal($row['due_amt_track']));
-    $principle = $row['due_amt_track'] * $principal_calc;
-    $intrest = $row['due_amt_track'] * $intrest_calc;
-    $sub_array[] = round($principle, 1);
-    $sub_array[] = round($intrest, 1);
-
+    $sub_array[] = moneyFormatIndia(intval($row['princ_amt_track']));
+    $sub_array[] = moneyFormatIndia(intval($row['int_amt_track']));
     $sub_array[] = moneyFormatIndia(intval($row['penalty_track']));
     $sub_array[] = moneyFormatIndia(intval($row['coll_charge_track']));
     $sub_array[] = moneyFormatIndia(intval($row['total_paid_track']));
@@ -129,7 +122,7 @@ foreach ($result as $row) {
 }
 function count_all_data($pdo)
 {
-    $query = $pdo->query("SELECT COUNT(subquery.id) AS count_result FROM ( SELECT coll.id FROM collection coll JOIN customer_status cs ON coll.cus_profile_id = cs.cus_profile_id LEFT JOIN loan_entry_loan_calculation lelc ON cs.cus_profile_id = lelc.cus_profile_id WHERE cs.status >= 7 AND lelc.due_type = 'EMI' GROUP BY coll.cus_profile_id ) AS subquery ");
+    $query = $pdo->query("SELECT COUNT(subquery.id) AS count_result FROM ( SELECT coll.id FROM collection coll JOIN customer_status cs ON coll.cus_profile_id = cs.cus_profile_id LEFT JOIN loan_entry_loan_calculation lelc ON cs.cus_profile_id = lelc.cus_profile_id WHERE cs.status >= 7 AND lelc.due_type = 'Interest' GROUP BY coll.cus_profile_id ) AS subquery ");
     $statement = $query->fetch();
     return intVal($statement['count_result']);
 }

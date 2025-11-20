@@ -814,9 +814,9 @@ WHERE c.cus_profile_id = $cp_id AND (c.due_amt_track != '' OR c.pre_close_waiver
             LEFT JOIN role r ON u.role = r.id
             WHERE c.`cus_profile_id` = '$cp_id' AND (c.due_amt_track != '' or c.princ_amt_track!='' or c.int_amt_track!='' or c.pre_close_waiver!='' or c.principal_waiver!='' or c.interest_waiver !='')
              AND (
-                (c.coll_date BETWEEN '$maturity_month' AND '$currentMonth' AND c.coll_date != '0000-00-00')
+                (DATE (c.coll_date) BETWEEN '$maturity_month' AND '$currentMonth' AND c.coll_date != '0000-00-00')
                 OR
-                (c.trans_date BETWEEN '$maturity_month' AND '$currentMonth' AND c.trans_date != '0000-00-00'))
+                (DATE (c.trans_date) BETWEEN '$maturity_month' AND '$currentMonth' AND c.trans_date != '0000-00-00'))
           ");
         } else
         if ($loanFrom['scheme_due_method'] == '2') {
@@ -853,6 +853,7 @@ WHERE c.cus_profile_id = $cp_id AND (c.due_amt_track != '' OR c.pre_close_waiver
                 $collectionAmnt = intVal($row['due_amt_track']);
                 $due_amt_track = intVal($row['due_amt_track']);
                 $waiver = intVal($row['pre_close_waiver']);
+                $principal_waiver = intVal($row['principal_waiver']);
                 $bal_amt = $bal_amt - $due_amt_track - $waiver;
                 if ($loan_type == 'interest') {
                     $PcollectionAmnt = intVal($row['princ_amt_track']);
@@ -959,7 +960,10 @@ WHERE c.cus_profile_id = $cp_id AND (c.due_amt_track != '' OR c.pre_close_waiver
                                 ?></td> -->
                     <td> <a class='print_due_coll' id="" value="<?php echo $row['coll_code']; ?>"> <i class="fa fa-print" aria-hidden="true"></i> </a> </td>
                 </tr>
-
+                <?php
+                if ($loan_type == 'interest') {
+                    $last_bal_amt = $bal_amt;
+                }?>
         <?php
                 $i++;
             }

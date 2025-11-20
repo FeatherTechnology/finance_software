@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Sep 16, 2025 at 01:30 PM
+-- Generation Time: Nov 20, 2025 at 06:22 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -85,8 +85,8 @@ CREATE TABLE `area_creation` (
 
 CREATE TABLE `area_creation_area_name` (
   `id` int(11) NOT NULL,
-  `area_creation_id` int(25) NOT NULL,
-  `area_id` int(25) NOT NULL
+  `area_creation_id` int(11) NOT NULL,
+  `area_id` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -469,6 +469,7 @@ CREATE TABLE `customer_status` (
   `coll_status` varchar(250) DEFAULT NULL,
   `status` int(11) NOT NULL,
   `sub_status` int(11) DEFAULT NULL,
+  `in_closed_date` date DEFAULT NULL,
   `closed_date` date DEFAULT NULL,
   `remark` varchar(255) DEFAULT NULL,
   `insert_login_id` int(11) NOT NULL,
@@ -1121,13 +1122,6 @@ CREATE TABLE `role` (
   `updated_on` date DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
---
--- Dumping data for table `role`
---
-
-INSERT INTO `role` (`id`, `role`, `insert_login_id`, `update_login_id`, `created_on`, `updated_on`) VALUES
-(1, 'Staff', 1, NULL, '2025-05-08', NULL);
-
 -- --------------------------------------------------------
 
 --
@@ -1219,13 +1213,24 @@ INSERT INTO `sub_menu_list` (`id`, `main_menu`, `sub_menu`, `link`, `icon`) VALU
 (23, 14, 'Balance Report', 'balance_report', 'event_available'),
 (24, 14, 'Closed Report', 'closed_report', 'erase'),
 (25, 14, 'Ledger View Report', 'ledger_view_report', 'terrain'),
-(26, 14, 'Other Transaction Report', 'other_transaction_report', 'terrain'),
-(27, 15, 'Interest Loan Issue Report', 'interest_loan_issue_report', 'area-graph'),
-(28, 15, 'Interest Collection Report', 'interest_collection_report', 'event_note'),
-(29, 15, 'Interest Balance Report', 'interest_balance_report', 'event_available'),
-(30, 15, 'Interest Closed Report', 'interest_closed_report', 'erase'),
-(31, 15, 'Interest Ledger View Report', 'interest_ledger_view_report', 'terrain'),
-(32, 16, 'Bulk Upload', 'bulk_upload', 'cloud_done');
+(26, 14, 'Other Transaction Report', 'other_transaction_report', 'area-graph'),
+(27, 14, 'Cancel Revoke Report', 'cancel_revoke_report', 'event_note'),
+(28, 14, 'Uncleared Report', 'uncleared_report', 'event_available'),
+(29, 14, 'In Closed Report', 'in_closed_report', 'erase'),
+(30, 14, 'Principal / Interest Report', 'principal_interest_report', 'terrain'),
+(31, 14, 'Due List Report', 'due_list_report', 'area-graph'),
+(32, 14, 'No Due Pay Report', 'no_due_pay_report', 'event_note'),
+(33, 15, 'Interest Loan Issue Report', 'interest_loan_issue_report', 'area-graph'),
+(34, 15, 'Interest Collection Report', 'interest_collection_report', 'event_note'),
+(35, 15, 'Interest Balance Report', 'interest_balance_report', 'event_available'),
+(36, 15, 'Interest Closed Report', 'interest_closed_report', 'erase'),
+(37, 15, 'Interest Ledger View Report', 'interest_ledger_view_report', 'terrain'),
+(38, 15, 'Interest Cancel Revoke Report', 'interest_cancel_revoke_report', 'area-graph'),
+(39, 15, 'Interest In Closed Report', 'interest_in_closed_report', 'event_note'),
+(40, 15, 'Interest Principal / Interest Report', 'interest_principal_interest_report', 'event_available'),
+(41, 15, 'Interest Due List Report', 'interest_due_list_report', 'erase'),
+(42, 15, 'Interest No Due Pay Report', 'interest_no_due_pay_report', 'terrain'),
+(43, 16, 'Bulk Upload Report', 'bulk_upload', 'cloud_done');
 
 -- --------------------------------------------------------
 
@@ -1603,8 +1608,7 @@ CREATE TABLE `users` (
 --
 
 INSERT INTO `users` (`id`, `name`, `user_code`, `role`, `designation`, `address`, `place`, `email`, `mobile`, `user_name`, `password`, `branch`, `loan_category`, `line`, `collection_access`, `download_access`, `screens`, `insert_login_id`, `update_login_id`, `created_on`, `updated_on`) VALUES
-(1, 'Super Admin', 'US-001', 1, 1, '', '', '', '', 'admin', '123', '1,2', '1,2,3,10,11,12,13,14,16', '1,3,4', 1, 1, '1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32', '1', '1', '2024-06-13', '2025-09-16'),
-(10, 'Test1', 'US-002', 1, 1, '', '', '', '', 'Test', '123', '1', '1', '1', 2, 2, '1,4,5,9,10,11,12,13,14,15,18,19,20,21,22,23,24,26', '1', NULL, '2025-01-29', NULL);
+(1, 'Super Admin', 'US-001', 1, 1, '', '', '', '', 'admin', '123', '1,2,3', '1,2,3,4,5', '3,1,2', 1, 1, '1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42', '1', '1', '2024-06-13', '2025-11-18');
 
 --
 -- Indexes for dumped tables
@@ -2205,7 +2209,7 @@ ALTER TABLE `repromotion_customer`
 -- AUTO_INCREMENT for table `role`
 --
 ALTER TABLE `role`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `scheme`
@@ -2223,7 +2227,7 @@ ALTER TABLE `states`
 -- AUTO_INCREMENT for table `sub_menu_list`
 --
 ALTER TABLE `sub_menu_list`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=33;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=44;
 
 --
 -- AUTO_INCREMENT for table `taluks`
@@ -2235,7 +2239,7 @@ ALTER TABLE `taluks`
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
 
 --
 -- Constraints for dumped tables

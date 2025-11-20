@@ -27,7 +27,7 @@ $query = "SELECT cp.id, cp.cus_id, cp.cus_name, cp.aadhar_num, lelc.loan_id, lc.
  LEFT JOIN area_creation ac ON cp.line = ac.line_id
 LEFT JOIN branch_creation bc ON ac.branch_id = bc.id
  LEFT JOIN customer_status cs ON cp.id = cs.cus_profile_id 
-WHERE cp.insert_login_id = '$user_id' AND cs.status <= 2 ";
+WHERE cp.insert_login_id = '$user_id' AND (cs.status = '1' OR cs.status = '2') ";
 
 if (isset($_POST['search'])) {
     if ($_POST['search'] != "") {
@@ -85,7 +85,9 @@ foreach ($result as $row) {
                 <button class='btn btn-outline-secondary'><i class='fa'>&#xf107;</i></button>
                 <div class='dropdown-content'>";
 
-    $action .= "<a href='#' class='edit-loan-entry' value='" . $row['id'] . "' data-id='" . $row['loan_calc_id'] . "' title='Edit details'>Edit</a>";
+    if ($row['c_sts'] == '1' || $row['c_sts'] == '2') {
+        $action .= "<a href='#' class='edit-loan-entry' value='" . $row['id'] . "' data-id='" . $row['loan_calc_id'] . "' title='Edit details'>Edit</a>";
+    }
 
     if ($row['c_sts'] == '2') {
         $action  .= "<a href='#' class='move-loan-entry' value='" . $row['cus_sts_id'] . "' title='Move'>Move</a>";
