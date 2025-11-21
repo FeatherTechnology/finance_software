@@ -172,7 +172,6 @@ foreach ($result as $row) {
         $search_date = strtotime($to_date);
 
         $start_date = new DateTime($row['due_startdate']);
-        $end_date   = new DateTime($row['maturity_date']);
         $to_dt      = new DateTime($to_date);
         $maturity_dt = new DateTime($row['maturity_date']);
 
@@ -182,7 +181,7 @@ foreach ($result as $row) {
         $od_months = 0;
 
         // OD days from maturity → to_date
-        $od_diff_days = $end_date->diff($to_dt)->days;
+        $od_diff_days = $maturity_dt->diff($to_dt)->days;
 
         // ------------------------------------ MONTHLY LOGIC ------------------------------------ //
 
@@ -212,7 +211,7 @@ foreach ($result as $row) {
         else {
 
             // PENDING 
-            $months = $start_date->diff($end_date)->days + 1;
+            $months = $start_date->diff($maturity_dt)->days + 1;
             $pending_month = $months;
 
             // DAILY OD (days)

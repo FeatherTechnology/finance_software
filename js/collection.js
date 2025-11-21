@@ -842,7 +842,7 @@ function getFineFormTable(cp_id) {
             'coll_charge'
         ];
         appendDataToTable('#fine_form_table', response, fineColumn);
-        setdtable('#fine_form_table',"Fine List");
+        setdtable('#fine_form_table', "Fine List");
 
         $('#fine_purpose').val('');
         $('#fine_Amnt').val('');
@@ -865,7 +865,9 @@ function dueChartList(cp_id, cus_id) {
     }).then(function () {
 
         $.post('api/collection_files/get_due_method_name.php', { cp_id }, function (response) {
-            $('#dueChartTitle').text('Due Chart ( ' + response['due_method'] + ' - ' + response['loan_type'] + ' )');
+            $('#dueChartTitle').text( `Due Chart
+                ( Aadhaar Number : ${response.aadhar_num} | Cus ID : ${response.cus_id} | Cus Name : ${response.cus_name} | Loan ID : ${response.loan_id} | Loan Category : ${response.loan_category} | ${response.loan_type} - ${response.due_method} )`
+            );
         }, 'json');
     })
 
