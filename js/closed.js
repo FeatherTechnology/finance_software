@@ -151,7 +151,7 @@ $(function () {
 });
 
 function getClosedListTable() {
-    serverSideTable('#closed_list_table', '', 'api/closed_files/close_list_table.php');
+    serverSideTable('#closed_list_table', '', 'api/closed_files/close_list_table.php', 'Closed List');
 }
 function moveToNext(cus_id, cus_sts) {
     $.post('api/closed_files/close_move_to_next.php', { cus_id, cus_sts }, function (response) {
@@ -198,7 +198,7 @@ function getClosedLoanList(cus_id) {
             'action'
         ];
         appendDataToTable('#close_loan_table', response, columnMapping);
-        setdtable('#close_loan_table');
+        setdtable('#close_loan_table', "Closed Loan List");
         //Dropdown in List Screen
         setDropdownScripts();
     }, 'json');

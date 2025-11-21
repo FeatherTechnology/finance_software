@@ -559,7 +559,7 @@ $(function () {
 
 function getCollectionListTable(collection_status) {
     let params = { 'collection_status': collection_status };
-    serverSideTable('#collection_list_table', params, 'api/collection_files/collection_list.php');
+    serverSideTable('#collection_list_table', params, 'api/collection_files/collection_list.php', 'Collection List');
 }
 
 function swapTableAndCreation() {
@@ -718,7 +718,7 @@ function OnLoadFunctions(cus_id) {
                     'action'
                 ];
                 appendDataToTable('#loan_list_table', response, columnMapping);
-                setdtable('#loan_list_table');
+                setdtable('#loan_list_table', "Loan List");
                 //Dropdown in List Screen
                 setDropdownScripts();
             }
@@ -842,7 +842,7 @@ function getFineFormTable(cp_id) {
             'coll_charge'
         ];
         appendDataToTable('#fine_form_table', response, fineColumn);
-        setdtable('#fine_form_table');
+        setdtable('#fine_form_table', "Fine List");
 
         $('#fine_purpose').val('');
         $('#fine_Amnt').val('');
@@ -865,7 +865,9 @@ function dueChartList(cp_id, cus_id) {
     }).then(function () {
 
         $.post('api/collection_files/get_due_method_name.php', { cp_id }, function (response) {
-            $('#dueChartTitle').text('Due Chart ( ' + response['due_method'] + ' - ' + response['loan_type'] + ' )');
+            $('#dueChartTitle').text( `Due Chart
+                ( Aadhaar Number : ${response.aadhar_num} | Cus ID : ${response.cus_id} | Cus Name : ${response.cus_name} | Loan ID : ${response.loan_id} | Loan Category : ${response.loan_category} | ${response.loan_type} - ${response.due_method} )`
+            );
         }, 'json');
     })
 

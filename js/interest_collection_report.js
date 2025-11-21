@@ -20,9 +20,12 @@ $(document).ready(function () {
 
             // Add Excel button only if download access is granted
             if (downloadAccess === 1) {
+                excelTitle = "Interest Collection Report List";
                 buttons.push({
-                    extend: 'excel',
-                    title: "Collection Report List"
+                    extend: 'excelHtml5',
+                    action: function (e, dt, button, config) {
+                        excelExportAction(e, dt, button, config, excelTitle);
+                    }
                 });
             }
 

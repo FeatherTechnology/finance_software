@@ -15,7 +15,7 @@ $(document).ready(function () {
             'to_date' : $('#to_date').val()
         };
 
-        serverSideTable('#loan_issue_report_table', data, 'api/report_files/get_loan_issue_report.php');
+        serverSideTable('#loan_issue_report_table', data, 'api/report_files/get_loan_issue_report.php', 'Loan Issue Report List');
 
     });
 

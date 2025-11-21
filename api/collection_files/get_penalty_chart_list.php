@@ -90,6 +90,6 @@ function moneyFormatIndia($num)
 
 <script type="text/javascript">
     $(function() {
-        setdtable('#penaltyListTable');
+        setdtable('#penaltyListTable',"Penalty Chart List");
     });
 </script>

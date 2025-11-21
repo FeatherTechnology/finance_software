@@ -25,6 +25,7 @@
                                 <th>Loan category</th>
                                 <th>Agent</th>
                                 <th>Loan Date</th>
+                                <th>Maturity Date</th>
                                 <th>Loan Amount</th>
                                 <th>Pricipal Amount</th>
                                 <th>Interest Amount</th>

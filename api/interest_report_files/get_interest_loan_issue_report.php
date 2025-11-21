@@ -20,6 +20,7 @@ $column = array(
     'lc.loan_category',
     'agc.agent_name',
     'li.issue_date',
+    'lelc.maturity_date',
     'lelc.loan_amnt',
     'lelc.principal_amnt',
     'lelc.interest_amnt',
@@ -29,7 +30,7 @@ $column = array(
     'li.issue_person',
     'li.relationship'
 );
-$query = "SELECT lelc.loan_id, cp.cus_id, cp.aadhar_num, cp.cus_name, fi.fam_name as gaurantor, anc.areaname, lnc.linename, bc.branch_name , cp.mobile1, lc.loan_category, agc.agent_name, li.issue_date, lelc.loan_amnt, lelc.principal_amnt, lelc.interest_amnt, lelc.doc_charge_calculate, lelc.processing_fees_calculate, li.net_cash, li.issue_person, li.relationship 
+$query = "SELECT lelc.loan_id, cp.cus_id, cp.aadhar_num, cp.cus_name, fi.fam_name as gaurantor, anc.areaname, lnc.linename, bc.branch_name , cp.mobile1, lc.loan_category, agc.agent_name, li.issue_date, lelc.loan_amnt, lelc.principal_amnt, lelc.interest_amnt, lelc.doc_charge_calculate, lelc.processing_fees_calculate, li.net_cash, li.issue_person, li.relationship , lelc.maturity_date
 FROM loan_issue li 
 JOIN customer_profile cp ON li.cus_profile_id = cp.id
 JOIN loan_entry_loan_calculation lelc ON cp.id = lelc.cus_profile_id
@@ -111,6 +112,7 @@ foreach ($result as $row) {
     $sub_array[] = isset($row['loan_category']) ? $row['loan_category'] : '';
     $sub_array[] = isset($row['agent_name']) ? $row['agent_name'] : '';
     $sub_array[] = isset($row['issue_date']) ? date('d-m-Y', strtotime($row['issue_date'])) : '';
+    $sub_array[] = isset($row['maturity_date']) ? date('d-m-Y', strtotime($row['maturity_date'])) : '';
     $sub_array[] = isset($row['loan_amnt']) ? moneyFormatIndia($row['loan_amnt']) : '';
     $sub_array[] = isset($row['principal_amnt']) ? moneyFormatIndia($row['principal_amnt']) : '';
     $sub_array[] = isset($row['interest_amnt']) ? moneyFormatIndia($row['interest_amnt']) : '';

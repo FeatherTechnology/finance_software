@@ -15,7 +15,7 @@ $(document).ready(function () {
             'to_date' : $('#to_date').val()
         };
 
-        serverSideTable('#interest_loan_issue_report_table', data, 'api/interest_report_files/get_interest_loan_issue_report.php');
+        serverSideTable('#interest_loan_issue_report_table', data, 'api/interest_report_files/get_interest_loan_issue_report.php', 'Interest Loan Issue Report List');
 
     });
 

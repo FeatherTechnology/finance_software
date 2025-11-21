@@ -234,7 +234,7 @@ function getAreaCreationTable() {
             'action'
         ];
         appendDataToTable('#area_creation_table', response, columnMapping);
-        setdtable('#area_creation_table');
+        setdtable('#area_creation_table', "Area Creation List");
     }, 'json');
 }
 function swapTableAndCreation() {
@@ -296,7 +296,7 @@ function getLineNameTable() {
                 "action"
             ]
             appendDataToTable('#line_creation_table', response, lineNameColumn);
-            setdtable('#line_creation_table');
+            setdtable('#line_creation_table', "Line Name List");
         }, 'json');
 
     } else {
@@ -335,7 +335,7 @@ function getAreaNameTable() {
     let branch_id = $('#branch_name').val();
     let params = { 'branch_id': branch_id };
     if (branch_id != '') {
-        serverSideTable('#area_name_table', params, 'api/area_creation_files/area_name_list.php');
+        serverSideTable('#area_name_table', params, 'api/area_creation_files/area_name_list.php',"Area Name List");
     } else {
         swalError('Warning', 'Kindly Select the Branch Name');
     }

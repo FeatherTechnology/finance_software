@@ -303,29 +303,36 @@ function calculateOthers($loan_arr, $response, $pdo)
 
         while ($start_date_obj < $end_date_obj && $start_date_obj < $current_date_obj) { // To find loan date count till now from start date.
 
-            $penalty_checking_date  = $start_date_obj->format('Y-m-d'); // This format is for query.. month , year function accept only if (Y-m-d).
-            $start_date_obj->add($interval);
+            $next_week = (clone $start_date_obj)->add($interval);
 
-            $checkcollection = $pdo->query("SELECT * FROM `collection` WHERE `cus_profile_id` = '$cp_id' && ((WEEK(coll_date)= WEEK('$penalty_checking_date') || WEEK(trans_date)= WEEK('$penalty_checking_date')) && (YEAR(coll_date)= YEAR('$penalty_checking_date') || YEAR(trans_date)= YEAR('$penalty_checking_date')))");
-            $collectioncount = $checkcollection->rowCount(); // Checking whether the collection are inserted on date or not by using penalty_raised_date.
+            if ($next_week <= $current_date_obj) {
 
-            if ($loan_arr['scheme_name'] == '' || $loan_arr['scheme_name'] == null) {
-                $result = $pdo->query("SELECT  overdue_penalty as overdue FROM `loan_category_creation` WHERE `id` = '" . $loan_arr['loan_category'] . "' ");
-            } else {
-                $result = $pdo->query("SELECT overdue_penalty_percent as overdue FROM `scheme` WHERE `id` = '" . $loan_arr['scheme_name'] . "' ");
-            }
-            $row = $result->fetch();
-            $penalty_per = $row['overdue']; //get penalty percentage to insert
-            $count++; //Count represents how many months are exceeded
+                $penalty_checking_date  = $start_date_obj->format('Y-m-d'); // This format is for query.. month , year function accept only if (Y-m-d).
 
-            if ($totalPaidAmt < $toPaytilldate && $collectioncount == 0) {
-                $checkPenalty = $pdo->query("SELECT * from penalty_charges where penalty_date = '$penalty_checking_date' and cus_profile_id = '$cp_id' ");
-                if ($checkPenalty->rowCount() == 0) {
-                    $penalty = round((($response['due_amt'] * $penalty_per) / 100) + $penalty);
-                    $qry = $pdo->query("INSERT into penalty_charges (`cus_profile_id`,`penalty_date`, `penalty`, `created_date`) values ('$cp_id','$penalty_checking_date','$penalty',current_timestamp)");
+                $checkcollection = $pdo->query("SELECT * FROM `collection` WHERE `cus_profile_id` = '$cp_id' && ((WEEK(coll_date)= WEEK('$penalty_checking_date') || WEEK(trans_date)= WEEK('$penalty_checking_date')) && (YEAR(coll_date)= YEAR('$penalty_checking_date') || YEAR(trans_date)= YEAR('$penalty_checking_date')))");
+
+                $collectioncount = $checkcollection->rowCount(); // Checking whether the collection are inserted on date or not by using penalty_raised_date.
+
+                if ($loan_arr['scheme_name'] == '' || $loan_arr['scheme_name'] == null) {
+                    $result = $pdo->query("SELECT  overdue_penalty as overdue FROM `loan_category_creation` WHERE `id` = '" . $loan_arr['loan_category'] . "' ");
+                } else {
+                    $result = $pdo->query("SELECT overdue_penalty_percent as overdue FROM `scheme` WHERE `id` = '" . $loan_arr['scheme_name'] . "' ");
                 }
-                $countForPenalty++;
+
+                $row = $result->fetch();
+                $penalty_per = $row['overdue']; //get penalty percentage to insert
+                $count++; //Count represents how many months are exceeded
+
+                if ($totalPaidAmt < $toPaytilldate && $collectioncount == 0) {
+                    $checkPenalty = $pdo->query("SELECT * from penalty_charges where penalty_date = '$penalty_checking_date' and cus_profile_id = '$cp_id' ");
+                    if ($checkPenalty->rowCount() == 0) {
+                        $penalty = round((($response['due_amt'] * $penalty_per) / 100) + $penalty);
+                        $qry = $pdo->query("INSERT into penalty_charges (`cus_profile_id`,`penalty_date`, `penalty`, `created_date`) values ('$cp_id','$penalty_checking_date','$penalty',current_timestamp)");
+                    }
+                    $countForPenalty++;
+                }
             }
+            $start_date_obj->add($interval);
         }
         //condition END
 
@@ -647,7 +654,7 @@ function dueAmtCalculation($pdo, $start_date, $end_date, $due_amt, $loan_arr, $s
                 $dueperday = $due_amt / intval($start->format('t'));
 
                 if ($status != 'pending') {
-                    if ($start->format('m') != $end->format('m')) {
+                    if ($start->format('Y-m') != $end->format('Y-m')) {
                         $new_end_date = clone $start;
                         $new_end_date->modify('last day of this month');
                         $cur_result = (($start->diff($new_end_date))->days + 1) * $dueperday;
@@ -824,7 +831,7 @@ function getTillDateInterest($loan_arr, $response, $pdo, $data, $cp_id)
         $cur_date->modify('last day of this month');
         $result = 0;
 
-        if ($issued_date->format('m') <= $cur_date->format('m')) {
+        if ($issued_date->format('Y-m') <= $cur_date->format('Y-m')) {
             $result = dueAmtCalculation($pdo, $issued_date, $cur_date, $response['due_amt'], $loan_arr, 'pending', $cp_id);
         }
         return $result;
@@ -841,14 +848,14 @@ function getPaidInterest($pdo, $cp_id)
 function getPenaltyCharges($pdo, $cp_id)
 {
     // to get overall penalty paid till now to show pending penalty amount
-      $qry = $pdo->query("SELECT COALESCE(SUM(penalty_track),0) as penalty, COALESCE(SUM(penalty_waiver),0) as penalty_waiver 
+    $qry = $pdo->query("SELECT COALESCE(SUM(penalty_track),0) as penalty, COALESCE(SUM(penalty_waiver),0) as penalty_waiver 
                         FROM `collection` 
                         WHERE cus_profile_id = '$cp_id'");
     $paid = $qry->fetch();
 
     $paid_total = $paid['penalty'] + $paid['penalty_waiver'];
     //to get overall penalty raised till now for this req id
-   // Total penalty charged till now
+    // Total penalty charged till now
     $qry2 = $pdo->query("SELECT COALESCE(SUM(penalty),0) as penalty 
                          FROM `penalty_charges` 
                          WHERE cus_profile_id = '$cp_id'");

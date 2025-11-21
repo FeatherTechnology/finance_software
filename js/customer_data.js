@@ -167,7 +167,7 @@ function getNewPromotionTable() {
             'action'
         ];
         appendDataToTable('#new_list_table', response, columnMapping);
-        setdtable('#new_list_table');
+        setdtable('#new_list_table', "New Promotion List");
         $('#new_form input').val('');
         $('#new_form input').css('border', '1px solid #cecece');
     }, 'json')
@@ -199,7 +199,7 @@ function getExistingPromotionTable(existing_details) {
             'action'
         ];
         appendDataToTable('#existing_list_table', response, columnMapping);
-        setdtable('#existing_list_table');
+        setdtable('#existing_list_table',"Existing List");
         setDropdownScripts();
 
     }, 'json')
@@ -220,7 +220,7 @@ function getRePromotionTable(repromotion_details) {
             'action'
         ];
         appendDataToTable('#repromotion_list_table', response, columnMapping);
-        setdtable('#repromotion_list_table');
+        setdtable('#repromotion_list_table',"Re-Promotion List");
         setDropdownScripts();
     }, 'json')
 }

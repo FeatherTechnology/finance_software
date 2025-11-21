@@ -1,30 +1,19 @@
 $(document).ready(function () {
 
-    $('#from_date').change(function () {
-        const fromDate = $(this).val();
-        const toDate = $('#to_date').val();
-        $('#to_date').attr('min', fromDate);
-
-        // Check if from_date is greater than to_date
-        if (toDate && fromDate > toDate) {
-            $('#to_date').val(''); // Clear the invalid value
-        }
-    });
-
-    //Closed Report Table
     $('#reset_btn').click(function () {
-        closedReportTable();
+        requestReportTable();
     })
+
 });
 
-function closedReportTable() {
-    $('#in_closed_report_table').DataTable().destroy();
+function requestReportTable() {
+    $('#due_list_report_table').DataTable().destroy();
     getUserAccess(function (downloadAccess) {
         let buttons = [];
 
         // Add Excel button only if download access is granted
         if (downloadAccess === 1) {
-            excelTitle = "In Closed Report List";
+            excelTitle = "Due List Report List";
             buttons.push({
                 extend: 'excelHtml5',
                 action: function (e, dt, button, config) {
@@ -39,7 +28,7 @@ function closedReportTable() {
             collectionLayout: 'fixed four-column',
         });
 
-        $('#in_closed_report_table').DataTable({
+        $('#due_list_report_table').DataTable({
             "order": [
                 [0, "desc"]
             ],
@@ -47,11 +36,10 @@ function closedReportTable() {
             'serverSide': true,
             'serverMethod': 'post',
             'ajax': {
-                'url': 'api/report_files/get_in_closed_report.php',
+                'url': 'api/report_files/get_due_list_report.php',
                 'data': function (data) {
                     var search = $('input[type=search]').val();
                     data.search = search;
-                    data.from_date = $('#from_date').val();
                     data.to_date = $('#to_date').val();
                 }
             },
@@ -73,7 +61,7 @@ function closedReportTable() {
                 };
 
                 // Array of column indices to sum
-                var columnsToSum = [10];
+                var columnsToSum = [];
 
                 // Loop through each column index
                 columnsToSum.forEach(function (colIndex) {

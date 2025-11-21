@@ -361,7 +361,7 @@ function getUserCreationTable() {
             'action'
         ];
         appendDataToTable('#user_creation_table', response, userColumn);
-        setdtable('#user_creation_table');
+        setdtable('#user_creation_table',"User Creation List");
     }, 'json');
 }
 
@@ -453,7 +453,7 @@ function getRoleTable() {
             "action"
         ]
         appendDataToTable('#role_table', response, loanCategoryColumn);
-        setdtable('#role_table');
+        setdtable('#role_table', "Role List");
     }, 'json');
 }
 
@@ -501,7 +501,7 @@ function getDesignationTable() {
             "action"
         ]
         appendDataToTable('#designation_modal_table', response, loanCategoryColumn);
-        setdtable('#designation_modal_table');
+        setdtable('#designation_modal_table', "Designation List");
     }, 'json');
 }
 
