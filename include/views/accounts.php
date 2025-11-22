@@ -423,7 +423,7 @@ function moneyFormatIndia($num1) {
                             <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
                                 <div class="form-group">
                                     <label for="expenses_amnt">Amount</label><span class="text-danger">*</span>
-                                    <input type="number" class="form-control" name="expenses_amnt" id="expenses_amnt" tabindex="12">
+                                    <input type="text" class="form-control" name="expenses_amnt" id="expenses_amnt" onkeyup="this.value = this.value.replace(/[^0-9]/g,'');" tabindex="12">
                                 </div>
                             </div>
                             <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12 exp_trans_div" style="display: none;">
@@ -572,7 +572,7 @@ function moneyFormatIndia($num1) {
                             <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
                                 <div class="form-group">
                                     <label for="other_amnt">Amount</label><span class="text-danger">*</span>
-                                    <input type="number" class="form-control" name="other_amnt" id="other_amnt" tabindex="12">
+                                    <input type="text" class="form-control" name="other_amnt" id="other_amnt" onkeyup="this.value = this.value.replace(/[^0-9]/g,'');" tabindex="12">
                                 </div>
                             </div>
                             <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">

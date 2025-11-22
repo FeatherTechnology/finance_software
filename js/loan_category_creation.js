@@ -250,14 +250,13 @@ $(document).ready(function () {
 
     $('#submit_loan_category_creation').click(function (event) {
         event.preventDefault();
-
         let isValid = true;
 
-        // Validate Loan Calculation Card
-        let isLoanCalculationValid = validateLoanCalculationCard();
-
-        // Validate Loan Scheme Card
-        let isLoanSchemeValid = validateLoanSchemeCard();
+        if (!checkAllInputs()) {
+            event.preventDefault();
+            isValid = false;
+           swalError('Warning', 'Please fill Loan Calculation Or Scheme ');
+        }
 
         // Validate main form fields
         if (!validateField($('#loan_category').val(), 'loan_category')) {
@@ -268,7 +267,7 @@ $(document).ready(function () {
         }
 
         // Proceed with form submission if either Loan Calculation or Loan Scheme card is fully valid
-        if (isValid && (isLoanCalculationValid || isLoanSchemeValid)) {
+        if (isValid) {
             let loan_limit_value = $('#loan_limit').val().replace(/,/g, '')
             let formData = {
                 loan_category: $('#loan_category').val(),
@@ -312,51 +311,6 @@ $(document).ready(function () {
             });
         }
     });
-
-
-    function validateLoanCalculationCard() {
-        let valid = true;
-        let due_type = $("#due_type").val();
-
-        if (due_type == "") {
-            return false;
-        }
-
-        // If due_type = interest → check interest_calculate also
-        if (due_type === "interest") {
-            valid = validateField($('#interest_calculate').val(), 'interest_calculate') && valid;
-        }
-
-        // Common validations for both EMI and Interest
-        valid = validateField($('#due_type').val(), 'due_type') && valid;
-        valid = validateField($('#interest_rate_min').val(), 'interest_rate_min') && valid;
-        valid = validateField($('#interest_rate_max').val(), 'interest_rate_max') && valid;
-        valid = validateField($('#due_period_min').val(), 'due_period_min') && valid;
-        valid = validateField($('#due_period_max').val(), 'due_period_max') && valid;
-        valid = validateField($('#doc_charge_min').val(), 'doc_charge_min') && valid;
-        valid = validateField($('#doc_charge_max').val(), 'doc_charge_max') && valid;
-        valid = validateField($('#processing_fee_min').val(), 'processing_fee_min') && valid;
-        valid = validateField($('#processing_fee_max').val(), 'processing_fee_max') && valid;
-        valid = validateField($('#overdue_penalty').val(), 'overdue_penalty') && valid;
-
-        return valid;
-    }
-
-
-    function validateLoanSchemeCard() {
-        let valid = true;
-        let value = $('#scheme_name').val();
-        if (value === '' || value === null || value === undefined) {
-            $('#scheme_name').closest('.choices').find('.choices__inner').css('border', '1px solid #ff0000');
-            valid = false;
-        } else {
-
-            $('#scheme_name').closest('.choices').find('.choices__inner').css('border', '1px solid #cecece');
-
-        }
-        return valid;
-    }
-
 
     ///////////////////////////////////// EDIT Screen START   /////////////////////////////////////
     $(document).on('click', '.loanCatCreationActionBtn', function () {
@@ -419,6 +373,10 @@ $(document).ready(function () {
     $('#clear_loan_cat_form').click(() => {
         clearLoanCategoryCreationForm();
     })
+    $('#loan_limit').on('keyup', function () {
+        let raw = $(this).val().replace(/,/g, '');
+        $(this).val(formatIndianNumber(raw));
+    });
 
 });//Document END.
 
@@ -684,5 +642,51 @@ function handleTypeChange(type, percentId, rupeeId, spanClass) {
         $(`#${rupeeId}`).prop('checked', true);
         $(`#${percentId}`).prop('checked', false);
         $(`.${spanClass}`).text('₹');
+    }
+}
+function checkAllInputs() {
+    let due_type = $("#due_type").val();
+
+    // Base selector list
+    let selectorList = [
+        '#due_type',
+        '#interest_rate_min', '#interest_rate_max',
+        '#due_period_min', '#due_period_max',
+        '#doc_charge_min', '#doc_charge_max',
+        '#processing_fee_min', '#processing_fee_max',
+        '#overdue_penalty'
+    ];
+
+    // Add dynamic input
+    if (due_type === 'interest') {
+        selectorList.push('#interest_calculate');
+    }
+
+    // Create jQuery object
+    let inputs = $(selectorList.join(', '));
+
+    // Count filled normal inputs
+    let filledInputs = inputs.filter(function () {
+        if ($(this).is('select')) {
+            let val = $(this).val();
+            return val !== null && val.length > 0;
+        } else {
+            return $(this).val().trim() !== "";
+        }
+    }).length;
+
+    // Multi-select value
+    let schemeFilled = scheme_choices.getValue().length > 0;
+
+    // Total inputs
+    let totalInputs = inputs.length;
+
+    // Validation rules
+    if (filledInputs === 0 && !schemeFilled) {
+        return false;
+    } else if (filledInputs === totalInputs || (filledInputs === 0 && schemeFilled)) {
+        return true;
+    } else {
+        return false;
     }
 }

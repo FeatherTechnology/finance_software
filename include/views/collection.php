@@ -1,16 +1,23 @@
 <div class="row gutters">
     <div class="col-12">
         <div class="card" id="collection_list">
-            <div class="card-header">
-                <h5 class="card-title">Collection List</h5>
-            </div>
-            <div class="col-12 sub_status" style="display: flex; align-items: center; justify-content: center; margin-top:13px">
-                <h4>Customer Status</h4>
-            </div>
-            <div class="col-12 sub_status" style="display: flex; align-items: center; justify-content: center; margin-top: 13px;">
-                <button type="button" class="btn btn-primary" id="due_nill_btn" value="Due Nil">Due Nill</button>
-                <button type="button" class="btn btn-primary" id="all_btn" value="All" style="display: none;">All</button>
-            </div>
+			<div class="d-flex justify-content-between align-items-center m-3">
+				<h5 class="card-title mb-0" style="padding-left: 10px;">Collection List</h5>
+				<div class="dropdown">
+					<button class="border-0 bg-transparent" type="button" id="filterDropdown" data-bs-toggle="dropdown"
+						aria-expanded="false">
+						<i class="fa fa-filter" style="color:#7ca5b8; font-size:35px; margin-right: 10px;"></i>
+					</button>
+					<ul class="dropdown-menu dropdown-menu-end" aria-labelledby="filterDropdown">
+						<li>
+							<a class="dropdown-item filter-option" id="due_nill_btn" value="Due Nil" data-filter="Due Nil">Due Nil</a>
+						</li>
+						<li>
+							<a class="dropdown-item filter-option" id="all_btn" value="All" style="display: none;" data-filter="All">All</a>
+						</li>
+					</ul>
+				</div>
+			</div>
             <div class="card-body">
                 <div class="row">
                     <div class="col-12">
@@ -241,31 +248,31 @@
                                 <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12 emiLoanDiv">
                                     <div class="form-group">
                                         <label for="disabledInput">Due Amount</label>&nbsp;<span class="text-danger">*</span>
-                                        <input type="number" class="form-control clearFields" id="due_amt_track" name="due_amt_track" value='' placeholder='Enter Due Amount' tabindex='16'>
+                                        <input type="text" class="form-control clearFields" id="due_amt_track" name="due_amt_track" value='' placeholder='Enter Due Amount'  onkeyup="this.value = this.value.replace(/[^0-9]/g,'');" tabindex='16'>
                                     </div>
                                 </div>
                                 <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12 intLoanDiv" style="display: none;">
                                     <div class="form-group">
                                         <label for="disabledInput">Principal Amount</label>&nbsp;<span class="text-danger">*</span>
-                                        <input type="number" class="form-control clearFields" id="princ_amt_track" name="princ_amt_track" value='' placeholder='Enter Principal Amount' tabindex='17'>
+                                        <input type="text" class="form-control clearFields" id="princ_amt_track" name="princ_amt_track" value='' placeholder='Enter Principal Amount' onkeyup="this.value = this.value.replace(/[^0-9]/g,'');" tabindex='17'>
                                     </div>
                                 </div>
                                 <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12 intLoanDiv" style="display: none;">
                                     <div class="form-group">
                                         <label for="disabledInput">Interest Amount</label>&nbsp;<span class="text-danger">*</span>
-                                        <input type="number" class="form-control clearFields" id="int_amt_track" name="int_amt_track" value='' placeholder='Enter Interest Amount' tabindex='18'>
+                                        <input type="text" class="form-control clearFields" id="int_amt_track" name="int_amt_track" value='' placeholder='Enter Interest Amount' onkeyup="this.value = this.value.replace(/[^0-9]/g,'');" tabindex='18'>
                                     </div>
                                 </div>
                                 <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
                                     <div class="form-group">
                                         <label for="disabledInput">Penalty</label>&nbsp;<span class="text-danger">*</span>
-                                        <input type="number" class="form-control clearFields" id="penalty_track" name="penalty_track" value='' placeholder='Enter Penalty Amount' tabindex='19'>
+                                        <input type="text" class="form-control clearFields" id="penalty_track" name="penalty_track" value='' placeholder='Enter Penalty Amount' onkeyup="this.value = this.value.replace(/[^0-9]/g,'');" tabindex='19'>
                                     </div>
                                 </div>
                                 <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
                                     <div class="form-group">
                                         <label for="disabledInput">Fine</label>&nbsp;<span class="text-danger">*</span>
-                                        <input type="number" class="form-control clearFields" id="coll_charge_track" name="coll_charge_track" value='' placeholder='Enter Fine' tabindex='20'>
+                                        <input type="text" class="form-control clearFields" id="coll_charge_track" name="coll_charge_track" value='' placeholder='Enter Fine' onkeyup="this.value = this.value.replace(/[^0-9]/g,'');" tabindex='20'>
                                     </div>
                                 </div>
                                 <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
@@ -281,31 +288,31 @@
                                 <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12 emiLoanDiv">
                                     <div class="form-group">
                                         <label for="disabledInput">Pre Closure</label>
-                                        <input type="number" class="form-control clearFields" id="pre_close_waiver" name="pre_close_waiver" value='' placeholder='Enter Pre Closure Amount' tabindex='22'>
+                                        <input type="text" class="form-control clearFields" id="pre_close_waiver" name="pre_close_waiver" value='' placeholder='Enter Pre Closure Amount' onkeyup="this.value = this.value.replace(/[^0-9]/g,'');" tabindex='22'>
                                     </div>
                                 </div>
                                 <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12 intLoanDiv" style="display: none;">
                                     <div class="form-group">
                                         <label for="disabledInput">Principle Waiver</label>
-                                        <input type="text" class="form-control clearFields" id="principal_waiver" name="principal_waiver" value='' placeholder='Enter Principle Waiver' tabindex='28'>
+                                        <input type="text" class="form-control clearFields" id="principal_waiver" name="principal_waiver" value='' placeholder='Enter Principle Waiver' onkeyup="this.value = this.value.replace(/[^0-9]/g,'');" tabindex='28'>
                                     </div>
                                 </div>
                                 <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12 intLoanDiv" style="display: none;">
                                     <div class="form-group">
                                         <label for="disabledInput">Interest Waiver</label>
-                                        <input type="text" class="form-control clearFields" id="interest_waiver" name="interest_waiver" value='' placeholder='Enter Interest Waiver' tabindex='28'>
+                                        <input type="text" class="form-control clearFields" id="interest_waiver" name="interest_waiver" value='' placeholder='Enter Interest Waiver' onkeyup="this.value = this.value.replace(/[^0-9]/g,'');" tabindex='28'>
                                     </div>
                                 </div>
                                 <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
                                     <div class="form-group">
                                         <label for="disabledInput">Penalty Waiver</label>
-                                        <input type="number" class="form-control clearFields" id="penalty_waiver" name="penalty_waiver" value='' placeholder='Enter Penalty Waiver' tabindex='23'>
+                                        <input type="text" class="form-control clearFields" id="penalty_waiver" name="penalty_waiver" value='' placeholder='Enter Penalty Waiver' onkeyup="this.value = this.value.replace(/[^0-9]/g,'');" tabindex='23'>
                                     </div>
                                 </div>
                                 <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
                                     <div class="form-group">
                                         <label for="disabledInput">Fine Waiver</label>
-                                        <input type="number" class="form-control clearFields" id="coll_charge_waiver" name="coll_charge_waiver" value='' placeholder='Enter Fine Waiver' tabindex='24'>
+                                        <input type="text" class="form-control clearFields" id="coll_charge_waiver" name="coll_charge_waiver" value='' placeholder='Enter Fine Waiver' onkeyup="this.value = this.value.replace(/[^0-9]/g,'');" tabindex='24'>
                                     </div>
                                 </div>
                                 <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">

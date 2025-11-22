@@ -37,7 +37,7 @@ $(document).ready(function () {
         let area = $('#area').val();
         let mobile = $('#mobile').val();
         let loan_cat = $('#loan_cat').val();
-        let loan_amount = $('#loan_amount').val();
+        let loan_amount = $('#loan_amount').val().replace(/,/g, '');
         let new_promotion_id = $('#new_Promotion_id').val();
 
         // Fields to validate
@@ -146,6 +146,10 @@ $(document).ready(function () {
     $(document).on('click', '#repromotion_detail_btn', function () {
         var repromotion_details = $("#repromotion_details").val();
         getRePromotionTable(repromotion_details);
+    });
+    $('#loan_amount').on('keyup', function () {
+        let raw = $(this).val().replace(/,/g, '');
+        $(this).val(formatIndianNumber(raw));
     });
 })
 

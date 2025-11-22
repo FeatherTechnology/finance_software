@@ -22,9 +22,7 @@ $overdue_type = $_POST['overdue_type'];
 $overdue_penalty = $_POST['overdue_penalty'];
 $scheme_name = $_POST['scheme_name'];
 $loan_cat_creation_id = $_POST['id'];
-if ($due_type == '') {
-    $due_type = 'emi';
-}
+
 $result = 0;
 if ($loan_cat_creation_id != '') {
     $qry = $pdo->query("UPDATE `loan_category_creation` SET `loan_category`='$loan_category',`loan_limit`='$loan_limit',`due_method`='$due_method',`due_type`='$due_type',`interest_calculate`='$interest_calculate',`interest_rate_min`='$interest_rate_min',`interest_rate_max`='$interest_rate_max',`due_period_min`='$due_period_min',`due_period_max`='$due_period_max',`document_charge_type`='$document_charge_type',`doc_charge_min`='$doc_charge_min',`doc_charge_max`='$doc_charge_max',`processing_fees_type`='$processing_fee_type',`processing_fee_min`='$processing_fee_min',`processing_fee_max`='$processing_fee_max',`penalty_type`='$overdue_type',`overdue_penalty`='$overdue_penalty',`scheme_name`='$scheme_name',`update_login_id`='$user_id',`updated_on`=now() WHERE `id`='$loan_cat_creation_id'");

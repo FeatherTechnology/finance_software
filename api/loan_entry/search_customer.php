@@ -12,10 +12,10 @@ $mobile = isset($_POST['mobile']) ? $_POST['mobile'] : '';
 $cus_profile_id = isset($_POST['cus_profile_id']) ? $_POST['cus_profile_id'] : '';
 
 // Construct the query based on the provided search criteria
-$query = "SELECT DISTINCT * FROM customer_profile WHERE id != '$cus_profile_id'";
+$query = "SELECT DISTINCT * FROM customer_profile WHERE 1";
 
 if (!empty($name)) {
-    $query .= " AND cus_name LIKE '%$name%'";
+    $query .= " AND cus_name = '$name'";
 }
 
 if (!empty($aadhar_num)) {
@@ -37,10 +37,10 @@ if ($result) {
 $familyQuery = "SELECT DISTINCT fi.*, cp.cus_name AS under_customer_name, cp.cus_id AS under_customer_id 
                 FROM family_info fi 
                 LEFT JOIN customer_profile cp ON fi.cus_id = cp.cus_id 
-                WHERE cp.id != '$cus_profile_id'";
+                WHERE 1";
 
 if (!empty($name)) {
-    $familyQuery .= " AND fi.fam_name LIKE '%$name%'";
+    $familyQuery .= " AND fi.fam_name = '$name'";
 }
 
 if (!empty($aadhar_num)) {

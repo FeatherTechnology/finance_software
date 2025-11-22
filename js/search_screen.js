@@ -232,6 +232,19 @@ $(document).ready(function () {
         compressImage(this, 200)
         img.attr('src', URL.createObjectURL(pic.files[0]));
     })
+    $('input[data-type="adhaar-number"]').keyup(function () {
+        var value = $(this).val();
+        value = value.replace(/\D/g, "").split(/(?:([\d]{4}))/g).filter(s => s.length > 0).join(" ");
+        $(this).val(value);
+    });
+
+    $('input[data-type="adhaar-number"]').change(function () {
+        let len = $(this).val().length;
+        if (len < 14) {
+            $(this).val('');
+            swalError('Warning', 'Kindly Enter Valid Aadhaar Number');
+        }
+    });
 
 });
 $('#print_doc').click(function () {
@@ -635,10 +648,10 @@ function editCustmerProfile(id) {
         $('#occupation').val(response[0].occupation);
         $('#occ_address').val(response[0].occ_address);
         $('#occ_detail').val(response[0].occ_detail);
-        $('#occ_income').val(response[0].occ_income);
+        $('#occ_income').val(moneyFormatIndia(response[0].occ_income));
         $('#area_confirm').val(response[0].area_confirm);
         $('#line').val(response[0].line);
-        $('#cus_limit').val(response[0].cus_limit);
+        $('#cus_limit').val(moneyFormatIndia(response[0].cus_limit));
         $('#about_cus').val(response[0].about_cus);
         dataCheckList(response[0].aadhar_num, response[0].cus_name, response[0].mobile1)
         getGuarantorName()
@@ -1097,14 +1110,14 @@ function loanCalculationEdit(id) {
         $('#due_period_upd').val(response[0].due_period);
         $('#doc_charge_upd').val(response[0].doc_charge);
         $('#proc_fees_upd').val(response[0].processing_fees);
-        $('#loan_amnt_calc').val(response[0].loan_amnt);
-        $('#principal_amnt_calc').val(response[0].principal_amnt);
-        $('#interest_amnt_calc').val(response[0].interest_amnt);
-        $('#total_amnt_calc').val(response[0].total_amnt);
-        $('#due_amnt_calc').val(response[0].due_amnt);
-        $('#doc_charge_calculate').val(response[0].doc_charge_calculate);
-        $('#processing_fees_calculate').val(response[0].processing_fees_calculate);
-        $('#net_cash_calc').val(response[0].net_cash);
+        $('#loan_amnt_calc').val(moneyFormatIndia(response[0].loan_amnt));
+        $('#principal_amnt_calc').val(moneyFormatIndia(response[0].principal_amnt));
+        $('#interest_amnt_calc').val(moneyFormatIndia(response[0].interest_amnt));
+        $('#total_amnt_calc').val(moneyFormatIndia(response[0].total_amnt));
+        $('#due_amnt_calc').val(moneyFormatIndia(response[0].due_amnt));
+        $('#doc_charge_calculate').val(moneyFormatIndia(response[0].doc_charge_calculate));
+        $('#processing_fees_calculate').val(moneyFormatIndia(response[0].processing_fees_calculate));
+        $('#net_cash_calc').val(moneyFormatIndia(response[0].net_cash));
         $('#loan_date_calc').val(response[0].loan_date);
         $('#due_startdate_calc').val(response[0].due_startdate);
         $('#maturity_date_calc').val(response[0].maturity_date);
