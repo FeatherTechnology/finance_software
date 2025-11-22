@@ -608,7 +608,7 @@ $(document).ready(function () {
         let native_address = $('#native_address').val();
         let occupation = $('#occupation').val();
         let occ_detail = $('#occ_detail').val();
-        let occ_income = $('#occ_income').val();
+        let occ_income = $('#occ_income').val().replace(/,/g, '');
         let occ_address = $('#occ_address').val();
         let area_confirm = $('#area_confirm').val();
         let area = $('#area').val();
@@ -867,6 +867,13 @@ $(document).ready(function () {
         if (charCode < 48 || charCode > 57) {
             event.preventDefault();
         }
+    });
+    $('#loan_amount_calc,#cus_limit,#occ_income').on('keyup', function () {
+        let raw = $(this).val().replace(/,/g, '');
+        $(this).val(formatIndianNumber(raw));
+    });
+    $('#due_period_calc').blur(function () {
+        $('#due_startdate_calc').trigger('change');
     });
 
 }); ///////////////////////////////////////////////////////////////// Customer Profile - Document END ////////////////////////////////////////////////////////////////////
@@ -1569,10 +1576,10 @@ function editCustmerProfile(id) {
         $('#occupation').val(response[0].occupation);
         $('#occ_address').val(response[0].occ_address);
         $('#occ_detail').val(response[0].occ_detail);
-        $('#occ_income').val(response[0].occ_income);
+        $('#occ_income').val(moneyFormatIndia(response[0].occ_income));
         $('#area_confirm').val(response[0].area_confirm);
         $('#line').val(response[0].line);
-        $('#cus_limit').val(response[0].cus_limit);
+        $('#cus_limit').val(moneyFormatIndia(response[0].cus_limit));
         $('#about_cus').val(response[0].about_cus);
         if (response[0].whatsapp_no === response[0].mobile1) {
             $('#mobile1_radio').prop('checked', true);
@@ -1867,6 +1874,7 @@ $(document).ready(function () {
         let customerProfileId = $('#customer_profile_id').val();
         if (customerProfileId != '') {
             $('#refresh_cal').trigger('click'); //For calculate once again if user missed to refresh calculation
+            $('#due_startdate_calc').trigger('change'); 
             let formData = {
                 'customer_profile_id': customerProfileId,
                 'cus_id': $('#auto_gen_cus_id').val(),
@@ -2051,7 +2059,8 @@ function getLoanCatDetails(id, edittype) {
         var proc_fee_upd = ($('#proc_fees_upd').val()) ? $('#proc_fees_upd').val() : '';
         //To set min and maximum 
         $('.min-max-int').text('* (' + response[0].interest_rate_min + '% - ' + response[0].interest_rate_max + '%) ');
-        $('#interest_rate_calc').attr('onChange', `if( parseFloat($(this).val()) > '` + response[0].interest_rate_max + `' ){ alert("Enter Lesser Value"); $(this).val(""); }else if( parseFloat($(this).val()) < '` + response[0].interest_rate_min + `' && parseFloat($(this).val()) != '' ){ alert("Enter Higher Value"); $(this).val(""); } `); //To check value between range
+        $('#interest_rate_calc').attr('onChange',`let val = parseFloat($(this).val()); let min = ${response[0].interest_rate_min}; let max = ${response[0].interest_rate_max};
+        if(val > max){ alert("Enter Lesser Value"); $(this).val(""); } else if(val < min && $(this).val().trim() !== ""){ alert("Enter Higher Value"); $(this).val(""); }`);
         $('#interest_rate_calc').val(int_rate_upd);
         $('.min-max-due').text('* (' + response[0].due_period_min + ' - ' + response[0].due_period_max + ') ');
         $('#due_period_calc').attr('onChange', `if( parseInt($(this).val()) > '` + response[0].due_period_max + `' ){ alert("Enter Lesser Value"); $(this).val(""); }else if( parseInt($(this).val()) < '` + response[0].due_period_min + `' && parseInt($(this).val()) != '' ){ alert("Enter Higher Value"); $(this).val(""); } `); //To check value between range

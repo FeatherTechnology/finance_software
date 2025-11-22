@@ -565,7 +565,7 @@ $(document).ready(function () {
         let native_address = $('#native_address').val();
         let occupation = $('#occupation').val();
         let occ_detail = $('#occ_detail').val();
-        let occ_income = $('#occ_income').val();
+        let occ_income = $('#occ_income').val().replace(/,/g, '');
         let occ_address = $('#occ_address').val();
         let area_confirm = $('#area_confirm').val();
         let area = $('#area').val();
@@ -731,6 +731,10 @@ $(document).ready(function () {
         if ($('#add_kyc_info_modal').is(':hidden')) {
             $('#add_kyc_info_modal').show();
         }
+    });
+    $('#cus_limit,#occ_income').on('keyup', function () {
+        let raw = $(this).val().replace(/,/g, '');
+        $(this).val(formatIndianNumber(raw));
     });
 
 }); ///////////////////////////////////////////////////////////////// Customer Profile - Document END ////////////////////////////////////////////////////////////////////
@@ -1345,10 +1349,10 @@ function editCustmerProfile(id) {
         $('#occupation').val(response[0].occupation);
         $('#occ_address').val(response[0].occ_address);
         $('#occ_detail').val(response[0].occ_detail);
-        $('#occ_income').val(response[0].occ_income);
+        $('#occ_income').val(moneyFormatIndia(response[0].occ_income));
         $('#area_confirm').val(response[0].area_confirm);
         $('#line').val(response[0].line);
-        $('#cus_limit').val(response[0].cus_limit);
+        $('#cus_limit').val(moneyFormatIndia(response[0].cus_limit));
         $('#about_cus').val(response[0].about_cus);
         dataCheckList(response[0].cus_id, response[0].cus_name, response[0].mobile1)
         if (response[0].whatsapp_no === response[0].mobile1) {

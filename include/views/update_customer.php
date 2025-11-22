@@ -378,7 +378,7 @@
                             <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
                                 <div class="form-group">
                                     <label for="occ_income"> Income</label>
-                                    <input type="number" class="form-control" id="occ_income" name="occ_income" placeholder="Enter Income" tabindex="25">
+                                    <input type="text" class="form-control" id="occ_income" name="occ_income" placeholder="Enter Income" onkeyup="this.value = this.value.replace(/[^0-9]/g,'');" tabindex="25">
                                 </div>
                             </div>
                             <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
@@ -539,7 +539,7 @@
                             <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
                                 <div class="form-group">
                                     <label for="cus_limit"> Customer Limit</label><span class="text-danger">*</span>
-                                    <input type="number" class="form-control" id="cus_limit" name="cus_limit" placeholder="Enter Limit" tabindex="33">
+                                    <input type="text" class="form-control" id="cus_limit" name="cus_limit" placeholder="Enter Limit" onkeyup="this.value = this.value.replace(/[^0-9]/g,'');" tabindex="33">
                                 </div>
                             </div>
                             <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">

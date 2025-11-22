@@ -632,11 +632,18 @@ function validateMultiSelectField(fieldId, choicesInstance) {
 }
 
 function moneyFormatIndia(num) {
-	var isNegative = false;
-	if (num < 0) {
-		isNegative = true;
-		num = Math.abs(num);
-	}
+    // If empty, null, undefined, NaN → return empty
+    if (num === "" || num === null || num === undefined || isNaN(num)) {
+        return "";
+    }
+
+    var isNegative = false;
+    num = Number(num); // convert to number
+
+    if (num < 0) {
+        isNegative = true;
+        num = Math.abs(num);
+    }
 
 	var explrestunits = "";
 	if (num.toString().length > 3) {
@@ -729,6 +736,24 @@ function excelExportAction(e, dt, button, config, baseTitle) {
 
 	// Perform actual Excel export
 	defaultAction.call(this, e, dt, button, config);
+}
+
+function formatIndianNumber(num) {
+    if (num == null || num === '') return '';
+
+    num = String(num).replace(/,/g, ''); // remove existing commas
+
+    let lastThree = num.slice(-3);
+    let rest = num.slice(0, -3);
+
+    if (rest !== '') {
+        rest = rest.replace(/\B(?=(\d{2})+(?!\d))/g, ',');
+        num = rest + ',' + lastThree;
+    } else {
+        num = lastThree;
+    }
+
+    return num;
 }
 
 //////////////////////////////////////////////////////////// Generate Excel Title End ////////////////////////////////////////////////////////////////////////////////////

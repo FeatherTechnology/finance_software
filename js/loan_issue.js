@@ -1234,6 +1234,8 @@ $(document).ready(function () {
     });
     $('#cash, #chequeValue, #transaction_value').on('input', function () {
         // Remove commas first, then parse to float
+        let raw = $(this).val().replace(/,/g, '');
+        $(this).val(formatIndianNumber(raw));
         let settle_balance = parseFloat($('#balance_net_cash').val().replace(/,/g, '')) || 0; // Convert to float, default to 0 if empty
         let payment_type = $('#payment_type').val();
         let cash_amount = parseFloat($('#cash').val().replace(/,/g, '')) || 0; // Convert to float, default to 0 if empty
@@ -1269,19 +1271,19 @@ $(document).ready(function () {
         let loanIssue = {
             'cus_id': $('#cus_id').val(),
             'cus_profile_id': $('#customer_profile_id').val(),
-            'loan_amnt': $('#loan_amnt_calc').val(),
+            'loan_amnt': $('#loan_amnt_calc').val().replace(/,/g, ''),
             'due_startdate': $('#due_startdate_calc').val(),
             'maturity_date': $('#maturity_date_calc').val(),
-            'bal_net_cash': $('#balance_net_cash').val(),
-            'bal_amount': $('#balance_amount').val(),
+            'bal_net_cash': $('#balance_net_cash').val().replace(/,/g, ''),
+            'bal_amount': $('#balance_amount').val().replace(/,/g, ''),
             'payment_type': $('#payment_type').val(),
-            'cash': $('#cash').val(),
+            'cash': $('#cash').val().replace(/,/g, ''),
             'bank_name': $('#bank_name').val(),
-            'chequeValue': $('#chequeValue').val(),
+            'chequeValue': $('#chequeValue').val().replace(/,/g, ''),
             'chequeRemark': $('#chequeRemark').val(),
             'transaction_remark': $('#transaction_remark').val(),
-            'transaction_value': $('#transaction_value').val(),
-            'net_cash': $('#net_cash_calc').val(),
+            'transaction_value': $('#transaction_value').val().replace(/,/g, ''),
+            'net_cash': $('#net_cash_calc').val().replace(/,/g, ''),
             'payment_mode': $('#payment_mode').val(),
             'transaction_id': $('#transaction_id').val(),
             'chequeno': $('#chequeno').val(),
@@ -1318,7 +1320,7 @@ function callLoanCaculationFunctions() {
 
 }
 
-function personalInfo() {
+    function personalInfo() {
     let id = $('#customer_profile_id').val();
     $.post('api/loan_issue_files/loan_issue_data.php', { id }, function (response) {
         $('#aadhar_nums').val(response[0].aadhar_num);
@@ -1330,7 +1332,7 @@ function personalInfo() {
         $('#loan_id_calc').val(response[0].loan_id);
         $('#loan_category_calc').val(response[0].loan_category);
         $('#category_info_calc').val(response[0].category_info);
-        $('#loan_amnt_calc').val(response[0].loan_amnt);
+        $('#loan_amnt_calc').val(moneyFormatIndia(response[0].loan_amnt));
         $('#profit_type_calc').val(response[0].profit_type);
         $('#due_method_calc').val(response[0].due_method);
         $('#scheme_due_method_calc').val(response[0].scheme_due_method);
@@ -1342,13 +1344,13 @@ function personalInfo() {
         $('#due_period_calc').val(response[0].due_period);
         $('#doc_charge_calc').val(response[0].doc_charge);
         $('#processing_fees_calc').val(response[0].processing_fees);
-        $('#principal_amnt_calc').val(response[0].principal_amnt);
-        $('#interest_amnt_calc').val(response[0].interest_amnt);
-        $('#total_amnt_calc').val(response[0].total_amnt);
-        $('#due_amnt_calc').val(response[0].due_amnt);
-        $('#doc_charge_calculate').val(response[0].doc_charge_calculate);
-        $('#processing_fees_calculate').val(response[0].processing_fees_calculate);
-        $('#net_cash_calc').val(response[0].net_cash);
+        $('#principal_amnt_calc').val(moneyFormatIndia(response[0].principal_amnt));
+        $('#interest_amnt_calc').val(moneyFormatIndia(response[0].interest_amnt));
+        $('#total_amnt_calc').val(moneyFormatIndia(response[0].total_amnt));
+        $('#due_amnt_calc').val(moneyFormatIndia(response[0].due_amnt));
+        $('#doc_charge_calculate').val(moneyFormatIndia(response[0].doc_charge_calculate));
+        $('#processing_fees_calculate').val(moneyFormatIndia(response[0].processing_fees_calculate));
+        $('#net_cash_calc').val(moneyFormatIndia(response[0].net_cash));
         $('#loan_date_calc').val(response[0].loan_date);
         $('#due_startdate_calc').val(response[0].due_startdate);
         $('#maturity_date_calc').val(response[0].maturity_date);
@@ -1576,7 +1578,7 @@ function checkBalance() {
                     $('#due_startdate_calc').attr('readonly', false);
                 } else {
                     $('#due_startdate_calc').attr('readonly', true);
-                    $('#balance_net_cash').val((balanceAmount));
+                    $('#balance_net_cash').val(moneyFormatIndia(balanceAmount));
                 }
 
             } else {
@@ -1589,14 +1591,14 @@ function checkBalance() {
 function calculateBalance() {
     // Get the settlement balance and remove commas, then parse it as a float
     let settlementBalance = parseFloat($('#balance_net_cash').val().replace(/,/g, '')) || 0;
-    let cashVal = parseFloat($('#cash').val()) || 0;
-    let cheqVal = parseFloat($('#chequeValue').val()) || 0;
-    let transVal = parseFloat($('#transaction_value').val()) || 0;
+    let cashVal = parseFloat($('#cash').val().replace(/,/g, '')) || 0;
+    let cheqVal = parseFloat($('#chequeValue').val().replace(/,/g, '')) || 0;
+    let transVal = parseFloat($('#transaction_value').val().replace(/,/g, '')) || 0;
     // Calculate the remaining balance
     let remainingBalance = settlementBalance - (cashVal + cheqVal + transVal);
 
     // Format the remaining balance using the moneyFormatIndia function
-    $('#balance_amount').val((remainingBalance));
+    $('#balance_amount').val(moneyFormatIndia(remainingBalance));
 }
 
 function getBankName() {
