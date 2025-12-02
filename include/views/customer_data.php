@@ -189,7 +189,7 @@
                             <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
                                 <div class="form-group">
                                     <label for="loan_amount">Loan Amount</label><span class="text-danger">*</span>
-                                    <input type="number" class="form-control" name="loan_amount" id="loan_amount" tabindex="1" placeholder="Enter Loan amount">
+                                    <input type="text" class="form-control" name="loan_amount" id="loan_amount" tabindex="1" onkeyup="this.value = this.value.replace(/[^0-9]/g,'');" placeholder="Enter Loan amount">
                                     <input type="hidden" id="addamt_id" value='0'>
                                 </div>
                             </div>

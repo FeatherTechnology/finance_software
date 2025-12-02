@@ -32,6 +32,7 @@
 </div>
 <!--Loan Entry List End-->
 <div id="loan_entry_content" style="display:none;">
+   <input type="hidden" id="cus_sts" name="cus_sts"> 
     <div class="radio-container">
         <div class="selector">
             <div class="selector-item">
@@ -390,7 +391,7 @@
                                 <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
                                     <div class="form-group">
                                         <label for="occ_income"> Income</label>
-                                        <input type="number" class="form-control" id="occ_income" name="occ_income" placeholder="Enter Income" tabindex="26">
+                                        <input type="test" class="form-control" id="occ_income" name="occ_income" placeholder="Enter Income" onkeyup="this.value = this.value.replace(/[^0-9]/g,'');" tabindex="26">
                                     </div>
                                 </div>
                                 <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
@@ -551,7 +552,7 @@
                                 <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
                                     <div class="form-group">
                                         <label for="cus_limit"> Customer Limit</label>
-                                        <input type="number" class="form-control" id="cus_limit" name="cus_limit" placeholder="" disabled tabindex="36">
+                                        <input type="text" class="form-control" id="cus_limit" name="cus_limit" placeholder="" onkeyup="this.value = this.value.replace(/[^0-9]/g,'');" disabled tabindex="36">
                                     </div>
                                 </div>
                                 <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">

@@ -107,7 +107,7 @@ $(document).ready(function(){
             'expenses_total_issued' : $('#expenses_total_issued').val(),
             'expenses_total_amnt' : $('#expenses_total_amnt').val(),
             'description' : $('#description').val(),
-            'expenses_amnt' : $('#expenses_amnt').val(),
+            'expenses_amnt' : $('#expenses_amnt').val().replace(/,/g, ''),
             'expenses_trans_id' : $('#expenses_trans_id').val(),
         }
             // Fetch closing balance and validate the expense amount before submitting
@@ -400,7 +400,10 @@ $(document).ready(function(){
             getIDEBalanceSheet();
         }
     });
-
+    $('#expenses_amnt,#other_amnt').on('keyup', function () {
+        let raw = $(this).val().replace(/,/g, '');
+        $(this).val(formatIndianNumber(raw));
+    });
 
 });  /////Document END.
 

@@ -14,14 +14,22 @@ $column = array(
     'cp.id'
 );
 $subQuery = "SELECT MAX(id) as max_id FROM customer_profile GROUP BY cus_id";
-$query = "SELECT cp.id, cp.aadhar_num , cp.cus_id, cp.cus_name,anc.areaname , lnc.linename, bc.branch_name , cp.mobile1, cs.id as cus_sts_id, cs.status as c_sts 
- FROM customer_profile cp 
- LEFT JOIN line_name_creation lnc ON cp.line = lnc.id
- LEFT JOIN area_name_creation anc ON cp.area = anc.id
- LEFT JOIN area_creation ac ON cp.line = ac.line_id
- LEFT JOIN branch_creation bc ON ac.branch_id = bc.id
- LEFT JOIN customer_status cs ON cp.id = cs.cus_profile_id
- INNER JOIN ($subQuery) latest ON cp.id = latest.max_id WHERE cs.status >= '1'";
+$query = "SELECT cp.id, cp.aadhar_num , cp.cus_id, cp.cus_name,anc.areaname , lnc.linename, bc.branch_name , cp.mobile1, cs.id, cs.status 
+FROM customer_profile cp
+LEFT JOIN line_name_creation lnc ON cp.line = lnc.id
+LEFT JOIN area_name_creation anc ON cp.area = anc.id
+LEFT JOIN area_creation ac ON cp.line = ac.line_id
+LEFT JOIN branch_creation bc ON ac.branch_id = bc.id
+LEFT JOIN customer_status cs ON cp.id = cs.cus_profile_id
+INNER JOIN (
+    SELECT cus_id,
+           MAX(id) AS last_id,
+           COUNT(*) AS total_records
+    FROM customer_profile
+    GROUP BY cus_id
+) latest ON latest.last_id = cp.id
+WHERE (( latest.total_records = 1  AND cs.status >= 7 )
+OR ( latest.total_records > 1 AND cs.status >= 1)) ";
 if (isset($_POST['search'])) {
     if ($_POST['search'] != "") {
         $search = $_POST['search'];

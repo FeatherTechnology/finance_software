@@ -1,15 +1,17 @@
 $(document).ready(function () {
     $('#due_nill_btn').click(function (event) {
         event.preventDefault();
-        let Customer_Status = $(this).val();
+        let Customer_Status = $(this).data('filter');
+        $(".card-title").text("Due Nil List");
         getCollectionListTable(Customer_Status);
         $('#all_btn').show();
         $('#due_nill_btn').hide();
-        // $("#duenill_id").val('');
     })
-    $('#all_btn').click(function (event) {
+
+        $('#all_btn').click(function (event) {
         event.preventDefault();
         getCollectionListTable('');
+        $(".card-title").text("Collection List");
         $('#all_btn').hide();
         $('#due_nill_btn').show();
         $("#coll_sts").val('');
@@ -179,7 +181,7 @@ $(document).ready(function () {
 
                 //To set limitations for input fields
                 $('#due_amt_track').on('blur', function () {
-                    if (parseInt($(this).val()) > response['balance']) {
+                    if (parseInt($(this).val().replace(/,/g, "")) > response['balance']) {
                         alert("Enter a Lesser Value");
                         $(this).val("");
                         $('#total_paid_track').val("");
@@ -188,7 +190,7 @@ $(document).ready(function () {
                 });
 
                 $('#princ_amt_track').on('blur', function () {
-                    if (parseInt($(this).val()) > response['balance']) {
+                    if (parseInt($(this).val().replace(/,/g, "")) > response['balance']) {
                         alert("Enter a Lesser Value");
                         $(this).val("");
                         $('#total_paid_track').val("");
@@ -197,7 +199,7 @@ $(document).ready(function () {
                 });
 
                 $('#int_amt_track').on('blur', function () {
-                    if (parseInt($(this).val()) > response['till_date_int']) {
+                    if (parseInt($(this).val().replace(/,/g, "")) > response['till_date_int']) {
                         alert("Enter a Lesser Value");
                         $(this).val("");
                         $('#total_paid_track').val("");
@@ -205,7 +207,7 @@ $(document).ready(function () {
                 });
 
                 $('#penalty_track').on('blur', function () {
-                    var penaltyValue = parseInt($(this).val()); // Value entered in the field
+                    var penaltyValue = parseInt($(this).val().replace(/,/g, "")); // Value entered in the field
                     var penaltyLimit = parseInt(response['penalty']); // Value from the response
 
                     if (isNaN(penaltyValue)) {
@@ -222,7 +224,7 @@ $(document).ready(function () {
 
 
                 $('#coll_charge_track').on('blur', function () {
-                    var collChargeValue = parseInt($(this).val());
+                    var collChargeValue = parseInt($(this).val().replace(/,/g, ""));
                     var responseCollCharge = parseInt(response['coll_charge']);
                     // Compare the input value with the response collection charge
                     if (collChargeValue > responseCollCharge) {
@@ -236,8 +238,8 @@ $(document).ready(function () {
                 //To set Limitation that should not cross its limit with considering track values and previous readonly values
                 $('#pre_close_waiver').on('blur', function () {
                     if (response['loan_type'] == "emi") {
-                        var due_track = $('#due_amt_track').val();
-                        if (parseFloat($(this).val()) > response['balance'] - due_track) {
+                        var due_track = $('#due_amt_track').val().replace(/,/g, "");
+                        if (parseFloat($(this).val().replace(/,/g, "")) > response['balance'] - due_track) {
                             alert("Enter a Lesser Value");
                             $(this).val("");
                             $('#total_waiver').val("");
@@ -247,8 +249,8 @@ $(document).ready(function () {
                 //To set Limitation that should not cross its limit with considering track values and previous readonly values
                 $('#principal_waiver').on('blur', function () {
                     if (response['loan_type'] == 'interest') {
-                        var princ_track = $('#princ_amt_track').val();
-                        if (parseFloat($(this).val()) > response['balance'] - princ_track) {
+                        var princ_track = $('#princ_amt_track').val().replace(/,/g, "");
+                        if (parseFloat($(this).val().replace(/,/g, "")) > response['balance'] - princ_track) {
                             alert("Enter a Lesser Value");
                             $(this).val("");
                             $('#total_waiver').val("");
@@ -257,7 +259,7 @@ $(document).ready(function () {
                 });
                 $('#interest_waiver').on('blur', function () {
                     if (response['loan_type'] == 'interest') {
-                        if (parseFloat($(this).val()) > response['till_date_int']) {
+                        if (parseFloat($(this).val().replace(/,/g, "")) > response['till_date_int']) {
                             alert("Enter a Lesser Value");
                             $(this).val("");
                             $('#total_waiver').val("");
@@ -266,8 +268,8 @@ $(document).ready(function () {
                 });
 
                 $('#penalty_waiver').on('blur', function () {
-                    var penalty_track = $('#penalty_track').val();
-                    if (parseFloat($(this).val()) > response['penalty'] - penalty_track) {
+                    var penalty_track = $('#penalty_track').val().replace(/,/g, "");
+                    if (parseFloat($(this).val().replace(/,/g, "")) > response['penalty'] - penalty_track) {
                         alert("Enter a Lesser Value");
                         $(this).val("");
                         $('#total_waiver').val("");
@@ -275,8 +277,8 @@ $(document).ready(function () {
                 });
 
                 $('#coll_charge_waiver').on('blur', function () {
-                    var coll_charge_track = $('#coll_charge_track').val();
-                    if (parseFloat($(this).val()) > response['coll_charge'] - coll_charge_track) {
+                    var coll_charge_track = $('#coll_charge_track').val().replace(/,/g, "");
+                    if (parseFloat($(this).val().replace(/,/g, "")) > response['coll_charge'] - coll_charge_track) {
                         alert("Enter a Lesser Value");
                         $(this).val("");
                         $('#total_waiver').val("");
@@ -549,6 +551,10 @@ $(document).ready(function () {
             }, 'json');
         }
     })
+    $('#due_amt_track,#penalty_track,#coll_charge_track,#pre_close_waiver,#penalty_waiver,#coll_charge_waiver,#princ_amt_track,#int_amt_track,#principal_waiver,#interest_waiver').on('keyup', function () {
+        let raw = $(this).val().replace(/,/g, '');
+        $(this).val(formatIndianNumber(raw));
+    });
 
 });
 /////////////////////////////////////////////////////////////////////////   Document END /////////////////////////////////////////////////////////////////////////
