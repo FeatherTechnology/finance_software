@@ -4,6 +4,7 @@ require "../../../ajaxconfig.php";
 $collection_list_arr = array();
 $cash_type = $_POST['cash_type'];
 $bank_id = $_POST['bank_id'];
+$op_date = date('Y-m-d', strtotime($_POST['op_date']));
 
 if ($cash_type == '1') {
     $cndtn = "coll_mode = '1' ";
@@ -15,8 +16,8 @@ $qry = $pdo->query("WITH first_query AS (
     SELECT 
         u.id AS userid, 
         u.name, 
-        lnc.linename, 
-        bc.branch_name, 
+        GROUP_CONCAT(DISTINCT lnc.linename) AS linename,
+        GROUP_CONCAT(DISTINCT bc.branch_name) AS branch_name,
         (
             SELECT COUNT(*) 
             FROM collection nbc 
@@ -26,7 +27,7 @@ $qry = $pdo->query("WITH first_query AS (
                 (SELECT created_on FROM accounts_collect_entry WHERE user_id = u.id AND $cndtn ORDER BY id DESC LIMIT 1), 
                 '1970-01-01 00:00:00'
             ) 
-            AND nbc.coll_date <= NOW()
+            AND nbc.coll_date <= CONCAT('$op_date', ' 23:59:59')
         ) as no_of_bills,
         SUM(c.total_paid_track) AS total_amount, 
         '1' AS type
@@ -45,7 +46,7 @@ $qry = $pdo->query("WITH first_query AS (
         (SELECT created_on FROM accounts_collect_entry WHERE user_id = u.id AND $cndtn ORDER BY id DESC LIMIT 1), 
         '1970-01-01 00:00:00'
     ) 
-    AND c.coll_date <= NOW() 
+    AND c.coll_date <= CONCAT('$op_date', ' 23:59:59') 
     AND c.insert_login_id = u.id 
     GROUP BY u.id
 ),
@@ -53,15 +54,15 @@ second_query AS (
     SELECT 
         us.id as userid, 
         us.name, 
-        ac.line, 
-        ac.branch, 
+        GROUP_CONCAT(DISTINCT ac.line) AS linename,
+        GROUP_CONCAT(DISTINCT ac.branch) AS branch_name,
         SUM(ac.no_of_bills) AS no_of_bills,  
         SUM(ac.collection_amnt) AS total_amount,
         '2' as type
     FROM `accounts_collect_entry` ac
     JOIN users us ON ac.user_id = us.id
     WHERE $cndtn 
-    AND DATE(ac.created_on) = CURDATE() 
+    AND DATE(ac.created_on) = CONCAT('$op_date', ' 23:59:59') 
     AND ac.user_id NOT IN (
         SELECT userid 
         FROM first_query

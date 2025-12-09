@@ -12,7 +12,7 @@ $mobile = isset($_POST['mobile']) ? $_POST['mobile'] : '';
 $cus_profile_id = isset($_POST['cus_profile_id']) ? $_POST['cus_profile_id'] : '';
 
 // Construct the query based on the provided search criteria
-$query = "SELECT DISTINCT * FROM customer_profile WHERE 1";
+$query = "SELECT DISTINCT cus_id, cus_name, mobile1, mobile2, aadhar_num FROM customer_profile WHERE 1";
 
 if (!empty($name)) {
     $query .= " AND cus_name = '$name'";

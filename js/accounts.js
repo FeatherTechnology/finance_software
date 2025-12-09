@@ -1,4 +1,4 @@
-$(document).ready(function(){
+$(document).ready(function () {
     $('input[name=accounts_type]').click(function () {
         let accountsType = $(this).val();
         if (accountsType == '1') { //Collection List
@@ -16,163 +16,177 @@ $(document).ready(function(){
         }
     });
 
-    $("input[name='coll_cash_type']").click(function(){
+    $("input[name='coll_cash_type']").click(function () {
         let collCashType = $(this).val();
 
         if (collCashType == '2') {
             $('#coll_bank_name').val('').attr('disabled', false);
             $('#accounts_collection_table').DataTable().destroy();
             $('#accounts_collection_table tbody').empty()
-        }else{
+        } else {
             $('#coll_bank_name').val('').attr('disabled', true);
             getCollectionList();
         }
     });
 
-    $('#coll_bank_name').change(function(){
+    $('#coll_bank_name').change(function () {
         getCollectionList();
     });
-    
-    $(document).on('click', '.collect-money', function(event){
+
+    $(document).on('click', '.collect-money', function (event) {
         event.preventDefault();
         let collectTableRowVal = {
-            'username' : $(this).closest('tr').find('td:nth-child(2)').text(),
-            'id' : $(this).attr('value'),
-            'line' : $(this).closest('tr').find('td:nth-child(3)').text(),
-            'branch' : $(this).closest('tr').find('td:nth-child(4)').text(),
-            'no_of_bills' : $(this).closest('tr').find('td:nth-child(5)').text(),
-            'collected_amnt' : $(this).closest('tr').find('td:nth-child(6)').text(),
-            'cash_type' : $("input[name='coll_cash_type']:checked").val(),
-            'bank_id' : $('#coll_bank_name :selected').val()
+            'username': $(this).closest('tr').find('td:nth-child(2)').text(),
+            'id': $(this).attr('value'),
+            'line': $(this).closest('tr').find('td:nth-child(3)').text(),
+            'branch': $(this).closest('tr').find('td:nth-child(4)').text(),
+            'no_of_bills': $(this).closest('tr').find('td:nth-child(5)').text(),
+            'collected_amnt': $(this).closest('tr').find('td:nth-child(6)').text(),
+            'cash_type': $("input[name='coll_cash_type']:checked").val(),
+            'bank_id': $('#coll_bank_name :selected').val()
         };
         swalConfirm('Collect', `Do you want to collect Money from ${collectTableRowVal.username}?`, submitCollect, collectTableRowVal);
     });
-    
-    $("input[name='issue_cash_type']").click(function(){
+
+    $(document).on('click', '.submit-money', function (event) {
+        event.preventDefault();
+        let issueTableRowVal = {
+            'username': $(this).closest('tr').find('td:nth-child(2)').text(),
+            'id': $(this).attr('value'),
+            'line': $(this).closest('tr').find('td:nth-child(3)').text(),
+            'no_of_bills': $(this).closest('tr').find('td:nth-child(4)').text(),
+            'netcash': $(this).closest('tr').find('td:nth-child(5)').text(),
+            'cash_type': $("input[name='issue_cash_type']:checked").val(),
+            'bank_id': $('#issue_bank_name :selected').val()
+        };
+        swalConfirm('Submit', `Do you want to submit Money to ${issueTableRowVal.username}?`, submitIssued, issueTableRowVal);
+    });
+
+    $("input[name='issue_cash_type']").click(function () {
         let collCashType = $(this).val();
 
         if (collCashType == '2') {
             $('#issue_bank_name').val('').attr('disabled', false);
             $('#accounts_loanissue_table').DataTable().destroy();
             $('#accounts_loanissue_table tbody').empty()
-        }else{
+        } else {
             $('#issue_bank_name').val('').attr('disabled', true);
             getLoanIssueList();
         }
     });
-    
-    $('#issue_bank_name').change(function(){
+
+    $('#issue_bank_name').change(function () {
         getLoanIssueList();
     });
 
-    $('#expenses_add').click(function(){
+    $('#expenses_add').click(function () {
         getBankName('#expenses_bank_name');
         getInvoiceNo();
         getBranchList();
         expensesTable('#expenses_creation_table');
     });
-    
-    $("input[name='expenses_cash_type']").click(function(){
+
+    $("input[name='expenses_cash_type']").click(function () {
         let expCashType = $(this).val();
         $('#expenses_trans_id').val('');
 
         if (expCashType == '2') {
             $('#expenses_bank_name').val('').attr('disabled', false);
             $('.exp_trans_div').show();
-        }else{
+        } else {
             $('.exp_trans_div').hide();
             $('#expenses_bank_name').val('').attr('disabled', true);
         }
     });
 
-    $('#expenses_category').change(function(){
+    $('#expenses_category').change(function () {
         let expCat = $(this).val();
-        if(expCat =='14'){
+        if (expCat == '14') {
             $('.agentDiv').show();
             getAgentName();
-        }else{
+        } else {
             $('.agentDiv').hide();
         }
     });
 
-    $('#submit_expenses_creation').click(function(event){
+    $('#submit_expenses_creation').click(function (event) {
         event.preventDefault();
         let expensesData = {
-            'coll_mode' : $("input[name='expenses_cash_type']:checked").val(),
-            'bank_id' : $('#expenses_bank_name :selected').val(),
-            'invoice_id' : $('#invoice_id').val(),
-            'branch_name' : $('#branch_name :selected').val(),
-            'expenses_category' : $('#expenses_category :selected').val(),
-            'agent_name' : $('#agent_name :selected').val(),
-            'expenses_total_issued' : $('#expenses_total_issued').val(),
-            'expenses_total_amnt' : $('#expenses_total_amnt').val(),
-            'description' : $('#description').val(),
-            'expenses_amnt' : $('#expenses_amnt').val().replace(/,/g, ''),
-            'expenses_trans_id' : $('#expenses_trans_id').val(),
+            'coll_mode': $("input[name='expenses_cash_type']:checked").val(),
+            'bank_id': $('#expenses_bank_name :selected').val(),
+            'invoice_id': $('#invoice_id').val(),
+            'branch_name': $('#branch_name :selected').val(),
+            'expenses_category': $('#expenses_category :selected').val(),
+            'agent_name': $('#agent_name :selected').val(),
+            'expenses_total_issued': $('#expenses_total_issued').val(),
+            'expenses_total_amnt': $('#expenses_total_amnt').val(),
+            'description': $('#description').val(),
+            'expenses_amnt': $('#expenses_amnt').val().replace(/,/g, ''),
+            'expenses_trans_id': $('#expenses_trans_id').val(),
         }
-            // Fetch closing balance and validate the expense amount before submitting
-            getClosingBal(function (hand_cash_balance, bank_cash_balance) {
-                let expensesAmount = parseFloat(expensesData.expenses_amnt);
-                let collMode = expensesData.coll_mode;
-    
-                // Check if cash mode is 1 (Hand Cash) and expenses amount is greater than hand cash balance
-                if (collMode == '1' && expensesAmount > hand_cash_balance) {
-                    swalError('Warning', 'Insufficient Hand cash balance');
-                    return;
-                }
-    
-                // Check if cash mode is 2 (Bank Transaction) and expenses amount is greater than bank cash balance
-                if (collMode == '2' && expensesAmount > bank_cash_balance) {
-                    swalError('Warning', 'Insufficient Bank cash balance.');
-                    return;
-                }
-    
-                // Proceed if the balance check passes
-                if (expensesFormValid(expensesData)) {
-                    $.post('api/accounts_files/accounts/submit_expenses.php', expensesData, function (response) {
-                        if (response == '1') {
-                            swalSuccess('Success', 'Expenses added successfully.');
-                            expensesTable('#expenses_creation_table');
-                            getInvoiceNo();
-                            getClosingBal(); // Update the closing balance after submission
-                        } else {
-                            swalError('Error', 'Failed to add expenses.');
-                        }
-                    }, 'json');
-                } else {
-                    swalError('Warning', 'Kindly Fill Mandatory Fields.');
-                }
-            });
+        // Fetch closing balance and validate the expense amount before submitting
+        getClosingBal(function (hand_cash_balance, bank_cash_balance) {
+            let expensesAmount = parseFloat(expensesData.expenses_amnt);
+            let collMode = expensesData.coll_mode;
+
+            // Check if cash mode is 1 (Hand Cash) and expenses amount is greater than hand cash balance
+            if (collMode == '1' && expensesAmount > hand_cash_balance) {
+                swalError('Warning', 'Insufficient Hand cash balance');
+                return;
+            }
+
+            // Check if cash mode is 2 (Bank Transaction) and expenses amount is greater than bank cash balance
+            if (collMode == '2' && expensesAmount > bank_cash_balance) {
+                swalError('Warning', 'Insufficient Bank cash balance.');
+                return;
+            }
+
+            // Proceed if the balance check passes
+            if (expensesFormValid(expensesData)) {
+                $.post('api/accounts_files/accounts/submit_expenses.php', expensesData, function (response) {
+                    if (response == '1') {
+                        swalSuccess('Success', 'Expenses added successfully.');
+                        expensesTable('#expenses_creation_table');
+                        getInvoiceNo();
+                        getClosingBal(); // Update the closing balance after submission
+                    } else {
+                        swalError('Error', 'Failed to add expenses.');
+                    }
+                }, 'json');
+            } else {
+                swalError('Warning', 'Kindly Fill Mandatory Fields.');
+            }
+        });
     });
 
-    
+
     $(document).on('click', '.expDeleteBtn', function () {
         let id = $(this).attr('value');
         swalConfirm('Delete', 'Are you sure you want to delete this Expenses?', deleteExp, id);
     });
 
-    $(document).on('click', '.exp-clse', function(){
+    $(document).on('click', '.exp-clse', function () {
         expensesTable('#accounts_expenses_table');
     });
 
-    $('#agent_name').change(function(){
+    $('#agent_name').change(function () {
         let agentId = $(this).val();
         let coll_mode = $("input[name='expenses_cash_type']:checked").val();
 
-        if(coll_mode =='' || coll_mode ==undefined){
+        if (coll_mode == '' || coll_mode == undefined) {
             swalError('Warning', 'Kindly select the cash mode.')
             $('#expenses_total_issued').val('');
             $('#expenses_total_amnt').val('');
-        }else{
+        } else {
             getAgentDetails(agentId, coll_mode);
         }
     });
-    
-    $('#other_trans_add').click(function(){
+
+    $('#other_trans_add').click(function () {
         otherTransTable('#other_transaction_table');
     });
-    
-    $("input[name='othertransaction_cash_type']").click(function(){
+
+    $("input[name='othertransaction_cash_type']").click(function () {
         let otherCashType = $(this).val();
         $('#other_trans_id').val('');
 
@@ -180,17 +194,17 @@ $(document).ready(function(){
             $('#othertransaction_bank_name').val('').attr('disabled', false);
             $('.other_trans_div').show();
             getBankName('#othertransaction_bank_name');
-        }else{
+        } else {
             $('.other_trans_div').hide();
             $('#othertransaction_bank_name').val('').attr('disabled', true);
         }
     });
 
-    $('#trans_category').change(function(){
+    $('#trans_category').change(function () {
         let category = $(this).val();
         if (category != '') {
             $('#trans_cat').val($(this).find(':selected').text());
-            $('#trans_cat').attr('data-id',$(this).val());
+            $('#trans_cat').attr('data-id', $(this).val());
             $('#name_modal_btn')
                 .attr('data-toggle', 'modal')
                 .attr('data-target', '#add_name_modal');
@@ -202,17 +216,17 @@ $(document).ready(function(){
 
         nameDropDown(); //To show name based on transaction category.
 
-        let catTypeOptn ='';
-            catTypeOptn +="<option value=''>Select Type</option>";
-        if(category == '1' || category == '2' || category == '3' || category == '4' || category == '9' ){ //credit / debit
-            catTypeOptn +="<option value='1'>Credit</option>";
-            catTypeOptn +="<option value='2'>Debit</option>";
+        let catTypeOptn = '';
+        catTypeOptn += "<option value=''>Select Type</option>";
+        if (category == '1' || category == '2' || category == '3' || category == '4' || category == '9') { //credit / debit
+            catTypeOptn += "<option value='1'>Credit</option>";
+            catTypeOptn += "<option value='2'>Debit</option>";
 
-        } else if(category == '5'){ //debit || category == '7'
-            catTypeOptn +="<option value='2'>Debit</option>";            
-        
-        } else if(category == '6' || category == '8'){ //credit
-            catTypeOptn +="<option value='1'>Credit</option>";
+        } else if (category == '5') { //debit || category == '7'
+            catTypeOptn += "<option value='2'>Debit</option>";
+
+        } else if (category == '6' || category == '8') { //credit
+            catTypeOptn += "<option value='1'>Credit</option>";
         }
 
         $('#cat_type').empty().append(catTypeOptn); //To show Type based on transaction category.
@@ -225,15 +239,15 @@ $(document).ready(function(){
         //     $('.other_user_name_div').hide();
         //     $('#other_user_name').val('').attr('disabled', true);
         // }
-        
+
         getRefId(category);
     });
-    
+
     $('#name_modal_btn').click(function () {
         if ($(this).attr('data-target')) {
             $('#add_other_transaction_modal').hide();
             getOtherTransNameTable();
-        }else{
+        } else {
             swalError('Warning', 'Kindly select Transaction Category.');
         }
     });
@@ -244,42 +258,42 @@ $(document).ready(function(){
         $('#other_name').val('');
     });
 
-    $('.clse-trans').click(function(){
+    $('.clse-trans').click(function () {
         otherTransTable('#accounts_other_trans_table');
     });
 
-    $('#submit_name').click(function(event){
+    $('#submit_name').click(function (event) {
         event.preventDefault();
         let transCat = $('#trans_cat').attr('data-id');
         let name = $('#other_name').val();
-        if(transCat =='' || name ==''){
+        if (transCat == '' || name == '') {
             swalError('Warning', 'Kindly fill all the fields.');
             return false;
         }
-        $.post('api/accounts_files/accounts/submit_other_trans_name.php',{transCat, name},function(response){
-            if(response == '1'){
+        $.post('api/accounts_files/accounts/submit_other_trans_name.php', { transCat, name }, function (response) {
+            if (response == '1') {
                 swalSuccess('Success', 'Transaction Name Added Successfully.');
                 getOtherTransNameTable();
                 $('#other_name').val('');
-            }else{
+            } else {
                 swalError('Error', 'Transaction Name Not Added. Try Again Later.');
             }
-        },'json');
+        }, 'json');
     });
 
-    $('#submit_other_transaction').click(function(event){
+    $('#submit_other_transaction').click(function (event) {
         event.preventDefault();
         let otherTransData = {
-            'coll_mode' : $("input[name='othertransaction_cash_type']:checked").val(),
-            'bank_id' : $('#othertransaction_bank_name :selected').val(),
-            'trans_category' : $('#trans_category :selected').val(),
-            'other_trans_name' : $('#other_trans_name :selected').val(),
-            'cat_type' : $('#cat_type :selected').val(),
-            'other_ref_id' : $('#other_ref_id').val(),
-            'other_trans_id' : $('#other_trans_id').val(),
+            'coll_mode': $("input[name='othertransaction_cash_type']:checked").val(),
+            'bank_id': $('#othertransaction_bank_name :selected').val(),
+            'trans_category': $('#trans_category :selected').val(),
+            'other_trans_name': $('#other_trans_name :selected').val(),
+            'cat_type': $('#cat_type :selected').val(),
+            'other_ref_id': $('#other_ref_id').val(),
+            'other_trans_id': $('#other_trans_id').val(),
             // 'other_user_name' : $('#other_user_name :selected').val(),
-            'other_amnt' : $('#other_amnt').val(),
-            'other_remark' : $('#other_remark').val()
+            'other_amnt': $('#other_amnt').val().replace(/,/g, ''),
+            'other_remark': $('#other_remark').val()
         }
         let otherAmount = otherTransData.other_amnt;
         let collMode = otherTransData.coll_mode;
@@ -361,7 +375,7 @@ $(document).ready(function(){
             });
         }, 'json');
     })
-    
+
     $(document).on('click', '.transDeleteBtn', function () {
         let id = $(this).attr('value');
         swalConfirm('Delete', 'Are you sure you want to delete this Other Transaction?', deleteTrans, id);
@@ -369,7 +383,7 @@ $(document).ready(function(){
 
 
     //Balance sheet
-    
+
     $('#IDE_type').change(function () {
         $('#blncSheetDiv').empty();
         $('.IDE_nameDiv').hide();
@@ -405,49 +419,124 @@ $(document).ready(function(){
         $(this).val(formatIndianNumber(raw));
     });
 
+    $('#addUntracked').click(function () {
+        getBankName('#bank_id_untracked');
+    });
+
+    $('#submit_untracked').click(function () {
+        var bank_id = $('#bank_id_untracked').val();
+        var amt = $('#untracked_amt').val();
+
+        if (bank_id !== '' && amt !== '') {
+
+            untrackedValues.push(Number(amt));
+
+            getClosingBal();
+
+            $('#closeUntracked').trigger('click');
+            $('#bank_id_untracked').val('');
+            $('#untracked_amt').val('');
+        } else {
+            if (bank_id == '') {
+                $('#bank_id_untrackedCheck').show()
+            } else {
+                $('#bank_id_untrackedCheck').hide()
+            }
+            if (amt == '') {
+                $('#untracked_amtCheck').show()
+            } else {
+                $('#untracked_amtCheck').hide()
+            }
+        }
+    });
+
 });  /////Document END.
 
-$(function(){
-    getOpeningBal();
-    
+$(function () {
+    getOpeningDate();
 });
 
-function getOpeningBal(){
-    $.post('api/accounts_files/accounts/opening_balance.php',function(response){
-        if(response.length > 0){
-            $('.opening_val').text(moneyFormatIndia(response[0]['opening_balance']));
-            $('.op_hand_cash_val').text(moneyFormatIndia(response[0]['hand_cash']));
-            $('.op_bank_cash_val').text(moneyFormatIndia(response[0]['bank_cash']));
+function getOpeningDate() {
+    $.ajax({
+        url: 'api/accounts_files/accounts/getOpeningDate.php',
+        dataType: 'json',
+        type: 'post',
+        cache: false,
+        success: function (response) {
+            $('#op_date').text(response['opening_date']);
         }
-    },'json').then(function(){
+    }).then(function () {
+        getOpeningBal();
+        submitCashTally();
+    });
+}
+
+
+function getOpeningBal() {
+    let op_date = $('#op_date').text().trim();
+
+    $.post('api/accounts_files/accounts/opening_balance.php', { op_date }, function (response) {
+        if (response.length > 0) {
+            let openingBal = response[0]['opening_balance'];
+            let handCash = response[0]['hand_cash'];
+            let bankCash = response[0]['bank_cash'];
+            let untracked = response[0]['untracked_opening'];
+
+            $('.opening_val').text(moneyFormatIndia(openingBal));
+            $('.op_hand_cash_val').text(moneyFormatIndia(handCash));
+            $('.op_bank_cash_val').text(
+                moneyFormatIndia(bankCash) + " (" + moneyFormatIndia(untracked) + ")"
+            );
+        }
+    }, 'json').then(function () {
         getClosingBal();
     });
 }
 
 function getClosingBal(callback) {
-    $.post('api/accounts_files/accounts/closing_balance.php', function (response) {
-        if (response.length > 0) {
-            let close = parseInt($('.opening_val').text().replace(/,/g,'')) + parseInt(response[0]['closing_balance']);
-            let hand = parseInt($('.op_hand_cash_val').text().replace(/,/g,'')) + parseInt(response[0]['hand_cash']);
-            let bank = parseInt($('.op_bank_cash_val').text().replace(/,/g,'')) + parseInt(response[0]['bank_cash']);
+    let op_date = $('#op_date').text().trim();
 
-            $('.closing_val').text(moneyFormatIndia(close));
-            $('.clse_hand_cash_val').text(moneyFormatIndia(hand));
-            $('.clse_bank_cash_val').text(moneyFormatIndia(bank));
+    $.post('api/accounts_files/accounts/closing_balance.php', { op_date }, function (response) {
+        if (!response || response.length === 0) return;
 
-            // Call the callback function if defined
-            if (typeof callback === "function") {
-                callback(hand, bank, close);
-            }
-        }
+        let data = response[0];
+
+        let openingVal = parseInt($('.opening_val').text().replace(/,/g, '')) || 0;
+        let openingHand = parseInt($('.op_hand_cash_val').text().replace(/,/g, '')) || 0;
+
+        let opBankText = $('.op_bank_cash_val').text().split("(")[0].trim();
+        let openingBank = parseInt(opBankText.replace(/,/g, '')) || 0;
+
+        let todayClose = parseInt(data['closing_balance']) || 0;
+        let todayHand = parseInt(data['hand_cash']) || 0;
+        let todayBank = parseInt(data['bank_cash']) || 0;
+
+        let finalClosing = openingVal + todayClose;
+        let finalHand = openingHand + todayHand;
+        let finalBank = openingBank + todayBank;
+
+        $('.closing_val').text(moneyFormatIndia(finalClosing));
+        $('.clse_hand_cash_val').text(moneyFormatIndia(finalHand));
+
+        // Correct cumulative logic
+        let openingUntracked = parseInt(data['untracked_opening']) || 0;
+        let todayUntracked = untrackedValues.reduce((a, b) => a + b, 0);
+        let totalUntracked = openingUntracked + todayUntracked;
+
+        $('.clse_bank_cash_val').text(
+            moneyFormatIndia(finalBank) + " (" + moneyFormatIndia(totalUntracked) + ")"
+        );
+
+        if (callback) callback(finalHand, finalBank, finalClosing);
+
     }, 'json');
 }
 
-
-function getCollectionList(){
+function getCollectionList() {
     let cash_type = $("input[name='coll_cash_type']:checked").val();
     let bank_id = $('#coll_bank_name :selected').val();
-    $.post('api/accounts_files/accounts/accounts_collection_list.php', {cash_type, bank_id},function(response){
+    let op_date = $('#op_date').text().trim();
+    $.post('api/accounts_files/accounts/accounts_collection_list.php', { cash_type, bank_id, op_date }, function (response) {
         let columnMapping = [
             'sno',
             'name',
@@ -458,37 +547,51 @@ function getCollectionList(){
             'action'
         ];
         appendDataToTable('#accounts_collection_table', response, columnMapping);
-        setdtable('#accounts_collection_table',"Collection List");
-    },'json');
+        setdtable('#accounts_collection_table', "Collection List");
+    }, 'json');
 }
 
-function submitCollect(values){
-    $.post('api/accounts_files/accounts/submit_collect.php', values, function(response){
+function submitCollect(values) {
+    $.post('api/accounts_files/accounts/submit_collect.php', values, function (response) {
         if (response == '1') {
             swalSuccess('Success', `Successfully collected ₹${(values.collected_amnt)} for ${values.no_of_bills} bills from ${values.username}.`);
             getCollectionList();
             getClosingBal();
-        }else{
+        } else {
             swalError('Error', 'Something went wrong.');
         }
-    },'json');
+    }, 'json');
 }
 
-function getLoanIssueList(){
+function submitIssued(values) {
+    $.post('api/accounts_files/accounts/submit_issued.php', values, function (response) {
+        if (response == '1') {
+            swalSuccess('Success', `Successfully issued ₹${(values.netcash)} for ${values.no_of_bills} bills from ${values.username}.`);
+            getLoanIssueList();
+            getClosingBal();
+        } else {
+            swalError('Error', 'Something went wrong.');
+        }
+    }, 'json');
+}
+
+function getLoanIssueList() {
     let cash_type = $("input[name='issue_cash_type']:checked").val();
     let bank_id = $('#issue_bank_name :selected').val();
-    $.post('api/accounts_files/accounts/accounts_loan_issue_list.php', {cash_type, bank_id},function(response){
+    let op_date = $('#op_date').text().trim();
+    $.post('api/accounts_files/accounts/accounts_loan_issue_list.php', { cash_type, bank_id, op_date }, function (response) {
         let columnMapping = [
             'sno',
             'name',
-            'linename',
+            'line_list',
             'no_of_loans',
-            'issueAmnt'
+            'issueAmnt',
+            'action'
             // 'balance'
         ];
         appendDataToTable('#accounts_loanissue_table', response, columnMapping);
-        setdtable('#accounts_loanissue_table',"Loan Issue List");
-    },'json');
+        setdtable('#accounts_loanissue_table', "Loan Issue List");
+    }, 'json');
 }
 
 function getBankName(dropdowndId) {
@@ -501,21 +604,21 @@ function getBankName(dropdowndId) {
     }, 'json');
 }
 
-function getInvoiceNo(){
-    $.post('api/accounts_files/accounts/get_invoice_no.php',{},function(response){
+function getInvoiceNo() {
+    $.post('api/accounts_files/accounts/get_invoice_no.php', {}, function (response) {
         $('#invoice_id').val(response);
-    },'json');
+    }, 'json');
 }
 
-function getBranchList(){
-    $.post('api/common_files/user_mapped_branches.php',function(response){
+function getBranchList() {
+    $.post('api/common_files/user_mapped_branches.php', function (response) {
         let branchOption;
         branchOption += '<option value="">Select Branch Name</option>';
-        $.each(response,function(index,value){
-            branchOption += '<option value="'+value.id+'">'+value.branch_name+'</option>';
-            });
+        $.each(response, function (index, value) {
+            branchOption += '<option value="' + value.id + '">' + value.branch_name + '</option>';
+        });
         $('#branch_name').empty().html(branchOption);
-    },'json');
+    }, 'json');
 }
 
 function getAgentName() {
@@ -534,23 +637,23 @@ function getAgentName() {
     }, 'json');
 }
 
-function expensesFormValid(expensesData){
-    for(key in expensesData){
-        if(key !='agent_name' && key !='expenses_total_issued' && key !='expenses_total_amnt' && key !='bank_id' && key !='expenses_trans_id'){
-            if(expensesData[key] =='' || expensesData[key] ==null || expensesData[key] ==undefined){
+function expensesFormValid(expensesData) {
+    for (key in expensesData) {
+        if (key != 'agent_name' && key != 'expenses_total_issued' && key != 'expenses_total_amnt' && key != 'bank_id' && key != 'expenses_trans_id') {
+            if (expensesData[key] == '' || expensesData[key] == null || expensesData[key] == undefined) {
                 return false;
             }
         }
     }
 
-    if(expensesData['coll_mode'] =='2'){
-        if(expensesData['bank_id'] =='' || expensesData['bank_id'] ==null || expensesData['bank_id'] == undefined || expensesData['expenses_trans_id'] =='' || expensesData['expenses_trans_id'] ==null || expensesData['expenses_trans_id'] == undefined ){
+    if (expensesData['coll_mode'] == '2') {
+        if (expensesData['bank_id'] == '' || expensesData['bank_id'] == null || expensesData['bank_id'] == undefined || expensesData['expenses_trans_id'] == '' || expensesData['expenses_trans_id'] == null || expensesData['expenses_trans_id'] == undefined) {
             return false;
         }
     }
 
-    if(expensesData['expenses_category']=='14'){
-        if(expensesData['agent_name'] =='' || expensesData['agent_name'] ==null || expensesData['agent_name'] ==undefined || expensesData['expenses_total_issued'] =='' || expensesData['expenses_total_issued'] ==null || expensesData['expenses_total_issued'] ==undefined || expensesData['expenses_total_amnt'] =='' || expensesData['expenses_total_amnt'] ==null || expensesData['expenses_total_amnt'] ==undefined ){
+    if (expensesData['expenses_category'] == '14') {
+        if (expensesData['agent_name'] == '' || expensesData['agent_name'] == null || expensesData['agent_name'] == undefined || expensesData['expenses_total_issued'] == '' || expensesData['expenses_total_issued'] == null || expensesData['expenses_total_issued'] == undefined || expensesData['expenses_total_amnt'] == '' || expensesData['expenses_total_amnt'] == null || expensesData['expenses_total_amnt'] == undefined) {
             return false;
         }
     }
@@ -558,8 +661,8 @@ function expensesFormValid(expensesData){
     return true;
 }
 
-function expensesTable(tableId){
-    $.post('api/accounts_files/accounts/get_expenses_list.php',function(response){
+function expensesTable(tableId) {
+    $.post('api/accounts_files/accounts/get_expenses_list.php', function (response) {
         let expensesColumn = [
             'sno',
             'coll_mode',
@@ -577,12 +680,12 @@ function expensesTable(tableId){
         ];
 
         appendDataToTable(tableId, response, expensesColumn);
-        setdtable(tableId,"Expenses List");
+        setdtable(tableId, "Expenses List");
         clearExpForm();
-    },'json');
+    }, 'json');
 }
 
-function clearExpForm(){
+function clearExpForm() {
     $('#expenses_total_issued').val('');
     $('#expenses_total_amnt').val('');
     $('#expenses_amnt').val('');
@@ -606,37 +709,37 @@ function deleteExp(id) {
     }, 'json');
 }
 
-function getAgentDetails(id, coll_mode){
-    $.post('api/accounts_files/accounts/get_agent_cash_details.php',{id, coll_mode},function(response){
+function getAgentDetails(id, coll_mode) {
+    $.post('api/accounts_files/accounts/get_agent_cash_details.php', { id, coll_mode }, function (response) {
         $('#expenses_total_issued').val(response[0].total_issued);
-        let issuedAmount = (response[0].total_issued =='0') ? '0' : response[0].total_amount;
+        let issuedAmount = (response[0].total_issued == '0') ? '0' : response[0].total_amount;
         $('#expenses_total_amnt').val(issuedAmount);
-    },'json');
+    }, 'json');
 }
 
-function getOtherTransNameTable(){
+function getOtherTransNameTable() {
     let transCat = $('#trans_category :selected').val();
-    $.post('api/accounts_files/accounts/get_other_trans_name_table.php',{transCat},function(response){
+    $.post('api/accounts_files/accounts/get_other_trans_name_table.php', { transCat }, function (response) {
         let nameColumns = [
             'sno',
             'trans_cat',
             'name'
         ];
-        appendDataToTable('#other_trans_name_table',response,nameColumns);
-        setdtable('#other_trans_name_table',"Other Transaction List");
-    },'json');
+        appendDataToTable('#other_trans_name_table', response, nameColumns);
+        setdtable('#other_trans_name_table', "Other Transaction List");
+    }, 'json');
 }
 
-function nameDropDown(){
+function nameDropDown() {
     let transCat = $('#trans_category :selected').val();
-    $.post('api/accounts_files/accounts/get_other_trans_name_table.php',{transCat},function(response){
-        let nameOptn='';
-            nameOptn +="<option value=''>Select Name</option>";
-            $.each(response, function(index, val){
-                nameOptn += "<option value='"+val.id+"'>"+val.name+"</option>";
-            });
+    $.post('api/accounts_files/accounts/get_other_trans_name_table.php', { transCat }, function (response) {
+        let nameOptn = '';
+        nameOptn += "<option value=''>Select Name</option>";
+        $.each(response, function (index, val) {
+            nameOptn += "<option value='" + val.id + "'>" + val.name + "</option>";
+        });
         $('#other_trans_name').empty().append(nameOptn);
-    },'json');
+    }, 'json');
 }
 
 // function getUserList(){
@@ -650,17 +753,17 @@ function nameDropDown(){
 //     },'json');
 // }
 
-function otherTransFormValid(data){
-    for(key in data){
-        if(key !='expenses_total_amnt' && key !='bank_id' && key !='other_trans_id'){
-            if(data[key] =='' || data[key] ==null || data[key] ==undefined){
+function otherTransFormValid(data) {
+    for (key in data) {
+        if (key != 'expenses_total_amnt' && key != 'bank_id' && key != 'other_trans_id') {
+            if (data[key] == '' || data[key] == null || data[key] == undefined) {
                 return false;
             }
         }
     }
-    
-    if(data['coll_mode'] =='2'){
-        if(data['bank_id'] =='' || data['bank_id'] ==null || data['bank_id'] == undefined || data['other_trans_id'] =='' || data['other_trans_id'] ==null || data['other_trans_id'] == undefined){
+
+    if (data['coll_mode'] == '2') {
+        if (data['bank_id'] == '' || data['bank_id'] == null || data['bank_id'] == undefined || data['other_trans_id'] == '' || data['other_trans_id'] == null || data['other_trans_id'] == undefined) {
             return false;
         }
     }
@@ -674,8 +777,8 @@ function otherTransFormValid(data){
     return true;
 }
 
-function otherTransTable(tableId){
-    $.post('api/accounts_files/accounts/get_other_trans_list.php',function(response){
+function otherTransTable(tableId) {
+    $.post('api/accounts_files/accounts/get_other_trans_list.php', function (response) {
         let expensesColumn = [
             'sno',
             'coll_mode',
@@ -692,12 +795,12 @@ function otherTransTable(tableId){
         ];
 
         appendDataToTable(tableId, response, expensesColumn);
-        setdtable(tableId,"Other Transaction List");
+        setdtable(tableId, "Other Transaction List");
         clearTransForm();
-    },'json');
+    }, 'json');
 }
 
-function clearTransForm(){
+function clearTransForm() {
     $('#other_ref_id').val('');
     $('#other_trans_id').val('');
     $('#other_amnt').val('');
@@ -718,32 +821,33 @@ function deleteTrans(id) {
     }, 'json');
 }
 
-function getRefId(trans_cat){
-    $.post('api/accounts_files/accounts/get_ref_id.php', {trans_cat}, function (response){
+function getRefId(trans_cat) {
+    $.post('api/accounts_files/accounts/get_ref_id.php', { trans_cat }, function (response) {
         $('#other_ref_id').val(response)
-    },'json');
+    }, 'json');
 }
 
-function balNameDropDown(){
+function balNameDropDown() {
     let transCat = $('#IDE_type :selected').val();
-    $.post('api/accounts_files/accounts/get_other_trans_name_table.php',{transCat},function(response){
-        let nameOptn='';
-            nameOptn +="<option value=''>Select Name</option>";
-            $.each(response, function(index, val){
-                nameOptn += "<option value='"+val.id+"'>"+val.name+"</option>";
-            });
+    $.post('api/accounts_files/accounts/get_other_trans_name_table.php', { transCat }, function (response) {
+        let nameOptn = '';
+        nameOptn += "<option value=''>Select Name</option>";
+        $.each(response, function (index, val) {
+            nameOptn += "<option value='" + val.id + "'>" + val.name + "</option>";
+        });
         $('#IDE_name_list').empty().append(nameOptn);
-    },'json');
+    }, 'json');
 }
 
 function getIDEBalanceSheet() {
     var type = $('#IDE_type').val(); //investment/Deposit/EL
     var view_type = $('#IDE_view_type').val();//overall/Individual
     var IDE_name_id = $('#IDE_name_list').val();//show by name wise
+    let op_date = $('#op_date').text().trim();
 
     $.ajax({
         url: 'api/accounts_files/accounts/dep_bal_sheet.php',
-        data: { 'IDEview_type': view_type, 'IDEtype': type, 'IDE_name_id': IDE_name_id },
+        data: { 'IDEview_type': view_type, 'IDEtype': type, 'IDE_name_id': IDE_name_id, 'op_date': op_date },
         type: 'post',
         cache: false,
         success: function (response) {
@@ -757,4 +861,118 @@ function resetBlncSheet() {
     $('#IDE_type').val('');
     $('#IDE_view_type').val('');
     $('#IDE_name_list').val('');
+}
+
+let untrackedValues = [];
+
+function submitCashTally() {
+
+    let op_date_str = $('#op_date').text().trim();
+
+    // Prevent invalid date
+    if (!op_date_str || op_date_str === '') return;
+
+    let op_date_parts = op_date_str.split("-");
+    let op_date = new Date(op_date_parts[2], op_date_parts[1] - 1, op_date_parts[0]);
+    let currentDate = new Date();
+
+    if (op_date <= currentDate) {
+
+        $('#submit_cash_tally').off('click');
+
+        $('#submit_cash_tally').click(function (event) {
+            event.preventDefault();
+
+            if (getBankCollectionSubmit() == 0 && getLoanIssuedSubmit() == 0) {
+
+                if (confirm('Are You sure to close this Day?')) {
+
+                    let op_date = $('#op_date').text();
+                    let opening_bal = $('.opening_val').text().replace(/,/g, '');
+                    let open_hand_cash = $('.op_hand_cash_val').text().replace(/,/g, '');
+                    let open_bank_cash = $('.op_bank_cash_val').text().split("(")[0].trim().replace(/,/g, '');
+
+                    let closing_bal = $('.closing_val').text().replace(/,/g, '');
+                    let close_hand_cash = $('.clse_hand_cash_val').text().replace(/,/g, '');
+                    let close_bank_cash = $('.clse_bank_cash_val').text().split("(")[0].trim().replace(/,/g, '');
+
+                    let untracked_total = $('.clse_bank_cash_val').text().split("(")[1].replace(")", "").replace(/,/g, '');
+
+                    let formtosend = {
+                        op_date,
+                        opening_bal,
+                        open_hand_cash,
+                        open_bank_cash,
+                        closing_bal,
+                        close_hand_cash,
+                        close_bank_cash,
+                        untracked_total
+                    };
+
+                    $.post('api/accounts_files/accounts/submitCashTally.php', formtosend, function (response) {
+                        if (response.includes('Successfully')) {
+                            Swal.fire({
+                                title: response,
+                                icon: 'success',
+                                confirmButtonColor: '#7CA5B8'
+                            }).then(() => {
+                                location.reload();
+                            });
+                        } else {
+                            Swal.fire({
+                                title: response,
+                                icon: 'error',
+                                confirmButtonColor: '#7CA5B8'
+                            });
+                        }
+                    });
+
+                } else {
+                    return false;
+                }
+
+            } else {
+                Swal.fire({
+                    title: 'Submittion Error',
+                    html: 'Please check:<br>1. Bank Collection<br>2. Hand & Bank Issued<br>has submitted!',
+                    icon: 'error',
+                    confirmButtonColor: '#7CA5B8'
+                });
+            }
+        });
+
+    } else {
+        $('#submit_cash_tally').off('click').hide();
+    }
+}
+
+function getBankCollectionSubmit() {
+    let op_date = $('#op_date').text().trim();
+    let retval = 1;
+    $.ajax({
+        url: 'api/accounts_files/accounts/getBankCollectionSubmit.php',
+        type: 'post',
+        async: false,
+        data: { op_date },
+        success: function (response) {
+            retval = parseInt(response);
+        }
+    });
+    return retval;
+}
+
+function getLoanIssuedSubmit() {
+    let op_date = $('#op_date').text().trim();
+    let retval = 1;
+
+    $.ajax({
+        url: 'api/accounts_files/accounts/getLoanIssuedSubmit.php',
+        type: 'post',
+        async: false,
+        data: { op_date },
+        success: function (response) {
+            retval = parseInt(response);
+        }
+    });
+    return retval;
 }

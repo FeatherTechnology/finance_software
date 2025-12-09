@@ -1123,6 +1123,8 @@ $(document).ready(function () {
 
         $('#transaction_id').val('');
         $('#chequeno').val('');
+        $('#transaction_remark').val('');
+        $('#chequeRemark').val('');
         var type = $(this).val();
         let paymentType = $('#payment_type').val();
 

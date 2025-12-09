@@ -1,6 +1,14 @@
 <?php
 require '../../ajaxconfig.php';
 
+$status = [
+    8 =>  'In Closed',
+    9 =>  'Closed',
+    10 => 'Move to NOC',
+    11 => 'NOC Completed',
+    12 => 'Removed From NOC'
+];
+
 $existing_promo_arr = [];
 $whereCondition = "";
 
@@ -64,7 +72,7 @@ $finalRows = [];
 foreach ($grouped as $aadhaar => $records) {
 
     // Sort by latest cp_id DESC
-    usort($records, fn($a,$b) => $b['cp_id'] <=> $a['cp_id']);
+    usort($records, fn($a, $b) => $b['cp_id'] <=> $a['cp_id']);
 
     $count  = count($records);
     $latest = $records[0]; // Always newest record
@@ -116,6 +124,7 @@ foreach ($finalRows as &$customerRow) {
 
     $loanCustomerStatus = loanCustomerStatus($pdo, $customerRow['cus_id']);
     $customerRow['c_substs'] = $loanCustomerStatus;
+    $customerRow['c_sts'] = $status[$customerRow['c_sts']];
 
     if ($customerRow['existing_detail'] != '') {
         $customerRow['action'] = $customerRow['existing_detail'];
@@ -166,4 +175,3 @@ function loanCustomerStatus($pdo, $cus_id)
 }
 
 $pdo = null;
-?>

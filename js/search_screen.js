@@ -564,8 +564,8 @@ function getAlineName(areaId) {
     });
 }
 
-function dataCheckList(aadhar_num, cus_name, cus_mble_no) {
-    $.post('api/loan_entry/datacheck_name.php', { aadhar_num }, function (response) {
+function dataCheckList(cus_id, aadhar_num, cus_name, cus_mble_no) {
+    $.post('api/loan_entry/datacheck_name.php', { cus_id }, function (response) {
         //Name
         $('#name_check').empty();
         $('#name_check').append("<option value=''>Select Name</option>");
@@ -653,7 +653,7 @@ function editCustmerProfile(id) {
         $('#line').val(response[0].line);
         $('#cus_limit').val(moneyFormatIndia(response[0].cus_limit));
         $('#about_cus').val(response[0].about_cus);
-        dataCheckList(response[0].aadhar_num, response[0].cus_name, response[0].mobile1)
+        dataCheckList(response[0].cus_id, response[0].aadhar_num, response[0].cus_name, response[0].mobile1)
         getGuarantorName()
         getAreaName()
         setTimeout(() => {
