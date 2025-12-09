@@ -419,6 +419,37 @@ $(document).ready(function () {
         $(this).val(formatIndianNumber(raw));
     });
 
+    $('#addUntracked').click(function () {
+        getBankName('#bank_id_untracked');
+    });
+
+    $('#submit_untracked').click(function () {
+        var bank_id = $('#bank_id_untracked').val();
+        var amt = $('#untracked_amt').val();
+
+        if (bank_id !== '' && amt !== '') {
+
+            untrackedValues.push(Number(amt));
+
+            getClosingBal();
+
+            $('#closeUntracked').trigger('click');
+            $('#bank_id_untracked').val('');
+            $('#untracked_amt').val('');
+        } else {
+            if (bank_id == '') {
+                $('#bank_id_untrackedCheck').show()
+            } else {
+                $('#bank_id_untrackedCheck').hide()
+            }
+            if (amt == '') {
+                $('#untracked_amtCheck').show()
+            } else {
+                $('#untracked_amtCheck').hide()
+            }
+        }
+    });
+
 });  /////Document END.
 
 $(function () {
@@ -816,7 +847,7 @@ function getIDEBalanceSheet() {
 
     $.ajax({
         url: 'api/accounts_files/accounts/dep_bal_sheet.php',
-        data: { 'IDEview_type': view_type, 'IDEtype': type, 'IDE_name_id': IDE_name_id , 'op_date': op_date},
+        data: { 'IDEview_type': view_type, 'IDEtype': type, 'IDE_name_id': IDE_name_id, 'op_date': op_date },
         type: 'post',
         cache: false,
         success: function (response) {
