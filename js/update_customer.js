@@ -72,11 +72,12 @@ $(document).ready(function () {
 
 
     $('#mobile1').on('blur', function () {
+        let cus_id = $('#auto_gen_cus_id').val();
         let aadhar_num = $('#aadhar_nums').val().trim().replace(/\s/g, '');
         let cus_name = $('#cus_name').val();
         let customerMobile = $(this).val().trim();
         if (customerMobile) {
-            dataCheckList(aadhar_num, cus_name, customerMobile)
+            dataCheckList(cus_id, cus_name, customerMobile , aadhar_num)
         } else {
             removeCustomerMobile();
         }
@@ -804,7 +805,7 @@ function clearCusProfileForm(type) {
 function fetchCustomerData(name, aadhar_num, mobile, cus_profile_id) {
     $.post('api/loan_entry/search_customer.php', { name, aadhar_num, mobile, cus_profile_id }, function (response) {
         // Process customer data
-        var customerMapping = ['index', 'aadhar_num', 'cus_name', 'mobiles'];
+        var customerMapping = ['index', 'cus_id', 'cus_name', 'mobiles'];
         var customerData = response.customers.map(function (customer, index) {
             let mobiles = customer.mobile1;
             if (customer.mobile2) {
@@ -812,7 +813,7 @@ function fetchCustomerData(name, aadhar_num, mobile, cus_profile_id) {
             }
             return {
                 index: index + 1,
-                aadhar_num: customer.aadhar_num,
+                cus_id: customer.cus_id,
                 cus_name: customer.cus_name,
                 mobiles: mobiles
             };
@@ -824,7 +825,7 @@ function fetchCustomerData(name, aadhar_num, mobile, cus_profile_id) {
         var familyData = response.family.map(function (member, index) {
             return {
                 index: index + 1,
-                aadhar_num: member.aadhar_num,
+                aadhar_num: member.fam_aadhar,
                 fam_name: member.fam_name,
                 fam_relationship: member.fam_relationship,
                 under_customer_name: member.under_customer_name,
@@ -1279,8 +1280,8 @@ function getAlineName(areaId) {
     });
 }
 
-function dataCheckList(aadhar_num, cus_name, cus_mble_no) {
-    $.post('api/loan_entry/datacheck_name.php', { aadhar_num }, function (response) {
+function dataCheckList( cus_id, cus_name, cus_mble_no, aadhar_num) {
+    $.post('api/loan_entry/datacheck_name.php', { cus_id }, function (response) {
         //Name
         $('#name_check').empty();
         $('#name_check').append("<option value=''>Select Name</option>");
@@ -1354,7 +1355,7 @@ function editCustmerProfile(id) {
         $('#line').val(response[0].line);
         $('#cus_limit').val(moneyFormatIndia(response[0].cus_limit));
         $('#about_cus').val(response[0].about_cus);
-        dataCheckList(response[0].cus_id, response[0].cus_name, response[0].mobile1)
+        dataCheckList(response[0].cus_id, response[0].cus_name, response[0].mobile1 , response[0].aadhar_num);
         if (response[0].whatsapp_no === response[0].mobile1) {
             $('#mobile1_radio').prop('checked', true);
             $('#selected_mobile_radio').val('mobile1');
