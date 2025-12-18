@@ -26,7 +26,7 @@ $to_date = date('Y-m-d', strtotime($inputDate)) . ' 23:59:59';
     }
 </style>
 
-<table class="table custom-table">
+<table id="interest_ledger_view_report" class="table custom-table">
     <thead>
         <tr>
             <th rowspan="2" style="width: 50px;">S.No</th>
@@ -227,3 +227,11 @@ function moneyFormatIndia($num)
     }
     return $thecash;
 }
+
+?>
+
+<script type="text/javascript">
+    $(function() {
+        setdtable('#interest_ledger_view_report',"Interest Ledger View List");
+    });
+</script>

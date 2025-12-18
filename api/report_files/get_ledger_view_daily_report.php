@@ -164,3 +164,9 @@ function moneyFormatIndia($num)
     return $thecash;
 }
 ?>
+
+<script type="text/javascript">
+    $(function() {
+        setdtable('#ledger_view_dailyreport_table',"Ledger View Daily List");
+    });
+</script>

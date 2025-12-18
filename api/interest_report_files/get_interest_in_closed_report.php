@@ -39,7 +39,7 @@ FROM
     LEFT JOIN loan_category_creation lcc ON lelc.loan_category = lcc.id
     LEFT JOIN loan_category lc ON lcc.loan_category = lc.id
     LEFT JOIN agent_creation agc ON lelc.agent_id = agc.id
-WHERE cs.in_closed_date != '' AND lelc.due_type = 'Interest' $where ";
+WHERE cs.in_closed_date IS NOT NULL AND lelc.due_type = 'Interest' $where ";
 
 if (isset($_POST['search'])) {
     if ($_POST['search'] != "") {

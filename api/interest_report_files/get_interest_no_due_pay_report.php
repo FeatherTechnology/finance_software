@@ -609,7 +609,13 @@ function calculateNewInterestAmt($interest_rate, $balance_amt, $interest_calcula
 
 function ceilAmount($amt)
 {
-    $cur_amt = ceil($amt / 5) * 5; //ceil will set the number to nearest upper integer//i.e ceil(121/5)*5 = 125
+    // Round the amount to avoid floating point precision errors.
+    $amt = round($amt, 2);  // Round to two decimal places (or adjust as needed)
+    $cur_amt = ceil($amt / 5) * 5;
+    // If cur_amt is exactly equal to amt (with small floating point tolerance), don't increment.
+    if (abs($cur_amt - $amt) < 0.01) {
+        return $cur_amt;
+    }
     if ($cur_amt < $amt) {
         $cur_amt += 5;
     }

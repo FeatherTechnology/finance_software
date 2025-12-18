@@ -43,7 +43,8 @@ $(document).ready(function () {
             'no_of_bills': $(this).closest('tr').find('td:nth-child(5)').text(),
             'collected_amnt': $(this).closest('tr').find('td:nth-child(6)').text(),
             'cash_type': $("input[name='coll_cash_type']:checked").val(),
-            'bank_id': $('#coll_bank_name :selected').val()
+            'bank_id': $('#coll_bank_name :selected').val(),
+            'op_date': $('#op_date').text().trim()
         };
         swalConfirm('Collect', `Do you want to collect Money from ${collectTableRowVal.username}?`, submitCollect, collectTableRowVal);
     });
@@ -57,7 +58,8 @@ $(document).ready(function () {
             'no_of_bills': $(this).closest('tr').find('td:nth-child(4)').text(),
             'netcash': $(this).closest('tr').find('td:nth-child(5)').text(),
             'cash_type': $("input[name='issue_cash_type']:checked").val(),
-            'bank_id': $('#issue_bank_name :selected').val()
+            'bank_id': $('#issue_bank_name :selected').val(),
+            'op_date': $('#op_date').text().trim()
         };
         swalConfirm('Submit', `Do you want to submit Money to ${issueTableRowVal.username}?`, submitIssued, issueTableRowVal);
     });
@@ -123,6 +125,7 @@ $(document).ready(function () {
             'description': $('#description').val(),
             'expenses_amnt': $('#expenses_amnt').val().replace(/,/g, ''),
             'expenses_trans_id': $('#expenses_trans_id').val(),
+            'op_date': $('#op_date').text().trim()
         }
         // Fetch closing balance and validate the expense amount before submitting
         getClosingBal(function (hand_cash_balance, bank_cash_balance) {
@@ -293,7 +296,8 @@ $(document).ready(function () {
             'other_trans_id': $('#other_trans_id').val(),
             // 'other_user_name' : $('#other_user_name :selected').val(),
             'other_amnt': $('#other_amnt').val().replace(/,/g, ''),
-            'other_remark': $('#other_remark').val()
+            'other_remark': $('#other_remark').val(),
+            'op_date': $('#op_date').text().trim()
         }
         let otherAmount = otherTransData.other_amnt;
         let collMode = otherTransData.coll_mode;
@@ -335,7 +339,7 @@ $(document).ready(function () {
                         }
                     }
                 }
-            } else if (transCategory <= 2) {
+            } else if (transCategory < 2) {
                 if (catType == '2' && totalCredit < totalDebit + otherAmount) {
                     const formattedBalance = moneyFormatIndia(Math.abs(balance));
                     swalError('Warning', 'You may only debit up to: ' + formattedBalance);
@@ -662,7 +666,8 @@ function expensesFormValid(expensesData) {
 }
 
 function expensesTable(tableId) {
-    $.post('api/accounts_files/accounts/get_expenses_list.php', function (response) {
+    let op_date = $('#op_date').text().trim();
+    $.post('api/accounts_files/accounts/get_expenses_list.php', { op_date }, function (response) {
         let expensesColumn = [
             'sno',
             'coll_mode',
@@ -778,7 +783,8 @@ function otherTransFormValid(data) {
 }
 
 function otherTransTable(tableId) {
-    $.post('api/accounts_files/accounts/get_other_trans_list.php', function (response) {
+    let op_date = $('#op_date').text().trim();
+    $.post('api/accounts_files/accounts/get_other_trans_list.php', { op_date }, function (response) {
         let expensesColumn = [
             'sno',
             'coll_mode',

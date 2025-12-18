@@ -35,13 +35,13 @@ if ($c_cr_b_qry->rowCount() > 0) {
     $c_cr_b = 0;
 }
 // Loan Issue
-$s_cr_h_qry = $pdo->query("SELECT COALESCE(SUM(cash),0) AS settlr_cr_amnt FROM loan_issue WHERE DATE(created_on) = '$op_date' "); //Hand Cash
+$s_cr_h_qry = $pdo->query("SELECT SUM(netcash) AS settlr_cr_amnt FROM accounts_loan_issued WHERE coll_mode = 1 AND DATE(created_date) = '$op_date' "); //Hand Cash
 if ($s_cr_h_qry->rowCount() > 0) {
     $s_cr_h = $s_cr_h_qry->fetch()['settlr_cr_amnt'];
 } else {
     $s_cr_h = 0;
 }
-$s_cr_b_qry = $pdo->query("SELECT COALESCE(SUM(cheque_val) + SUM(transaction_val),0) AS settlr_br_amnt FROM loan_issue WHERE DATE(created_on) = '$op_date'"); //Hand Cash
+$s_cr_b_qry = $pdo->query("SELECT SUM(netcash) AS settlr_br_amnt FROM accounts_loan_issued WHERE coll_mode = 2 AND DATE(created_date) = '$op_date'"); //bank Cash
 if ($s_cr_b_qry->rowCount() > 0) {
     $s_cr_b = $s_cr_b_qry->fetch()['settlr_br_amnt'];
 } else {

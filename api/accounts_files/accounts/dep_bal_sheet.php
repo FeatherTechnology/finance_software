@@ -320,6 +320,307 @@ if ($IDEtype == 1 and $IDEview_type == 1 and $IDE_name_id == '') { //Deposit wit
     $tabBodyEnd = "<tr><td colspan='3'><b>Total</b></td><td>" . moneyFormatIndia($creditSum) . "</td><td>" . moneyFormatIndia($debitSum) . "</td></tr>";
     $tabBodyEnd .= "<tr><td colspan='3'><b>Difference</b></td><td colspan='2'>" . moneyFormatIndia($difference) . "</td></tr>";
     $tabBodyEnd .= "<tr><td colspan='3'><b>Closing Balance</b></td><td colspan='2'>" . moneyFormatIndia($closing_bal) . "</td></tr>";
+} else if ($IDEtype == 2 and $IDEview_type == 1 and $IDE_name_id == '') { // investment without name
+    {
+        $qry = $pdo->query("SELECT `id` FROM `other_trans_name` WHERE trans_cat = 2 GROUP by name");
+        $dep_name = [];
+        while ($rww = $qry->fetch()) {
+            $dep_name[] = $rww["id"];
+        }
+
+        $tableHeaders = "<th width='50'>S.No</th><th>Name</th><th>Closing Balance</th>";
+
+        $i = 1;
+        $difference1 = 0;
+        $c_bal = 0;
+
+        $tabBody = '';
+        $opening_bal = '';
+
+        foreach ($dep_name as $id) {
+
+            $name_id = $id ?? ''; {
+                $opening_qry = $pdo->query("SELECT IFNULL(SUM(CASE WHEN grp = 'ct_tables' THEN Credit - Debit END), 0) AS opening_balance
+                FROM (
+                    SELECT 0 AS Credit, amount AS Debit, 'ct_tables' AS grp
+                    FROM other_transaction
+                    WHERE created_on < DATE_FORMAT(CURRENT_DATE(), '%Y-%m-01') AND `trans_cat` ='2' AND coll_mode = 1 AND type = 2 AND name = '$name_id'
+                
+                    UNION ALL
+                    SELECT amount AS Credit, 0 AS Debit, 'ct_tables' AS grp
+                    FROM other_transaction
+                    WHERE created_on < DATE_FORMAT(CURRENT_DATE(), '%Y-%m-01') AND `trans_cat` ='2' AND coll_mode = 1 AND type = 1 AND name = '$name_id'
+                
+                    UNION ALL
+                    SELECT 0 AS Credit, amount AS Debit, 'ct_tables' AS grp
+                    FROM other_transaction
+                    WHERE created_on < DATE_FORMAT(CURRENT_DATE(), '%Y-%m-01') AND `trans_cat` ='2' AND coll_mode = 2 AND type = 2 AND name = '$name_id'
+                
+                    UNION ALL
+                    SELECT amount AS Credit, 0 AS Debit, 'ct_tables' AS grp
+                    FROM other_transaction
+                    WHERE created_on < DATE_FORMAT(CURRENT_DATE(), '%Y-%m-01') AND `trans_cat` ='2' AND coll_mode = 2 AND type = 1 AND name = '$name_id'
+                ) AS opening; ");
+
+                $op_bal = $opening_qry->fetch()['opening_balance'];
+            }
+
+            $qry = $pdo->query("SELECT name, SUM(Credit) AS Credit, SUM(Debit) AS Debit 
+            FROM ( 
+                SELECT name, created_on AS tdate,'' AS Credit, SUM(amount) AS Debit
+                FROM other_transaction 
+                WHERE MONTH(created_on) = MONTH(CURRENT_DATE()) AND YEAR(created_on) = YEAR(CURRENT_DATE()) 
+                AND `trans_cat` ='2' AND coll_mode = 1 AND type = 2 AND name = '$name_id'
+
+                UNION ALL 
+                SELECT name, created_on AS tdate,'' AS Credit, SUM(amount) AS Debit
+                FROM other_transaction
+                WHERE MONTH(created_on) = MONTH(CURRENT_DATE()) AND YEAR(created_on) = YEAR(CURRENT_DATE())
+                AND `trans_cat` ='2' AND coll_mode = 2 AND type = 2 AND name = '$name_id'
+
+                UNION ALL 
+                SELECT name, created_on AS tdate, SUM(amount) AS Credit, '' AS Debit
+                FROM other_transaction
+                WHERE MONTH(created_on) = MONTH(CURRENT_DATE()) AND YEAR(created_on) = YEAR(CURRENT_DATE())
+                AND `trans_cat` ='2' AND coll_mode = 1 AND type = 1 AND name = '$name_id'
+
+                UNION ALL 
+                SELECT name, created_on AS tdate, SUM(amount) AS Credit, '' AS Debit
+                FROM other_transaction
+                WHERE MONTH(created_on) = MONTH(CURRENT_DATE()) AND YEAR(created_on) = YEAR(CURRENT_DATE())
+                AND `trans_cat` ='2' AND coll_mode = 2 AND type = 1 AND name = '$name_id'
+            
+                ORDER BY tdate 
+            ) AS combined ");
+
+            $closing_bal = 0; // define default value
+
+            if ($qry->rowCount() > 0) {
+                while ($row = $qry->fetch()) {
+                    $agqry = $pdo->query("SELECT name from other_trans_name where id = '$name_id'");
+                    $dep_name = $agqry->fetch()['name'] ?? '';
+
+                    $difference1 = intVal($row['Credit']) - intVal($row['Debit']);
+                    $closing_bal = $difference1 + $op_bal;
+                    $c_bal += $closing_bal;
+
+                    if ($closing_bal != 0) { // show only if balance not zero
+                        $tabBody .= "<tr>";
+                        $tabBody .= "<td>$i</td>";
+                        $tabBody .= "<td>$dep_name</td>";
+                        $tabBody .= "<td>" . moneyFormatIndia($closing_bal) . "</td>";
+                        $tabBody .= "</tr>";
+                        $i++;
+                    }
+                }
+            }
+        }
+        $tabBodyEnd = "<tr><td colspan='2'><b>Total</b></td><td><b>" . moneyFormatIndia($c_bal) . "</b></td></tr>";
+    }
+} else if ($IDEtype == 2 and $IDEview_type == 2 and $IDE_name_id != '') { //investment with name
+    {
+        $opening_qry = $pdo->query("SELECT
+        IFNULL(SUM(Credit), 0) - IFNULL(SUM(Debit), 0) AS opening_balance
+        FROM (
+            SELECT
+                '' AS Credit,
+                amount AS Debit
+            FROM other_transaction
+            WHERE
+                created_on < DATE_FORMAT(CURRENT_DATE(), '%Y-%m-01')
+                AND `trans_cat` ='2' AND coll_mode = 1 AND type = 2 AND insert_login_id = '$user_id' AND name ='$IDE_name_id'
+
+            UNION ALL
+
+            SELECT
+                amount AS Credit,
+                '' AS Debit
+            FROM other_transaction
+            WHERE
+                created_on < DATE_FORMAT(CURRENT_DATE(), '%Y-%m-01')
+                AND `trans_cat` ='2' AND coll_mode = 1 AND type = 1 AND insert_login_id = '$user_id' AND name ='$IDE_name_id'
+
+            UNION ALL
+
+            SELECT
+                '' AS Credit,
+                amount AS Debit
+            FROM other_transaction
+            WHERE
+                created_on < DATE_FORMAT(CURRENT_DATE(), '%Y-%m-01')
+                AND `trans_cat` ='2' AND coll_mode = 2 AND type = 2 AND insert_login_id = '$user_id' AND name ='$IDE_name_id'
+
+            UNION ALL
+
+            SELECT
+                amount AS Credit,
+                '' AS Debit
+            FROM other_transaction
+            WHERE
+                created_on < DATE_FORMAT(CURRENT_DATE(), '%Y-%m-01')
+                AND `trans_cat` ='2' AND coll_mode = 2 AND type = 1 AND insert_login_id = '$user_id' AND name ='$IDE_name_id'
+        ) AS opening
+    ");
+        $opening_bal = $opening_qry->fetch()['opening_balance'];
+
+        $closing_qry = $pdo->query("SELECT
+        IFNULL(SUM(Credit), 0) - IFNULL(SUM(Debit), 0) AS closing_balance
+        FROM (
+            SELECT
+                '' AS Credit,
+                amount AS Debit
+            FROM other_transaction
+            WHERE
+                created_on <= LAST_DAY(DATE_SUB(CURRENT_DATE(), INTERVAL 1 MONTH))
+                AND `trans_cat` ='2' AND coll_mode = 1 AND type = 2 AND insert_login_id = '$user_id' AND name ='$IDE_name_id'
+
+            UNION ALL
+
+            SELECT
+                amount AS Credit,
+                '' AS Debit
+            FROM other_transaction
+            WHERE
+                created_on <= LAST_DAY(DATE_SUB(CURRENT_DATE(), INTERVAL 1 MONTH))
+                AND `trans_cat` ='2' AND coll_mode = 1 AND type = 1 AND insert_login_id = '$user_id' AND name ='$IDE_name_id'
+            
+            UNION ALL
+            
+            SELECT
+                '' AS Credit,
+                amount AS Debit
+            FROM other_transaction
+            WHERE
+                created_on <= LAST_DAY(DATE_SUB(CURRENT_DATE(), INTERVAL 1 MONTH))
+                AND `trans_cat` ='2' AND coll_mode = 2 AND type = 2 AND insert_login_id = '$user_id' AND name ='$IDE_name_id'
+
+            UNION ALL
+
+            SELECT
+                amount AS Credit,
+                '' AS Debit
+            FROM other_transaction
+            WHERE
+                created_on <= LAST_DAY(DATE_SUB(CURRENT_DATE(), INTERVAL 1 MONTH))
+                AND `trans_cat` ='2' AND coll_mode = 2 AND type = 1 AND insert_login_id = '$user_id' AND name ='$IDE_name_id'
+
+            UNION ALL
+
+            SELECT
+                '' AS Credit,
+                amount AS Debit
+            FROM other_transaction
+            WHERE
+                MONTH(created_on) = MONTH(CURRENT_DATE())
+                AND YEAR(created_on) = YEAR(CURRENT_DATE())
+                AND `trans_cat` ='2' AND coll_mode = 1 AND type = 2 AND insert_login_id = '$user_id' AND name ='$IDE_name_id'
+
+            UNION ALL
+
+            SELECT
+                amount AS Credit,
+                '' AS Debit
+            FROM other_transaction
+            WHERE
+                MONTH(created_on) = MONTH(CURRENT_DATE())
+                AND YEAR(created_on) = YEAR(CURRENT_DATE())
+                AND `trans_cat` ='2' AND coll_mode = 1 AND type = 1 AND insert_login_id = '$user_id' AND name ='$IDE_name_id'
+            
+            UNION ALL
+
+            SELECT
+                '' AS Credit,
+                amount AS Debit
+            FROM other_transaction
+            WHERE
+                MONTH(created_on) = MONTH(CURRENT_DATE())
+                AND YEAR(created_on) = YEAR(CURRENT_DATE())
+                AND `trans_cat` ='2' AND coll_mode = 2 AND type = 2 AND insert_login_id = '$user_id' AND name ='$IDE_name_id'
+
+            UNION ALL
+
+            SELECT
+                amount AS Credit,
+                '' AS Debit
+            FROM other_transaction
+            WHERE
+                MONTH(created_on) = MONTH(CURRENT_DATE())
+                AND YEAR(created_on) = YEAR(CURRENT_DATE())
+                AND `trans_cat` ='2' AND coll_mode = 2 AND type = 1 AND insert_login_id = '$user_id' AND name ='$IDE_name_id'
+        ) AS closing
+    ");
+        $closing_bal = $closing_qry->fetch()['closing_balance'];
+    }
+    $tableHeaders = "<th width='50'>S.No</th><th>Date</th><th>Cash Type</th><th>Credit</th><th>Debit</th>";
+
+
+    $qry = $pdo->query("SELECT DATE_FORMAT(`created_on`, '%d-%m-%Y') AS tdate, 'Hand Cash' AS ctype, '' AS Credit, amount AS Debit, amount AS Amount 
+    FROM other_transaction 
+    WHERE MONTH(created_on) = MONTH(CURRENT_DATE()) AND YEAR(created_on) = YEAR(CURRENT_DATE()) AND `trans_cat` ='2' AND coll_mode = 1 AND type = 2 AND insert_login_id = '$user_id' AND name ='$IDE_name_id'
+    
+    UNION ALL 
+    
+    SELECT DATE_FORMAT(`created_on`, '%d-%m-%Y') AS tdate, bank_id AS ctype, '' AS Credit, amount AS Debit, amount AS Amount 
+    FROM other_transaction 
+    WHERE MONTH(created_on) = MONTH(CURRENT_DATE()) AND YEAR(created_on) = YEAR(CURRENT_DATE()) AND `trans_cat` ='2' AND coll_mode = 2 AND type = 2 AND insert_login_id = '$user_id' AND name ='$IDE_name_id'
+    
+    UNION ALL 
+    
+    SELECT DATE_FORMAT(`created_on`, '%d-%m-%Y') AS tdate, 'Hand Cash' AS ctype, amount AS Credit, '' AS Debit, amount AS Amount 
+    FROM other_transaction 
+    WHERE MONTH(created_on) = MONTH(CURRENT_DATE()) AND YEAR(created_on) = YEAR(CURRENT_DATE()) AND `trans_cat` ='2' AND coll_mode = 1 AND type = 1 AND insert_login_id = '$user_id' AND name ='$IDE_name_id'
+    
+    UNION ALL 
+    
+    SELECT DATE_FORMAT(`created_on`, '%d-%m-%Y') AS tdate, bank_id AS ctype, amount AS Credit, '' AS Debit, amount AS Amount 
+    FROM other_transaction 
+    WHERE MONTH(created_on) = MONTH(CURRENT_DATE()) AND YEAR(created_on) = YEAR(CURRENT_DATE()) AND `trans_cat` ='2' AND coll_mode = 2 AND type = 1 AND insert_login_id = '$user_id' AND name ='$IDE_name_id'
+    
+    ORDER BY 1
+    ");
+
+    $i = 1;
+    $creditSum = 0;
+    $debitSum = 0;
+
+    $tabBody = '<tr>';
+
+    if ($qry->rowCount() > 0) { //check wheather query returning values or not
+
+        while ($row = $qry->fetch()) {
+            $tabBody .= "<td>$i</td>";
+            $tabBody .= "<td>" . date('d-m-Y', strtotime($row['tdate'])) . "</td>";
+
+            if ($row['ctype'] != 'Hand Cash') {
+                $bnameqry = $pdo->query("SELECT bank_short_name,account_number from bank_creation where id = '" . $row['ctype'] . "' ");
+                $bnamerun = $bnameqry->fetch();
+                $bname = $bnamerun['bank_short_name'] . ' - ' . substr($bnamerun['account_number'], -5);
+
+                $tabBody .= "<td>" . $bname . "</td>";
+            } else {
+                $tabBody .= "<td>" . $row['ctype'] . "</td>";
+            }
+
+            $tabBody .= "<td>" . moneyFormatIndia($row['Credit']) . "</td>";
+            $tabBody .= "<td>" . moneyFormatIndia($row['Debit']) . "</td>";
+            $tabBody .= '</tr>';
+
+            //Store credit and debit for total
+            $creditSum = $creditSum + intVal($row['Credit']);
+            $debitSum = $debitSum + intVal($row['Debit']);
+            $i++;
+        }
+        $difference = $creditSum - $debitSum;
+    } else {
+        //if query not returning any values, set table body and footer empty. by default its not working
+        $tabBody = '';
+        $tabBodyEnd = '';
+        $difference = 0;
+    }
+
+    $tabBodyEnd = "<tr><td colspan='3'><b>Total</b></td><td>" . moneyFormatIndia($creditSum) . "</td><td>" . moneyFormatIndia($debitSum) . "</td></tr>";
+    $tabBodyEnd .= "<tr><td colspan='3'><b>Difference</b></td><td colspan='2'>" . moneyFormatIndia($difference) . "</td></tr>";
+    $tabBodyEnd .= "<tr><td colspan='3'><b>Closing Balance</b></td><td colspan='2'>" . moneyFormatIndia($closing_bal) . "</td></tr>";
 } else if ($IDEtype == 3 and $IDEview_type == 1 and $IDE_name_id == '') { //EL without name
 
     $qry = $pdo->query("SELECT `id` FROM `other_trans_name` WHERE trans_cat = 3 GROUP by name");
