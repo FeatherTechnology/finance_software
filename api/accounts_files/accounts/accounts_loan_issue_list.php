@@ -24,7 +24,7 @@ if ($cash_type == 1) {
         JOIN users b ON li.insert_login_id = b.id 
         LEFT JOIN customer_profile cp ON li.cus_profile_id = cp.id
         LEFT JOIN line_name_creation lnc ON cp.line = lnc.id
-        WHERE DATE(li.issue_date) = '$op_date' $cndtn
+        WHERE DATE(li.created_on) = '$op_date' $cndtn
         GROUP BY b.name, li.insert_login_id;
     ");
 } else {
@@ -38,7 +38,7 @@ if ($cash_type == 1) {
         JOIN users b ON li.insert_login_id = b.id 
         LEFT JOIN customer_profile cp ON li.cus_profile_id = cp.id
         LEFT JOIN line_name_creation lnc ON cp.line = lnc.id
-        WHERE DATE(li.issue_date) = '$op_date' $cndtn
+        WHERE DATE(li.created_on) = '$op_date' $cndtn
         GROUP BY b.name, li.insert_login_id;
     ");
 }

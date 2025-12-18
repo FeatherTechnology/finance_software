@@ -559,10 +559,9 @@ function calculateNewInterestAmt($int_rate, $balance, $calculate_method)
         $int = ($balance * ($int_rate / 100) / 30);
     }
 
-    $curInterest = ceil($int / 5) * 5; //to increase Interest to nearest multiple of 5
-    if ($curInterest < $int) {
-        $curInterest += 5;
-    }
+    // Use your clean rounding logic
+    $curInterest = ceilAmount($int);
+
     $response = $curInterest;
 
     return $response;
@@ -693,90 +692,6 @@ function calculateInterestLoan($pdo, $loan_arr, $response, $cp_id)
     $res['till_date_int'] = ceilAmount($res['till_date_int']);
     return $res;
 }
-// function getTillDateInterest($loan_arr, $response, $pdo, $data)
-// {
-
-//     if ($data == 'from01') {
-//         //in this calculate till date interest when month are crossed for current month
-
-//         //to calculate till date interest if loan is interst based
-//         if ($loan_arr['loan_type'] == 'interest') {
-
-//             // Get the current month's count of days
-//             $currentMonthCount = date('t');
-//             // divide current interest amt for one day of current month
-//             $amtperDay = $response['due_amt'] / intVal($currentMonthCount);
-
-//             $st_date = new DateTime(date('Y-m-01')); // start date
-//             $tdate = new DateTime(date('Y-m-d') . '+1 day'); //current date
-//             // $tdate = $tdate->modify('+1 day');//current date +1
-//             // Calculate the interval between the two dates
-//             $date_diff = $st_date->diff($tdate);
-//             // Get the number of days from the interval
-//             $numberOfDays = $date_diff->days;
-//             $response = $amtperDay * $numberOfDays;
-
-//             //to increase till date Interest to nearest multiple of 5
-//             $cur_amt = ceil($response / 5) * 5; //ceil will set the number to nearest upper integer//i.e ceil(121/5)*5 = 125
-//             if ($cur_amt < $response) {
-//                 $cur_amt += 5;
-//             }
-//             $response = $cur_amt;
-//         }
-//     } else if ($data == 'forstartmonth') {
-//         //if condition is true then this is , 2 months has been completed.
-//         //so the pending amt will be only the first month's complete interest amount
-
-//         //to calculate till date interest if loan is interst based
-//         if ($loan_arr['loan_type'] == 'interest') {
-
-//             // Get the current month's count of days
-//             $currentMonthCount = date('t', strtotime($loan_arr['due_startdate']));
-//             // divide current interest amt for one day of current month
-//             $amtperDay = $response['due_amt'] / intVal($currentMonthCount);
-
-//             $st_date = new DateTime(date('Y-m-d', strtotime($loan_arr['due_startdate']))); // start date
-//             $tdate = new DateTime(date('Y-m-d') . '+1 day'); //current date
-//             // Calculate the interval between the two dates
-//             $date_diff = $st_date->diff($tdate);
-//             // Get the number of days from the interval
-//             $numberOfDays = $date_diff->days;
-//             $response = $amtperDay * $numberOfDays;
-
-//             //to increase till date Interest to nearest multiple of 5
-//             $cur_amt = ceil($response / 5) * 5; //ceil will set the number to nearest upper integer//i.e ceil(121/5)*5 = 125
-//             if ($cur_amt < $response) {
-//                 $cur_amt += 5;
-//             }
-//             $response = $cur_amt;
-
-//             //if today date is less than start date means make till date interest as 0 else it will show some amount as the different shows
-//             if ($tdate < $st_date) {
-//                 $response = 0;
-//             }
-//         }
-//     } else if ($data == 'fullstartmonth') {
-//         //in this calculate till date interest when month are not crossed for due starting month
-
-//         //to calculate till date interest if loan is interst based
-//         if ($loan_arr['loan_type'] == 'interest') {
-
-//             // Get the current month's count of days
-//             $currentMonthCount = date('t', strtotime($loan_arr['due_startdate']));
-//             // divide current interest amt for one day of current month
-//             $amtperDay = $response['due_amt'] / intVal($currentMonthCount);
-
-//             $st_date = new DateTime(date('Y-m-d', strtotime($loan_arr['due_startdate']))); // start date
-//             $tdate = new DateTime(date('Y-m-t', strtotime($loan_arr['due_startdate']))); //current date
-//             // Calculate the interval between the two dates
-//             $date_diff = $st_date->diff($tdate);
-//             // Get the number of days from the interval
-//             $numberOfDays = $date_diff->days;
-//             $response = ceil($amtperDay * $numberOfDays);
-//         }
-//     }
-//     return $response;
-// }
 
 function getTillDateInterest($loan_arr, $response, $pdo, $data, $cp_id)
 {
@@ -795,11 +710,9 @@ function getTillDateInterest($loan_arr, $response, $pdo, $data, $cp_id)
             $result = dueAmtCalculation($pdo, $issued_date, $cur_date, $response['due_amt'], $loan_arr, '', $cp_id);
             // $result = (($issued_date->diff($cur_date))->days) * $issue_month_due;
 
-            //to increase till date Interest to nearest multiple of 5
-            $cur_amt = ceil($result / 5) * 5; //ceil will set the number to nearest upper integer//i.e ceil(121/5)*5 = 125
-            if ($cur_amt < $result) {
-                $cur_amt += 5;
-            }
+            // Use your clean rounding logic
+            $cur_amt = ceilAmount($result);
+
             $result = $cur_amt;
         }
         return $result;
@@ -1059,7 +972,13 @@ function getPenaltyCharges($pdo, $cp_id)
 }
 function ceilAmount($amt)
 {
-    $cur_amt = ceil($amt / 5) * 5; //ceil will set the number to nearest upper integer//i.e ceil(121/5)*5 = 125
+    // Round the amount to avoid floating point precision errors.
+    $amt = round($amt, 2);  // Round to two decimal places (or adjust as needed)
+    $cur_amt = ceil($amt / 5) * 5;
+    // If cur_amt is exactly equal to amt (with small floating point tolerance), don't increment.
+    if (abs($cur_amt - $amt) < 0.01) {
+        return $cur_amt;
+    }
     if ($cur_amt < $amt) {
         $cur_amt += 5;
     }

@@ -731,6 +731,7 @@ function moneyFormatIndia($num1)
                                     <select class="form-control" id='IDE_type' name='IDE_type'>
                                         <option value=''>Select Sheet type</option>
                                         <option value='1'>Deposit</option>
+                                        <option value='2'>Investment</option>
                                         <option value='3'>EL</option>
                                         <option value='4'>Exchange</option>
                                     </select>

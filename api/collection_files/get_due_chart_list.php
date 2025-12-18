@@ -963,7 +963,7 @@ WHERE c.cus_profile_id = $cp_id AND (c.due_amt_track != '' OR c.pre_close_waiver
                 <?php
                 if ($loan_type == 'interest') {
                     $last_bal_amt = $bal_amt;
-                }?>
+                } ?>
         <?php
                 $i++;
             }
@@ -1471,10 +1471,9 @@ function calculateNewInterestAmt($int_rate, $balance, $calculate_method)
         $int = ($balance * ($int_rate / 100) / 30);
     }
 
-    $curInterest = ceil($int / 5) * 5; //to increase Interest to nearest multiple of 5
-    if ($curInterest < $int) {
-        $curInterest += 5;
-    }
+    // Use your clean rounding logic
+    $curInterest = ceilAmount($int);
+
     $response = $curInterest;
 
     return $response;
@@ -1735,7 +1734,13 @@ function getPaidInterest($pdo, $cp_id, $date)
 
 function ceilAmount($amt)
 {
-    $cur_amt = ceil($amt / 5) * 5; //ceil will set the number to nearest upper integer//i.e ceil(121/5)*5 = 125
+    // Round the amount to avoid floating point precision errors.
+    $amt = round($amt, 2);  // Round to two decimal places (or adjust as needed)
+    $cur_amt = ceil($amt / 5) * 5;
+    // If cur_amt is exactly equal to amt (with small floating point tolerance), don't increment.
+    if (abs($cur_amt - $amt) < 0.01) {
+        return $cur_amt;
+    }
     if ($cur_amt < $amt) {
         $cur_amt += 5;
     }

@@ -255,7 +255,7 @@ function getUserAccess(callback) {
 		dataType: 'json', // Expect JSON response
 		success: function (response) {
 			// Check if response contains download_access
-			const downloadAccess = response.download_access || 0; // Default to 0 if not found
+			const downloadAccess = Number(response.download_access) || 0; // Default to 0 if not found
 			callback(downloadAccess);
 		},
 	});

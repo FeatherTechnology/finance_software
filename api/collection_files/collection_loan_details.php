@@ -508,10 +508,9 @@ function calculateNewInterestAmt($int_rate, $balance, $calculate_method)
         $int = ($balance * ($int_rate / 100) / 30);
     }
 
-    $curInterest = ceil($int / 5) * 5; //to increase Interest to nearest multiple of 5
-    if ($curInterest < $int) {
-        $curInterest += 5;
-    }
+    // Use your clean rounding logic
+    $curInterest = ceilAmount($int);
+
     $response = $curInterest;
 
     return $response;
@@ -669,8 +668,8 @@ function dueAmtCalculation($pdo, $start_date, $end_date, $due_amt, $loan_arr, $s
 
                 $result += $cur_result;
                 $monthly_interest_data[$month_key] = ($monthly_interest_data[$month_key] ?? 0) + $cur_result;
+                $start->setDate($start->format('Y'), $start->format('m'), 1);
                 $start->modify('+1 month');
-                $start->modify('first day of this month');
             }
         } else if ($interest_calculate == 'Days') {
             while ($start->format('Y-m-d') <= $end->format('Y-m-d')) {
@@ -805,11 +804,9 @@ function getTillDateInterest($loan_arr, $response, $pdo, $data, $cp_id)
             $result = dueAmtCalculation($pdo, $issued_date, $cur_date, $response['due_amt'], $loan_arr, '', $cp_id);
             // $result = (($issued_date->diff($cur_date))->days) * $issue_month_due;
 
-            //to increase till date Interest to nearest multiple of 5
-            $cur_amt = ceil($result / 5) * 5; //ceil will set the number to nearest upper integer//i.e ceil(121/5)*5 = 125
-            if ($cur_amt < $result) {
-                $cur_amt += 5;
-            }
+            // Use your clean rounding logic
+            $cur_amt = ceilAmount($result);
+
             $result = $cur_amt;
         }
         return $result;
@@ -869,7 +866,13 @@ function getPenaltyCharges($pdo, $cp_id)
 
 function ceilAmount($amt)
 {
-    $cur_amt = ceil($amt / 5) * 5; //ceil will set the number to nearest upper integer//i.e ceil(121/5)*5 = 125
+    // Round the amount to avoid floating point precision errors.
+    $amt = round($amt, 2);  // Round to two decimal places (or adjust as needed)
+    $cur_amt = ceil($amt / 5) * 5;
+    // If cur_amt is exactly equal to amt (with small floating point tolerance), don't increment.
+    if (abs($cur_amt - $amt) < 0.01) {
+        return $cur_amt;
+    }
     if ($cur_amt < $amt) {
         $cur_amt += 5;
     }

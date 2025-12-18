@@ -62,7 +62,7 @@ second_query AS (
     FROM `accounts_collect_entry` ac
     JOIN users us ON ac.user_id = us.id
     WHERE $cndtn 
-    AND DATE(ac.created_on) = CONCAT('$op_date', ' 23:59:59') 
+    AND DATE(ac.created_on) = '$op_date'
     AND ac.user_id NOT IN (
         SELECT userid 
         FROM first_query

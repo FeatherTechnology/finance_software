@@ -101,7 +101,7 @@ FROM
     LEFT JOIN loan_category lc ON lcc.loan_category = lc.id
     LEFT JOIN agent_creation agc ON lelc.agent_id = agc.id
     LEFT JOIN family_info fi ON cp.guarantor_name = fi.id
-    LEFT JOIN loan_issue li ON cp.id = li.cus_profile_id
+    LEFT JOIN loan_issue li ON cp.id = li.cus_profile_id AND li.balance_amount = 0
     LEFT JOIN (
     SELECT 
         cus_profile_id, 
@@ -407,12 +407,11 @@ function getTillDateInterest($loan_arr, $response, $pdo, $data, $cus_profile_id,
 
         $result = dueAmtCalculation($pdo, $issued_date, $cur_date, $response['interest_amount'], $loan_arr, '', $cus_profile_id);
 
-        //to increase till date Interest to nearest multiple of 5
-        $cur_amt = ceil($result / 5) * 5; //ceil will set the number to nearest upper integer//i.e ceil(121/5)*5 = 125
-        if ($cur_amt < $result) {
-            $cur_amt += 5;
-        }
+        // Use your clean rounding logic
+        $cur_amt = ceilAmount($result);
+
         $result = $cur_amt;
+
         return $result;
     }
     if ($data == 'curmonth') {
@@ -422,7 +421,6 @@ function getTillDateInterest($loan_arr, $response, $pdo, $data, $cus_profile_id,
         $cur_date = new DateTime($to_date ?? date('Y-m-d'));
 
         $issued_date = new DateTime(date('Y-m-d', strtotime($loan_arr['loan_date'])));
-
 
         $result = dueAmtCalculation($pdo, $issued_date, $cur_date, $response['interest_amount'], $loan_arr, 'TDI', $cus_profile_id);
         return $result;
@@ -576,8 +574,8 @@ function dueAmtCalculation($pdo, $start_date, $end_date, $interest_amount, $loan
 
                 $result += $cur_result;
                 $monthly_interest_data[$month_key] = ($monthly_interest_data[$month_key] ?? 0) + $cur_result;
+                $start->setDate($start->format('Y'), $start->format('m'), 1);
                 $start->modify('+1 month');
-                $start->modify('first day of this month');
             }
         } else if ($interest_calculate == 'Days') {
             while ($start->format('Y-m-d') <= $end->format('Y-m-d')) {
@@ -617,10 +615,9 @@ function calculateNewInterestAmt($interest_rate, $balance_amt, $interest_calcula
         $int = ($balance_amt * ($interest_rate / 100) / 30);
     }
 
-    $curInterest = ceil($int / 5) * 5; //to increase Interest to nearest multiple of 5
-    if ($curInterest < $int) {
-        $curInterest += 5;
-    }
+    // Use your clean rounding logic
+    $curInterest = ceilAmount($int);
+
     $response = $curInterest;
 
     return $response;
@@ -628,7 +625,13 @@ function calculateNewInterestAmt($interest_rate, $balance_amt, $interest_calcula
 
 function ceilAmount($amt)
 {
-    $cur_amt = ceil($amt / 5) * 5; //ceil will set the number to nearest upper integer//i.e ceil(121/5)*5 = 125
+    // Round the amount to avoid floating point precision errors.
+    $amt = round($amt, 2);  // Round to two decimal places (or adjust as needed)
+    $cur_amt = ceil($amt / 5) * 5;
+    // If cur_amt is exactly equal to amt (with small floating point tolerance), don't increment.
+    if (abs($cur_amt - $amt) < 0.01) {
+        return $cur_amt;
+    }
     if ($cur_amt < $amt) {
         $cur_amt += 5;
     }

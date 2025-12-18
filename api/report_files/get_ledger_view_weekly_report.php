@@ -209,3 +209,9 @@ function moneyFormatIndia($num)
     return $thecash;
 }
 ?>
+
+<script type="text/javascript">
+    $(function() {
+        setdtable('#ledger_view_weeklyreport_table',"Ledger View Weekly List");
+    });
+</script>
