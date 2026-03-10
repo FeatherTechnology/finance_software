@@ -1267,6 +1267,12 @@ $(document).ready(function () {
             $('#issue_relationship').val('');
         }
     });
+    $('#bank_name').change(function(){
+        $('#transaction_id, #trans_date, #bank_clr_bank_id, #bank_clr_trans_amnt').val('');
+    });
+    $("#transaction_id").keydown(function () {
+        $('#trans_date').val('');
+    });
 
     $('#submit_loan_issue').click(function (event) {
         event.preventDefault();
@@ -1292,6 +1298,8 @@ $(document).ready(function () {
             'issue_date': $('#issue_date').val(),
             'issue_person': $('#issue_person').val(),
             'issue_relationship': $('#issue_relationship').val(),
+            'bank_clr_bank_id' : $('#bank_clr_bank_id').val(),
+            'bank_clr_trans_amnt' : $('#bank_clr_trans_amnt').val()
         }
 
         if (isFormDataValid(loanIssue)) {
@@ -1306,8 +1314,58 @@ $(document).ready(function () {
             });
         }
 
-    })
+    });
+$("#transaction_id").blur(async function () {
+    try {
 
+        let bankId = $('#bank_name').val();
+        if(!bankId){
+            swalError('Warning', 'Kindly select Bank Name!');
+            $('#transaction_id').val('');
+            return;
+        }
+
+        let payment_mode = $('#payment_mode').val();
+        let transactionValue ='';
+
+        if(payment_mode =='2'){
+            transactionValue = $('#transaction_value').val() != '' 
+                ? $('#transaction_value').val().replace(/,/g, '') 
+                : 0;
+        }
+
+        if(!transactionValue){
+            swalError('Warning', 'Kindly enter Transaction Value!');
+            $('#transaction_id').val('');
+            return;
+        }
+
+        let transId = $('#transaction_id').val();
+
+        let response = await checkBankTransactionDetails('debit', bankId, transId, transactionValue);
+
+        if (!response.status) {
+            swalError('Warning', response.message);
+            $('#transaction_id').val('');
+            return;
+        }
+
+        let alertStatus = response.data.alert_status;
+
+        if(alertStatus){
+            swalError('Warning', response.data.alert);
+            $('#transaction_id').val('');
+        }else{
+            $('#trans_date').val(response.data.trans_date);
+            $('#bank_clr_bank_id').val(response.data.id);
+            $('#bank_clr_trans_amnt').val(response.data.transaction_amount);
+        }
+
+    } catch (error) {
+        console.error(error);
+        swalError('Error', 'Something went wrong while checking transaction!');
+    }
+});
 
 }); ///Document END.
 

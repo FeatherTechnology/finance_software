@@ -27,6 +27,10 @@
 </div>
 <!--Loan Issue List End-->
 <div id="loan_issue_content" style="display:none;">
+    
+    <input type="hidden" name="bank_clr_bank_id" id="bank_clr_bank_id"/>
+    <input type="hidden" name="bank_clr_trans_amnt" id="bank_clr_trans_amnt"/>
+
     <div class="text-right">
         <button type="button" class="btn btn-primary" id="back_btn"><span class="icon-arrow-left"></span>&nbsp; Back </button>
     </div>
@@ -640,7 +644,12 @@
                                     <span class="text-danger" style="display: none;" id="transact_id"> Please Enter Transaction ID </span>
                                 </div>
                             </div>
-
+                            <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12 transaction" style="display:none">
+                                <div class="form-group">
+                                    <label for="disabledInput">Transaction Date</label>&nbsp;<span class="text-danger">*</span>
+                                    <input type="date" class="form-control" id="trans_date" name="trans_date" value='' tabindex='32' readonly>
+                                </div>
+                            </div>
                             <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12 transaction" style="display:none">
                                 <div class="form-group">
                                     <label for="disabledInput">Transaction Value </label><span class="text-danger">*</span>

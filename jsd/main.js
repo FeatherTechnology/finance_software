@@ -755,5 +755,13 @@ function formatIndianNumber(num) {
 
     return num;
 }
-
+/////////////////////////////////////////////////////  Check Transaction Details START  //////////////////////////////////////////////////// 
+function checkBankTransactionDetails(crdrType, bankId, transId, amount) {
+    return $.post('include/common/getBankTransactionDetails.php', {
+        crdrType,
+        bankId,
+        transId,
+        amount
+    }, null, 'json');
+}
 //////////////////////////////////////////////////////////// Generate Excel Title End ////////////////////////////////////////////////////////////////////////////////////
