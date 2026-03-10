@@ -25,6 +25,12 @@ $transaction_value = $_POST['transaction_value'];
 $issue_date = $_POST['issue_date'];
 $issue_person = $_POST['issue_person'];
 $issue_relationship = $_POST['issue_relationship'];
+if (isset($_POST['bank_clr_bank_id'])) {
+    $bank_clr_bank_id = $_POST['bank_clr_bank_id'];
+}
+if (isset($_POST['bank_clr_trans_amnt'])) {
+    $bank_clr_trans_amnt = $_POST['bank_clr_trans_amnt'];
+}
 
 $qry = $pdo->query("INSERT INTO `loan_issue`(`cus_id`, `cus_profile_id`, `loan_amnt`, `net_cash`,`net_bal_cash`,`payment_type`, `payment_mode`, `bank_name`,`cash`,`cheque_val`,`transaction_val`, `transaction_id`, `cheque_no`,`cheque_remark`,`tran_remark`,`balance_amount`, `issue_date`, `issue_person`, `relationship`, `insert_login_id`, `created_on`) VALUES ('$cus_id','$cus_profile_id','$loan_amnt','$net_cash','$bal_net_cash','$payment_type','$payment_mode','$bank_name','$cash','$chequeValue','$transaction_value','$transaction_id','$chequeno','$chequeRemark','$transaction_remark','$bal_amount','$issue_date','$issue_person','$issue_relationship','$user_id',now())");
 
@@ -37,6 +43,32 @@ $qry3 = $pdo->query("UPDATE `customer_status` SET `status`='7',`coll_status`='Cu
 }else if ($payment_type == "2"){
     $qry3 = $pdo->query("UPDATE `customer_status` SET `status`='7',`coll_status`='Current',`update_login_id`='$user_id',`updated_on`=now() WHERE `cus_profile_id`='$cus_profile_id' "); //Loan Issued.
 }
+if (!empty($bank_clr_bank_id)) {
+        // Deduct paid amount
+        $amnt = floatval($transaction_value);
+        $bank_clr_trans_amnt -= $amnt;
+
+        // Prevent negative balance
+        if ($bank_clr_trans_amnt < 0) {
+            $bank_clr_trans_amnt = 0;
+        }
+
+        $clr_sts = ($bank_clr_trans_amnt == 0) ? 1 : 0; //1 - cleared, 0 - uncleared
+        $query = $pdo->prepare("UPDATE bank_clearance SET transaction_amount = ?, clr_status = ? WHERE id = ? ");
+
+        $query->execute([$bank_clr_trans_amnt, $clr_sts, $bank_clr_bank_id]);
+        
+        $historyStmt = $pdo->prepare("INSERT INTO cleared_bank_stmt_history
+            (bank_stmt_id, transaction_amount, type, screens, insert_login_id, created_date)
+            VALUES
+            (:bank_stmt_id, :amt, 2, 'Loan Issued', :user_id, NOW()) ");
+
+        $historyStmt->execute([
+            ':bank_stmt_id' => $bank_clr_bank_id,
+            ':amt' => $amnt,
+            ':user_id' => $user_id
+        ]);
+    }
 
 // $qry = $pdo->query("SELECT cus_name, mobile1 FROM `customer_profile` WHERE `id` = '$cus_profile_id' ");
 // $row = $qry->fetch_assoc();

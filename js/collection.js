@@ -469,7 +469,9 @@ $(document).ready(function () {
             'bank_id': $('#bank_id').val(),
             'cheque_no': $('#cheque_no').val(),
             'trans_id': $('#trans_id').val(),
-            'trans_date': $('#trans_date').val()
+            'trans_date': $('#trans_date').val(),
+            'bank_clr_bank_id' : $('#bank_clr_bank_id').val(),
+            'bank_clr_trans_amnt' : $('#bank_clr_trans_amnt').val()
         };
 
         if (isFormDataValid(collData)) {
@@ -555,7 +557,49 @@ $(document).ready(function () {
         let raw = $(this).val().replace(/,/g, '');
         $(this).val(formatIndianNumber(raw));
     });
+    $('#bank_id').change(function(){
+        $('#trans_id, #trans_date, #bank_clr_bank_id, #bank_clr_trans_amnt').val('');
+    });
 
+        //Transaction id validation
+    $("#trans_id").keydown(function () { //clear transaction date if changes in trans id becuase if by chance changing trans id after gets trans date means it take while a time to reflect new date in mean time able to submit with old date.  
+        $('#trans_date').val('');
+    });
+
+    $("#trans_id").blur(async function () {
+        let bankId = $('#bank_id').val();
+            if(!bankId){
+             swalError('Warning', 'Kindly select Bank Name!');
+             $('#trans_id').val('');
+            return;
+            }
+            
+            let totalPaidTrack = $('#total_paid_track').val() != '' ? $('#total_paid_track').val().replace(/,/g, '') : 0;
+            if(!totalPaidTrack){
+             swalError('Warning', 'Kindly Fill Collection Track!');
+             $('#trans_id').val('');
+            return;
+            }
+
+            let transId = $('#trans_id').val();
+            let response = await checkBankTransactionDetails('credit', bankId, transId, totalPaidTrack);
+            if (!response.status) {
+            swalError('Warning',response.message);
+            $('#trans_id').val('');
+            return;
+            }
+
+            let alertStatus = response.data.alert_status;
+            if(alertStatus){
+            swalError('Warning',response.data.alert);
+            $('#trans_id').val('');
+            }else{
+            $('#trans_date').val(response.data.trans_date);
+            $('#bank_clr_bank_id').val(response.data.id);
+            $('#bank_clr_trans_amnt').val(response.data.transaction_amount);
+            }
+
+    });
 });
 /////////////////////////////////////////////////////////////////////////   Document END /////////////////////////////////////////////////////////////////////////
 
